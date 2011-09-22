@@ -1,0 +1,245 @@
+############################# C++ CODING STANDARD OF THE EAST v1.0 #############################
+
+## Headers (file include/RSys/Import/RSomeClass.hh)
+
+Every header file MUST include at least one RSys header; if no headers are needed
+RSys/RSys.hh must be included instead
+
+#ifndef RSYS_IMPORT_RSOME_CLASS_HH
+#define RSYS_IMPORT_RSOME_CLASS_HH
+
+/**********************************************************************************************/
+#include <.hh>
+#include <.hh>
+#include <.hh>
+/********************************************* RS *********************************************/
+/*                                         RSomeClass                                         */
+/**********************************************************************************************/
+
+class RSomeClass: public BaseClass
+{
+  private:
+    int       m_member1;
+
+  public:
+    /**/      RSomeClass();
+    virtual   ~RSomeClass();
+    void      methodA(int a, int b);
+};
+
+/**********************************************************************************************/
+
+#endif /* RSYS_IMPORT_RSOME_CLASS_HH */
+
+## Sources (file include/RSys/Import/RSomeClass.cc)
+
+#include <.hh>
+#include <RSys/Import/RSomeClass.hh>
+#include <.hh>
+/********************************************* RS *********************************************/
+/*                                         RSomeClass                                         */
+/**********************************************************************************************/
+
+/**/ RSomeClass :: RSomeClass():
+  BaseClass(0)
+{
+}
+
+/**********************************************************************************************/
+
+/**/ RSomeClass :: ~RSomeClass()
+{
+}
+
+/**********************************************************************************************/
+
+void RSomeClass :: methodA(int a, int b)
+{
+}
+
+/**********************************************************************************************/
+
+## Formatting
+
+Line length:  96
+Indendation:  2 spaces
+
+Conditionals:
+  if (condition)
+  {
+    foo;
+    bar;
+  }
+  else if (...)
+  {
+  }
+  else
+  {
+  }
+
+Short-conditional:
+  /**/ if (cond1) act1;
+  else if (cond2) act2;
+  else if (cond3) act3;
+  else /********/ act4;
+
+Try-catch:
+  try
+  {
+  }
+  catch (Exception e)
+  {
+  }
+
+While:
+  while (a < 5)
+  {
+  }
+
+For:
+  for (; a < 5; ++a)
+  {
+  }
+
+  for (auto it = vector.begin(); it != vector.end(); ++it)
+  {
+  }
+
+Switch:
+  switch (key)
+  {
+    case Value1:
+      foo;
+      bar;
+      break;
+
+    case Value2:
+    {
+      int a = 5;
+      foo;
+      bar;
+      break;
+    }
+
+    default:
+      break;
+  }
+
+Operators:
+  Style:      Binary operators are surrounded with spaces
+  Examples:   2 + 2, 2 * 9 + 2, 2 += 4 * q, a << 5
+  Exceptions: RClassName::staticFunction(...)
+              RClassName::Enumerator1
+              RClassName::[anything]
+              Namespace::[anything]
+              class RButton: public QButton
+
+Pointer/reference declarators:
+  QButton*    button1;
+  QWidget*    button2;
+  QButton*&   ref1 = button1;
+
+Variable declarations:
+  // Variables are declared in columns
+  int                 a             = 2;
+  RSomeOtherFooClass* classInstance = new RSomeOtherFooClass();
+  QButton*            button;
+
+Class structure:
+  class RSomeClass
+  {
+    public:
+      enum Enum
+      {
+        Enumerator1,
+        Enumerator2
+      };
+
+    public:
+      typedef QVector<RSomeClass*>    ClassVector;
+      typedef QVector<QVector<int>>   ClassVector2;
+
+    public:
+      static int        s_intThatNobodyCaresAbout;
+      static QWidget*   s_lastWidget;
+
+      int               m_member1;
+      int               m_member2;
+      int               m_someX, m_someY;
+      QWidget*          m_someOtherWidget;
+
+    public:
+      /***/             RSomeClass();
+      /***/             RSomeClass(int a);
+      virtual           ~RSomeClass();
+      void              methodA();
+      RSomeOtherClass*  methodB();
+      Enum              methodC(Enum x);
+      virtual void      pureMethod() = 0;
+
+    public slots:
+      void              slot1();
+
+    public signals:
+      void              signal(int arg1, QString arg2);
+  };
+
+Method implementations:
+
+  void RSomeClass :: methodA()
+  {
+  }
+
+  // Return type is nested enum; using the new function declaration syntax
+  auto RSomeClass :: methodC(Enum x) -> Enum
+  {
+  }
+
+## Naming
+
+Files:
+  Style:      Uppercase CamelCase
+  Prefix:     R
+  Suffix:     .cc for sources, .hh for headers
+  Examples:   RSomeNiceClass.cc RSomeHTMLExporter.hh
+
+Preprocessor macro:
+  Style:      ALL_CAPS
+  Example:    SQUARE_ROOT, ERROR_AND_EXIT
+
+Typenames (class, struct):
+  Style:      Uppercase CamelCase
+  Prefix:     R, RI for interfaces
+  Examples:   RMyClass, RIMyInterface
+
+Typenames (typedef, enum)
+  Style:      Uppercase CamelCase
+
+Functions (non-member, member):
+  Style:      Lowercase camelCase
+  Examples:   veryNiceFunction
+
+Variable (non-member, argument):
+  Style:      Lowercase camelCase
+
+Variable (member):
+  Style:      Lowercase camelCase
+  Prefix:     m_
+  Examples:   m_myList, m_itemModel
+
+Variable (static):
+  Style:      Lowercase camelCase
+  Prefix:     s_
+  Examples:   s_staticMember1
+
+Variable (global):
+  Style:      Lowercase camelCase
+  Prefix:     g_
+  Examples:   g_application, g_globalCounter
+
+Enumeration constant:
+  Style:      Uppercase CamelCase
+  Examples:   InvalidFileAccess, FileNotFound
+
+Namespace names: (** undecided **)
+  Style:      Uppercase CamelCase
