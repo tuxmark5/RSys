@@ -28,7 +28,7 @@ int main(int argc, char** argv)
   widget.setDataset( 0, vec0, "v0" );
   widget.setDataset( 1, vec1, "v1" );
   widget.setDataset( 2, vec2, "v2" );
-  widget.setType( KDChart::Widget::Pie );
+  widget.setType( KDChart::Widget::Bar );
 
   // Draw a line around the
   // third sections
@@ -36,8 +36,8 @@ int main(int argc, char** argv)
   QPen piePen;
   piePen.setWidth( 3 );
   piePen.setColor( Qt::white );
-  widget.pieDiagram()->setPen( 2,  piePen );
-  ((KDChart::PolarCoordinatePlane*)widget.coordinatePlane())->setStartPosition( 90 );
+  //widget.pieDiagram()->setPen( 2,  piePen );
+  //((KDChart::PolarCoordinatePlane*)widget.coordinatePlane())->setStartPosition( 90 );
 
   widget.show();
 

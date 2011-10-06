@@ -39,6 +39,13 @@ SOURCES             +=                          \
   src/RSys/main.cc
 
 HEADERS             +=                          \
-  include/RSys/RSys.hh
+  include/RSys/RSys.hh                          \
+  include/RSys/Core/RData.hh                    \
+  include/RSys/Core/RDivision.hh                \
+  include/RSys/Core/RElement.hh                 \
+  include/RSys/Core/RMeasure.hh                 \
+  include/RSys/Core/RSystem.hh                  \
+  include/RSys/Import/RITable.hh                \
+  include/RSys/Import/RIDocument.hh
 
 ################################################################################################
