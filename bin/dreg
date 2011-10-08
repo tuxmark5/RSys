@@ -51,6 +51,7 @@ PHASES = {
         'k':  'Kodavimas',
         'v':  'Peržiūra',
         't':  'Testavimas',
+        'd':  'Dokumentavimas',
         'a':  'Aptarimas',
         }
 RSYS_DIR = os.path.join(
