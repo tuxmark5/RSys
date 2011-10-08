@@ -100,6 +100,17 @@ def pickle_defect(args):
         pickle.dump(defects, fp)
 
 
+
+def dict_to_string(dictionary):
+    """ Converts dictionary to unicode string.
+    """
+
+    return ', '.join(
+            '{0}:{1}'.format(key, value)
+            for key, value in dictionary.items()
+            )
+
+
 def main(argv=None):
     """ Main entry point.
     """
@@ -113,15 +124,23 @@ def main(argv=None):
             description='Užregistruoja defekto radimą.')
     parser.add_argument(
             'component', choices=COMPONENTS.keys(),
-            help='Komponentas, kuriame buvo rastas defektas')
+            help=(
+                'Komponentas, kuriame buvo rastas defektas ({0}).'.format(
+                    dict_to_string(COMPONENTS))))
     parser.add_argument(
             'defect_type', type=int, help='Defekto tipo id.')
     parser.add_argument(
             'insert_phase', choices=PHASES.keys(),
-            help='Fazė, kurioje buvo įterptas.')
+            help=(
+                'Fazė, kurioje buvo įterptas ({0}).').format(
+                    dict_to_string(PHASES)
+                    ))
     parser.add_argument(
             'remove_phase', choices=PHASES.keys(),
-            help='Fazė, kurioje buvo pašalintas.')
+            help=(
+                'Fazė, kurioje buvo pašalintas ({0}).').format(
+                    dict_to_string(PHASES)
+                    ))
     parser.add_argument(
             'description', type=to_unicode,
             help='Defekto aprašymas.')
