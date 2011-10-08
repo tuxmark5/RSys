@@ -1,0 +1,66 @@
+#!/usr/bin/python2.7
+# -*- coding: utf-8 -*-
+
+
+""" Scenarijus defektų fiksavimui.
+"""
+
+
+from __future__ import unicode_literals
+
+import argparse
+import os
+import pickle
+import datetime
+
+
+RSYS_DIR = os.path.join(
+        os.path.abspath(
+            os.path.join(os.path.dirname(__file__), '..')))
+PICKLE_PATH = os.path.join(RSYS_DIR, '.defects.pickle')
+CSV_PATH = os.path.join(RSYS_DIR, '.defects.csv')
+
+
+def to_unicode(string):
+    """ Converts string to unicode.
+    """
+
+    if isinstance(string, str):
+        return string.decode('utf-8')
+    else:
+        return unicode(string)
+
+
+def list_defects(args):
+    """ Išsaugo defektą SSV (Smile sperated values) faile.
+    """
+
+    with open(PICKLE_PATH, 'rb') as fp:
+        last_id = pickle.load(fp)
+        defects = pickle.load(fp)
+
+    print 'Paskutinis ID:', last_id
+    for defect_id, defect in defects.items():
+        print 'Defekto ID:', defect_id
+        for key, value in defect.items():
+            print '  {0:20}: {1}'.format(key, value)
+
+
+def main(argv=None):
+    """ Main entry point.
+    """
+
+    if argv is None:
+        import sys
+        argv = sys.argv[1:]
+
+    parser = argparse.ArgumentParser(
+            description='Parodo rastų defektų sąrašą.')
+
+    args = parser.parse_args(argv)
+
+    list_defects(args)
+
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,36 @@
+#!/usr/bin/python2.7
+# -*- coding: utf-8 -*-
+
+
+""" Sukuria reikiamus failus dreg'ui.
+"""
+
+
+from __future__ import unicode_literals
+
+import os
+import sys
+import pickle
+
+
+RSYS_DIR = os.path.join(
+        os.path.abspath(
+            os.path.join(os.path.dirname(__file__), '..')))
+PICKLE_PATH = os.path.join(RSYS_DIR, '.defects.pickle')
+CSV_PATH = os.path.join(RSYS_DIR, '.defects.csv')
+
+
+def main(argv):
+    """ Main entry point.
+    """
+
+    if len(argv) != 1:
+        print 'Naudojimas: dreg-init <pradinis-id>'
+    else:
+        with open(PICKLE_PATH, 'wb') as fp:
+            pickle.dump(int(argv[0]), fp)
+            pickle.dump({}, fp)
+
+
+if __name__ == '__main__':
+    main(sys.argv[1:])

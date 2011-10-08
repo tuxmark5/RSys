@@ -1,3 +1,5 @@
+.defects.csv
+.defects.pickle
 bin/*
 deps/*
 dist/*

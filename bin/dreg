@@ -1,0 +1,134 @@
+#!/usr/bin/python2.7
+# -*- coding: utf-8 -*-
+
+
+""" Scenarijus defektų fiksavimui.
+
++   ``dreg komponentas tipas įterptas pašalintas komentaras``
+
+    Sukuria žymę, kad aptiktas defektas ir jis pradėtas taisyti. Apie
+    defektą išsaugo:
+
+    +   laiką;
+    +   radėją;
+    +   komponentą;
+    +   id;
+    +   tipą;
+    +   įterpimo ciklą ir fazę;
+    +   pašalinimo ciklą ir fazę;
+    +   aprašymą.
+
++   dreg-a id trukmė [aprašymas]
+
+    Užregistruoja defektą, pašalina aptikto defekto žymę. Jei pateiktas
+    aprašymas, jo tekstą prideda prie jau turimo aprašymo.
+
+"""
+
+
+from __future__ import unicode_literals
+
+import argparse
+import os
+import pickle
+import datetime
+
+
+DEVELOPMENT_CYCLE = 1
+COMPONENTS = {
+        'e':  'Export',
+        'i':  'Import',
+        'g':  'Interface',              # g nuo GUI
+        'l':  'Logic',
+        'p':  'Parse',
+        's':  'Store',
+        }
+PHASES = {
+        #'s':  'Strategija',
+        #'pl': 'Planavimas',
+        'r':  'Reikalavimai',
+        'p':  'Projektavimas',
+        'k':  'Kodavimas',
+        'v':  'Peržiūra',
+        't':  'Testavimas',
+        'a':  'Aptarimas',
+        }
+RSYS_DIR = os.path.join(
+        os.path.abspath(
+            os.path.join(os.path.dirname(__file__), '..')))
+PICKLE_PATH = os.path.join(RSYS_DIR, '.defects.pickle')
+CSV_PATH = os.path.join(RSYS_DIR, '.defects.csv')
+
+
+def to_unicode(string):
+    """ Converts string to unicode.
+    """
+
+    if isinstance(string, str):
+        return string.decode('utf-8')
+    else:
+        return unicode(string)
+
+
+def pickle_defect(args):
+    """ Pickles defect.
+    """
+
+    with open(PICKLE_PATH, 'rb') as fp:
+        last_id = pickle.load(fp)
+        defects = pickle.load(fp)
+
+    defect_id = last_id + 1
+    defects[defect_id] = {
+            'laikas': to_unicode(
+                datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
+            'radėjas': to_unicode(os.getenv('USER')),
+            'komponentas': COMPONENTS[args.component],
+            'id': defect_id,
+            'tipas': args.defect_type,
+            'įterptas': ':'.join([
+                unicode(DEVELOPMENT_CYCLE), PHASES[args.insert_phase]]),
+            'pašalintas': ':'.join([
+                unicode(DEVELOPMENT_CYCLE), PHASES[args.remove_phase]]),
+            'aprašymas': args.description,
+            }
+
+    print 'Užregistruotas defektas. ID:', defect_id
+    with open(PICKLE_PATH, 'wb') as fp:
+        pickle.dump(defect_id, fp)
+        pickle.dump(defects, fp)
+
+
+def main(argv=None):
+    """ Main entry point.
+    """
+
+
+    if argv is None:
+        import sys
+        argv = sys.argv[1:]
+
+    parser = argparse.ArgumentParser(
+            description='Užregistruoja defekto radimą.')
+    parser.add_argument(
+            'component', choices=COMPONENTS.keys(),
+            help='Komponentas, kuriame buvo rastas defektas')
+    parser.add_argument(
+            'defect_type', type=int, help='Defekto tipo id.')
+    parser.add_argument(
+            'insert_phase', choices=PHASES.keys(),
+            help='Fazė, kurioje buvo įterptas.')
+    parser.add_argument(
+            'remove_phase', choices=PHASES.keys(),
+            help='Fazė, kurioje buvo pašalintas.')
+    parser.add_argument(
+            'description', type=to_unicode,
+            help='Defekto aprašymas.')
+
+    args = parser.parse_args(argv)
+
+    pickle_defect(args)
+
+
+if __name__ == '__main__':
+    main()
