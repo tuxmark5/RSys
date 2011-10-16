@@ -146,7 +146,7 @@ struct TIME_T { // FILETYPE
 #define	ENDOFCHAIN	0xFFFFFFFE
 #define	FREESECT	0xFFFFFFFF
 
-#ifndef _WIN32
+#ifndef NATIVE_WIN32
 enum STGTY {
 	STGTY_INVALID	= 0,
 	STGTY_STORAGE	= 1,
@@ -234,7 +234,7 @@ inline std::wstring widen_string(const std::string& str)
 }
 
 
-#ifdef _WIN32
+#ifdef NATIVE_WIN32
 
 #include <objbase.h>
 
@@ -578,7 +578,7 @@ struct LittleEndian
 };
 
 
-#ifndef _WIN32
+#ifndef NATIVE_WIN32
 
 class Block
 // PURPOSE: In charge of handling blocks of data from a file
@@ -904,7 +904,7 @@ namespace YExcel
 {
 using namespace YCompoundFiles;
 
-#ifdef _WIN32
+#ifdef NATIVE_WIN32
 using namespace WinCompFiles;
 #endif
 
