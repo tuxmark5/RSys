@@ -4,8 +4,12 @@
 #include <malloc.h>	// for alloca()
 #endif
 
-
 #ifdef _WIN32
+extern "C" void* _alloca(size_t size);
+#define alloca _alloca
+#endif
+
+#ifdef NATIVE_WIN32
 
 namespace WinCompFiles
 {
@@ -2353,7 +2357,7 @@ namespace YExcel
 {
 using namespace YCompoundFiles;
 
-#ifdef _WIN32
+#ifdef NATIVE_WIN32
 using namespace WinCompFiles;
 #endif
 

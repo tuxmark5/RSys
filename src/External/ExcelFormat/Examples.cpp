@@ -19,7 +19,7 @@
 using namespace ExcelFormat;
 
 
-#ifdef _WIN32
+#ifdef NATIVE_WIN32
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -360,7 +360,7 @@ int old_main(int argc, char** argv)
 	write_big_sheet("big-example.xls", 500, 100);
 
 
-#ifdef _WIN32
+#ifdef NATIVE_WIN32
 	 // open the output files in Excel
 	ShellExecute(0, NULL, "example1.xls", NULL, NULL, SW_NORMAL);
 	ShellExecute(0, NULL, "example2.xls", NULL, NULL, SW_NORMAL);
