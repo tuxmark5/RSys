@@ -18,6 +18,9 @@ class RElement;
 class RMeasure;
 class RSystem;
 /**********************************************************************************************/
+class QSplitter;
+class QTabWidget;
+/**********************************************************************************************/
 typedef long long                 RID;
 typedef QVector<RDivision*>       RDivisionVector;
 typedef QMap<RMeasure*, double>   RMeasureMap;
