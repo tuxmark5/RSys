@@ -1,0 +1,7 @@
+* aptarti užsakovo atsakymai;
+* suformuluotos naujos problemos, dėl kurių reikia aišikintis su užsakovu (nėra aišku, iš ko sudaryti istoriniai duomenys ir planuojami paramos kiekiai);
+* aptarta vartotojų teisių/prieeigos architektūra ir jos santykis su DBVS;
+* aptartos skirtingos vartotojų rolės;
+* su saugumu susijusių klausimų realizacija perkelta į kitą ciklą;
+* nustatyti konkretūs ciklo baigimo kriterijai;
+
