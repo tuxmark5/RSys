@@ -43,6 +43,8 @@ SOURCES             +=                          \
   src/RSys/main.cc
 
 HEADERS             +=                          \
+  include/External/ExcelFormat/ExcelFormat.h    \
+  include/External/ExcelFormat/BasicExcel.hpp   \
   include/RSys/RSys.hh                          \
   include/RSys/Core/RData.hh                    \
   include/RSys/Core/RDivision.hh                \
@@ -57,3 +59,4 @@ HEADERS             +=                          \
   include/RSys/Interface/RUsageTab.hh
 
 ################################################################################################
+

@@ -2,18 +2,29 @@
 #define RSYS_IMPORT_RXLS_TABLE_HH
 
 /**********************************************************************************************/
+#include <External/ExcelFormat/BasicExcel.hpp>
+#include <External/ExcelFormat/ExcelFormat.h>
 #include <RSys/Import/RITable.hh>
+
+using namespace ExcelFormat;
 /********************************************* RS *********************************************/
 /*                                         RXLSTable                                          */
 /**********************************************************************************************/
 
 class RXLSTable: public RITable
 {
+  private:
+    _M BasicExcelWorksheet* m_table;
+    _M QString              m_title;
+    _M int                  m_height;
+    _M int                  m_width;
   public:
-    _V QVariant     cell(int x, int y) const;
-    _V QString      title() const;
-    _V int          height() const;
-    _V int          width() const;
+    _M                      RXLSTable(BasicExcelWorksheet* table);
+    _V                      ~RXLSTable();
+    _V QVariant             cell(int x, int y) const;
+    _V QString              title() const;
+    _V int                  height() const;
+    _V int                  width() const;
 };
 
 /**********************************************************************************************/
