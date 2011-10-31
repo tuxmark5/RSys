@@ -13,8 +13,8 @@ class RUsageTab: public QWidget
   Q_OBJECT
 
   public:
-    _M              RUsageTab(QWidget* parent = 0);
-    _V              ~RUsageTab();
+    _M Vacuum       RUsageTab(QWidget* parent = 0);
+    _V Vacuum       ~RUsageTab();
 };
 
 /**********************************************************************************************/

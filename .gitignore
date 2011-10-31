@@ -4,5 +4,6 @@ bin/*
 deps/*
 dist/*
 lib/External/*
+*.user
 *.user*
 

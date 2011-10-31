@@ -36,7 +36,10 @@ SOURCES             +=                          \
   src/External/ExcelFormat/BasicExcel.cpp       \
   src/External/ExcelFormat/Examples.cpp         \
   src/External/ExcelFormat/ExcelFormat.cpp      \
+  src/RSys/Interface/RMeasureModel.cc           \
   src/RSys/Interface/RMainWindow.cc             \
+  src/RSys/Interface/RModel1D.cc                \
+  src/RSys/Interface/RModel2D.cc                \
   src/RSys/Interface/RUsageTab.cc               \
   src/RSys/main.cc
 
@@ -49,7 +52,10 @@ HEADERS             +=                          \
   include/RSys/Core/RSystem.hh                  \
   include/RSys/Import/RITable.hh                \
   include/RSys/Import/RIDocument.hh             \
+  include/RSys/Interface/RMeasureModel.hh       \
   include/RSys/Interface/RMainWindow.hh         \
+  include/RSys/Interface/RModel1D.hh            \
+  include/RSys/Interface/RModel2D.hh            \
   include/RSys/Interface/RUsageTab.hh
 
 ################################################################################################

@@ -13,6 +13,10 @@ class RMeasure: public RElement
     _M RID              m_groupId;
     _M QString          m_identifier;
     _M QString          m_name;
+
+  public:
+    _M QString          identifier() const { return m_identifier; }
+    _M QString          name() const { return m_name; }
 };
 
 /**********************************************************************************************/

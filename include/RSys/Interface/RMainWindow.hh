@@ -18,8 +18,8 @@ class RMainWindow: public QMainWindow
     _M QTabWidget*  m_tabWidgetR;
 
   public:
-    _M              RMainWindow();
-    _V              ~RMainWindow();
+    _M Vacuum       RMainWindow();
+    _V Vacuum       ~RMainWindow();
 };
 
 /**********************************************************************************************/
