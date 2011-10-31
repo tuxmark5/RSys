@@ -6,7 +6,7 @@
 #include <External/ExcelFormat/ExcelFormat.h>
 #include <RSys/Import/RIDocument.hh>
 #include <RSys/Import/RXLSTable.hh>
-
+/**********************************************************************************************/
 using namespace ExcelFormat;
 /********************************************* RS *********************************************/
 /*                                        RXLSDocument                                        */
@@ -18,9 +18,9 @@ class RXLSDocument: public RIDocument
     _M BasicExcel*  m_document;
   public:
     _M              RXLSDocument();
-    _M              RXLSDocument(QString name);
+    _M              RXLSDocument(const QString& name);
     _V              ~RXLSDocument();
-    _V void         open(QString name);
+    _V void         open(const QString& name);
     _V void         close();
     _V QString      nameAt(int index) const;
     _V int          numTables() const;

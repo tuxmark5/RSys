@@ -5,7 +5,7 @@
 #include <External/ExcelFormat/BasicExcel.hpp>
 #include <External/ExcelFormat/ExcelFormat.h>
 #include <RSys/Import/RITable.hh>
-
+/**********************************************************************************************/
 using namespace ExcelFormat;
 /********************************************* RS *********************************************/
 /*                                         RXLSTable                                          */
@@ -15,9 +15,7 @@ class RXLSTable: public RITable
 {
   private:
     _M BasicExcelWorksheet* m_table;
-    _M QString              m_title;
-    _M int                  m_height;
-    _M int                  m_width;
+
   public:
     _M                      RXLSTable(BasicExcelWorksheet* table);
     _V                      ~RXLSTable();
