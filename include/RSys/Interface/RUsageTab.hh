@@ -3,18 +3,19 @@
 
 /**********************************************************************************************/
 #include <RSys/RSys.hh>
-#include <QtGui/QWidget>
+#include <QtGui/QScrollArea>
 /********************************************* RS *********************************************/
 /*                                         RUsageTab                                          */
 /**********************************************************************************************/
 
-class RUsageTab: public QWidget
+class RUsageTab: public QScrollArea
 {
   Q_OBJECT
 
   public:
     _M Vacuum       RUsageTab(QWidget* parent = 0);
     _V Vacuum       ~RUsageTab();
+    _V void         resizeEvent(QResizeEvent* event);
 };
 
 /**********************************************************************************************/

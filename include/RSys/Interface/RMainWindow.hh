@@ -13,13 +13,14 @@ class RMainWindow: public QMainWindow
   Q_OBJECT
 
   private:
-    _M QSplitter*   m_splitter;
-    _M QTabWidget*  m_tabWidgetL;
-    _M QTabWidget*  m_tabWidgetR;
+    _M QSplitter*     m_splitter;
+    _M QTabWidget*    m_tabWidgetL;
+    _M QTabWidget*    m_tabWidgetR;
+    _M QScrollArea*   m_sa_results;
 
   public:
-    _M Vacuum       RMainWindow();
-    _V Vacuum       ~RMainWindow();
+    _M Vacuum         RMainWindow();
+    _V Vacuum         ~RMainWindow();
 };
 
 /**********************************************************************************************/

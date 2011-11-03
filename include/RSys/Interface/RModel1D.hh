@@ -7,9 +7,7 @@
 /********************************************* RS *********************************************/
 /*                                          RModel1D                                          */
 /**********************************************************************************************/
-
-// std::function<Q
-
+#if 0
 class RModel1D: public QAbstractItemModel
 {
   Q_OBJECT
@@ -29,7 +27,7 @@ class RModel1D: public QAbstractItemModel
     _V int            rowCount(const QModelIndex& parent = QModelIndex()) const;
     _V bool           setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 };
-
+#endif
 /**********************************************************************************************/
 
 #endif /* RSYS_INTERFACE_RMODEL_1D_HH */

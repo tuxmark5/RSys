@@ -38,11 +38,13 @@ SOURCES             +=                          \
   src/External/ExcelFormat/ExcelFormat.cpp      \
   src/RSys/Import/RXLSDocument.cc               \
   src/RSys/Import/RXLSTable.cc                  \
+  src/RSys/Interface/RLayerWidget.cc            \
   src/RSys/Interface/RMainWindow.cc             \
   src/RSys/Interface/RMeasureModel.cc           \
   src/RSys/Interface/RModel1D.cc                \
   src/RSys/Interface/RModel2D.cc                \
   src/RSys/Interface/RUsageTab.cc               \
+  src/RSys/Interface/RUsageWidget.cc            \
   src/RSys/main.cc
 
 HEADERS             +=                          \
@@ -58,11 +60,13 @@ HEADERS             +=                          \
   include/RSys/Import/RIDocument.hh             \
   include/RSys/Import/RXLSDocument.hh           \
   include/RSys/Import/RXLSTable.hh              \
+  include/RSys/Interface/RLayerWidget.hh        \
   include/RSys/Interface/RMainWindow.hh         \
   include/RSys/Interface/RMeasureModel.hh       \
   include/RSys/Interface/RModel1D.hh            \
   include/RSys/Interface/RModel2D.hh            \
-  include/RSys/Interface/RUsageTab.hh
+  include/RSys/Interface/RUsageTab.hh           \
+  include/RSys/Interface/RUsageWidget.hh
 
 ################################################################################################
 

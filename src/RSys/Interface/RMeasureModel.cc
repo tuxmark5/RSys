@@ -9,7 +9,7 @@
 Vacuum RMeasureModel :: RMeasureModel(QObject* parent):
   QAbstractItemModel(parent)
 {
-  m_measures.append();
+  //m_measures.append();
 }
 
 /**********************************************************************************************/
