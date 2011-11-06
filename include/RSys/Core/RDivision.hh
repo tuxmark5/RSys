@@ -14,6 +14,13 @@ class RDivision: public RElement
     _M QString        m_name;
     _M RSystemVector  m_systems;
     _M RMeasureMap    m_measureMap;
+
+  public:
+    _M Vacuum         RDivision(RData* data);
+    _M QString        identifier() const { return m_identifier; }
+    _M QString        name() const { return m_name; }
+    _M void           setIdentifier(const QString& identifier);
+    _M void           setName(const QString& name);
 };
 
 /**********************************************************************************************/

@@ -23,7 +23,7 @@ QVariant RXLSTable::cell(int x, int y) const
   BasicExcelCell* cell = m_table->Cell(y, x);
   int             type = cell->Type();
 
-  switch(type)
+  switch (type)
   {
     case BasicExcelCell::INT:
       return cell->GetInteger();

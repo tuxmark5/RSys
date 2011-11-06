@@ -1,22 +1,14 @@
-#ifndef RSYS_CORE_RELEMENT_HH
-#define RSYS_CORE_RELEMENT_HH
+#include <RSys/Core/RElement.hh>
 
-/**********************************************************************************************/
-#include <RSys/RSys.hh>
 /********************************************* RS *********************************************/
 /*                                          RElement                                          */
 /**********************************************************************************************/
 
-class RElement
+Vacuum RElement :: RElement(RData* data):
+  m_data(data),
+  m_id(0)
 {
-  public:
-    _M RData*         m_data;
-    _M RID            m_id;
-
-  public:
-    _M Vacuum         RElement(RData* data);
-};
+}
 
 /**********************************************************************************************/
 
-#endif /* RSYS_CORE_RELEMENT_HH */
