@@ -45,7 +45,10 @@ QVariant RXLSTable::cell(int x, int y) const
 
 QString RXLSTable :: title() const
 {
-  return QString::fromWCharArray(m_table->GetUnicodeSheetName());
+  QString title = QString::fromWCharArray(m_table->GetUnicodeSheetName());
+  if (title.isEmpty())
+    title = m_table->GetAnsiSheetName();
+  return title;
 }
 
 /**********************************************************************************************/
