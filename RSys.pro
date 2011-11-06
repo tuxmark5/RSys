@@ -2,7 +2,7 @@
 #                                             RSys                                             #
 ################################################################################################
 
-CONFIG              += depend_includepath
+CONFIG              += depend_includepath qtestlib
 QT                  += core gui sql
 TARGET               = RSys
 TEMPLATE             = app
@@ -45,6 +45,8 @@ SOURCES             +=                          \
   src/RSys/Interface/RModel2D.cc                \
   src/RSys/Interface/RUsageTab.cc               \
   src/RSys/Interface/RUsageWidget.cc            \
+  src/RSys/Tests/RTests.cc                      \
+  src/RSys/Tests/TestRXLSDocument.cc            \
   src/RSys/main.cc
 
 HEADERS             +=                          \
@@ -66,7 +68,8 @@ HEADERS             +=                          \
   include/RSys/Interface/RModel1D.hh            \
   include/RSys/Interface/RModel2D.hh            \
   include/RSys/Interface/RUsageTab.hh           \
-  include/RSys/Interface/RUsageWidget.hh
+  include/RSys/Interface/RUsageWidget.hh        \
+  include/RSys/Tests/RTests.hh                  \
+  include/RSys/Tests/TestRXLSDocument.hh
 
 ################################################################################################
-
