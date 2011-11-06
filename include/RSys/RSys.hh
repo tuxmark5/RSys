@@ -34,6 +34,7 @@ class QPushButton;
 class QScrollArea;
 class QSplitter;
 class QTabWidget;
+class QTableView;
 /**********************************************************************************************/
 typedef long long                 RID;
 typedef QVector<RDivision*>       RDivisionVector;

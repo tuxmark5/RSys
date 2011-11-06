@@ -21,9 +21,6 @@ Vacuum RMainToolBar :: RMainToolBar(RMainWindow* parent):
 
   addAction(parent->m_searchAction);
 
-  addAction(parent->m_divisionsStateAction);
-  addAction(parent->m_systemsStateAction);
-
   addAction(parent->m_helpAction);
 }
 

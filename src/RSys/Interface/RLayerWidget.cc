@@ -50,7 +50,7 @@ void RLayerWidget :: leaveEvent(QEvent* event)
 
   for (auto it = buttons.begin(); it != buttons.end(); ++it)
   {
-    delete *it;
+    (*it)->deleteLater();
   }
 }
 

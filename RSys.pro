@@ -52,6 +52,8 @@ SOURCES             +=                          \
   src/RSys/Interface/RMeasureModel.cc           \
   src/RSys/Interface/RModel1D.cc                \
   src/RSys/Interface/RModel2D.cc                \
+  src/RSys/Interface/RPaletteDock.cc            \
+  src/RSys/Interface/RTab.cc                    \
   src/RSys/Interface/RUsageTab.cc               \
   src/RSys/Interface/RUsageWidget.cc            \
   src/RSys/main.cc
@@ -78,6 +80,8 @@ HEADERS             +=                          \
   include/RSys/Interface/RMeasureModel.hh       \
   include/RSys/Interface/RModel1D.hh            \
   include/RSys/Interface/RModel2D.hh            \
+  include/RSys/Interface/RPaletteDock.hh        \
+  include/RSys/Interface/RTab.hh                \
   include/RSys/Interface/RUsageTab.hh           \
   include/RSys/Interface/RUsageWidget.hh        \
   include/RSys/Util/RAccessorAdapter.hh         \
