@@ -17,24 +17,25 @@ class RMainWindow: public QMainWindow
     _F class        RMainToolBar;
 
   private:
-    _M QSplitter*   m_splitter;
-    _M QTabWidget*  m_tabWidgetL;
-    _M QTabWidget*  m_tabWidgetR;
+    _M QSplitter*     m_splitter;
+    _M QTabWidget*    m_tabWidgetL;
+    _M QTabWidget*    m_tabWidgetR;
+    _M QScrollArea*   m_sa_results;
 
-    _M QAction*     m_openAction;
-    _M QAction*     m_saveAction;
-    _M QAction*     m_importAction;
-    _M QAction*     m_disconnectAction;
-    _M QAction*     m_exitAction;
-    _M QAction*     m_searchAction;
-    _M QAction*     m_divisionsStateAction;
-    _M QAction*     m_systemsStateAction;
-    _M QAction*     m_helpAction;
+    _M QAction*       m_openAction;
+    _M QAction*       m_saveAction;
+    _M QAction*       m_importAction;
+    _M QAction*       m_disconnectAction;
+    _M QAction*       m_exitAction;
+    _M QAction*       m_searchAction;
+    _M QAction*       m_divisionsStateAction;
+    _M QAction*       m_systemsStateAction;
+    _M QAction*       m_helpAction;
 
   public:
-    _M Vacuum       RMainWindow();
-    _V Vacuum       ~RMainWindow();
-    _M void         createActions();
+    _M Vacuum         RMainWindow(QWidget* parent = 0);
+    _V Vacuum         ~RMainWindow();
+    _M void           createActions();
 };
 
 /**********************************************************************************************/

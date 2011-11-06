@@ -31,6 +31,7 @@ class QDateEdit;
 class QLabel;
 class QLineEdit;
 class QPushButton;
+class QScrollArea;
 class QSplitter;
 class QTabWidget;
 /**********************************************************************************************/

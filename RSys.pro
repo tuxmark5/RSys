@@ -44,6 +44,7 @@ SOURCES             +=                          \
   src/RSys/Import/RXLSDocument.cc               \
   src/RSys/Import/RXLSTable.cc                  \
   src/RSys/Interface/RIntervalToolBar.cc        \
+  src/RSys/Interface/RLayerWidget.cc            \
   src/RSys/Interface/RLoginWidget.cc            \
   src/RSys/Interface/RMainMenuBar.cc            \
   src/RSys/Interface/RMainToolBar.cc            \
@@ -52,6 +53,7 @@ SOURCES             +=                          \
   src/RSys/Interface/RModel1D.cc                \
   src/RSys/Interface/RModel2D.cc                \
   src/RSys/Interface/RUsageTab.cc               \
+  src/RSys/Interface/RUsageWidget.cc            \
   src/RSys/main.cc
 
 HEADERS             +=                          \
@@ -68,6 +70,7 @@ HEADERS             +=                          \
   include/RSys/Import/RXLSDocument.hh           \
   include/RSys/Import/RXLSTable.hh              \
   include/RSys/Interface/RIntervalToolBar.hh    \
+  include/RSys/Interface/RLayerWidget.hh        \
   include/RSys/Interface/RLoginWidget.hh        \
   include/RSys/Interface/RMainMenuBar.hh        \
   include/RSys/Interface/RMainToolBar.hh        \
@@ -76,6 +79,7 @@ HEADERS             +=                          \
   include/RSys/Interface/RModel1D.hh            \
   include/RSys/Interface/RModel2D.hh            \
   include/RSys/Interface/RUsageTab.hh           \
+  include/RSys/Interface/RUsageWidget.hh        \
   include/RSys/Util/RAccessorAdapter.hh         \
   include/RSys/Util/RContainer.hh               \
   include/RSys/Util/RDynAccessor.hh             \

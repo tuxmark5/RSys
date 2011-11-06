@@ -11,6 +11,7 @@
 #include <QtGui/QLabel>
 #include <QtGui/QListView>
 #include <QtGui/QSplitter>
+#include <QtGui/QScrollArea>
 #include <QtGui/QTableView>
 #include <QtGui/QTabWidget>
 #include <QtGui/QAction>
@@ -24,16 +25,24 @@
 
 QList<RMeasure*> g_measures;
 
-RMainWindow :: RMainWindow()
+Vacuum RMainWindow :: RMainWindow(QWidget* parent):
+  QMainWindow(parent)
 {
-  m_splitter    = new QSplitter(this);
   m_tabWidgetL  = new QTabWidget(this);
+  m_tabWidgetL->setTabPosition(QTabWidget::South);
+  m_tabWidgetL->addTab(new QLabel("TEST1"), "LTAB");
+
   m_tabWidgetR  = new QTabWidget(this);
+
   createActions();
 
   setMenuBar(new RMainMenuBar(this));
   addToolBar(new RMainToolBar(this));
   addToolBar(new RIntervalToolBar(this));
+
+  m_sa_results  = new QScrollArea(this);
+  m_splitter    = new QSplitter(this);
+
   setCentralWidget(m_splitter);
   //setCentralWidget(new RLoginWidget(this));
 
@@ -41,8 +50,6 @@ RMainWindow :: RMainWindow()
   m_splitter->addWidget(m_tabWidgetL);
   m_splitter->addWidget(m_tabWidgetR);
 
-  m_tabWidgetL->setTabPosition(QTabWidget::South);
-  m_tabWidgetL->addTab(new QLabel("TEST1"), "LTAB");
 
 
   //RMeasure* r;
