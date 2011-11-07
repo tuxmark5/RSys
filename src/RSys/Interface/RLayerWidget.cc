@@ -46,12 +46,12 @@ void RLayerWidget :: enterEvent(QEvent* event)
 
 void RLayerWidget :: leaveEvent(QEvent* event)
 {
+  Q_UNUSED(event);
+
   QList<QPushButton*> buttons = findChildren<QPushButton*>();
 
   for (auto it = buttons.begin(); it != buttons.end(); ++it)
-  {
-    delete *it;
-  }
+    (*it)->deleteLater();
 }
 
 /**********************************************************************************************/

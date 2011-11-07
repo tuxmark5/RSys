@@ -21,6 +21,7 @@ RMainWindow :: RMainWindow()
 
   m_tabWidgetR  = new QTabWidget(this);
   m_sa_results  = new QScrollArea(this);
+  //m_sa_results->set
 
   m_splitter    = new QSplitter(this);
   setCentralWidget(m_splitter);
