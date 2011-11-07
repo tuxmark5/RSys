@@ -1,5 +1,6 @@
 #include <QtGui/QFont>
 #include <RSys/Interface/RModel1D.hh>
+#include <RSys/Interface/RRowObserverAdapter.hh>
 
 /**********************************************************************************************/
 QFont g_lastRowFont;
@@ -8,9 +9,11 @@ QFont g_lastRowFont;
 /**********************************************************************************************/
 
 Vacuum RModel1D :: RModel1D(RContainer* container, QObject* parent):
-  QAbstractItemModel(parent),
+  RAbstractItemModel(parent),
   m_container(container)
 {
+  container->addObserver(new RRowObserverAdapter(this));
+
   if (!g_lastRowFont.italic())
     g_lastRowFont.setItalic(true);
 }
@@ -128,7 +131,10 @@ bool RModel1D ::setData(const QModelIndex& index, const QVariant& value, int rol
   R_GUARD(index.isValid(),      false);
   R_GUARD(role == Qt::EditRole, false);
 
+  if (index.row() == m_container->height())
+     m_container->add();
   m_container->set(index.column(), index.row(), value);
+
   return true;
 }
 

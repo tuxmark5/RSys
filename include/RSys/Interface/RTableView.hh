@@ -1,23 +1,22 @@
-#ifndef RSYS_INTERFACE_RUSAGE_TAB_HH
-#define RSYS_INTERFACE_RUSAGE_TAB_HH
+#ifndef RSYS_INTERFACE_RTABLE_VIEW_HH
+#define RSYS_INTERFACE_RTABLE_VIEW_HH
 
 /**********************************************************************************************/
 #include <RSys/RSys.hh>
-#include <QtGui/QWidget>
+#include <QtGui/QTableView>
 /********************************************* RS *********************************************/
-/*                                            RTab                                            */
+/*                                         RTableView                                         */
 /**********************************************************************************************/
 
-class RTab: public QWidget
+class RTableView: public QTableView
 {
   Q_OBJECT
 
   public:
-    _M Vacuum       RTab(const QString& title, QWidget* parent = 0);
-    _V Vacuum       ~RTab();
-    _M void         makeTable1DTab(RContainer* container);
+    _M Vacuum       RTableView(QAbstractItemModel* model, QWidget* parent = 0);
+    _V Vacuum       ~RTableView();
 };
 
 /**********************************************************************************************/
 
-#endif /* RSYS_INTERFACE_RUSAGE_TAB_HH */
+#endif /* RSYS_INTERFACE_RTABLE_VIEW_HH */

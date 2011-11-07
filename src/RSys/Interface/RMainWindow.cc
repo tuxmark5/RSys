@@ -1,3 +1,5 @@
+#include <RSys/Core/RData.hh>
+
 #include <RSys/Interface/RIntervalToolBar.hh>
 #include <RSys/Interface/RLoginWidget.hh>
 #include <RSys/Interface/RMainMenuBar.hh>
@@ -5,6 +7,10 @@
 #include <RSys/Interface/RMainWindow.hh>
 #include <RSys/Interface/RModel1D.hh>
 #include <RSys/Interface/RPaletteDock.hh>
+
+#include <RSys/Interface/RDivisionTab.hh>
+#include <RSys/Interface/RMeasureTab.hh>
+#include <RSys/Interface/RSystemTab.hh>
 #include <RSys/Interface/RUsageTab.hh>
 
 
@@ -44,6 +50,8 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   m_splitter->addWidget(m_tabWidgetL);
   m_splitter->addWidget(m_tabWidgetR);
 
+  m_data        = new RData();
+
   createTabs();
 
   setCentralWidget(m_splitter);
@@ -55,6 +63,15 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
 
 RMainWindow :: ~RMainWindow()
 {
+}
+
+/**********************************************************************************************/
+
+void RMainWindow :: addLeftTab(RTab* tab, const char* title, const char* toolTip)
+{
+  int id = m_tabWidgetL->addTab(tab, QString::fromUtf8(title));
+
+  m_tabWidgetL->setTabToolTip(id, QString::fromUtf8(toolTip));
 }
 
 /**********************************************************************************************/
@@ -81,6 +98,7 @@ void RMainWindow :: createActions()
   m_exitAction->setShortcut(QKeySequence("Ctrl+Shift+X"));
 
   m_searchAction          = R_ACTION(":/icons/search.png",      "Ieškoti intervalo");
+  m_searchAction->setCheckable(true);
   m_searchAction->setShortcut(QKeySequence("Ctrl+F"));
 
   m_divisionsStateAction  = R_ACTION(":/icons/divisions.png",   "Padaliniai");
@@ -100,19 +118,16 @@ void RMainWindow :: createActions()
 
 /**********************************************************************************************/
 
-QList<RMeasure*> g_measures;
-
 void RMainWindow :: createTabs()
 {
-  int id;
+  addLeftTab(new RMeasureTab(m_data->measures(), this),  "Priemonės", "Priemonės TOOL");
+  addLeftTab(new RDivisionTab(m_data->divisions(), this), "Padaliniai", "Padaliniai TOOL");
+  addLeftTab(new RSystemTab(m_data->systems(), this),   "IS", "IS TOOL");
 
-  id = m_tabWidgetL->addTab(new QLabel("NOT IMPLEMENTED"), QString::fromUtf8("Priemonės"));
-  m_tabWidgetL->setTabToolTip(id, "Tooltip");
-
-  m_tabWidgetL->addTab(new QLabel("NOT IMPLEMENTED"), QString::fromUtf8("Padaliniai"));
-  m_tabWidgetL->addTab(new QLabel("NOT IMPLEMENTED"), QString::fromUtf8("IS"));
+  // 2d
   m_tabWidgetL->addTab(new QLabel("NOT IMPLEMENTED"), QString::fromUtf8("Priemonių adm."));
   m_tabWidgetL->addTab(new QLabel("NOT IMPLEMENTED"), QString::fromUtf8("IS adm."));
+
   m_tabWidgetL->addTab(new QLabel("NOT IMPLEMENTED"), QString::fromUtf8("Istoriniai duom."));
   m_tabWidgetL->addTab(new QLabel("NOT IMPLEMENTED"), QString::fromUtf8("Planuojami kiekiai"));
 
@@ -120,7 +135,7 @@ void RMainWindow :: createTabs()
   m_tabWidgetR->addTab(new QLabel("TEST2"), QString::fromUtf8("Apžvalga"));
 
   // WIP
-  auto c = newContainer(&g_measures);
+  /*auto c = newContainer(&g_measures);
   c->addColumn<QString, &RMeasure::name,       &RMeasure::setName>       ("name");
   c->addColumn<QString, &RMeasure::identifier, &RMeasure::setIdentifier> ("ident");
 
@@ -130,7 +145,7 @@ void RMainWindow :: createTabs()
   //v->horizontalHeader()->set
   v->verticalHeader()->setDefaultSectionSize(20); //setHeight
 
-  m_tabWidgetL->addTab(v, QString::fromUtf8("Priemonės"));
+  m_tabWidgetL->addTab(v, QString::fromUtf8("Priemonės"));*/
 
 }
 

@@ -32,11 +32,16 @@ class RMainWindow: public QMainWindow
     _M QAction*       m_systemsStateAction;
     _M QAction*       m_helpAction;
 
+    _M RData*         m_data;
+
   public:
     _M Vacuum         RMainWindow(QWidget* parent = 0);
     _V Vacuum         ~RMainWindow();
     _M void           createActions();
     _M void           createTabs();
+
+  private:
+    _M void           addLeftTab(RTab* tab, const char* title, const char* toolTip);
 };
 
 /**********************************************************************************************/

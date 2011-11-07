@@ -12,8 +12,8 @@ class RDivision: public RElement
   public:
     _M QString        m_identifier;
     _M QString        m_name;
-    _M RSystemVector  m_systems;
     _M RMeasureMap    m_measureMap;
+    _M RSystemMap     m_systemMap;
 
   public:
     _M Vacuum         RDivision(RData* data);

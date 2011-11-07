@@ -12,7 +12,6 @@ class RSystem: public RElement
   public:
     _M QString          m_identifier;
     _M QString          m_name;
-    _M RDivisionVector  m_divisions;
 
   public:
     _M Vacuum           RSystem(RData* data);

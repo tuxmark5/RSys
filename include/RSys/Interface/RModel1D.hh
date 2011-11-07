@@ -2,13 +2,13 @@
 #define RSYS_INTERFACE_RMODEL_1D_HH
 
 /**********************************************************************************************/
+#include <RSys/Interface/RAbstractItemModel.hh>
 #include <RSys/Util/RContainer.hh>
-#include <QtCore/QAbstractItemModel>
 /********************************************* RS *********************************************/
 /*                                          RModel1D                                          */
 /**********************************************************************************************/
 
-class RModel1D: public QAbstractItemModel
+class RModel1D: public RAbstractItemModel
 {
   Q_OBJECT
 
