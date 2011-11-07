@@ -1,22 +1,22 @@
-#ifndef RSYS_CORE_RELEMENT_HH
-#define RSYS_CORE_RELEMENT_HH
+#ifndef RSYS_INTERFACE_RMAIN_TOOL_BAR_HH
+#define RSYS_INTERFACE_RMAIN_TOOL_BAR_HH
 
 /**********************************************************************************************/
 #include <RSys/RSys.hh>
+#include <QtGui/QToolBar>
 /********************************************* RS *********************************************/
-/*                                          RElement                                          */
+/*                                        RMainToolBar                                        */
 /**********************************************************************************************/
 
-class RElement
+class RMainToolBar: public QToolBar
 {
-  public:
-    _M RData*         m_data;
-    _M RID            m_id;
+  Q_OBJECT
 
   public:
-    _M Vacuum         RElement(RData* data);
+    _M Vacuum       RMainToolBar(RMainWindow* parent = 0);
+    _V Vacuum       ~RMainToolBar();
 };
 
 /**********************************************************************************************/
 
-#endif /* RSYS_CORE_RELEMENT_HH */
+#endif /* RSYS_INTERFACE_RMAIN_TOOL_BAR_HH */

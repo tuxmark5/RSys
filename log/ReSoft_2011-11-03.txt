@@ -1,0 +1,3 @@
+* aptarti galutiniai interfeiso maketai;
+* sutarta dėl importo dalies unit testų;
+* nustatyti interfeiso patikslinimai;

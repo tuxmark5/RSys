@@ -36,13 +36,24 @@ SOURCES             +=                          \
   src/External/ExcelFormat/BasicExcel.cpp       \
   src/External/ExcelFormat/Examples.cpp         \
   src/External/ExcelFormat/ExcelFormat.cpp      \
+  src/RSys/Core/RData.cc                        \
+  src/RSys/Core/RDivision.cc                    \
+  src/RSys/Core/RElement.cc                     \
+  src/RSys/Core/RMeasure.cc                     \
+  src/RSys/Core/RSystem.cc                      \
   src/RSys/Import/RXLSDocument.cc               \
   src/RSys/Import/RXLSTable.cc                  \
+  src/RSys/Interface/RIntervalToolBar.cc        \
   src/RSys/Interface/RLayerWidget.cc            \
+  src/RSys/Interface/RLoginWidget.cc            \
+  src/RSys/Interface/RMainMenuBar.cc            \
+  src/RSys/Interface/RMainToolBar.cc            \
   src/RSys/Interface/RMainWindow.cc             \
   src/RSys/Interface/RMeasureModel.cc           \
   src/RSys/Interface/RModel1D.cc                \
   src/RSys/Interface/RModel2D.cc                \
+  src/RSys/Interface/RPaletteDock.cc            \
+  src/RSys/Interface/RTab.cc                    \
   src/RSys/Interface/RUsageTab.cc               \
   src/RSys/Interface/RUsageWidget.cc            \
   src/RSys/Tests/RTests.cc                      \
@@ -62,14 +73,30 @@ HEADERS             +=                          \
   include/RSys/Import/RIDocument.hh             \
   include/RSys/Import/RXLSDocument.hh           \
   include/RSys/Import/RXLSTable.hh              \
+  include/RSys/Interface/RIntervalToolBar.hh    \
   include/RSys/Interface/RLayerWidget.hh        \
+  include/RSys/Interface/RLoginWidget.hh        \
+  include/RSys/Interface/RMainMenuBar.hh        \
+  include/RSys/Interface/RMainToolBar.hh        \
   include/RSys/Interface/RMainWindow.hh         \
   include/RSys/Interface/RMeasureModel.hh       \
   include/RSys/Interface/RModel1D.hh            \
   include/RSys/Interface/RModel2D.hh            \
+  include/RSys/Interface/RPaletteDock.hh        \
+  include/RSys/Interface/RTab.hh                \
   include/RSys/Interface/RUsageTab.hh           \
   include/RSys/Interface/RUsageWidget.hh        \
+  include/RSys/Util/RAccessorAdapter.hh         \
+  include/RSys/Util/RContainer.hh               \
+  include/RSys/Util/RDynAccessor.hh             \
+  include/RSys/Util/RFunAccessor.hh             \
+  include/RSys/Util/RMemAccessor.hh             \
   include/RSys/Tests/RTests.hh                  \
   include/RSys/Tests/TestRXLSDocument.hh
+
+################################################################################################
+
+RESOURCES +=                                    \
+  res/RResources.qrc
 
 ################################################################################################
