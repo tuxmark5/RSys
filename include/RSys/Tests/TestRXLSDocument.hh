@@ -17,6 +17,7 @@ class TestRXLSDocument: public QObject
     _V void     checkSystems(RXLSTable *table);
     _V void     checkDivisionsSystems(RXLSTable *table);
     _V void     checkMeasuresAdministration(RXLSTable *table);
+    _V void     checkAmounts(RXLSTable *table);
   private slots:
     _M void     testOpenningExampleFile();
   };

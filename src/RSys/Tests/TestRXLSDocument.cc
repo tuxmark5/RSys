@@ -4,8 +4,13 @@
 void TestRXLSDocument::testOpenningExampleFile()
 {
 
-  RXLSDocument document(QString::fromUtf8("../../RSys/static/test1.xls"));
-  QCOMPARE(document.numTables(), 5);
+  RXLSDocument document(QString::fromUtf8("../../RSys/static/test2.xls"));
+//for (int i = 0; i < document.numTables(); i++)
+//{
+//  qDebug() << document.nameAt(i);
+//}
+
+  QCOMPARE(document.numTables(), 8);
 
   QCOMPARE(document.nameAt(0),
            QString::fromUtf8("Paramos priemonės"));
@@ -23,6 +28,18 @@ void TestRXLSDocument::testOpenningExampleFile()
   QCOMPARE(document.nameAt(4),
            QString::fromUtf8("Paramos administravimas"));
   this->checkMeasuresAdministration(document.tableAt(4));
+
+  QCOMPARE(document.nameAt(5),
+           QString::fromUtf8("Paramos kiekiai"));
+  this->checkAmounts(document.tableAt(5));
+  QCOMPARE(document.nameAt(6),
+           QString::fromUtf8("Istoriniai duomenys"));
+//RXLSTable *table = document.tableAt(6);
+//qDebug() << table->height() << table->width();
+  QCOMPARE(document.nameAt(7),
+           QString::fromUtf8("Istorinė lentelė"));
+//table = document.tableAt(7);
+//qDebug() << table->height() << table->width();
 }
 
 
@@ -124,8 +141,8 @@ void TestRXLSDocument::checkDivisionsSystems(RXLSTable *table)
 void TestRXLSDocument::checkMeasuresAdministration(RXLSTable *table)
 {
   QCOMPARE(table->title(), QString::fromUtf8("Paramos administravimas"));
-  QCOMPARE(table->width(), 13);
-  QCOMPARE(table->height(), 30);
+  QCOMPARE(table->width(), 14);
+  QCOMPARE(table->height(), 31);
 
   QCOMPARE(table->cell(0, 2).toString(),
            QString::fromUtf8("Priemonė/Padaliniai"));
@@ -133,13 +150,62 @@ void TestRXLSDocument::checkMeasuresAdministration(RXLSTable *table)
            QString::fromUtf8("PA1"));
   QCOMPARE(table->cell(5, 2).toString(),
            QString::fromUtf8("PA5"));
+  QCOMPARE(table->cell(12, 2).toString(),
+           QString::fromUtf8("PA12"));
+  QCOMPARE(table->cell(13, 2).toString(),
+           QString::fromUtf8("Iš viso laiko"));
   QCOMPARE(table->cell(0, 4).toString(),
            QString::fromUtf8("p1-2"));
+  QCOMPARE(table->cell(0, 30).toString(),
+           QString::fromUtf8(""));
 
   QCOMPARE(table->cell(2, 4).toString(),
-           QString::fromUtf8("3"));
-  QCOMPARE(table->cell(2, 4).toInt(), 3);
+           QString::fromUtf8("0.5"));
+  QCOMPARE(table->cell(2, 4).toInt(), 1);
+  QCOMPARE(table->cell(2, 4).toDouble(), 0.5);
+
   QCOMPARE(table->cell(3, 4).toString(),
            QString::fromUtf8(""));
   QCOMPARE(table->cell(3, 4).toInt(), 0);
+  QCOMPARE(table->cell(3, 4).toDouble(), 0.0);
+
+  QCOMPARE(table->cell(2, 30).toString(),
+           QString::fromUtf8(""));
+  QCOMPARE(table->cell(13, 3).toString(),
+           QString::fromUtf8(""));
+
+}
+
+void TestRXLSDocument::checkAmounts(RXLSTable *table)
+{
+  QCOMPARE(table->title(), QString::fromUtf8("Paramos kiekiai"));
+  QCOMPARE(table->width(), 5);
+  QCOMPARE(table->height(), 1243);
+
+  QCOMPARE(table->cell(0, 0).toString(),
+           QString::fromUtf8("Priemone"));
+  QCOMPARE(table->cell(1, 0).toString(),
+           QString::fromUtf8("Nuo"));
+  QCOMPARE(table->cell(2, 0).toString(),
+           QString::fromUtf8("Iki"));
+  QCOMPARE(table->cell(3, 0).toString(),
+           QString::fromUtf8("Kiekis"));
+
+  QCOMPARE(table->cell(0, 2).toString(),
+           QString::fromUtf8("p1-1"));
+  QCOMPARE(table->cell(3, 2).toString(),
+           QString::fromUtf8("27"));
+  QCOMPARE(table->cell(3, 2).toInt(), 27);
+
+  auto date = [&table](int x, int y)->QDate {
+    return QDateTime::fromMSecsSinceEpoch(
+        (table->cell(x, y).toLongLong() - 25569) * 86400000).date(); };
+
+  QCOMPARE(date(1, 2).toString("yyyy-MM-dd"), QString("2008-02-01"));
+  QCOMPARE(date(2, 2).toString("yyyy-MM-dd"), QString("2008-02-29"));
+  QCOMPARE(date(1, 3).toString("yyyy-MM-dd"), QString("2008-03-01"));
+  QCOMPARE(date(2, 3).toString("yyyy-MM-dd"), QString("2008-03-31"));
+  QCOMPARE(date(1, 4).toString("yyyy-MM-dd"), QString("2008-04-01"));
+  QCOMPARE(date(2, 4).toString("yyyy-MM-dd"), QString("2008-04-30"));
+
 }
