@@ -13,6 +13,13 @@ class RSystem: public RElement
     _M QString          m_identifier;
     _M QString          m_name;
     _M RDivisionVector  m_divisions;
+
+  public:
+    _M Vacuum           RSystem(RData* data);
+    _M QString          identifier() const { return m_identifier; }
+    _M QString          name() const { return m_name; }
+    _M void             setIdentifier(const QString& identifier);
+    _M void             setName(const QString& name);
 };
 
 /**********************************************************************************************/

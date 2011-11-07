@@ -1,0 +1,6 @@
+* aptarti paskutiniai užsakovo atsakymai;
+* nustatytas tikslus apkrovų skaičiaivmo algoritmas;
+* aptartas apkrovų prognozavimo algoritmas;
+* nuspręsta reikalavimų specifikacijos dalį (interfeiso reikalavimus) paimti iš 2-ojo ŽKS darbo, kur tie reikalavimai jau apibrėžti;
+* susipažinta su pradiniais interfeiso maketais;
+

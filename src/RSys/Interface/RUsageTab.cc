@@ -1,3 +1,4 @@
+#include <QtGui/QScrollArea>
 #include <QtGui/QVBoxLayout>
 #include <RSys/Interface/RUsageTab.hh>
 #include <RSys/Interface/RUsageWidget.hh>
@@ -7,8 +8,11 @@
 /**********************************************************************************************/
 
 Vacuum RUsageTab :: RUsageTab(QWidget* parent):
-  QScrollArea(parent)
+  RTab(QString::fromUtf8("Apkrovos ir prognozės"), parent),
+  m_scrollArea(new QScrollArea(this))
 {
+  this->layout()->addWidget(m_scrollArea);
+
   QWidget*      widget = new QWidget();
   QVBoxLayout*  layout = new QVBoxLayout(widget);
 
@@ -22,8 +26,8 @@ Vacuum RUsageTab :: RUsageTab(QWidget* parent):
   layout->addWidget(new RUsageWidget());
   layout->setSpacing(0);
 
-  setWidget(widget);
-  //setWidgetResizable(true);
+  m_scrollArea->setWidget(widget);
+  m_scrollArea->setWidgetResizable(true);
 }
 
 /**********************************************************************************************/
@@ -36,11 +40,11 @@ Vacuum RUsageTab :: ~RUsageTab()
 
 void RUsageTab :: resizeEvent(QResizeEvent* event)
 {
-  int newWidth = qMax(viewport()->width(), 500);
+  int newWidth = qMax(m_scrollArea->viewport()->width(), 500);
 
-  widget()->resize(newWidth, widget()->height());
+  m_scrollArea->widget()->resize(newWidth, m_scrollArea->widget()->height());
 
-  QScrollArea::resizeEvent(event);
+  RTab::resizeEvent(event);
 }
 
 /**********************************************************************************************/

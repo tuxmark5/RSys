@@ -1,22 +1,22 @@
-#ifndef RSYS_CORE_RELEMENT_HH
-#define RSYS_CORE_RELEMENT_HH
+#ifndef RSYS_INTERFACE_RMAIN_MENU_BAR_HH
+#define RSYS_INTERFACE_RMAIN_MENU_BAR_HH
 
 /**********************************************************************************************/
 #include <RSys/RSys.hh>
+#include <QtGui/QMenuBar>
 /********************************************* RS *********************************************/
-/*                                          RElement                                          */
+/*                                        RMainMenuBar                                        */
 /**********************************************************************************************/
 
-class RElement
+class RMainMenuBar: public QMenuBar
 {
-  public:
-    _M RData*         m_data;
-    _M RID            m_id;
+  Q_OBJECT
 
   public:
-    _M Vacuum         RElement(RData* data);
+    _M Vacuum       RMainMenuBar(RMainWindow* parent = 0);
+    _V Vacuum       ~RMainMenuBar();
 };
 
 /**********************************************************************************************/
 
-#endif /* RSYS_CORE_RELEMENT_HH */
+#endif /* RSYS_INTERFACE_RMAIN_MENU_BAR_HH */

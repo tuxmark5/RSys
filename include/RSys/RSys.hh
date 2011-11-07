@@ -9,6 +9,7 @@
 /********************************************* RS *********************************************/
 /*                                            RSys                                            */
 /**********************************************************************************************/
+#define _F friend
 #define _M
 #define _S static
 #define _T typedef
@@ -24,9 +25,16 @@ class RElement;
 class RMeasure;
 class RSystem;
 /**********************************************************************************************/
+class RMainWindow;
+/**********************************************************************************************/
+class QDateEdit;
+class QLabel;
+class QLineEdit;
+class QPushButton;
 class QScrollArea;
 class QSplitter;
 class QTabWidget;
+class QTableView;
 /**********************************************************************************************/
 typedef long long                 RID;
 typedef QVector<RDivision*>       RDivisionVector;

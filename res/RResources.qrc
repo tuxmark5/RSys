@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/disconnect.png</file>
+        <file>icons/divisions.png</file>
+        <file>icons/find_interval.png</file>
+        <file>icons/help.png</file>
+        <file>icons/import.png</file>
+        <file>icons/open.png</file>
+        <file>icons/save.png</file>
+        <file>icons/systems.png</file>
+    </qresource>
+</RCC>

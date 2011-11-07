@@ -1,22 +1,22 @@
-#ifndef RSYS_CORE_RELEMENT_HH
-#define RSYS_CORE_RELEMENT_HH
+#ifndef RSYS_INTERFACE_RUSAGE_TAB_HH
+#define RSYS_INTERFACE_RUSAGE_TAB_HH
 
 /**********************************************************************************************/
 #include <RSys/RSys.hh>
+#include <QtGui/QWidget>
 /********************************************* RS *********************************************/
-/*                                          RElement                                          */
+/*                                            RTab                                            */
 /**********************************************************************************************/
 
-class RElement
+class RTab: public QWidget
 {
-  public:
-    _M RData*         m_data;
-    _M RID            m_id;
+  Q_OBJECT
 
   public:
-    _M Vacuum         RElement(RData* data);
+    _M Vacuum       RTab(const QString& title, QWidget* parent = 0);
+    _V Vacuum       ~RTab();
 };
 
 /**********************************************************************************************/
 
-#endif /* RSYS_CORE_RELEMENT_HH */
+#endif /* RSYS_INTERFACE_RUSAGE_TAB_HH */

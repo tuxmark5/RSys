@@ -23,7 +23,7 @@ QVariant RXLSTable::cell(int x, int y) const
   BasicExcelCell* cell = m_table->Cell(y, x);
   int             type = cell->Type();
 
-  switch(type)
+  switch (type)
   {
     case BasicExcelCell::INT:
       return cell->GetInteger();
@@ -45,7 +45,10 @@ QVariant RXLSTable::cell(int x, int y) const
 
 QString RXLSTable :: title() const
 {
-  return QString::fromWCharArray(m_table->GetUnicodeSheetName());
+  QString title = QString::fromWCharArray(m_table->GetUnicodeSheetName());
+  if (title.isEmpty())
+    title = m_table->GetAnsiSheetName();
+  return title;
 }
 
 /**********************************************************************************************/
