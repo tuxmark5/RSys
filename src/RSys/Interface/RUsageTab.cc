@@ -27,7 +27,6 @@ Vacuum RUsageTab :: RUsageTab(QWidget* parent):
   layout->setSpacing(0);
 
   m_scrollArea->setWidget(widget);
-  m_scrollArea->setWidgetResizable(true);
 }
 
 /**********************************************************************************************/
@@ -40,11 +39,13 @@ Vacuum RUsageTab :: ~RUsageTab()
 
 void RUsageTab :: resizeEvent(QResizeEvent* event)
 {
-  int newWidth = qMax(m_scrollArea->viewport()->width(), 500);
-
-  m_scrollArea->widget()->resize(newWidth, m_scrollArea->widget()->height());
+  QWidget*  viewport  = m_scrollArea->viewport();
+  QWidget*  widget    = m_scrollArea->widget();
+  int       newWidth  = qMax(viewport->width(), 500);
 
   RTab::resizeEvent(event);
+
+  widget->resize(newWidth, widget->height());
 }
 
 /**********************************************************************************************/
