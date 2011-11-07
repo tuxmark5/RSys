@@ -50,8 +50,7 @@ void TestRXLSDocument::checkMeasures(RXLSTable *table)
 
 void TestRXLSDocument::checkDivisions(RXLSTable *table)
 {
-  // FIXME: Kodėl lentelės title yra tuščias?
-  //QCOMPARE(table->title(), QString::fromUtf8("Padaliniai"));
+  QCOMPARE(table->title(), QString::fromUtf8("Padaliniai"));
   QCOMPARE(table->width(), 2);
   QCOMPARE(table->height(), 13);
   QCOMPARE(table->cell(0, 0).toString(), QString::fromUtf8("Kodas"));
@@ -64,8 +63,7 @@ void TestRXLSDocument::checkDivisions(RXLSTable *table)
 
 void TestRXLSDocument::checkSystems(RXLSTable *table)
 {
-  // FIXME: Kodėl lentelės title yra tuščias?
-  //QCOMPARE(table->title(), QString::fromUtf8("IS"));
+  QCOMPARE(table->title(), QString::fromUtf8("IS"));
   QCOMPARE(table->width(), 2);
   QCOMPARE(table->height(), 11);
   QCOMPARE(table->cell(0, 0).toString(),
@@ -84,8 +82,7 @@ void TestRXLSDocument::checkSystems(RXLSTable *table)
 
 void TestRXLSDocument::checkDivisionsSystems(RXLSTable *table)
 {
-  // FIXME: Kodėl lentelės title yra tuščias?
-  //QCOMPARE(table->title(), QString::fromUtf8("IS"));
+  QCOMPARE(table->title(), QString::fromUtf8("IS-Padaliniai"));
   QCOMPARE(table->width(), 14);
   QCOMPARE(table->height(), 14);
 
@@ -126,8 +123,7 @@ void TestRXLSDocument::checkDivisionsSystems(RXLSTable *table)
 
 void TestRXLSDocument::checkMeasuresAdministration(RXLSTable *table)
 {
-  // FIXME: Kodėl lentelės title yra tuščias?
-  //QCOMPARE(table->title(), QString::fromUtf8("IS"));
+  QCOMPARE(table->title(), QString::fromUtf8("Paramos administravimas"));
   QCOMPARE(table->width(), 13);
   QCOMPARE(table->height(), 30);
 
