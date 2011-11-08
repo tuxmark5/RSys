@@ -12,7 +12,7 @@ class RSystemTab: public RTab
   Q_OBJECT
 
   public:
-    _M Vacuum         RSystemTab(RSystemList* systems, RMainWindow* parent = 0);
+    _M Vacuum         RSystemTab(RMainWindow* parent = 0);
     _V Vacuum         ~RSystemTab();
 };
 

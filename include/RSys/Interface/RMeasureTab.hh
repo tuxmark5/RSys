@@ -12,7 +12,7 @@ class RMeasureTab: public RTab
   Q_OBJECT
 
   public:
-    _M Vacuum         RMeasureTab(RMeasureList* measures, RMainWindow* parent = 0);
+    _M Vacuum         RMeasureTab(RMainWindow* parent = 0);
     _V Vacuum         ~RMeasureTab();
 };
 

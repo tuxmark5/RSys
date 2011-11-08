@@ -6,7 +6,8 @@
 /**********************************************************************************************/
 
 Vacuum RDivision :: RDivision(RData* data):
-  RElement(data)
+  RElement(data),
+  m_visible(true)
 {
 }
 
@@ -24,6 +25,13 @@ void RDivision :: setName(const QString& name)
 {
   m_name = name;
   //m_data->update(this);
+}
+
+/**********************************************************************************************/
+
+void RDivision :: setVisible(bool visible)
+{
+  m_visible = visible;
 }
 
 /**********************************************************************************************/

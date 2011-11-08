@@ -20,6 +20,7 @@ class RContainer
     //_V void           remove(int x)                               = 0;
     _V bool           set(int x, int y, const QVariant& variant)  = 0;
     _V int            width() const                               = 0;
+    _V bool           writable() const                            = 0;
 };
 
 /**********************************************************************************************/
@@ -46,24 +47,26 @@ class RContainerI: public RContainer
       m_list(list) { }
 
     _M Vacuum         ~RContainerI()
-      { }
+      { } // TODO: delete accessors
 
     _V bool           add()
     {
-      m_list->append(m_allocator());
-      return true;
+      if (m_allocator)
+        return m_list->append(m_allocator()), true;
+      return false;
     }
 
     _V void           addObserver(RIObserver* observer)
     { m_list->addObserver(observer); }
 
     template <class   Value,
-              Value   (Entry::*Getter)() const,
-              void    (Entry::*Setter)(const Value&)>
-    _M void           addColumn(const QString& title)
+              class   _Getter, _Getter Getter,
+              class   _Setter, _Setter Setter>
+    _M void           addColumn(const char* title)
     {
-      Accessor* accessor = new RAccessorAdapterI<RMemAccessor<Entry, Value, Getter, Setter> >();
-      m_columns.append(Column(title, accessor));
+      Accessor* accessor = new RAccessorAdapterI
+          <RMemAccessor<Entry, Value, _Getter, Getter, _Setter, Setter> >();
+      m_columns.append(Column(QString::fromUtf8(title), accessor));
     }
 
     _V QVariant       get(int x, int y) const
@@ -94,6 +97,9 @@ class RContainerI: public RContainer
 
     _V int            width() const
     { return m_columns.length(); }
+
+    _V bool           writable() const
+    { return bool(m_allocator); }
 };
 
 /**********************************************************************************************/

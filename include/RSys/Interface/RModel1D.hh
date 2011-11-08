@@ -14,6 +14,7 @@ class RModel1D: public RAbstractItemModel
 
   public:
     _M RContainer*    m_container;
+    _M bool           m_writable: 1;
 
   public:
     _M Vacuum         RModel1D(RContainer* container, QObject* parent = 0);
@@ -26,6 +27,7 @@ class RModel1D: public RAbstractItemModel
     _V QVariant       lastRowData(const QModelIndex& index, int role) const;
     _V QModelIndex    parent(const QModelIndex& index) const;
     _V int            rowCount(const QModelIndex& parent = QModelIndex()) const;
+    _M void           setContainer(RContainer* container);
     _V bool           setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 };
 

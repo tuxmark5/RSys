@@ -16,6 +16,7 @@ class RTab: public QWidget
     _M Vacuum       RTab(const QString& title, QWidget* parent = 0);
     _V Vacuum       ~RTab();
     _M void         makeTable1DTab(RContainer* container);
+    _M void         makeTable2DTab(RContainer* containerX, RContainer* containerY);
 };
 
 /**********************************************************************************************/

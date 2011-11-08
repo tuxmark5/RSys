@@ -1,19 +1,19 @@
 #include <RSys/Interface/RMainWindow.hh>
-#include <RSys/Interface/RDivisionTab.hh>
+#include <RSys/Interface/RSystemAdmTab.hh>
 
 /********************************************* RS *********************************************/
-/*                                        RDivisionTab                                        */
+/*                                       RSystemAdmTab                                        */
 /**********************************************************************************************/
 
-Vacuum RDivisionTab :: RDivisionTab(RMainWindow* parent):
+Vacuum RSystemAdmTab :: RSystemAdmTab(RMainWindow* parent):
   RTab("AAA", parent)
 {
-  makeTable1DTab(parent->divisionContainer());
+  makeTable2DTab(parent->systemContainer(), parent->divisionContainer());
 }
 
 /**********************************************************************************************/
 
-Vacuum RDivisionTab :: ~RDivisionTab()
+Vacuum RSystemAdmTab :: ~RSystemAdmTab()
 {
 }
 

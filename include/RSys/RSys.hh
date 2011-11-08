@@ -15,6 +15,7 @@
 #define _T typedef
 #define _V virtual
 /**********************************************************************************************/
+#define FN(x)         decltype(x), x
 #define R_GUARD(x, r) if (!(x)) return r
 /**********************************************************************************************/
 #define Vacuum
@@ -29,6 +30,7 @@ class RSystem;
 // Interface
 class RAbstractItemModel;
 class RMainWindow;
+class RModel1D;
 class RTab;
 /**********************************************************************************************/
 // Util

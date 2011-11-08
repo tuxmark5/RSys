@@ -1,19 +1,19 @@
 #include <RSys/Interface/RMainWindow.hh>
-#include <RSys/Interface/RDivisionTab.hh>
+#include <RSys/Interface/RMeasureAdmTab.hh>
 
 /********************************************* RS *********************************************/
-/*                                        RDivisionTab                                        */
+/*                                       RMeasureAdmTab                                       */
 /**********************************************************************************************/
 
-Vacuum RDivisionTab :: RDivisionTab(RMainWindow* parent):
+Vacuum RMeasureAdmTab :: RMeasureAdmTab(RMainWindow* parent):
   RTab("AAA", parent)
 {
-  makeTable1DTab(parent->divisionContainer());
+  makeTable2DTab(parent->measureContainer(), parent->divisionContainer());
 }
 
 /**********************************************************************************************/
 
-Vacuum RDivisionTab :: ~RDivisionTab()
+Vacuum RMeasureAdmTab :: ~RMeasureAdmTab()
 {
 }
 

@@ -40,6 +40,7 @@ SOURCES             +=                              \
   src/RSys/Core/RDivision.cc                        \
   src/RSys/Core/RElement.cc                         \
   src/RSys/Core/RMeasure.cc                         \
+  src/RSys/Core/RSubmission.cc                      \
   src/RSys/Core/RSystem.cc                          \
   src/RSys/Import/RXLSDocument.cc                   \
   src/RSys/Import/RXLSTable.cc                      \
@@ -52,6 +53,7 @@ SOURCES             +=                              \
   src/RSys/Interface/RMainMenuBar.cc                \
   src/RSys/Interface/RMainToolBar.cc                \
   src/RSys/Interface/RMainWindow.cc                 \
+  src/RSys/Interface/RMeasureAdmTab.cc              \
   src/RSys/Interface/RMeasureTab.cc                 \
   src/RSys/Interface/RModel1D.cc                    \
   src/RSys/Interface/RModel2D.cc                    \
@@ -59,6 +61,7 @@ SOURCES             +=                              \
   src/RSys/Interface/RRowObserverAdapter.cc         \
   src/RSys/Interface/RTab.cc                        \
   src/RSys/Interface/RTableView.cc                  \
+  src/RSys/Interface/RSystemAdmTab.cc               \
   src/RSys/Interface/RSystemTab.cc                  \
   src/RSys/Interface/RUsageTab.cc                   \
   src/RSys/Interface/RUsageWidget.cc                \
@@ -72,6 +75,7 @@ HEADERS             +=                              \
   include/RSys/Core/RDivision.hh                    \
   include/RSys/Core/RElement.hh                     \
   include/RSys/Core/RMeasure.hh                     \
+  include/RSys/Core/RSubmission.hh                  \
   include/RSys/Core/RSystem.hh                      \
   include/RSys/Import/RITable.hh                    \
   include/RSys/Import/RIDocument.hh                 \
@@ -86,11 +90,13 @@ HEADERS             +=                              \
   include/RSys/Interface/RMainMenuBar.hh            \
   include/RSys/Interface/RMainToolBar.hh            \
   include/RSys/Interface/RMainWindow.hh             \
+  include/RSys/Interface/RMeasureAdmTab.hh          \
   include/RSys/Interface/RMeasureTab.hh             \
   include/RSys/Interface/RModel1D.hh                \
   include/RSys/Interface/RModel2D.hh                \
   include/RSys/Interface/RPaletteDock.hh            \
   include/RSys/Interface/RRowObserverAdapter.hh     \
+  include/RSys/Interface/RSystemAdmTab.hh           \
   include/RSys/Interface/RSystemTab.hh              \
   include/RSys/Interface/RTab.hh                    \
   include/RSys/Interface/RTableView.hh              \

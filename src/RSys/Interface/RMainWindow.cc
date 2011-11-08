@@ -1,4 +1,7 @@
 #include <RSys/Core/RData.hh>
+#include <RSys/Core/RDivision.hh>
+#include <RSys/Core/RMeasure.hh>
+#include <RSys/Core/RSystem.hh>
 
 #include <RSys/Interface/RIntervalToolBar.hh>
 #include <RSys/Interface/RLoginWidget.hh>
@@ -9,7 +12,9 @@
 #include <RSys/Interface/RPaletteDock.hh>
 
 #include <RSys/Interface/RDivisionTab.hh>
+#include <RSys/Interface/RMeasureAdmTab.hh>
 #include <RSys/Interface/RMeasureTab.hh>
+#include <RSys/Interface/RSystemAdmTab.hh>
 #include <RSys/Interface/RSystemTab.hh>
 #include <RSys/Interface/RUsageTab.hh>
 
@@ -33,6 +38,9 @@
 Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   QMainWindow(parent)
 {
+  m_data        = new RData();
+  createContainers();
+
   createActions();
 
   addToolBar(new RMainToolBar(this));
@@ -50,10 +58,7 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   m_splitter->addWidget(m_tabWidgetL);
   m_splitter->addWidget(m_tabWidgetR);
 
-  m_data        = new RData();
-
   createTabs();
-
   setCentralWidget(m_splitter);
 
   //setCentralWidget(new RLoginWidget(this));
@@ -118,15 +123,38 @@ void RMainWindow :: createActions()
 
 /**********************************************************************************************/
 
+void RMainWindow :: createContainers()
+{
+  auto cd = newContainer(m_data->divisions());
+  cd->addColumn<QString, FN(&RDivision::identifier),  FN(&RDivision::setIdentifier)>  ("Pavadinimas");
+  cd->addColumn<QString, FN(&RDivision::name),        FN(&RDivision::setName)>        ("Aprašymas");
+  cd->setAlloc([]() { return new RDivision(0); });
+
+  auto cm = newContainer(m_data->measures());
+  cm->addColumn<QString, FN(&RMeasure::identifier),   FN(&RMeasure::setIdentifier)>   ("Pavadinimas");
+  cm->addColumn<QString, FN(&RMeasure::name),         FN(&RMeasure::setName)>         ("Aprašymas");
+  cm->setAlloc([]() { return new RMeasure(0); });
+
+  auto cs = newContainer(m_data->systems());
+  cs->addColumn<QString, FN(&RSystem::identifier),    FN(&RSystem::setIdentifier)>    ("Pavadinimas");
+  cs->addColumn<QString, FN(&RSystem::name),          FN(&RSystem::setName)>          ("Aprašymas");
+  cs->setAlloc([]() { return new RSystem(0); });
+
+  m_divisionContainer = cd;
+  m_measureContainer  = cm;
+  m_systemContainer   = cs;
+}
+
+/**********************************************************************************************/
+
 void RMainWindow :: createTabs()
 {
-  addLeftTab(new RMeasureTab(m_data->measures(), this),  "Priemonės", "Priemonės TOOL");
-  addLeftTab(new RDivisionTab(m_data->divisions(), this), "Padaliniai", "Padaliniai TOOL");
-  addLeftTab(new RSystemTab(m_data->systems(), this),   "IS", "IS TOOL");
+  addLeftTab(new RMeasureTab(this),     "Priemonės", "Priemonės TOOL");
+  addLeftTab(new RDivisionTab(this),    "Padaliniai", "Padaliniai TOOL");
+  addLeftTab(new RSystemTab(this),      "IS", "IS TOOL");
 
-  // 2d
-  m_tabWidgetL->addTab(new QLabel("NOT IMPLEMENTED"), QString::fromUtf8("Priemonių adm."));
-  m_tabWidgetL->addTab(new QLabel("NOT IMPLEMENTED"), QString::fromUtf8("IS adm."));
+  addLeftTab(new RMeasureAdmTab(this),  "Priemonių adm.", "Priemonės TOOL");
+  addLeftTab(new RSystemAdmTab(this),   "IS adm.", "IS TOOL");
 
   m_tabWidgetL->addTab(new QLabel("NOT IMPLEMENTED"), QString::fromUtf8("Istoriniai duom."));
   m_tabWidgetL->addTab(new QLabel("NOT IMPLEMENTED"), QString::fromUtf8("Planuojami kiekiai"));
