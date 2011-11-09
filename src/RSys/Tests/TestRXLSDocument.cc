@@ -55,6 +55,7 @@ void TestRXLSDocument::checkMeasures(RXLSTable *table)
            QString::fromUtf8("Paramos priemonė"));
   QCOMPARE(table->cell(0, 1).toString(),
            QString::fromUtf8(""));
+  QCOMPARE(table->cell(0, 1).isNull(), true);
   QCOMPARE(table->cell(1, 1).toString(),
            QString::fromUtf8(
                "1 KRYPTIS „Žemės, maisto ūkio ir "
