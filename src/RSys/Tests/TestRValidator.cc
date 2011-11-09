@@ -28,15 +28,45 @@ void TestRValidator::testReadingMeasures()
 //}
 }
 
+
+void TestRValidator::testReadingSystems()
+{
+
+  RXLSDocument document(QString::fromUtf8("../../RSys/static/test2.xls"));
+  QCOMPARE(document.nameAt(2),
+           QString::fromUtf8("IS"));
+
+  RValidator validator;
+  RData data;
+  RSystemList *systems = data.systems();
+
+  QCOMPARE(validator.validateSystems(document.tableAt(2), &data), true);
+
+  QCOMPARE(systems->size(), 10);
+  QCOMPARE(
+        systems->at(9)->identifier(),
+        QString::fromUtf8("IS10"));
+  QCOMPARE(
+        systems->at(9)->name(),
+        QString::fromUtf8("Vidaus audito sistema"));
+}
+
+
 void TestRValidator::testTableTypeDetection()
 {
   RXLSDocument document(QString::fromUtf8("../../RSys/static/test2.xls"));
   RValidator validator;
   RData data;
 
+  // Paramos priemonės
   QCOMPARE(validator.validate(document.tableAt(0), &data), true);
   QCOMPARE(validator.validate(document.tableAt(1), &data), false);
+
+  // IS
+  QCOMPARE(validator.validate(document.tableAt(2), &data), true);
+  QCOMPARE(validator.validate(document.tableAt(3), &data), false);
 }
+
 
 void TestRValidator::testImportingXLSFile()
 {

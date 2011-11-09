@@ -40,6 +40,10 @@ bool RValidator::validate(RITable *table, RData *data)
   {
     return this->validateMeasures(table, data);
   }
+  else if (table->title() == QString::fromUtf8("IS"))
+  {
+    return this->validateSystems(table, data);
+  }
   else
   {
     return false;
@@ -51,12 +55,13 @@ bool RValidator::validateMeasures(RITable *table, RData *data)
 {
   RMeasureList *list = data->measures();
   int added = 0;
+  bool errors = false;
   for (int i = 1; i < table->height(); i++)
   {
     if (table->cell(0, i).isNull())
     {
       // Kryptis.
-      // FIXME: Kryptys yra ignoruojamos.
+      // FIXME: Kryptys (ir tuščios eilutės) yra ignoruojamos.
       continue;
     }
     else
@@ -70,6 +75,7 @@ bool RValidator::validateMeasures(RITable *table, RData *data)
                 "nes joje nenurodytas priemonės pavadinimas. "
                 "(Nurodytas kodas buvo: „%3“.)")
               .arg(table->title()).arg(i + 1).arg(table->cell(0, i).toString()));
+        errors = true;
         continue;
       }
       // Priemonė.
@@ -84,8 +90,60 @@ bool RValidator::validateMeasures(RITable *table, RData *data)
   }
   this->log(RINFO, 1,
             QString::fromUtf8(
-              "Iš %1 buvo sėkmingai importuota informacija apie %2 paramos priemones."
+              "Iš %1 buvo sėkmingai importuota informacija "
+              "apie %2 paramos priemones."
               ).arg(table->title()).arg(added));
 
-  return true;
+  return !errors;
+}
+
+
+bool RValidator::validateSystems(RITable *table, RData *data)
+{
+  RSystemList *list = data->systems();
+  bool errors = false;                  // Ar buvo klaidų.
+  int added = 0;
+  for (int i = 1; i < table->height(); i++)
+  {
+    if (table->cell(0, i).isNull() && table->cell(1, i).isNull())
+    {
+      // Tuščios eilutės yra normalu.
+      continue;
+    }
+    if (table->cell(0, i).isNull())
+    {
+      this->log(
+            RWARNING, 4,
+            QString::fromUtf8(
+              "Praleidžiama „%1“ lakšto %2 eilutė, "
+              "nes joje nenurodytas sistemos kodas."
+              ).arg(table->title()).arg(i + 1));
+      errors = true;
+      continue;
+    }
+    if (table->cell(1, i).isNull())
+    {
+      this->log(
+            RWARNING, 5,
+            QString::fromUtf8(
+              "Praleidžiama „%1“ lakšto %2 eilutė, "
+              "nes joje nenurodytas sistemos pavadinimas."
+              ).arg(table->title()).arg(i + 1));
+      errors = true;
+      continue;
+    }
+    RSystem *system = new RSystem(data);
+    system->setIdentifier(table->cell(0, i).toString());
+    system->setName(table->cell(1, i).toString());
+    list->append(system);
+    added++;
+    // FIXME: Ar nėra kartais šioje vietoje „memory leak“?
+  }
+  this->log(RINFO, 6,
+            QString::fromUtf8(
+              "Iš %1 buvo sėkmingai importuota informacija "
+              "apie %2 informacines sistemas."
+              ).arg(table->title()).arg(added));
+
+  return !errors;
 }
