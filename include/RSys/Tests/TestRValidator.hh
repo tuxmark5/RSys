@@ -13,7 +13,7 @@ class TestRValidator: public QObject
   private:
   private slots:
     _M void     testReadingMeasures();
-    _M void     testReadingXLSDocument();
+    _M void     testTableTypeDetection();
 
 };
 
