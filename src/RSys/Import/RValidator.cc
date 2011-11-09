@@ -1,15 +1,27 @@
 #include <RSys/Import/RValidator.hh>
 
 
-bool RValidator::validateMeasures(
-  RITable *table, RData *data, RMeasureList *list)
+bool RValidator::validate(RITable *table, RData *data)
 {
-  qDebug() << "Veikia 1";
+  // FIXME: Čia turi būti ne „įhardcodintos“ reikšmės, o nusiskaitomos.
+  if (table->title() == QString::fromUtf8("Paramos priemonės"))
+  {
+    return this->validateMeasures(table, data);
+  }
+  else
+  {
+    return false;
+  }
+}
+
+
+bool RValidator::validateMeasures(RITable *table, RData *data)
+{
+  RMeasureList *list = data->measures();
   for (int i = 1; i < table->height(); i++)
   {
     if (table->cell(0, i).isNull())
     {
-      qDebug() << i << "Ignoruojame kryptį";
       // Kryptis.
       // FIXME: Kryptys yra ignoruojamos.
       continue;
@@ -27,14 +39,12 @@ bool RValidator::validateMeasures(
               .arg(table->title()).arg(i + 1).arg(table->cell(0, i).toString()));
         continue;
       }
-      qDebug() << i << "Pridedame priemonę";
       // Priemonė.
       // FIXME: Kryptys yra ignoruojamos.
       RMeasure *measure = new RMeasure(data);
       measure->setIdentifier(table->cell(0, i).toString());
       measure->setName(table->cell(1, i).toString());
       list->append(measure);
-      qDebug() << i << "Priemonė prideta: " << list->size();
       // FIXME: Ar nėra kartais šioje vietoje „memory leak“?
     }
   }

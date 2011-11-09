@@ -14,7 +14,8 @@ class RValidator: public QObject
   public slots:
 //  _M  bool validate(QString filename, RData *data);
 //  _M  bool validate(RIDocument *document, RData *data);
-    _M  bool validateMeasures(RITable *table, RData *, RMeasureList *list);
+    _M  bool validate(RITable *table, RData *data);
+    _M  bool validateMeasures(RITable *table, RData *data);
 
 
   signals:
