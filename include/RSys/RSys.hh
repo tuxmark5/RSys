@@ -25,6 +25,7 @@ class RData;
 class RDivision;
 class RElement;
 class RMeasure;
+class RSubmission;
 class RSystem;
 /**********************************************************************************************/
 // Interface
@@ -54,6 +55,7 @@ typedef QMap<RSystem*, double>    RSystemMap;
 /**********************************************************************************************/
 typedef ROList<RDivision*>        RDivisionList;
 typedef ROList<RMeasure*>         RMeasureList;
+typedef ROList<RSubmission*>      RSubmissionList;
 typedef ROList<RSystem*>          RSystemList;
 /**********************************************************************************************/
 

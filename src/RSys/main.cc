@@ -1,3 +1,4 @@
+#include <QtCore/QLocale>
 #include <QtGui/QApplication>
 #include <RSys/Interface/RMainWindow.hh>
 
@@ -7,6 +8,8 @@
 
 int main(int argc, char** argv)
 {
+  QLocale       locale(QLocale::Lithuanian, QLocale::Lithuania);
+  QLocale::setDefault(locale);
   QApplication  app(argc, argv);
   RMainWindow   mainWnd;
 

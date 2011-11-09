@@ -1,6 +1,7 @@
 #include <RSys/Core/RData.hh>
 #include <RSys/Core/RDivision.hh>
 #include <RSys/Core/RMeasure.hh>
+#include <RSys/Core/RSubmission.hh>
 #include <RSys/Core/RSystem.hh>
 
 #include <RSys/Interface/RIntervalToolBar.hh>
@@ -14,6 +15,7 @@
 #include <RSys/Interface/RDivisionTab.hh>
 #include <RSys/Interface/RMeasureAdmTab.hh>
 #include <RSys/Interface/RMeasureTab.hh>
+#include <RSys/Interface/RSubmissionTab.hh>
 #include <RSys/Interface/RSystemAdmTab.hh>
 #include <RSys/Interface/RSystemTab.hh>
 #include <RSys/Interface/RUsageTab.hh>
@@ -135,20 +137,36 @@ void RMainWindow :: createContainers()
   auto cm = newContainer(m_data->measures());
   cm->addColumn("Pavadinimas");
   cm->addColumn("Aprašymas");
-  cm->addAccessor<QString, FN(&RMeasure::identifier),   FN(&RMeasure::setIdentifier)>   (0, Qt::DisplayRole);
-  cm->addAccessor<QString, FN(&RMeasure::name),         FN(&RMeasure::setName)>         (1, Qt::DisplayRole);
+  cm->addAccessor2<QString>(0, Qt::DisplayRole) >> &RMeasure::identifier << &RMeasure::setIdentifier;
+  cm->addAccessor2<QString>(1, Qt::DisplayRole) >> &RMeasure::name       << &RMeasure::setName;
   cm->setAlloc([]() { return new RMeasure(0); });
+
+  auto cu = newContainer(m_data->submissions());
+  cu->addColumn("Priemonė");
+  cu->addColumn("Kiekis");
+  cu->addColumn("Pradžia");
+  cu->addColumn("Pabaiga");
+  cu->addAccessor2<QString>(0, Qt::DisplayRole)
+    >> &RSubmission::measureName << &RSubmission::setMeasureName;
+  cu->addAccessor2<int>(1, Qt::DisplayRole)
+    >> &RSubmission::count << &RSubmission::setCount;
+  cu->addAccessor2<QDate>(2, Qt::DisplayRole)
+    >> &RSubmission::date0 << &RSubmission::setDate0;
+  cu->addAccessor2<QDate>(3, Qt::DisplayRole)
+    >> &RSubmission::date1 << &RSubmission::setDate1;
+  cu->setAlloc([]() { return new RSubmission(0); });
 
   auto cs = newContainer(m_data->systems());
   cs->addColumn("Pavadinimas");
   cs->addColumn("Aprašymas");
-  cs->addAccessor<QString, FN(&RSystem::identifier),    FN(&RSystem::setIdentifier)>    (0, Qt::DisplayRole);
-  cs->addAccessor<QString, FN(&RSystem::name),          FN(&RSystem::setName)>          (1, Qt::DisplayRole);
+  cs->addAccessor2<QString>(0, Qt::DisplayRole) >> &RSystem::identifier << &RSystem::setIdentifier;
+  cs->addAccessor2<QString>(1, Qt::DisplayRole) >> &RSystem::name       << &RSystem::setName;
   cs->setAlloc([]() { return new RSystem(0); });
 
-  m_divisionContainer = cd;
-  m_measureContainer  = cm;
-  m_systemContainer   = cs;
+  m_divisionContainer     = cd;
+  m_measureContainer      = cm;
+  m_submissionContainer   = cu;
+  m_systemContainer       = cs;
 }
 
 /**********************************************************************************************/
@@ -162,7 +180,8 @@ void RMainWindow :: createTabs()
   addLeftTab(new RMeasureAdmTab(this),  "Priemonių adm.", "Priemonės TOOL");
   addLeftTab(new RSystemAdmTab(this),   "IS adm.", "IS TOOL");
 
-  m_tabWidgetL->addTab(new QLabel("NOT IMPLEMENTED"), QString::fromUtf8("Istoriniai duom."));
+  addLeftTab(new RSubmissionTab(this),  "Istoriniai duom.", "IS TOOL");
+
   m_tabWidgetL->addTab(new QLabel("NOT IMPLEMENTED"), QString::fromUtf8("Planuojami kiekiai"));
 
   m_tabWidgetR->addTab(new RUsageTab(), QString::fromUtf8("Apkrovos ir prognozės"));

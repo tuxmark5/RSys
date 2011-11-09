@@ -35,6 +35,7 @@ class RMainWindow: public QMainWindow
     _M RData*         m_data;
     _M RContainer*    m_divisionContainer;
     _M RContainer*    m_measureContainer;
+    _M RContainer*    m_submissionContainer;
     _M RContainer*    m_systemContainer;
 
   public:
@@ -46,6 +47,7 @@ class RMainWindow: public QMainWindow
     _M RData*         data() const { return m_data; }
     _M RContainer*    divisionContainer() const { return m_divisionContainer; }
     _M RContainer*    measureContainer() const { return m_measureContainer; }
+    _M RContainer*    submissionContainer() const { return m_submissionContainer; }
     _M RContainer*    systemContainer() const { return m_systemContainer; }
 
   private:

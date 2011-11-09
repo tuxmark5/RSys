@@ -6,7 +6,9 @@
 /**********************************************************************************************/
 
 Vacuum RSubmission :: RSubmission(RData* data):
-  RElement(data)
+  RElement(data),
+  m_measure(0),
+  m_count(0)
 {
 }
 
