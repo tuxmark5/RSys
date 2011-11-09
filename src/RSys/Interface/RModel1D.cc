@@ -28,6 +28,13 @@ Vacuum RModel1D :: ~RModel1D()
 
 /**********************************************************************************************/
 
+void RModel1D :: addRow()
+{
+
+}
+
+/**********************************************************************************************/
+
 int RModel1D :: columnCount(const QModelIndex& parent) const
 {
   R_GUARD(!parent.isValid(), 0);
@@ -116,6 +123,16 @@ QVariant RModel1D :: lastRowData(const QModelIndex& index, int role) const
 
 /**********************************************************************************************/
 
+void RModel1D :: notifyRowChanged(int row)
+{
+  QModelIndex left  = createIndex(row, 0, 0);
+  QModelIndex right = createIndex(row, m_container->width() - 1, 0);
+
+  emit dataChanged(left, right);
+}
+
+/**********************************************************************************************/
+
 QModelIndex RModel1D :: parent(const QModelIndex& index) const
 {
   Q_UNUSED(index);
@@ -145,7 +162,7 @@ void RModel1D :: setContainer(RContainer* container)
 
 /**********************************************************************************************/
 
-bool RModel1D ::setData(const QModelIndex& index, const QVariant& value, int role)
+bool RModel1D :: setData(const QModelIndex& index, const QVariant& value, int role)
 {
   R_GUARD(index.isValid(), false);
 
@@ -159,6 +176,8 @@ bool RModel1D ::setData(const QModelIndex& index, const QVariant& value, int rol
       return false;
 
   m_container->set(index.column(), index.row(), role, value);
+  notifyRowChanged(index.row()); // hmm
+
   return true;
 }
 

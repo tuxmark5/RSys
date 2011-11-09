@@ -10,15 +10,17 @@
 class RData
 {
   private:
-    _M RDivisionList  m_divisions;
-    _M RMeasureList   m_measures;
-    _M RSystemList    m_systems;
+    _M RDivisionList      m_divisions;
+    _M RMeasureList       m_measures;
+    _M RSubmissionList    m_submissions;
+    _M RSystemList        m_systems;
 
   public:
-    _M Vacuum         RData();
-    _M RDivisionList* divisions() { return &m_divisions; }
-    _M RMeasureList*  measures()  { return &m_measures; }
-    _M RSystemList*   systems()   { return &m_systems; }
+    _M Vacuum             RData();
+    _M RDivisionList*     divisions()     { return &m_divisions; }
+    _M RMeasureList*      measures()      { return &m_measures; }
+    _M RSubmissionList*   submissions()   { return &m_submissions; }
+    _M RSystemList*       systems()       { return &m_systems; }
 };
 
 /**********************************************************************************************/
