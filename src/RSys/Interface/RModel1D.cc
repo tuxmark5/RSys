@@ -13,7 +13,7 @@ Vacuum RModel1D :: RModel1D(RContainer* container, QObject* parent):
   m_container(container),
   m_writable(container->writable())
 {
-  container->addObserver(new RRowObserverAdapter(this));
+  container->addObserver(m_rowAdapter = new RRowObserverAdapter(this));
 
   if (!g_lastRowFont.italic())
     g_lastRowFont.setItalic(true);
@@ -53,12 +53,12 @@ QVariant RModel1D :: data(const QModelIndex& index, int role) const
 
   switch (role)
   {
-    case Qt::CheckStateRole:
-      return true;
-
     case Qt::EditRole:
     case Qt::DisplayRole:
-      return m_container->get(index.column(), index.row());
+      return m_container->get(index.column(), index.row(), Qt::DisplayRole);
+
+    default:
+      return m_container->get(index.column(), index.row(), role);
   }
 
   return QVariant();
@@ -73,8 +73,7 @@ Qt::ItemFlags RModel1D :: flags(const QModelIndex& index) const
   return Qt::ItemIsSelectable
        | Qt::ItemIsEditable
        | Qt::ItemIsEnabled
-       | Qt::ItemIsUserCheckable // TODO: handle this more properly
-      ;
+       | Qt::ItemIsUserCheckable;
 }
 
 /**********************************************************************************************/
@@ -138,8 +137,9 @@ int RModel1D :: rowCount(const QModelIndex& parent) const
 void RModel1D :: setContainer(RContainer* container)
 {
   beginResetModel();
-  // TODO: RE-REGISTER observers
+  m_container->removeObserver(m_rowAdapter);
   m_container = container;
+  m_container->addObserver(m_rowAdapter);
   endResetModel();
 }
 
@@ -147,14 +147,18 @@ void RModel1D :: setContainer(RContainer* container)
 
 bool RModel1D ::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-  R_GUARD(index.isValid(),      false);
-  R_GUARD(role == Qt::EditRole, false);
+  R_GUARD(index.isValid(), false);
+
+  qDebug() << "SET DATA" << value << role;
+
+  if (role == Qt::EditRole)
+    role = Qt::DisplayRole;
 
   if (index.row() == m_container->height())
     if (!m_container->add())
       return false;
 
-  m_container->set(index.column(), index.row(), value);
+  m_container->set(index.column(), index.row(), role, value);
   return true;
 }
 

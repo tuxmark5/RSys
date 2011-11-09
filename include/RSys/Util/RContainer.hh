@@ -3,6 +3,7 @@
 
 /**********************************************************************************************/
 #include <RSys/Util/RAccessorAdapter.hh>
+#include <RSys/Util/RFunAccessor.hh>
 #include <RSys/Util/RMemAccessor.hh>
 /********************************************* RS *********************************************/
 /*                                         RContainer                                         */
@@ -12,15 +13,16 @@ class RContainer
 {
   public:
     _V Vacuum         ~RContainer() { }
-    _V bool           add()                                       = 0;
-    _V void           addObserver(RIObserver* observer)           = 0;
-    _V QVariant       get(int x, int y) const                     = 0;
-    _V QString        header(int x) const                         = 0;
-    _V int            height() const                              = 0;
+    _V bool           add()                                                 = 0;
+    _V void           addObserver(RIObserver* observer)                     = 0;
+    _V QVariant       get(int x, int y, int role) const                     = 0;
+    _V QString        header(int x) const                                   = 0;
+    _V int            height() const                                        = 0;
     //_V void           remove(int x)                               = 0;
-    _V bool           set(int x, int y, const QVariant& variant)  = 0;
-    _V int            width() const                               = 0;
-    _V bool           writable() const                            = 0;
+    _V void           removeObserver(RIObserver* observer)                  = 0;
+    _V bool           set(int x, int y, int role, const QVariant& variant)  = 0;
+    _V int            width() const                                         = 0;
+    _V bool           writable() const                                      = 0;
 };
 
 /**********************************************************************************************/
@@ -33,14 +35,15 @@ class RContainerI: public RContainer
     _T typename _List::Value                            EntryPtr;
     _T typename std::remove_pointer<EntryPtr>::type     Entry;
     _T RAccessorAdapter<Entry>                          Accessor;
-    _T std::pair<QString, Accessor*>                    Column;
-    _T QList<Column>                                    ColumnList;
     _T std::function<Entry*()>                          Allocator;
+    _T QHash<int, Accessor*>                            ColumnMap;
+    _T QList<QString>                                   HeaderList;
 
   private:
     _M Allocator      m_allocator;
     _M List*          m_list;
-    _M ColumnList     m_columns;
+    _M ColumnMap      m_columns;
+    _M HeaderList     m_headers;
 
   public:
     _M Vacuum         RContainerI(List* list):
@@ -62,33 +65,45 @@ class RContainerI: public RContainer
     template <class   Value,
               class   _Getter, _Getter Getter,
               class   _Setter, _Setter Setter>
-    _M void           addColumn(const char* title)
+    _M void           addAccessor(int column, int role)
     {
-      Accessor* accessor = new RAccessorAdapterI
-          <RMemAccessor<Entry, Value, _Getter, Getter, _Setter, Setter> >();
-      m_columns.append(Column(QString::fromUtf8(title), accessor));
+      Accessor* accessor = new RAccessorAdapterI<RMemAccessor<Entry, Value, _Getter, Getter, _Setter, Setter> >();
+      m_columns.insert((column << 8) | role, accessor);
     }
 
-    _V QVariant       get(int x, int y) const
+    template <class   Value>
+    _M RFunAccessor<Entry, Value>& addAccessor2(int column, int role)
     {
-      Accessor*     accessor  = m_columns.at(x).second;
-      const Entry*  entry     = m_list->at(y);
+      auto accessor = new RAccessorAdapterI<RFunAccessor<Entry, Value> >();
+      m_columns.insert((column << 8) | role, accessor);
+      return accessor->m_accessor;
+    }
 
-      return accessor->get(*entry);
+    _M void           addColumn(const char* title)
+    {
+      m_headers.append(QString::fromUtf8(title));
+    }
+
+    _V QVariant       get(int x, int y, int role) const
+    {
+      if (Accessor* accessor  = m_columns.value(x << 8 | role))
+        return accessor->get(*m_list->at(y));
+      return QVariant();
     }
 
     _V QString        header(int x) const
-    { return m_columns.at(x).first; }
+    { return m_headers.at(x); }
 
     _V int            height() const
     { return m_list->length(); }
 
-    _V bool           set(int x, int y, const QVariant& variant)
-    {
-      Accessor*     accessor  = m_columns.at(x).second;
-      Entry*        entry     = m_list->at(y);
+    _V void           removeObserver(RIObserver* observer)
+    { m_list->removeObserver(observer); }
 
-      accessor->set(*entry, variant);
+    _V bool           set(int x, int y, int role, const QVariant& variant)
+    {
+      if (Accessor* accessor = m_columns.value(x << 8 | role))
+        accessor->set(*m_list->at(y), variant);
       return true;
     }
 
@@ -96,7 +111,7 @@ class RContainerI: public RContainer
     { m_allocator = std::move(allocator); }
 
     _V int            width() const
-    { return m_columns.length(); }
+    { return m_headers.length(); }
 
     _V bool           writable() const
     { return bool(m_allocator); }

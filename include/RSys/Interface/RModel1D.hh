@@ -12,8 +12,12 @@ class RModel1D: public RAbstractItemModel
 {
   Q_OBJECT
 
+  private:
+    _T RRowObserverAdapter  RowAdapter;
+
   public:
     _M RContainer*    m_container;
+    _M RowAdapter*    m_rowAdapter;
     _M bool           m_writable: 1;
 
   public:

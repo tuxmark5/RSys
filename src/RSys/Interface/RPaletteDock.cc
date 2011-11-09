@@ -7,6 +7,7 @@
 #include <RSys/Interface/RModel1D.hh>
 #include <RSys/Interface/RPaletteDock.hh>
 #include <RSys/Interface/RTableView.hh>
+#include <RSys/Util/RFunctional.hh>
 
 /********************************************* RS *********************************************/
 /*                                        RPaletteDock                                        */
@@ -51,15 +52,21 @@ Vacuum RPaletteDock :: ~RPaletteDock()
 
 /**********************************************************************************************/
 
+int   get_(bool x)  { return x ? 2 : 0; }
+bool  set_(int x)   { return x != 0; }
+
 void RPaletteDock :: createContainers(RMainWindow* main)
 {
   auto cd = newContainer(main->data()->divisions());
-  cd->addColumn<bool,     FN(&RDivision::visible),    FN(&RDivision::setVisible)>     ("Rodyti");
-  cd->addColumn<QString,  FN(&RDivision::identifier), FN(&RDivision::setIdentifier)>  ("Padalinys");
+  cd->addColumn("Padalinys");
+  cd->addAccessor2<bool>   (0, Qt::CheckStateRole) >> f(get_) * f(&RDivision::visible)
+                                                   << f(&RDivision::setVisible);// * f(set_);
+  cd->addAccessor2<QString>(0, Qt::DisplayRole)    >> &RDivision::identifier << &RDivision::setIdentifier;
 
   auto cs = newContainer(main->data()->systems());
-  cs->addColumn<bool,     FN(&RSystem::visible),      FN(&RSystem::setVisible)>       ("Rodyti");
-  cs->addColumn<QString,  FN(&RSystem::identifier),   FN(&RSystem::setIdentifier)>    ("Sistema");
+  cs->addColumn("Sistema");
+  cs->addAccessor2<bool>    (0, Qt::CheckStateRole) >> &RSystem::visible    << &RSystem::setVisible;
+  cs->addAccessor2<QString> (0, Qt::DisplayRole)    >> &RSystem::identifier << &RSystem::setIdentifier;
 
   m_divisionContainer = cd;
   m_systemContainer   = cs;

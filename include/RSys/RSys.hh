@@ -31,6 +31,7 @@ class RSystem;
 class RAbstractItemModel;
 class RMainWindow;
 class RModel1D;
+class RRowObserverAdapter;
 class RTab;
 /**********************************************************************************************/
 // Util

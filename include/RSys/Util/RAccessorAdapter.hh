@@ -29,7 +29,7 @@ class RAccessorAdapterI: public RAccessorAdapter<typename _Accessor::Entry>
     _T typename _Accessor::Entry              Entry;
     _T typename _Accessor::Value              Value;
 
-  private:
+  public:
     _M Accessor       m_accessor;
 
   public:
