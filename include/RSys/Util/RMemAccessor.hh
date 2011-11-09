@@ -11,9 +11,10 @@
  * Member static accessor
  */
 
-template <class _Entry, class _Value,
-          _Value (_Entry::*Getter)() const,
-          void   (_Entry::*Setter)(const _Value&)>
+template <class _Entry,
+          class _Value,
+          class _Getter, _Getter Getter,
+          class _Setter, _Setter Setter>
 class RMemAccessor
 {
   public:

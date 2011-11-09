@@ -1,6 +1,9 @@
 #include <QtGui/QLabel>
 #include <QtGui/QVBoxLayout>
+#include <RSys/Interface/RModel1D.hh>
+#include <RSys/Interface/RModel2D.hh>
 #include <RSys/Interface/RTab.hh>
+#include <RSys/Interface/RTableView.hh>
 
 /********************************************* RS *********************************************/
 /*                                            RTab                                            */
@@ -23,6 +26,26 @@ Vacuum RTab :: RTab(const QString& title, QWidget* parent):
 
 Vacuum RTab :: ~RTab()
 {
+}
+
+/**********************************************************************************************/
+
+void RTab :: makeTable1DTab(RContainer* container)
+{
+  RModel1D*   model     = new RModel1D(container, this);
+  RTableView* tableView = new RTableView(model, this);
+
+  layout()->addWidget(tableView);
+}
+
+/**********************************************************************************************/
+
+void RTab :: makeTable2DTab(RContainer* containerX, RContainer* containerY)
+{
+  RModel2D*   model     = new RModel2D(containerX, containerY, this);
+  RTableView* tableView = new RTableView(model, this);
+
+  layout()->addWidget(tableView);
 }
 
 /**********************************************************************************************/

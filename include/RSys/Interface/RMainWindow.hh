@@ -32,11 +32,24 @@ class RMainWindow: public QMainWindow
     _M QAction*       m_systemsStateAction;
     _M QAction*       m_helpAction;
 
+    _M RData*         m_data;
+    _M RContainer*    m_divisionContainer;
+    _M RContainer*    m_measureContainer;
+    _M RContainer*    m_systemContainer;
+
   public:
     _M Vacuum         RMainWindow(QWidget* parent = 0);
     _V Vacuum         ~RMainWindow();
     _M void           createActions();
+    _M void           createContainers();
     _M void           createTabs();
+    _M RData*         data() const { return m_data; }
+    _M RContainer*    divisionContainer() const { return m_divisionContainer; }
+    _M RContainer*    measureContainer() const { return m_measureContainer; }
+    _M RContainer*    systemContainer() const { return m_systemContainer; }
+
+  private:
+    _M void           addLeftTab(RTab* tab, const char* title, const char* toolTip);
 };
 
 /**********************************************************************************************/

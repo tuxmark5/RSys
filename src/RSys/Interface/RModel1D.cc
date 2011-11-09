@@ -1,5 +1,6 @@
 #include <QtGui/QFont>
 #include <RSys/Interface/RModel1D.hh>
+#include <RSys/Interface/RRowObserverAdapter.hh>
 
 /**********************************************************************************************/
 QFont g_lastRowFont;
@@ -8,9 +9,12 @@ QFont g_lastRowFont;
 /**********************************************************************************************/
 
 Vacuum RModel1D :: RModel1D(RContainer* container, QObject* parent):
-  QAbstractItemModel(parent),
-  m_container(container)
+  RAbstractItemModel(parent),
+  m_container(container),
+  m_writable(container->writable())
 {
+  container->addObserver(new RRowObserverAdapter(this));
+
   if (!g_lastRowFont.italic())
     g_lastRowFont.setItalic(true);
 }
@@ -41,11 +45,17 @@ QVariant RModel1D :: data(const QModelIndex& index, int role) const
   int height  = m_container->height();
 
   R_GUARD(index.column() <  width,  QVariant());
-  R_GUARD(index.row()    != height, lastRowData(index, role));
+
+  if (m_writable && index.row() == height)
+    return lastRowData(index, role);
+
   R_GUARD(index.row()    <  height, QVariant());
 
   switch (role)
   {
+    case Qt::CheckStateRole:
+      return true;
+
     case Qt::EditRole:
     case Qt::DisplayRole:
       return m_container->get(index.column(), index.row());
@@ -62,7 +72,9 @@ Qt::ItemFlags RModel1D :: flags(const QModelIndex& index) const
 
   return Qt::ItemIsSelectable
        | Qt::ItemIsEditable
-       | Qt::ItemIsEnabled;
+       | Qt::ItemIsEnabled
+       | Qt::ItemIsUserCheckable // TODO: handle this more properly
+      ;
 }
 
 /**********************************************************************************************/
@@ -118,7 +130,17 @@ int RModel1D :: rowCount(const QModelIndex& parent) const
 {
   R_GUARD(!parent.isValid(), 0);
 
-  return m_container->height() + 1;
+  return m_container->height() + int(m_writable);
+}
+
+/**********************************************************************************************/
+
+void RModel1D :: setContainer(RContainer* container)
+{
+  beginResetModel();
+  // TODO: RE-REGISTER observers
+  m_container = container;
+  endResetModel();
 }
 
 /**********************************************************************************************/
@@ -127,6 +149,10 @@ bool RModel1D ::setData(const QModelIndex& index, const QVariant& value, int rol
 {
   R_GUARD(index.isValid(),      false);
   R_GUARD(role == Qt::EditRole, false);
+
+  if (index.row() == m_container->height())
+    if (!m_container->add())
+      return false;
 
   m_container->set(index.column(), index.row(), value);
   return true;

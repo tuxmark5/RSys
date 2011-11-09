@@ -15,17 +15,26 @@
 #define _T typedef
 #define _V virtual
 /**********************************************************************************************/
+#define FN(x)         decltype(x), x
 #define R_GUARD(x, r) if (!(x)) return r
 /**********************************************************************************************/
 #define Vacuum
 /**********************************************************************************************/
+// Core
 class RData;
 class RDivision;
 class RElement;
 class RMeasure;
 class RSystem;
 /**********************************************************************************************/
+// Interface
+class RAbstractItemModel;
 class RMainWindow;
+class RModel1D;
+class RTab;
+/**********************************************************************************************/
+// Util
+class RContainer;
 /**********************************************************************************************/
 class QDateEdit;
 class QLabel;
@@ -37,10 +46,14 @@ class QTabWidget;
 class QTableView;
 /**********************************************************************************************/
 typedef long long                 RID;
-typedef QVector<RDivision*>       RDivisionVector;
-typedef QList<RMeasure*>          RMeasureList;
 typedef QMap<RMeasure*, double>   RMeasureMap;
-typedef QVector<RSystem*>         RSystemVector;
+typedef QMap<RSystem*, double>    RSystemMap;
+/**********************************************************************************************/
+#include <RSys/Util/ROList.hh>
+/**********************************************************************************************/
+typedef ROList<RDivision*>        RDivisionList;
+typedef ROList<RMeasure*>         RMeasureList;
+typedef ROList<RSystem*>          RSystemList;
 /**********************************************************************************************/
 
 #endif /* RSYS_RSYS_HH */

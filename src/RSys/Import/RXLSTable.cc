@@ -18,7 +18,7 @@ Vacuum RXLSTable :: ~RXLSTable()
 
 /**********************************************************************************************/
 
-QVariant RXLSTable::cell(int x, int y) const
+QVariant RXLSTable :: cell(int x, int y) const
 {
   BasicExcelCell* cell = m_table->Cell(y, x);
   int             type = cell->Type();
