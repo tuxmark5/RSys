@@ -3,6 +3,7 @@
 
 
 #include <RSys/Tests/TestRXLSDocument.hh>
+#include <RSys/Tests/TestRValidator.hh>
 
 
 void run_all_tests(int argc, char *argv[]);
