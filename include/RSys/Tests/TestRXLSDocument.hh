@@ -2,7 +2,6 @@
 #define TESTRXLSDOCUMENT_HH
 
 #include <QtTest/QTest>
-#include <RSys/RSys.hh>
 #include <RSys/Import/RXLSDocument.hh>
 
 
@@ -12,12 +11,12 @@ class TestRXLSDocument: public QObject
     Q_OBJECT
 
   private:
-    _V void     checkMeasures(RXLSTable *table);
-    _V void     checkDivisions(RXLSTable *table);
-    _V void     checkSystems(RXLSTable *table);
-    _V void     checkDivisionsSystems(RXLSTable *table);
-    _V void     checkMeasuresAdministration(RXLSTable *table);
-    _V void     checkAmounts(RXLSTable *table);
+    _M void     checkMeasures(RXLSTable *table);
+    _M void     checkDivisions(RXLSTable *table);
+    _M void     checkSystems(RXLSTable *table);
+    _M void     checkDivisionsSystems(RXLSTable *table);
+    _M void     checkMeasuresAdministration(RXLSTable *table);
+    _M void     checkAmounts(RXLSTable *table);
   private slots:
     _M void     testOpenningExampleFile();
   };
