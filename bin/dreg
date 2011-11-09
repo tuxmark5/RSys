@@ -42,6 +42,7 @@ COMPONENTS = {
         'l':  'Logic',
         'p':  'Parse',
         's':  'Store',
+        'a':  'All',
         }
 PHASES = {
         #'s':  'Strategija',
