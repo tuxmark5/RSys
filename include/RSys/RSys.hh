@@ -46,6 +46,8 @@ class QTabWidget;
 class QTableView;
 /**********************************************************************************************/
 typedef long long                 RID;
+typedef enum {RDEBUG, RINFO, RWARNING, RERROR, RCRITICAL}
+                                  RLEVEL;
 typedef QMap<RMeasure*, double>   RMeasureMap;
 typedef QMap<RSystem*, double>    RSystemMap;
 /**********************************************************************************************/
