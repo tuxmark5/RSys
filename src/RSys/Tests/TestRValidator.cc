@@ -37,3 +37,13 @@ void TestRValidator::testTableTypeDetection()
   QCOMPARE(validator.validate(document.tableAt(0), &data), true);
   QCOMPARE(validator.validate(document.tableAt(1), &data), false);
 }
+
+void TestRValidator::testImportingXLSFile()
+{
+  RValidator validator;
+  RData data;
+
+  QCOMPARE(validator.validate(
+             QString::fromUtf8("../../RSys/static/test2.xls"), &data),
+           false);
+}

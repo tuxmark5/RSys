@@ -3,6 +3,7 @@
 
 #include <RSys/Core/RMeasure.hh>
 #include <RSys/Import/RIDocument.hh>
+#include <RSys/Import/RXLSDocument.hh>
 #include <RSys/Core/RData.hh>
 
 
@@ -12,14 +13,17 @@ class RValidator: public QObject
     Q_OBJECT
 
   public slots:
-//  _M  bool validate(QString filename, RData *data);
-//  _M  bool validate(RIDocument *document, RData *data);
+    _M  bool validate(const QString &filename, RData *data);
+    _M  bool validate(RIDocument *document, RData *data);
     _M  bool validate(RITable *table, RData *data);
     _M  bool validateMeasures(RITable *table, RData *data);
 
 
   signals:
-    _M  void log(RLEVEL level, QString message);
+    // FIXME: Kaip galima būtų realizuoti galimybę grupuoti žinutes?
+    // Pavyzdžiui, jei turime 200 pranešimų apie to pačio tipo
+    // klaidą. Taip pat, kaip užtikrinti ID unikalumą?
+    _M  void log(RLEVEL level, RID id, QString message);
     _M  void parsed(double part);
 
 };
