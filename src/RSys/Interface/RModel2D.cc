@@ -62,10 +62,10 @@ QVariant RModel2D :: headerData(int section, Qt::Orientation orientation, int ro
   switch (orientation)
   {
     case Qt::Horizontal:
-      return m_containerX->get(0, section);
+      return m_containerX->get(0, section, role);
 
     case Qt::Vertical:
-      return m_containerY->get(0, section);
+      return m_containerY->get(0, section, role);
   }
 
   return QVariant();

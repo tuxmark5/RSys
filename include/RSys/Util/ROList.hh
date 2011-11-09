@@ -98,7 +98,7 @@ class ROList
       // TODO: delete observers & dispatchers
     }
 
-    _M void addObserver (RIObserver* observer)
+    _M void addObserver(RIObserver* observer)
     {
       RODispatcher* dispatcher = new RODispatcher();
 
@@ -111,14 +111,29 @@ class ROList
     {
       int i0 = m_list.length();
 
-      guarded(&RIObserver::insert0, &RIObserver::insert1, [&]()
+      guarded(&RIObserver::insert0, &RIObserver::insert1, [&]() -> bool
       { return m_list.append(x), true; }, i0, i0 + 1);
     }
 
     _M void remove(int i)
     {
-      guarded(&RIObserver::remove0, &RIObserver::remove1, [&]()
+      guarded(&RIObserver::remove0, &RIObserver::remove1, [&]() -> bool
       { return m_list.remove(i), true; }, i, i + 1);
+    }
+
+    _M void removeObserver(RIObserver* observer)
+    {
+      for (RODispatcher** self = &m_dispatcher; *self; self = &(*self)->m_nextDispatcher)
+      {
+        if ((*self)->m_observer == observer)
+        {
+          RODispatcher* dispatcher0 = *self;
+
+          *self = (*self)->m_nextDispatcher;
+          delete dispatcher0;
+          return;
+        }
+      }
     }
 
     _M const Value&     at(int x) const     { return m_list.at(x);    }

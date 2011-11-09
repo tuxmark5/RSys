@@ -110,6 +110,7 @@ HEADERS             +=                              \
   include/RSys/Util/RContainer.hh                   \
   include/RSys/Util/RDynAccessor.hh                 \
   include/RSys/Util/RFunAccessor.hh                 \
+  include/RSys/Util/RFunctional.hh                  \
   include/RSys/Util/RMemAccessor.hh                 \
   include/RSys/Util/ROList.hh                       \
   include/RSys/Tests/RTests.hh                      \

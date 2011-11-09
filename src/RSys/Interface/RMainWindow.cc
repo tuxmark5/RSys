@@ -126,18 +126,24 @@ void RMainWindow :: createActions()
 void RMainWindow :: createContainers()
 {
   auto cd = newContainer(m_data->divisions());
-  cd->addColumn<QString, FN(&RDivision::identifier),  FN(&RDivision::setIdentifier)>  ("Pavadinimas");
-  cd->addColumn<QString, FN(&RDivision::name),        FN(&RDivision::setName)>        ("Aprašymas");
+  cd->addColumn("Pavadinimas");
+  cd->addColumn("Aprašymas");
+  cd->addAccessor2<QString>(0, Qt::DisplayRole) >> &RDivision::identifier << &RDivision::setIdentifier;
+  cd->addAccessor2<QString>(1, Qt::DisplayRole) >> &RDivision::name       << &RDivision::setName;
   cd->setAlloc([]() { return new RDivision(0); });
 
   auto cm = newContainer(m_data->measures());
-  cm->addColumn<QString, FN(&RMeasure::identifier),   FN(&RMeasure::setIdentifier)>   ("Pavadinimas");
-  cm->addColumn<QString, FN(&RMeasure::name),         FN(&RMeasure::setName)>         ("Aprašymas");
+  cm->addColumn("Pavadinimas");
+  cm->addColumn("Aprašymas");
+  cm->addAccessor<QString, FN(&RMeasure::identifier),   FN(&RMeasure::setIdentifier)>   (0, Qt::DisplayRole);
+  cm->addAccessor<QString, FN(&RMeasure::name),         FN(&RMeasure::setName)>         (1, Qt::DisplayRole);
   cm->setAlloc([]() { return new RMeasure(0); });
 
   auto cs = newContainer(m_data->systems());
-  cs->addColumn<QString, FN(&RSystem::identifier),    FN(&RSystem::setIdentifier)>    ("Pavadinimas");
-  cs->addColumn<QString, FN(&RSystem::name),          FN(&RSystem::setName)>          ("Aprašymas");
+  cs->addColumn("Pavadinimas");
+  cs->addColumn("Aprašymas");
+  cs->addAccessor<QString, FN(&RSystem::identifier),    FN(&RSystem::setIdentifier)>    (0, Qt::DisplayRole);
+  cs->addAccessor<QString, FN(&RSystem::name),          FN(&RSystem::setName)>          (1, Qt::DisplayRole);
   cs->setAlloc([]() { return new RSystem(0); });
 
   m_divisionContainer = cd;
