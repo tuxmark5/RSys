@@ -2,7 +2,7 @@
 #define TESTRVALIDATOR_HH
 
 #include <QtTest/QTest>
-#include <RSys/Import/RValidator.hh>
+#include <RSys/Parse/RValidator.hh>
 #include <RSys/Import/RXLSDocument.hh>
 
 class TestRValidator: public QObject

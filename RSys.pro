@@ -67,7 +67,7 @@ SOURCES             +=                              \
   src/RSys/Interface/RUsageWidget.cc                \
   src/RSys/Tests/RTests.cc                          \
   src/RSys/Tests/TestRXLSDocument.cc                \
-  src/RSys/Import/RValidator.cc                     \
+  src/RSys/Parse/RValidator.cc                      \
   src/RSys/Tests/TestRValidator.cc                  \
   src/RSys/main.cc
 
@@ -115,7 +115,7 @@ HEADERS             +=                              \
   include/RSys/Util/ROList.hh                       \
   include/RSys/Tests/RTests.hh                      \
   include/RSys/Tests/TestRXLSDocument.hh            \
-  include/RSys/Import/RValidator.hh                 \
+  include/RSys/Parse/RValidator.hh                  \
   include/RSys/Tests/TestRValidator.hh
 
 ################################################################################################
