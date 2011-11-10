@@ -1,6 +1,7 @@
 #include <QtCore/QLocale>
 #include <QtGui/QApplication>
 #include <RSys/Interface/RMainWindow.hh>
+#include <RSys/Tests/RTests.hh>
 
 #include <RSys/Util/RFT.hh>
 #include <functional>
@@ -149,18 +150,23 @@ typedef FT::take<4, Argz2>::x   Argz4;
 
 int main(int argc, char** argv)
 {
+  run_all_tests(argc, argv);
+  return 0;
 //  GEN<Argz4 >::call(2, 2, 3, 3);
 
 
   //Zimbabwe::call(2, 2, 3);
 
-  QLocale       locale(QLocale::Lithuanian, QLocale::Lithuania);
-  QLocale::setDefault(locale);
-  QApplication  app(argc, argv);
-  RMainWindow   mainWnd;
+//QLocale       locale(QLocale::Lithuanian, QLocale::Lithuania);
+//QLocale::setDefault(locale);
+//QApplication  app(argc, argv);
+//RMainWindow   mainWnd;
 
-  mainWnd.show();
-  return app.exec();
+//QApplication  app(argc, argv);
+//RMainWindow   mainWnd;
+
+//mainWnd.show();
+//return app.exec();
 }
 
 /**********************************************************************************************/

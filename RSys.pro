@@ -3,7 +3,7 @@
 #                                             RSys                                             #
 ################################################################################################
 
-CONFIG              += depend_includepath
+CONFIG              += depend_includepath qtestlib
 QT                  += core gui sql
 TARGET               = RSys
 TEMPLATE             = app
@@ -67,6 +67,10 @@ SOURCES             +=                              \
   src/RSys/Interface/RSystemTab.cc                  \
   src/RSys/Interface/RUsageTab.cc                   \
   src/RSys/Interface/RUsageWidget.cc                \
+  src/RSys/Tests/RTests.cc                          \
+  src/RSys/Tests/TestRXLSDocument.cc                \
+  src/RSys/Parse/RValidator.cc                      \
+  src/RSys/Tests/TestRValidator.cc                  \
   src/RSys/main.cc
 
 HEADERS             +=                              \
@@ -113,7 +117,11 @@ HEADERS             +=                              \
   include/RSys/Util/RFunctional.hh                  \
   include/RSys/Util/RFT.hh                          \
   include/RSys/Util/RMemAccessor.hh                 \
-  include/RSys/Util/ROList.hh
+  include/RSys/Util/ROList.hh                       \
+  include/RSys/Tests/RTests.hh                      \
+  include/RSys/Tests/TestRXLSDocument.hh            \
+  include/RSys/Parse/RValidator.hh                  \
+  include/RSys/Tests/TestRValidator.hh
 
 ################################################################################################
 
