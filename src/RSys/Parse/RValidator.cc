@@ -136,7 +136,6 @@ bool RValidator::validateMeasures(RITable *table, RData *data)
       measure->setName(table->cell(1, i).toString());
       list->append(measure);
       added++;
-      // FIXME: Ar nėra kartais šioje vietoje „memory leak“?
     }
   }
   this->log(RINFO, 1,
@@ -188,7 +187,6 @@ bool RValidator::validateDivisions(RITable *table, RData *data)
     division->setName(table->cell(1, i).toString());
     list->append(division);
     added++;
-    // FIXME: Ar nėra kartais šioje vietoje „memory leak“?
   }
   this->log(RINFO, 6,
             QString::fromUtf8(
@@ -239,7 +237,6 @@ bool RValidator::validateSystems(RITable *table, RData *data)
     system->setName(table->cell(1, i).toString());
     list->append(system);
     added++;
-    // FIXME: Ar nėra kartais šioje vietoje „memory leak“?
   }
   this->log(RINFO, 6,
             QString::fromUtf8(
@@ -272,6 +269,9 @@ bool RValidator::validateDivisionsSystems(RITable *table, RData *data)
       for (int j = 3; j < table->height() - 1; j++)
       {
         if (table->cell(0, j).isNull()) {
+          continue;
+          }
+        if (!table->cell(i, j).toBool()) {
           continue;
           }
         RSystem *system = this->getSystem(data, table->cell(0, j).toString());
@@ -323,6 +323,9 @@ bool RValidator::validateDivisionsMeasures(RITable *table, RData *data)
         if (table->cell(0, j).isNull()) {
           continue;
           }
+        if (table->cell(i, j).isNull()) {
+          continue;
+          }
         RMeasure *measure = this->getMeasure(data, table->cell(0, j).toString());
         if (!measure)
         {
@@ -333,7 +336,6 @@ bool RValidator::validateDivisionsMeasures(RITable *table, RData *data)
         else
         {
           division->m_measureMap[measure] = table->cell(i, j).toDouble();
-          // FIXME: Jei 0.0, tai nekurti įrašo iš viso?
           updatedRelations++;
         }
       }
