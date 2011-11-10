@@ -52,7 +52,7 @@ typedef long long                 RID;
 typedef enum {RDEBUG, RINFO, RWARNING, RERROR, RCRITICAL}
                                   RLEVEL;
 typedef QMap<RMeasure*, double>   RMeasureMap;
-typedef QMap<RSystem*, double>    RSystemMap;
+typedef QMap<RSystem*, bool>      RSystemMap;
 /**********************************************************************************************/
 #include <RSys/Util/ROList.hh>
 /**********************************************************************************************/
