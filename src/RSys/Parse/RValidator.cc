@@ -27,6 +27,19 @@ RSystem *RValidator::getSystem(RData *data, const QString &identifier)
 }
 
 
+RMeasure *RValidator::getMeasure(RData *data, const QString &identifier)
+{
+  for (auto it = data->measures()->begin(); it != data->measures()->end(); it++)
+  {
+    if ((*it)->identifier() == identifier)
+    {
+      return *it;
+    }
+  }
+  return NULL;
+}
+
+
 bool RValidator::validate(const QString &filename, RData *data)
 {
   RXLSDocument document;
@@ -77,6 +90,10 @@ bool RValidator::validate(RITable *table, RData *data)
   else if (table->title() == QString::fromUtf8("IS-Padaliniai"))
   {
     return this->validateDivisionsSystems(table, data);
+  }
+  else if (table->title() == QString::fromUtf8("Paramos administravimas"))
+  {
+    return this->validateDivisionsMeasures(table, data);
   }
   else
   {
@@ -276,6 +293,56 @@ bool RValidator::validateDivisionsSystems(RITable *table, RData *data)
             QString::fromUtf8(
               "Iš %1 buvo sėkmingai importuoti %2 padalinių – "
               "informacinių sistemų ryšiai."
+              ).arg(table->title()).arg(updatedRelations));
+  return !errors;
+}
+
+
+bool RValidator::validateDivisionsMeasures(RITable *table, RData *data)
+{
+  bool errors = false;
+  int updatedRelations = 0;
+  for (int i = 1; i < table->width(); i++)
+  {
+    // TODO: Pridėti visus tikrinimus.
+    if (table->cell(i, 2).isNull())
+      continue;
+    if (table->cell(i, 2).toString() == QString::fromUtf8("Iš viso laiko"))
+      continue;
+    RDivision *division = this->getDivision(data, table->cell(i, 2).toString());
+    if (!division)
+    {
+      // TODO: Pranešti, kad nebuvo rastas padalinys.
+      qDebug() << "Nerastas padalinys: " << table->cell(i, 2).toString();
+      errors = true;
+    }
+    else
+    {
+      for (int j = 3; j < table->height() - 1; j++)
+      {
+        if (table->cell(0, j).isNull()) {
+          continue;
+          }
+        RMeasure *measure = this->getMeasure(data, table->cell(0, j).toString());
+        if (!measure)
+        {
+          // TODO: Pranešti, kad nebuvo rasta sistema.
+          qDebug() << "Nerasta priemonė." << table->title() << 0 << j << table->cell(0, j).toString();
+          errors = true;
+        }
+        else
+        {
+          division->m_measureMap[measure] = table->cell(i, j).toDouble();
+          // FIXME: Jei 0.0, tai nekurti įrašo iš viso?
+          updatedRelations++;
+        }
+      }
+    }
+  }
+  this->log(RINFO, 7,
+            QString::fromUtf8(
+              "Iš %1 buvo sėkmingai importuoti %2 padalinių – "
+              "paramos priemonių ryšiai."
               ).arg(table->title()).arg(updatedRelations));
   return !errors;
 }

@@ -107,7 +107,45 @@ void TestRValidator::testReadingDivisionsSystems()
   QCOMPARE(division->m_systemMap[systems->at(0)], 1.0);
   QCOMPARE(division->m_systemMap[systems->at(1)], 1.0);
   QCOMPARE(division->m_systemMap[systems->at(2)], 0.0);
+}
 
+
+void TestRValidator::testReadingDivisionsMeasures()
+{
+  RXLSDocument document(QString::fromUtf8("../../RSys/static/test2.xls"));
+  QCOMPARE(document.nameAt(4),
+           QString::fromUtf8("Paramos administravimas"));
+
+  RValidator validator;
+  RData data;
+  RDivisionList *divisions = data.divisions();
+  RMeasureList *measures = data.measures();
+
+  QCOMPARE(validator.validateMeasures(document.tableAt(0), &data), true);
+  QCOMPARE(validator.validateDivisions(document.tableAt(1), &data), true);
+  QCOMPARE(validator.validateDivisionsMeasures(document.tableAt(4), &data), true);
+
+  RDivision *division = divisions->at(6);
+
+  QCOMPARE(
+        division->identifier(),
+        QString::fromUtf8("PA7"));
+  QCOMPARE(
+        measures->at(0)->identifier(),
+        QString::fromUtf8("p1-1"));
+  QCOMPARE(
+        measures->at(1)->identifier(),
+        QString::fromUtf8("p1-2"));
+  QCOMPARE(
+        measures->at(2)->identifier(),
+        QString::fromUtf8("p1-3"));
+  QCOMPARE(
+        measures->at(3)->identifier(),
+        QString::fromUtf8("p1-4"));
+  QCOMPARE(division->m_measureMap[measures->at(0)], 1.0);
+  QCOMPARE(division->m_measureMap[measures->at(1)], 0.5);
+  QCOMPARE(division->m_measureMap[measures->at(2)], 1.0);
+  QCOMPARE(division->m_measureMap[measures->at(3)], 0.0);
 }
 
 
@@ -128,6 +166,9 @@ void TestRValidator::testTableTypeDetection()
 
   // IS-Padaliniai
   QCOMPARE(validator.validate(document.tableAt(3), &data), true);
+
+  // Paramos administravimas
+  QCOMPARE(validator.validate(document.tableAt(4), &data), true);
 
   // Neatpažintas
   QCOMPARE(validator.validate(document.tableAt(7), &data), false);
