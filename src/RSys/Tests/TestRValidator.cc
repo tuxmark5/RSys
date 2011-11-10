@@ -133,16 +133,16 @@ void TestRValidator::testReadingDivisionsMeasures()
         QString::fromUtf8("PA7"));
   QCOMPARE(
         measures->at(0)->identifier(),
-        QString::fromUtf8("p1-1"));
+        QString::fromUtf8("P1-1"));
   QCOMPARE(
         measures->at(1)->identifier(),
-        QString::fromUtf8("p1-2"));
+        QString::fromUtf8("P1-2"));
   QCOMPARE(
         measures->at(2)->identifier(),
-        QString::fromUtf8("p1-3"));
+        QString::fromUtf8("P1-3"));
   QCOMPARE(
         measures->at(3)->identifier(),
-        QString::fromUtf8("p1-4"));
+        QString::fromUtf8("P1-4"));
   QCOMPARE(division->m_measureMap[measures->at(0)], 1.0);
   QCOMPARE(division->m_measureMap[measures->at(1)], 0.5);
   QCOMPARE(division->m_measureMap[measures->at(2)], 1.0);

@@ -132,7 +132,7 @@ bool RValidator::validateMeasures(RITable *table, RData *data)
       // Priemonė.
       // FIXME: Kryptys yra ignoruojamos.
       RMeasure *measure = new RMeasure(data);
-      measure->setIdentifier(table->cell(0, i).toString());
+      measure->setIdentifier(table->cell(0, i).toString().toUpper());
       measure->setName(table->cell(1, i).toString());
       list->append(measure);
       added++;
@@ -183,7 +183,7 @@ bool RValidator::validateDivisions(RITable *table, RData *data)
       continue;
     }
     RDivision *division = new RDivision(data);
-    division->setIdentifier(table->cell(0, i).toString());
+    division->setIdentifier(table->cell(0, i).toString().toUpper());
     division->setName(table->cell(1, i).toString());
     list->append(division);
     added++;
@@ -233,7 +233,7 @@ bool RValidator::validateSystems(RITable *table, RData *data)
       continue;
     }
     RSystem *system = new RSystem(data);
-    system->setIdentifier(table->cell(0, i).toString());
+    system->setIdentifier(table->cell(0, i).toString().toUpper());
     system->setName(table->cell(1, i).toString());
     list->append(system);
     added++;
@@ -257,7 +257,8 @@ bool RValidator::validateDivisionsSystems(RITable *table, RData *data)
     // TODO: Pridėti visus tikrinimus.
     if (table->cell(i, 2).isNull())
       continue;
-    RDivision *division = this->getDivision(data, table->cell(i, 2).toString());
+    RDivision *division = this->getDivision(
+          data, table->cell(i, 2).toString().toUpper());
     if (!division)
     {
       // TODO: Pranešti, kad nebuvo rastas padalinys.
@@ -274,7 +275,8 @@ bool RValidator::validateDivisionsSystems(RITable *table, RData *data)
         if (!table->cell(i, j).toBool()) {
           continue;
           }
-        RSystem *system = this->getSystem(data, table->cell(0, j).toString());
+        RSystem *system = this->getSystem(
+              data, table->cell(0, j).toString().toUpper());
         if (!system)
         {
           // TODO: Pranešti, kad nebuvo rasta sistema.
@@ -309,7 +311,8 @@ bool RValidator::validateDivisionsMeasures(RITable *table, RData *data)
       continue;
     if (table->cell(i, 2).toString() == QString::fromUtf8("Iš viso laiko"))
       continue;
-    RDivision *division = this->getDivision(data, table->cell(i, 2).toString());
+    RDivision *division = this->getDivision(
+          data, table->cell(i, 2).toString().toUpper());
     if (!division)
     {
       // TODO: Pranešti, kad nebuvo rastas padalinys.
@@ -326,7 +329,8 @@ bool RValidator::validateDivisionsMeasures(RITable *table, RData *data)
         if (table->cell(i, j).isNull()) {
           continue;
           }
-        RMeasure *measure = this->getMeasure(data, table->cell(0, j).toString());
+        RMeasure *measure = this->getMeasure(
+              data, table->cell(0, j).toString().toUpper());
         if (!measure)
         {
           // TODO: Pranešti, kad nebuvo rasta sistema.
