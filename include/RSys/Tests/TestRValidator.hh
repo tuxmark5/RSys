@@ -14,9 +14,10 @@ class TestRValidator: public QObject
   private slots:
     _M void     testReadingMeasures();
     _M void     testReadingSystems();
+    _M void     testReadingDivisions();
+    _M void     testReadingDivisionsSystems();
     _M void     testTableTypeDetection();
     _M void     testImportingXLSFile();
-    _M void     testReadingDivisions();
 
 };
 

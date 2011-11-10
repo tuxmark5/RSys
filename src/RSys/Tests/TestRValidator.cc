@@ -75,6 +75,42 @@ void TestRValidator::testReadingDivisions()
 }
 
 
+void TestRValidator::testReadingDivisionsSystems()
+{
+  RXLSDocument document(QString::fromUtf8("../../RSys/static/test2.xls"));
+  QCOMPARE(document.nameAt(3),
+           QString::fromUtf8("IS-Padaliniai"));
+
+  RValidator validator;
+  RData data;
+  RDivisionList *divisions = data.divisions();
+  RSystemList *systems = data.systems();
+
+  QCOMPARE(validator.validateDivisions(document.tableAt(1), &data), true);
+  QCOMPARE(validator.validateSystems(document.tableAt(2), &data), true);
+  QCOMPARE(validator.validateDivisionsSystems(document.tableAt(3), &data), true);
+
+  RDivision *division = divisions->at(10);
+
+  QCOMPARE(
+        division->identifier(),
+        QString::fromUtf8("PA11"));
+  QCOMPARE(
+        systems->at(0)->identifier(),
+        QString::fromUtf8("IS1"));
+  QCOMPARE(
+        systems->at(1)->identifier(),
+        QString::fromUtf8("IS2"));
+  QCOMPARE(
+        systems->at(2)->identifier(),
+        QString::fromUtf8("IS3"));
+  QCOMPARE(division->m_systemMap[systems->at(0)], 1.0);
+  QCOMPARE(division->m_systemMap[systems->at(1)], 1.0);
+  QCOMPARE(division->m_systemMap[systems->at(2)], 0.0);
+
+}
+
+
 void TestRValidator::testTableTypeDetection()
 {
   RXLSDocument document(QString::fromUtf8("../../RSys/static/test2.xls"));
@@ -89,6 +125,9 @@ void TestRValidator::testTableTypeDetection()
 
   // IS
   QCOMPARE(validator.validate(document.tableAt(2), &data), true);
+
+  // IS-Padaliniai
+  QCOMPARE(validator.validate(document.tableAt(3), &data), true);
 
   // Neatpažintas
   QCOMPARE(validator.validate(document.tableAt(7), &data), false);

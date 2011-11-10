@@ -1,6 +1,32 @@
 #include <RSys/Parse/RValidator.hh>
 
 
+RDivision *RValidator::getDivision(RData *data, const QString &identifier)
+{
+  for (auto it = data->divisions()->begin(); it != data->divisions()->end(); it++)
+  {
+    if ((*it)->identifier() == identifier)
+    {
+      return *it;
+    }
+  }
+  return NULL;
+}
+
+
+RSystem *RValidator::getSystem(RData *data, const QString &identifier)
+{
+  for (auto it = data->systems()->begin(); it != data->systems()->end(); it++)
+  {
+    if ((*it)->identifier() == identifier)
+    {
+      return *it;
+    }
+  }
+  return NULL;
+}
+
+
 bool RValidator::validate(const QString &filename, RData *data)
 {
   RXLSDocument document;
@@ -47,6 +73,10 @@ bool RValidator::validate(RITable *table, RData *data)
   else if (table->title() == QString::fromUtf8("IS"))
   {
     return this->validateSystems(table, data);
+  }
+  else if (table->title() == QString::fromUtf8("IS-Padaliniai"))
+  {
+    return this->validateDivisionsSystems(table, data);
   }
   else
   {
@@ -200,5 +230,52 @@ bool RValidator::validateSystems(RITable *table, RData *data)
               "apie %2 informacines sistemas."
               ).arg(table->title()).arg(added));
 
+  return !errors;
+}
+
+
+bool RValidator::validateDivisionsSystems(RITable *table, RData *data)
+{
+  bool errors = false;
+  int updatedRelations = 0;
+  for (int i = 1; i < table->width(); i++)
+  {
+    // TODO: Pridėti visus tikrinimus.
+    if (table->cell(i, 2).isNull())
+      continue;
+    RDivision *division = this->getDivision(data, table->cell(i, 2).toString());
+    if (!division)
+    {
+      // TODO: Pranešti, kad nebuvo rastas padalinys.
+      qDebug() << "Nerastas padalinys: " << table->cell(i, 2).toString();
+      errors = true;
+    }
+    else
+    {
+      for (int j = 3; j < table->height() - 1; j++)
+      {
+        if (table->cell(0, j).isNull()) {
+          continue;
+          }
+        RSystem *system = this->getSystem(data, table->cell(0, j).toString());
+        if (!system)
+        {
+          // TODO: Pranešti, kad nebuvo rasta sistema.
+          qDebug() << "Nerasta sistema." << table->title() << 0 << j << table->cell(0, j).toString();
+          errors = true;
+        }
+        else
+        {
+          division->m_systemMap[system] = table->cell(i, j).toBool();
+          updatedRelations++;
+        }
+      }
+    }
+  }
+  this->log(RINFO, 7,
+            QString::fromUtf8(
+              "Iš %1 buvo sėkmingai importuoti %2 padalinių – "
+              "informacinių sistemų ryšiai."
+              ).arg(table->title()).arg(updatedRelations));
   return !errors;
 }
