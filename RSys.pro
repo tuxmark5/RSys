@@ -1,3 +1,4 @@
+
 ############################################## RS ##############################################
 #                                             RSys                                             #
 ################################################################################################
@@ -110,6 +111,7 @@ HEADERS             +=                              \
   include/RSys/Util/REntity2D.hh                    \
   include/RSys/Util/RFunAccessor.hh                 \
   include/RSys/Util/RFunctional.hh                  \
+  include/RSys/Util/RFT.hh                          \
   include/RSys/Util/RMemAccessor.hh                 \
   include/RSys/Util/ROList.hh
 

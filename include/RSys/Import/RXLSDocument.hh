@@ -15,16 +15,19 @@ using namespace ExcelFormat;
 class RXLSDocument: public RIDocument
 {
   private:
-    _M BasicExcel*  m_document;
+    _M BasicExcel*    m_document;
+    _M bool           m_opened: 1;
+
   public:
-    _M              RXLSDocument();
-    _M              RXLSDocument(const QString& name);
-    _V              ~RXLSDocument();
-    _V void         open(const QString& name);
-    _V void         close();
-    _V QString      nameAt(int index) const;
-    _V int          numTables() const;
-    _V RXLSTable*   tableAt(int index) const;
+    _M Vacuum         RXLSDocument();
+    _M Vacuum         RXLSDocument(const QString& name);
+    _V Vacuum         ~RXLSDocument();
+    _V bool           open(const QString& name);
+    _V void           close();
+    _M bool           isOpen() const { return m_opened; }
+    _V QString        nameAt(int index) const;
+    _V int            numTables() const;
+    _V RXLSTable*     tableAt(int index) const;
 };
 
 /**********************************************************************************************/

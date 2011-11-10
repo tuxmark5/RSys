@@ -5,14 +5,16 @@
 /**********************************************************************************************/
 
 Vacuum RXLSDocument :: RXLSDocument():
-  m_document(new BasicExcel())
+  m_document(new BasicExcel()),
+  m_opened(false)
 {
 }
 
 /**********************************************************************************************/
 
 Vacuum RXLSDocument :: RXLSDocument(const QString& name):
-  m_document(new BasicExcel())
+  m_document(new BasicExcel()),
+  m_opened(false)
 {
   open(name);
 }
@@ -27,9 +29,10 @@ Vacuum RXLSDocument :: ~RXLSDocument()
 
 /**********************************************************************************************/
 
-void RXLSDocument :: open(const QString& name)
+bool RXLSDocument :: open(const QString& name)
 {
-  m_document->Load(name.toAscii().constData());
+  m_opened = m_document->Load(name.toAscii().constData());
+  return m_opened;
 }
 
 /**********************************************************************************************/

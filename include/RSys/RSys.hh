@@ -50,7 +50,7 @@ class QTableView;
 /**********************************************************************************************/
 typedef long long                 RID;
 typedef QMap<RMeasure*, double>   RMeasureMap;
-typedef QMap<RSystem*, double>    RSystemMap;
+typedef QMap<RSystem*, bool>      RSystemMap;
 /**********************************************************************************************/
 #include <RSys/Util/ROList.hh>
 /**********************************************************************************************/

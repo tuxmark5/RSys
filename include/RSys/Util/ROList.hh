@@ -35,6 +35,7 @@ template <class _Value>
 class ROList
 {
   public:
+    _T Id<int>                        Key;
     _T _Value                         Value;
     _T QList<Value>                   Base;
     _T ROList<Value>                  Self;
