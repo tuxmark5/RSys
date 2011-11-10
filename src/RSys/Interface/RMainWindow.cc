@@ -163,6 +163,13 @@ void RMainWindow :: createContainers()
   cs->addAccessor2<QString>(1, Qt::DisplayRole) >> &RSystem::name       << &RSystem::setName;
   cs->setAlloc([]() { return new RSystem(0); });
 
+  /*auto mm = [=](DMeasure* measure, RDivision* division) -> double
+  {
+    RDivision*  division  = m_data->divisions()->at(y);
+    RMeasure*   measure   = m_data->measures()->at(x);
+    return division->m_measureMap.value(measure, 0);
+  };*/
+
   m_divisionContainer     = cd;
   m_measureContainer      = cm;
   m_submissionContainer   = cu;

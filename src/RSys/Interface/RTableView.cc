@@ -12,7 +12,6 @@ Vacuum RTableView :: RTableView(QAbstractItemModel* model, QWidget* parent):
   horizontalHeader()->setResizeMode(QHeaderView::Stretch);
   verticalHeader()->setDefaultSectionSize(20);
   setModel(model);
-  connect(this, SIGNAL(activated(QModelIndex)), this, SLOT(onActivated(QModelIndex)));
 }
 
 /**********************************************************************************************/
@@ -24,15 +23,15 @@ Vacuum RTableView :: ~RTableView()
 
 /**********************************************************************************************/
 
-void RTableView :: onActivated(const QModelIndex& index)
-{
+bool RTableView :: edit(const QModelIndex& index, EditTrigger trigger, QEvent* event)
+{ 
   if (RModel1D* model = qobject_cast<RModel1D*>(this->model()))
-  {
-    if (model->rowCount(QModelIndex()) == index.row())
-    {
+    if (model->rowCount(QModelIndex()) - 1 == index.row())
       model->addRow();
-    }
-  }
+
+  if (QTableView::edit(index, trigger, event))
+    return true;
+  return false;
 }
 
 /**********************************************************************************************/

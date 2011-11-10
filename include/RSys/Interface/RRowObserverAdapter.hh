@@ -11,6 +11,7 @@ class RRowObserverAdapter: public RIObserver
 {
   private:
     _M RAbstractItemModel*    m_model;
+    _M int                    m_modifier;
 
   public:
     _M Vacuum         RRowObserverAdapter(RAbstractItemModel* model);
@@ -21,6 +22,7 @@ class RRowObserverAdapter: public RIObserver
     _V void           modify1(int i0, int i1);
     _V bool           remove0(int i0, int i1);
     _V void           remove1(int i0, int i1);
+    _M void           setModifier(int modifier);
 };
 
 /**********************************************************************************************/

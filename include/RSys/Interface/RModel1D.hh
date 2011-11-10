@@ -34,6 +34,7 @@ class RModel1D: public RAbstractItemModel
     _V int            rowCount(const QModelIndex& parent = QModelIndex()) const;
     _M void           setContainer(RContainer* container);
     _V bool           setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
+    _M bool           writable() const { return m_writable; }
 
   private:
     _M void           notifyRowChanged(int row);

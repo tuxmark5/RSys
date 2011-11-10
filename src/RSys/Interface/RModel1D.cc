@@ -13,7 +13,9 @@ Vacuum RModel1D :: RModel1D(RContainer* container, QObject* parent):
   m_container(container),
   m_writable(container->writable())
 {
-  container->addObserver(m_rowAdapter = new RRowObserverAdapter(this));
+  m_rowAdapter = new RRowObserverAdapter(this);
+  m_rowAdapter->setModifier(m_writable);
+  container->addObserver(m_rowAdapter);
 
   if (!g_lastRowFont.italic())
     g_lastRowFont.setItalic(true);
@@ -30,7 +32,9 @@ Vacuum RModel1D :: ~RModel1D()
 
 void RModel1D :: addRow()
 {
-
+  int row = m_container->height();
+  if (m_container->add())
+    notifyRowChanged(row);
 }
 
 /**********************************************************************************************/
@@ -166,17 +170,14 @@ bool RModel1D :: setData(const QModelIndex& index, const QVariant& value, int ro
 {
   R_GUARD(index.isValid(), false);
 
-  qDebug() << "SET DATA" << value << role;
-
   if (role == Qt::EditRole)
     role = Qt::DisplayRole;
 
-  if (index.row() == m_container->height())
-    if (!m_container->add())
-      return false;
-
-  m_container->set(index.column(), index.row(), role, value);
-  notifyRowChanged(index.row()); // hmm
+  if (index.row() < m_container->height())
+  {
+    m_container->set(index.column(), index.row(), role, value);
+    notifyRowChanged(index.row()); // hmm
+  }
 
   return true;
 }

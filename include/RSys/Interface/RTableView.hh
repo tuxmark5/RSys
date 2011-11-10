@@ -16,8 +16,8 @@ class RTableView: public QTableView
     _M Vacuum       RTableView(QAbstractItemModel* model, QWidget* parent = 0);
     _V Vacuum       ~RTableView();
 
-  private slots:
-    _M void         onActivated(const QModelIndex& index);
+  protected:
+    _V bool         edit(const QModelIndex& index, EditTrigger trigger, QEvent* event);
 };
 
 /**********************************************************************************************/
