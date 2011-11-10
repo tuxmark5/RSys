@@ -21,6 +21,12 @@ void TestRValidator::testReadingMeasures()
         measures->at(26)->name(),
         QString::fromUtf8("3. Parama VVG veiklai, įgūdžiams "
                           "įgyti ir aktyviai pritaikyti"));
+  QCOMPARE(
+        measures->at(1)->identifier(),
+        QString::fromUtf8("P1-2"));
+  QCOMPARE(
+        measures->at(1)->name(),
+        QString::fromUtf8("2. Naudojimasis konsultavimo paslaugomis"));
 
 //for (auto it = measures->begin(); it != measures->end(); it++)
 //{
@@ -151,6 +157,47 @@ void TestRValidator::testReadingDivisionsMeasures()
 }
 
 
+void TestRValidator::testReadingSubmissions()
+{
+  RXLSDocument document(QString::fromUtf8("../../RSys/static/test2.xls"));
+  QCOMPARE(document.nameAt(5),
+           QString::fromUtf8("Paramos kiekiai"));
+
+  RValidator validator;
+  RData data;
+  RSubmissionList *submissions = data.submissions();
+
+  QCOMPARE(validator.validateMeasures(document.tableAt(0), &data), true);
+  QCOMPARE(validator.validateSubmissions(document.tableAt(5), &data), true);
+
+  RSubmission *submission = submissions->at(0);
+  QCOMPARE(
+        submission->measure()->identifier(),
+        QString::fromUtf8("P1-1"));
+  QCOMPARE(
+        submission->date0().toString("yyyy-MM-dd"),
+        QString::fromUtf8("2008-01-01"));
+  QCOMPARE(
+        submission->date1().toString("yyyy-MM-dd"),
+        QString::fromUtf8("2008-01-31"));
+  QCOMPARE(submission->count(), 15);
+
+  QCOMPARE(submissions->size(), 1242);
+
+  submission = submissions->at(1241);
+
+  QCOMPARE(
+        submission->measure()->identifier(),
+        QString::fromUtf8("P4-3"));
+  QCOMPARE(
+        submission->date0().toString("yyyy-MM-dd"),
+        QString::fromUtf8("2011-10-01"));
+  QCOMPARE(
+        submission->date1().toString("yyyy-MM-dd"),
+        QString::fromUtf8("2011-10-31"));
+  QCOMPARE(submission->count(), 35);
+}
+
 void TestRValidator::testTableTypeDetection()
 {
   RXLSDocument document(QString::fromUtf8("../../RSys/static/test2.xls"));
@@ -171,6 +218,9 @@ void TestRValidator::testTableTypeDetection()
 
   // Paramos administravimas
   QCOMPARE(validator.validate(document.tableAt(4), &data), true);
+
+  // Paramos kiekiai
+  QCOMPARE(validator.validate(document.tableAt(5), &data), true);
 
   // Neatpažintas
   QCOMPARE(validator.validate(document.tableAt(7), &data), false);

@@ -40,6 +40,13 @@ RMeasure *RValidator::getMeasure(RData *data, const QString &identifier)
 }
 
 
+QDate RValidator::parseDate(const QVariant &cell)
+{
+  return QDateTime::fromMSecsSinceEpoch(
+        (cell.toLongLong() - 25569) * 86400000).date();
+}
+
+
 bool RValidator::validate(const QString &filename, RData *data)
 {
   RXLSDocument document;
@@ -94,6 +101,10 @@ bool RValidator::validate(RITable *table, RData *data)
   else if (table->title() == QString::fromUtf8("Paramos administravimas"))
   {
     return this->validateDivisionsMeasures(table, data);
+  }
+  else if (table->title() == QString::fromUtf8("Paramos kiekiai"))
+  {
+    return this->validateSubmissions(table, data);
   }
   else
   {
@@ -345,10 +356,66 @@ bool RValidator::validateDivisionsMeasures(RITable *table, RData *data)
       }
     }
   }
-  this->log(RINFO, 7,
+  this->log(RINFO, 8,
             QString::fromUtf8(
               "Iš %1 buvo sėkmingai importuoti %2 padalinių – "
               "paramos priemonių ryšiai."
               ).arg(table->title()).arg(updatedRelations));
+  return !errors;
+}
+
+
+bool RValidator:: validateSubmissions(RITable *table, RData *data)
+{
+  RSubmissionList *list = data->submissions();
+  int added = 0;
+  bool errors = false;
+
+  for (int i = 1; i < table->height(); i++)
+  {
+    if (table->cell(0, i).isNull() &&
+        table->cell(1, i).isNull() &&
+        table->cell(2, i).isNull() &&
+        table->cell(3, i).isNull())
+    {
+      // Ignoruojame tuščias eilutes.
+      continue;
+    }
+    if (table->cell(0, i).isNull() ||
+        table->cell(1, i).isNull() ||
+        table->cell(2, i).isNull() ||
+        table->cell(3, i).isNull())
+    {
+      this->log(RWARNING, 10,
+                QString::fromUtf8(
+                  "Praleidžiama „%1“ lakšto %2 eilutė, "
+                  "nes joje yra ne vis duomenys."
+              ).arg(table->title()).arg(i));
+      errors = true;
+      continue;
+    }
+    RSubmission *submission = new RSubmission(data);
+    RMeasure *measure = this->getMeasure(
+          data, table->cell(0, i).toString().toUpper());
+    if (!measure)
+    {
+      // FIXME: Pridėti pranešimą.
+      errors = true;
+      continue;
+    }
+    submission->setMeasure(measure);
+    submission->setDate0(this->parseDate(table->cell(1, i)));
+    submission->setDate1(this->parseDate(table->cell(2, i)));
+    submission->setCount(table->cell(3, i).toInt());
+    list->append(submission);
+    added++;
+  }
+
+  this->log(RINFO, 9,
+            QString::fromUtf8(
+              "Iš %1 buvo sėkmingai importuoti %2 įrašai "
+              "apie paramos priemonių suadministravimą."
+              ).arg(table->title()).arg(added));
+
   return !errors;
 }
