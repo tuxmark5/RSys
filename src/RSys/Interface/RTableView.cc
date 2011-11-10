@@ -1,4 +1,5 @@
 #include <QtGui/QHeaderView>
+#include <RSys/Interface/RModel1D.hh>
 #include <RSys/Interface/RTableView.hh>
 
 /********************************************* RS *********************************************/
@@ -18,6 +19,19 @@ Vacuum RTableView :: RTableView(QAbstractItemModel* model, QWidget* parent):
 Vacuum RTableView :: ~RTableView()
 {
 
+}
+
+/**********************************************************************************************/
+
+bool RTableView :: edit(const QModelIndex& index, EditTrigger trigger, QEvent* event)
+{ 
+  if (RModel1D* model = qobject_cast<RModel1D*>(this->model()))
+    if (model->rowCount(QModelIndex()) - 1 == index.row())
+      model->addRow();
+
+  if (QTableView::edit(index, trigger, event))
+    return true;
+  return false;
 }
 
 /**********************************************************************************************/

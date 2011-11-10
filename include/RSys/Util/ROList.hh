@@ -111,14 +111,20 @@ class ROList
     {
       int i0 = m_list.length();
 
-      guarded(&RIObserver::insert0, &RIObserver::insert1, [&]() -> bool
-      { return m_list.append(x), true; }, i0, i0 + 1);
+      guarded(&RIObserver::insert0, &RIObserver::insert1, [=]() -> bool
+      { return this->m_list.append(x), true; }, i0, i0 + 1);
+    }
+
+    _M void modify(int i)
+    {
+      notify(&RIObserver::modify0, i, i + 1);
+      notify(&RIObserver::modify1, i, i + 1);
     }
 
     _M void remove(int i)
     {
-      guarded(&RIObserver::remove0, &RIObserver::remove1, [&]() -> bool
-      { return m_list.remove(i), true; }, i, i + 1);
+      guarded(&RIObserver::remove0, &RIObserver::remove1, [=]() -> bool
+      { return this->m_list.remove(i), true; }, i, i + 1);
     }
 
     _M void removeObserver(RIObserver* observer)

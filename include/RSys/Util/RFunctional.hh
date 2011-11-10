@@ -11,17 +11,18 @@
 template <class F0, class F1>
 struct RFunComp
 {
-  F0 f0;
-  F1 f1;
+  F0 f0; F1 f1;
 
   RFunComp(F0&& f0, F1&& f1):
     f0(std::forward<F0>(f0)), f1(std::forward<F1>(f1)) { }
 
-  template <typename... Args>
-  auto operator ()(Args... args) -> decltype(f0(f1(args...)))
-  {
-    return f0(f1(std::forward<Args>(args)...));
-  }
+  template <typename Arg1>
+  auto operator ()(Arg1&& arg1) -> decltype(f0(f1(arg1)))
+  { return f0(f1(std::forward<Arg1>(arg1))); }
+
+  template <typename Arg1, typename Arg2>
+  auto operator ()(Arg1&& arg1, Arg2&& arg2) -> decltype(f0(arg1, f1(arg2)))
+  { return f0(std::forward<Arg1>(arg1), f1(std::forward<Arg2>(arg2))); }
 };
 
 /********************************************* RS *********************************************/

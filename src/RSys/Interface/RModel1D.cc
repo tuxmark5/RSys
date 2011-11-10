@@ -13,7 +13,9 @@ Vacuum RModel1D :: RModel1D(RContainer* container, QObject* parent):
   m_container(container),
   m_writable(container->writable())
 {
-  container->addObserver(m_rowAdapter = new RRowObserverAdapter(this));
+  m_rowAdapter = new RRowObserverAdapter(this);
+  m_rowAdapter->setModifier(m_writable);
+  container->addObserver(m_rowAdapter);
 
   if (!g_lastRowFont.italic())
     g_lastRowFont.setItalic(true);
@@ -24,6 +26,15 @@ Vacuum RModel1D :: RModel1D(RContainer* container, QObject* parent):
 Vacuum RModel1D :: ~RModel1D()
 {
   delete m_container;
+}
+
+/**********************************************************************************************/
+
+void RModel1D :: addRow()
+{
+  int row = m_container->height();
+  if (m_container->add())
+    notifyRowChanged(row);
 }
 
 /**********************************************************************************************/
@@ -116,6 +127,16 @@ QVariant RModel1D :: lastRowData(const QModelIndex& index, int role) const
 
 /**********************************************************************************************/
 
+void RModel1D :: notifyRowChanged(int row)
+{
+  QModelIndex left  = createIndex(row, 0, 0);
+  QModelIndex right = createIndex(row, m_container->width() - 1, 0);
+
+  emit dataChanged(left, right);
+}
+
+/**********************************************************************************************/
+
 QModelIndex RModel1D :: parent(const QModelIndex& index) const
 {
   Q_UNUSED(index);
@@ -145,20 +166,19 @@ void RModel1D :: setContainer(RContainer* container)
 
 /**********************************************************************************************/
 
-bool RModel1D ::setData(const QModelIndex& index, const QVariant& value, int role)
+bool RModel1D :: setData(const QModelIndex& index, const QVariant& value, int role)
 {
   R_GUARD(index.isValid(), false);
-
-  qDebug() << "SET DATA" << value << role;
 
   if (role == Qt::EditRole)
     role = Qt::DisplayRole;
 
-  if (index.row() == m_container->height())
-    if (!m_container->add())
-      return false;
+  if (index.row() < m_container->height())
+  {
+    m_container->set(index.column(), index.row(), role, value);
+    notifyRowChanged(index.row()); // hmm
+  }
 
-  m_container->set(index.column(), index.row(), role, value);
   return true;
 }
 

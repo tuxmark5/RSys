@@ -52,21 +52,28 @@ Vacuum RPaletteDock :: ~RPaletteDock()
 
 /**********************************************************************************************/
 
-int   get_(bool x)  { return x ? 2 : 0; }
-bool  set_(int x)   { return x != 0; }
-
 void RPaletteDock :: createContainers(RMainWindow* main)
 {
+  auto getBool = [](bool x) -> int  { return x ? 2 : 0; };
+  auto setBool = [](int x)  -> bool { return x != 0; };
+
   auto cd = newContainer(main->data()->divisions());
   cd->addColumn("Padalinys");
-  cd->addAccessor2<bool>   (0, Qt::CheckStateRole) >> f(get_) * f(&RDivision::visible)
-                                                   << f(&RDivision::setVisible);// * f(set_);
-  cd->addAccessor2<QString>(0, Qt::DisplayRole)    >> &RDivision::identifier << &RDivision::setIdentifier;
+  cd->addAccessor2<int>    (0, Qt::CheckStateRole)
+    >> f(getBool) * f(&RDivision::visible)
+    << f(&RDivision::setVisible) * f(setBool);
+  cd->addAccessor2<QString>(0, Qt::DisplayRole)
+    >> &RDivision::identifier
+    << &RDivision::setIdentifier;
 
   auto cs = newContainer(main->data()->systems());
   cs->addColumn("Sistema");
-  cs->addAccessor2<bool>    (0, Qt::CheckStateRole) >> &RSystem::visible    << &RSystem::setVisible;
-  cs->addAccessor2<QString> (0, Qt::DisplayRole)    >> &RSystem::identifier << &RSystem::setIdentifier;
+  cs->addAccessor2<int>     (0, Qt::CheckStateRole)
+    >> f(getBool) * f(&RSystem::visible)
+    << f(&RSystem::setVisible) * f(setBool);
+  cs->addAccessor2<QString> (0, Qt::DisplayRole)
+    >> &RSystem::identifier
+    << &RSystem::setIdentifier;
 
   m_divisionContainer = cd;
   m_systemContainer   = cs;
