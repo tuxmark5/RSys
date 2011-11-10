@@ -40,6 +40,10 @@ bool RValidator::validate(RITable *table, RData *data)
   {
     return this->validateMeasures(table, data);
   }
+  else if (table->title() == QString::fromUtf8("Padaliniai"))
+  {
+    return this->validateDivisions(table, data);
+  }
   else if (table->title() == QString::fromUtf8("IS"))
   {
     return this->validateSystems(table, data);
@@ -92,6 +96,57 @@ bool RValidator::validateMeasures(RITable *table, RData *data)
             QString::fromUtf8(
               "Iš %1 buvo sėkmingai importuota informacija "
               "apie %2 paramos priemones."
+              ).arg(table->title()).arg(added));
+
+  return !errors;
+}
+
+
+bool RValidator::validateDivisions(RITable *table, RData *data)
+{
+  RDivisionList *list = data->divisions();
+  bool errors = false;                  // Ar buvo klaidų.
+  int added = 0;
+  for (int i = 1; i < table->height(); i++)
+  {
+    if (table->cell(0, i).isNull() && table->cell(1, i).isNull())
+    {
+      // Tuščios eilutės yra normalu.
+      continue;
+    }
+    if (table->cell(0, i).isNull())
+    {
+      this->log(
+            RWARNING, 4,
+            QString::fromUtf8(
+              "Praleidžiama „%1“ lakšto %2 eilutė, "
+              "nes joje nenurodytas padalinio kodas."
+              ).arg(table->title()).arg(i + 1));
+      errors = true;
+      continue;
+    }
+    if (table->cell(1, i).isNull())
+    {
+      this->log(
+            RWARNING, 5,
+            QString::fromUtf8(
+              "Praleidžiama „%1“ lakšto %2 eilutė, "
+              "nes joje nenurodytas padalinio pavadinimas."
+              ).arg(table->title()).arg(i + 1));
+      errors = true;
+      continue;
+    }
+    RDivision *division = new RDivision(data);
+    division->setIdentifier(table->cell(0, i).toString());
+    division->setName(table->cell(1, i).toString());
+    list->append(division);
+    added++;
+    // FIXME: Ar nėra kartais šioje vietoje „memory leak“?
+  }
+  this->log(RINFO, 6,
+            QString::fromUtf8(
+              "Iš %1 buvo sėkmingai importuota informacija "
+              "apie %2 padalinius."
               ).arg(table->title()).arg(added));
 
   return !errors;

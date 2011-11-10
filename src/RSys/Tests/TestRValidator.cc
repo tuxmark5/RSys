@@ -52,6 +52,29 @@ void TestRValidator::testReadingSystems()
 }
 
 
+void TestRValidator::testReadingDivisions()
+{
+
+  RXLSDocument document(QString::fromUtf8("../../RSys/static/test2.xls"));
+  QCOMPARE(document.nameAt(1),
+           QString::fromUtf8("Padaliniai"));
+
+  RValidator validator;
+  RData data;
+  RDivisionList *divisions = data.divisions();
+
+  QCOMPARE(validator.validateDivisions(document.tableAt(1), &data), true);
+
+  QCOMPARE(divisions->size(), 12);
+  QCOMPARE(
+        divisions->at(11)->identifier(),
+        QString::fromUtf8("PA12"));
+  QCOMPARE(
+        divisions->at(11)->name(),
+        QString::fromUtf8("Padalinys 12"));
+}
+
+
 void TestRValidator::testTableTypeDetection()
 {
   RXLSDocument document(QString::fromUtf8("../../RSys/static/test2.xls"));
@@ -60,11 +83,15 @@ void TestRValidator::testTableTypeDetection()
 
   // Paramos priemonės
   QCOMPARE(validator.validate(document.tableAt(0), &data), true);
-  QCOMPARE(validator.validate(document.tableAt(1), &data), false);
+
+  // Padaliniai
+  QCOMPARE(validator.validate(document.tableAt(1), &data), true);
 
   // IS
   QCOMPARE(validator.validate(document.tableAt(2), &data), true);
-  QCOMPARE(validator.validate(document.tableAt(3), &data), false);
+
+  // Neatpažintas
+  QCOMPARE(validator.validate(document.tableAt(7), &data), false);
 }
 
 

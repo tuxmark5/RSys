@@ -16,6 +16,7 @@ class TestRValidator: public QObject
     _M void     testReadingSystems();
     _M void     testTableTypeDetection();
     _M void     testImportingXLSFile();
+    _M void     testReadingDivisions();
 
 };
 

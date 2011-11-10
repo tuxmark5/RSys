@@ -3,6 +3,7 @@
 
 #include <RSys/Core/RMeasure.hh>
 #include <RSys/Core/RSystem.hh>
+#include <RSys/Core/RDivision.hh>
 #include <RSys/Import/RIDocument.hh>
 #include <RSys/Import/RXLSDocument.hh>
 #include <RSys/Core/RData.hh>
@@ -18,6 +19,7 @@ class RValidator: public QObject
     _M  bool validate(RIDocument *document, RData *data);
     _M  bool validate(RITable *table, RData *data);
     _M  bool validateMeasures(RITable *table, RData *data);
+    _M  bool validateDivisions(RITable *table, RData *data);
     _M  bool validateSystems(RITable *table, RData *data);
 
   signals:
