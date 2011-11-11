@@ -1,0 +1,7 @@
+* aptartos su duomenų importavimu susijusios problemos
+* aptartos su duomenų modeliais susijusios problemos
+* nustatyti sekančios savaitės su importu susiję planai
+* nuspręsta darbą su duomenų baze taip pat perkelti į kitą ciklą
+* peržiūrėti pradinio importo kodo testai
+* aptartas jau dalinai veikiantis vartotojo interfeisas
+

@@ -10,9 +10,10 @@
 class RCalculator
 {
   public:
-    _M Vacuum           RCalculator(RData* data);
+    _M Vacuum           RCalculator();
     _M Vacuum           ~RCalculator();
-    _M QVector<double>  calcUsages(QDate from, QDate to);
+    _M QVector<double>  calcUsages(RDivision* division, QDate from, QDate to);
+    _M QVector<double>  calcUsages(RSystem* system, QDate from, QDate to);
 };
 
 /**********************************************************************************************/

@@ -225,8 +225,8 @@ namespace YCompoundFiles
 /********************************** Start of Class Block *************************************/
 // PURPOSE: Manage a file by treating it as blocks of data of a certain size.
 Block::Block() :
-	blockSize_(512), fileSize_(0), indexEnd_(0),
-	filename_(0) {}
+  filename_(0),
+  blockSize_(512), indexEnd_(0), fileSize_(0) { }
 
 bool Block::Create(const wchar_t* filename)
 // PURPOSE: Create a new block file and open it.
@@ -685,8 +685,9 @@ CompoundFile::PropertyTree::~PropertyTree()
 /********************************** Start of Class CompoundFile ******************************/
 // PURPOSE: Manage a compound file.
 CompoundFile::CompoundFile() :
-	block_(512), dirEntries_(0), propertyTrees_(0),
-	blocksIndices_(0), sblocksIndices_(0) {}
+  block_(512),
+  blocksIndices_(0), sblocksIndices_(0),
+  propertyTrees_(0), dirEntries_(0) {}
 
 CompoundFile::~CompoundFile() {this->Close();}
 
@@ -2490,12 +2491,12 @@ YEOF::YEOF() : Record() {code_ = CODE::YEOF; dataSize_ = 0; recordSize_ = 4;}
 /************************************************************************************************************/
 
 /************************************************************************************************************/
-SmallString::SmallString() : name_(0), wname_(0) {}
+SmallString::SmallString() : wname_(0), name_(0) {}
 
 SmallString::~SmallString() {Reset();}
 
 SmallString::SmallString(const SmallString& s) :
-	name_(0), wname_(0), unicode_(s.unicode_)
+  wname_(0), name_(0), unicode_(s.unicode_)
 {
 	if (s.name_)
 	{
@@ -2637,7 +2638,7 @@ LargeString::LargeString() : unicode_(-1), richtext_(0), phonetic_(0) {}
 LargeString::~LargeString() {}
 
 LargeString::LargeString(const LargeString& s) :
-	name_(s.name_), wname_(s.wname_),
+  wname_(s.wname_), name_(s.name_),
 	unicode_(s.unicode_), richtext_(s.richtext_), phonetic_(s.phonetic_) {}
 
 LargeString& LargeString::operator=(const LargeString& s)
@@ -6464,11 +6465,11 @@ void BasicExcelWorksheet::MergeCells(int row, int col, USHORT rowRange, USHORT c
 /************************************************************************************************************/
 
 /************************************************************************************************************/
-BasicExcelCell::BasicExcelCell()
- :	type_(UNDEFINED),
-	_xf_idx(0), //MF
+BasicExcelCell::BasicExcelCell():
+  type_(UNDEFINED),
 	mergedRows_(1),
-	mergedColumns_(1)
+  mergedColumns_(1),
+  _xf_idx(0) //MF
 {
 }
 

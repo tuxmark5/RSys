@@ -35,7 +35,6 @@ unix:QMAKE_LFLAGS   += -Wl,-rpath $$PWD/lib/External
 
 SOURCES             +=                              \
   src/External/ExcelFormat/BasicExcel.cpp           \
-  src/External/ExcelFormat/Examples.cpp             \
   src/External/ExcelFormat/ExcelFormat.cpp          \
   src/RSys/Core/RData.cc                            \
   src/RSys/Core/RDivision.cc                        \
@@ -60,6 +59,7 @@ SOURCES             +=                              \
   src/RSys/Interface/RModel2D.cc                    \
   src/RSys/Interface/RPaletteDock.cc                \
   src/RSys/Interface/RPlannedTab.cc                 \
+  src/RSys/Interface/RResultsModel.cc               \
   src/RSys/Interface/RRowObserverAdapter.cc         \
   src/RSys/Interface/RTab.cc                        \
   src/RSys/Interface/RTableView.cc                  \
@@ -69,6 +69,7 @@ SOURCES             +=                              \
   src/RSys/Interface/RUsageTab.cc                   \
   src/RSys/Interface/RUsageWidget.cc                \
   src/RSys/Logic/RCalculator.cc                     \
+  src/RSys/Logic/RResults.cc                        \
   src/RSys/Tests/RTests.cc                          \
   src/RSys/Tests/TestRXLSDocument.cc                \
   src/RSys/Parse/RValidator.cc                      \
@@ -104,6 +105,7 @@ HEADERS             +=                              \
   include/RSys/Interface/RModel2D.hh                \
   include/RSys/Interface/RPaletteDock.hh            \
   include/RSys/Interface/RPlannedTab.hh             \
+  include/RSys/Interface/RResultsModel.hh           \
   include/RSys/Interface/RRowObserverAdapter.hh     \
   include/RSys/Interface/RSubmissionTab.hh          \
   include/RSys/Interface/RSystemAdmTab.hh           \
@@ -113,6 +115,7 @@ HEADERS             +=                              \
   include/RSys/Interface/RUsageTab.hh               \
   include/RSys/Interface/RUsageWidget.hh            \
   include/RSys/Logic/RCalculator.hh                 \
+  include/RSys/Logic/RResults.hh                    \
   include/RSys/Util/RAccessorAdapter.hh             \
   include/RSys/Util/RCompose.hh                     \
   include/RSys/Util/RContainer.hh                   \

@@ -116,18 +116,24 @@ QWidget* RUsageWidget :: widgetAt(int index)
          << "2011-06-02";
 
   QStandardItemModel* model = new QStandardItemModel();
-
-  for (auto it = vec2.begin(); it != vec2.end(); ++it)
+  int i = 0;
+  for (auto it = vec2.begin(); it != vec2.end(); ++it, ++i)
   {
-    QStandardItem* item = new QStandardItem();
+    QStandardItem* item0 = new QStandardItem();
+    QStandardItem* item1 = new QStandardItem();
 
-    item->setData(*it, Qt::DisplayRole);
-    model->appendRow(item);
+    item0->setData(vec2[i], Qt::DisplayRole);
+    item1->setData(vec1[i], Qt::DisplayRole);
+    model->appendRow(QList<QStandardItem*>() << item0 << item1);
+
+    QStandardItem* item2 = new QStandardItem();
+    item2->setData(vec2[i], Qt::DisplayRole);
+    model->setVerticalHeaderItem(i, item2);
   }
 
   LineDiagram*    line        = new LineDiagram(); line->setModel(model);
-  //CartesianAxis*  bottomAxis  = new CartesianAxis(line);
-  Axis*           bottomAxis  = new Axis(line);
+  CartesianAxis*  bottomAxis  = new CartesianAxis(line);
+  //Axis*           bottomAxis  = new Axis(line);
   CartesianAxis*  leftAxis    = new CartesianAxis(line);
 
 

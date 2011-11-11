@@ -100,6 +100,8 @@ bool RUsageTab :: remove0(int i0, int i1)
     m_innerLayout->removeItem(item);
     widget->deleteLater();
   }
+
+  return true;
 }
 
 /**********************************************************************************************/

@@ -24,6 +24,8 @@ Vacuum RLayerWidget :: ~RLayerWidget()
 
 void RLayerWidget :: enterEvent(QEvent* event)
 {
+  Q_UNUSED(event);
+
   int baseY = 0; //(height() - 3 * 25) / 2;
   QPalette palette = this->palette();
 
@@ -72,6 +74,8 @@ void RLayerWidget :: leaveEvent(QEvent* event)
 
 QString RLayerWidget :: nameAt(int index) const
 {
+  Q_UNUSED(index);
+
   return QString();
 }
 
@@ -86,6 +90,8 @@ int RLayerWidget :: numWidgets() const
 
 QWidget* RLayerWidget :: widgetAt(int index)
 {
+  Q_UNUSED(index);
+
   return 0;
 }
 
