@@ -28,6 +28,8 @@ bool RColumnObserverAdapter :: insert0(int i0, int i1)
 
 void RColumnObserverAdapter :: insert1(int i0, int i1)
 {
+  Q_UNUSED(i0);
+  Q_UNUSED(i1);
   m_model->endInsertColumns();
 }
 
@@ -35,13 +37,16 @@ void RColumnObserverAdapter :: insert1(int i0, int i1)
 
 void RColumnObserverAdapter :: modify0(int i0, int i1)
 {
-
+  Q_UNUSED(i0);
+  Q_UNUSED(i1);
 }
 
 /**********************************************************************************************/
 
 void RColumnObserverAdapter :: modify1(int i0, int i1)
 {
+  Q_UNUSED(i0);
+  Q_UNUSED(i1);
 }
 
 /**********************************************************************************************/
@@ -56,6 +61,8 @@ bool RColumnObserverAdapter :: remove0(int i0, int i1)
 
 void RColumnObserverAdapter :: remove1(int i0, int i1)
 {
+  Q_UNUSED(i0);
+  Q_UNUSED(i1);
   m_model->endRemoveColumns();
 }
 

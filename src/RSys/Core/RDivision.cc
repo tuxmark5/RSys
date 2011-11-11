@@ -6,8 +6,7 @@
 /**********************************************************************************************/
 
 Vacuum RDivision :: RDivision(RData* data):
-  RElement(data),
-  m_visible(true)
+  RElement(data)
 {
 }
 
@@ -55,13 +54,6 @@ void RDivision :: setSystem(RSystem* system, bool value)
     m_systemMap.remove(system);
   else
     m_systemMap.insert(system, value);
-}
-
-/**********************************************************************************************/
-
-void RDivision :: setVisible(bool visible)
-{
-  m_visible = visible;
 }
 
 /**********************************************************************************************/

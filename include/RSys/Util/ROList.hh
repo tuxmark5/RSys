@@ -116,6 +116,12 @@ class ROList
       { return this->m_list.append(x), true; }, i0, i0 + 1);
     }
 
+    template <class Value2>
+    ROList<Value2>* cast()
+    {
+      return reinterpret_cast<ROList<Value2>*>(this);
+    }
+
     _M void modify(int i)
     {
       notify(&RIObserver::modify0, i, i + 1);
@@ -143,11 +149,12 @@ class ROList
       }
     }
 
-    _M const Value&     at(int x) const     { return m_list.at(x);    }
-    _M ConstIterator    begin()   const     { return m_list.begin();  }
-    _M ConstIterator    end()     const     { return m_list.end();    }
-    _M int              length()  const     { return m_list.length(); }
-    _M int              size()    const     { return m_list.size();   }
+    _M const Value&     at(int x)               const { return m_list.at(x);      }
+    _M ConstIterator    begin()                 const { return m_list.begin();    }
+    _M ConstIterator    end()                   const { return m_list.end();      }
+    _M int              indexOf(const Value& x) const { return m_list.indexOf(x);   }
+    _M int              length()                const { return m_list.length();   }
+    _M int              size()                  const { return m_list.size();     }
 };
 
 /**********************************************************************************************/

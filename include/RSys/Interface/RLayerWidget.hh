@@ -21,6 +21,7 @@ class RLayerWidget: public QWidget
 
   protected:
     _V void           enterEvent(QEvent* event);
+    _V bool           event(QEvent* event);
     _V void           leaveEvent(QEvent* event);
 };
 

@@ -12,9 +12,11 @@
 /*                                        RUsageWidget                                        */
 /**********************************************************************************************/
 
-Vacuum RUsageWidget :: RUsageWidget(QWidget* parent):
-  RLayerWidget(parent)
+Vacuum RUsageWidget :: RUsageWidget(RElement* element, QWidget* parent):
+  RLayerWidget(parent),
+  m_element(element)
 {
+  setMinimumWidth(600);
   setFixedHeight(200);
   layout()->addWidget(widgetAt(0));
 }

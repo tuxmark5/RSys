@@ -87,6 +87,15 @@ void RMainWindow :: addLeftTab(RTab* tab, const char* title, const char* toolTip
 
 /**********************************************************************************************/
 
+void RMainWindow :: addRightTab(RTab* tab, const char* title, const char* toolTip)
+{
+  int id = m_tabWidgetR->addTab(tab, QString::fromUtf8(title));
+
+  m_tabWidgetR->setTabToolTip(id, QString::fromUtf8(toolTip));
+}
+
+/**********************************************************************************************/
+
 void RMainWindow :: connectActions()
 {
   QAction::connect(m_importAction, SIGNAL(triggered()), this, SLOT(importData()));
@@ -235,7 +244,7 @@ void RMainWindow :: createTabs()
   addLeftTab(new RSubmissionTab(this),  "Istoriniai duom.", "IS TOOL");
   addLeftTab(new RPlannedTab(this),     "Planuojami kiekiai", "IS TOOL");
 
-  m_tabWidgetR->addTab(new RUsageTab(), QString::fromUtf8("Apkrovos ir prognozės"));
+  addRightTab(new RUsageTab(this),      "Apkrovos ir prognozės", "ZEL");
   m_tabWidgetR->addTab(new QLabel("TEST2"), QString::fromUtf8("Apžvalga"));
 }
 

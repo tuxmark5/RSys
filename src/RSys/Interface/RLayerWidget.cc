@@ -1,3 +1,4 @@
+#include <QtCore/QEvent>
 #include <QtGui/QPushButton>
 #include <QtGui/QStackedLayout>
 #include <RSys/Interface/RLayerWidget.hh>
@@ -40,6 +41,17 @@ void RLayerWidget :: enterEvent(QEvent* event)
     button->setText("XXXX");
     button->setVisible(true);
   }
+}
+
+/**********************************************************************************************/
+
+bool RLayerWidget :: event(QEvent* event)
+{
+  if (event->type() == QEvent::Polish)
+  {
+
+  }
+  return QWidget::event(event);
 }
 
 /**********************************************************************************************/

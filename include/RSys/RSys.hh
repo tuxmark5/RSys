@@ -41,6 +41,7 @@ class RTableView;
 // Util
 class RContainer;
 /**********************************************************************************************/
+// Qt
 class QDateEdit;
 class QLabel;
 class QLineEdit;
@@ -49,6 +50,7 @@ class QScrollArea;
 class QSplitter;
 class QTabWidget;
 class QTableView;
+class QVBoxLayout;
 /**********************************************************************************************/
 typedef long long                 RID;
 typedef enum {RDEBUG, RINFO, RWARNING, RERROR, RCRITICAL}

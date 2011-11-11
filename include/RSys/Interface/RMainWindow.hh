@@ -54,12 +54,14 @@ class RMainWindow: public QMainWindow
     _M RContainer*    submissionContainer() const { return m_submissionContainer; }
     _M RContainer*    submission1Container() const { return m_submission1Container; }
     _M RContainer*    systemContainer() const { return m_systemContainer; }
+    _M QAction*       systemsStateAction() const { return m_systemsStateAction; }
 
   public slots:
     _M void           importData();
 
   private:
     _M void           addLeftTab(RTab* tab, const char* title, const char* toolTip);
+    _M void           addRightTab(RTab* tab, const char* title, const char* toolTip);
 };
 
 /**********************************************************************************************/

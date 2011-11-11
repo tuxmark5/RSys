@@ -7,8 +7,13 @@
 /*                                           RData                                            */
 /**********************************************************************************************/
 
-class RData
+class RData: public QObject
 {
+  Q_OBJECT
+
+  public:
+    _F class RElement;
+
   private:
     _M RDivisionList      m_divisions;
     _M RMeasureList       m_measures;
@@ -25,6 +30,9 @@ class RData
     _M RSubmissionList*   submissions()   { return &m_submissions; }
     _M RSubmissionList*   submissions1()  { return &m_submissions1; }
     _M RSystemList*       systems()       { return &m_systems; }
+
+  signals:
+    _M void               visibilityChanged(RElement* element, bool visible);
 };
 
 /**********************************************************************************************/

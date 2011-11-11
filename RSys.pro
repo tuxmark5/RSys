@@ -68,6 +68,7 @@ SOURCES             +=                              \
   src/RSys/Interface/RSystemTab.cc                  \
   src/RSys/Interface/RUsageTab.cc                   \
   src/RSys/Interface/RUsageWidget.cc                \
+  src/RSys/Logic/RCalculator.cc                     \
   src/RSys/Tests/RTests.cc                          \
   src/RSys/Tests/TestRXLSDocument.cc                \
   src/RSys/Parse/RValidator.cc                      \
@@ -111,6 +112,7 @@ HEADERS             +=                              \
   include/RSys/Interface/RTableView.hh              \
   include/RSys/Interface/RUsageTab.hh               \
   include/RSys/Interface/RUsageWidget.hh            \
+  include/RSys/Logic/RCalculator.hh                 \
   include/RSys/Util/RAccessorAdapter.hh             \
   include/RSys/Util/RCompose.hh                     \
   include/RSys/Util/RContainer.hh                   \

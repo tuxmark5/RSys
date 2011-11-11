@@ -15,20 +15,17 @@ class RDivision: public RElement
     _M RMeasureMap    m_measureMap;
     _M RMeasureMap    m_measureMap1;  // planned measures
     _M RSystemMap     m_systemMap;
-    _M bool           m_visible: 1;
 
   public:
     _M Vacuum         RDivision(RData* data);
     _M QString        identifier() const { return m_identifier; }
     //_M RMeasure*      me
     _M QString        name() const { return m_name; }
-    _M bool           visible() const { return m_visible; }
     _M void           setIdentifier(const QString& identifier);
     _M void           setMeasure(RMeasure* measure, double value);
     _M void           setMeasure1(RMeasure* measure, double value);
     _M void           setName(const QString& name);
     _M void           setSystem(RSystem* system, bool value);
-    _M void           setVisible(bool visible);
 };
 
 /**********************************************************************************************/
