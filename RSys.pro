@@ -42,6 +42,7 @@ SOURCES             +=                              \
   src/RSys/Core/RMeasure.cc                         \
   src/RSys/Core/RSubmission.cc                      \
   src/RSys/Core/RSystem.cc                          \
+  src/RSys/Core/RUnit.cc                            \
   src/RSys/Import/RXLSDocument.cc                   \
   src/RSys/Import/RXLSTable.cc                      \
   src/RSys/Interface/RAbstractItemModel.cc          \
@@ -86,6 +87,7 @@ HEADERS             +=                              \
   include/RSys/Core/RMeasure.hh                     \
   include/RSys/Core/RSubmission.hh                  \
   include/RSys/Core/RSystem.hh                      \
+  include/RSys/Core/RUnit.hh                        \
   include/RSys/Import/RITable.hh                    \
   include/RSys/Import/RIDocument.hh                 \
   include/RSys/Import/RXLSDocument.hh               \

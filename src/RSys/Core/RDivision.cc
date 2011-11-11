@@ -6,16 +6,8 @@
 /**********************************************************************************************/
 
 Vacuum RDivision :: RDivision(RData* data):
-  RElement(data)
+  RUnit(data)
 {
-}
-
-/**********************************************************************************************/
-
-void RDivision :: setIdentifier(const QString& identifier)
-{
-  m_identifier = identifier;
-  //m_data->update(this);
 }
 
 /**********************************************************************************************/
@@ -36,14 +28,6 @@ void RDivision :: setMeasure1(RMeasure* measure, double value)
     m_measureMap1.remove(measure);
   else
     m_measureMap1.insert(measure, value);
-}
-
-/**********************************************************************************************/
-
-void RDivision :: setName(const QString& name)
-{
-  m_name = name;
-  //m_data->update(this);
 }
 
 /**********************************************************************************************/

@@ -1,3 +1,13 @@
+#include <QtGui/QAction>
+#include <QtGui/QFileDialog>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QListView>
+#include <QtGui/QSplitter>
+#include <QtGui/QScrollArea>
+#include <QtGui/QTableView>
+#include <QtGui/QTabWidget>
+
 #include <RSys/Core/RData.hh>
 #include <RSys/Core/RDivision.hh>
 #include <RSys/Core/RMeasure.hh>
@@ -21,19 +31,8 @@
 #include <RSys/Interface/RSystemTab.hh>
 #include <RSys/Interface/RUsageTab.hh>
 
+#include <RSys/Logic/RResults.hh>
 #include <RSys/Parse/RValidator.hh>
-
-#include <QtGui/QFileDialog>
-#include <QtGui/QHeaderView>
-#include <QtGui/QLabel>
-#include <QtGui/QListView>
-#include <QtGui/QSplitter>
-#include <QtGui/QScrollArea>
-#include <QtGui/QTableView>
-#include <QtGui/QTabWidget>
-#include <QtGui/QAction>
-
-#include <RSys/Core/RMeasure.hh>
 #include <RSys/Util/RContainer.hh>
 
 /********************************************* RS *********************************************/
@@ -44,6 +43,7 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   QMainWindow(parent)
 {
   m_data        = new RData();
+  m_results     = new RResults(m_data);
   createContainers();
 
   createActions();
@@ -74,6 +74,7 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
 
 RMainWindow :: ~RMainWindow()
 {
+  //delete m_results;
 }
 
 /**********************************************************************************************/

@@ -19,6 +19,10 @@ Vacuum RResultsModel :: ~RResultsModel()
 
 /**********************************************************************************************/
 
+
+
+/**********************************************************************************************/
+
 int RResultsModel :: columnCount(const QModelIndex& parent) const
 {
   R_GUARD(!parent.isValid(), 0);

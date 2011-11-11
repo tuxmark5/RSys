@@ -12,6 +12,9 @@ class RResultsModel: public RAbstractItemModel
   Q_OBJECT
 
   public:
+    _F class          RResults;
+
+  public:
     _T std::function<QVariant (int)>  Getter;
     _T Qt::Orientation                Orientation;
     _T std::tuple<QString, Getter>    Field;

@@ -34,6 +34,7 @@ class RAbstractItemModel;
 class RMainWindow;
 class RModel1D;
 class RModel2D;
+class RResultModel;
 class RRowObserverAdapter;
 class RTab;
 class RTableView;

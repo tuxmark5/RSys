@@ -17,6 +17,7 @@ class RLayerWidget: public QWidget
     _V Vacuum         ~RLayerWidget();
     _V QString        nameAt(int index) const;
     _V int            numWidgets() const;
+    //_M void           setWidget(QWidget* widget);
     _V QWidget*       widgetAt(int index);
 
   protected:

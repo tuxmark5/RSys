@@ -17,6 +17,7 @@ class RUsageWidget: public RLayerWidget
   public:
     _M Vacuum         RUsageWidget(RElement* element, QWidget* parent = 0);
     _V Vacuum         ~RUsageWidget();
+    //_M
     _V QString        nameAt(int index) const;
     _V int            numWidgets() const;
     _V QWidget*       widgetAt(int index);

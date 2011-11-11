@@ -4,7 +4,8 @@
 /*                                          RResults                                          */
 /**********************************************************************************************/
 
-Vacuum RResults :: RResults()
+Vacuum RResults :: RResults(RData* data):
+  m_data(data)
 {
 }
 
@@ -12,6 +13,34 @@ Vacuum RResults :: RResults()
 
 Vacuum RResults :: ~RResults()
 {
+}
+
+/**********************************************************************************************/
+
+void RResults :: addUsage0Field(RResultModel* model, RElement* element)
+{
+
+}
+
+/**********************************************************************************************/
+
+void RResults :: addUsage1Field(RResultModel* model, RElement* element)
+{
+
+}
+
+/**********************************************************************************************/
+
+void RResults :: addDeltaUsageField(RResultModel* model, RElement* element)
+{
+
+}
+
+/**********************************************************************************************/
+
+void RResults :: addDeltaPUsageField(RResultModel* model, RElement* element)
+{
+
 }
 
 /**********************************************************************************************/

@@ -33,6 +33,8 @@ class RMainWindow: public QMainWindow
     _M QAction*       m_helpAction;
 
     _M RData*         m_data;
+    _M RResults*      m_results;
+
     _M RContainer*    m_divisionContainer;
     _M RContainer*    m_measureContainer;
     _M RContainer*    m_measure1Container;
@@ -51,6 +53,7 @@ class RMainWindow: public QMainWindow
     _M RContainer*    divisionContainer() const { return m_divisionContainer; }
     _M RContainer*    measureContainer() const { return m_measureContainer; }
     _M RContainer*    measure1Container() const { return m_measure1Container; }
+    _M RResults*      results() const { return m_results; }
     _M RContainer*    submissionContainer() const { return m_submissionContainer; }
     _M RContainer*    submission1Container() const { return m_submission1Container; }
     _M RContainer*    systemContainer() const { return m_systemContainer; }
