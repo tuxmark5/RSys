@@ -15,12 +15,15 @@
 #include <RSys/Interface/RDivisionTab.hh>
 #include <RSys/Interface/RMeasureAdmTab.hh>
 #include <RSys/Interface/RMeasureTab.hh>
+#include <RSys/Interface/RPlannedTab.hh>
 #include <RSys/Interface/RSubmissionTab.hh>
 #include <RSys/Interface/RSystemAdmTab.hh>
 #include <RSys/Interface/RSystemTab.hh>
 #include <RSys/Interface/RUsageTab.hh>
 
+#include <RSys/Parse/RValidator.hh>
 
+#include <QtGui/QFileDialog>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QListView>
@@ -44,6 +47,7 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   createContainers();
 
   createActions();
+  connectActions();
 
   addToolBar(new RMainToolBar(this));
   addToolBar(new RIntervalToolBar(this));
@@ -79,6 +83,13 @@ void RMainWindow :: addLeftTab(RTab* tab, const char* title, const char* toolTip
   int id = m_tabWidgetL->addTab(tab, QString::fromUtf8(title));
 
   m_tabWidgetL->setTabToolTip(id, QString::fromUtf8(toolTip));
+}
+
+/**********************************************************************************************/
+
+void RMainWindow :: connectActions()
+{
+  QAction::connect(m_importAction, SIGNAL(triggered()), this, SLOT(importData()));
 }
 
 /**********************************************************************************************/
@@ -156,6 +167,10 @@ void RMainWindow :: createContainers()
     >> &RSubmission::date1 << &RSubmission::setDate1;
   cu->setAlloc([]() { return new RSubmission(0); });
 
+  auto cu1 = newContainer(m_data->submissions1(), *cu);
+  cu->addAccessor2<QString>(0, Qt::DisplayRole)
+    << &RSubmission::setMeasure1Name;
+
   auto cs = newContainer(m_data->systems());
   cs->addColumn("Pavadinimas");
   cs->addColumn("Aprašymas");
@@ -163,16 +178,11 @@ void RMainWindow :: createContainers()
   cs->addAccessor2<QString>(1, Qt::DisplayRole) >> &RSystem::name       << &RSystem::setName;
   cs->setAlloc([]() { return new RSystem(0); });
 
-  /*auto mm = [=](DMeasure* measure, RDivision* division) -> double
-  {
-    RDivision*  division  = m_data->divisions()->at(y);
-    RMeasure*   measure   = m_data->measures()->at(x);
-    return division->m_measureMap.value(measure, 0);
-  };*/
-
   m_divisionContainer     = cd;
   m_measureContainer      = cm;
+  m_measure1Container     = newContainer(m_data->measures1(), *cm);
   m_submissionContainer   = cu;
+  m_submission1Container  = cu1;
   m_systemContainer       = cs;
 }
 
@@ -180,33 +190,69 @@ void RMainWindow :: createContainers()
 
 void RMainWindow :: createTabs()
 {
+  auto dmGetter = [=](int x, int y) -> QVariant
+  {
+    RDivision*  division  = m_data->divisions()->at(y);
+    RMeasure*   measure   = m_data->measures()->at(x);
+    double      value     = division->m_measureMap.value(measure, 0);
+
+    return value == 0.0 ? QVariant() : value;
+  };
+
+  auto dmSetter = [=](int x, int y, const QVariant& var) -> void
+  {
+    RDivision*  division  = m_data->divisions()->at(y);
+    RMeasure*   measure   = m_data->measures()->at(x);
+
+    division->setMeasure(measure, var.toDouble());
+  };
+
+  auto dsGetter = [=](int x, int y) -> QVariant
+  {
+    RDivision*  division  = m_data->divisions()->at(y);
+    RSystem*    system    = m_data->systems()->at(x);
+    int         value     = division->m_systemMap.value(system, 0);
+
+    return value == 1 ? 1 : QVariant();
+  };
+
+  auto dsSetter = [=](int x, int y, const QVariant& var) -> void
+  {
+    RDivision*  division  = m_data->divisions()->at(y);
+    RSystem*    system    = m_data->systems()->at(x);
+
+    division->setSystem(system, var.toInt());
+  };
+
+  RMeasureAdmTab*   dmTab = new RMeasureAdmTab(dmGetter, dmSetter, this);
+  RSystemAdmTab*    dsTab = new RSystemAdmTab(dsGetter, dsSetter, this);
+
   addLeftTab(new RMeasureTab(this),     "Priemonės", "Priemonės TOOL");
   addLeftTab(new RDivisionTab(this),    "Padaliniai", "Padaliniai TOOL");
   addLeftTab(new RSystemTab(this),      "IS", "IS TOOL");
-
-  addLeftTab(new RMeasureAdmTab(this),  "Priemonių adm.", "Priemonės TOOL");
-  addLeftTab(new RSystemAdmTab(this),   "IS adm.", "IS TOOL");
-
+  addLeftTab(dmTab,                     "Priemonių adm.", "Priemonės TOOL");
+  addLeftTab(dsTab,                     "IS adm.", "IS TOOL");
   addLeftTab(new RSubmissionTab(this),  "Istoriniai duom.", "IS TOOL");
-
-  m_tabWidgetL->addTab(new QLabel("NOT IMPLEMENTED"), QString::fromUtf8("Planuojami kiekiai"));
+  addLeftTab(new RPlannedTab(this),     "Planuojami kiekiai", "IS TOOL");
 
   m_tabWidgetR->addTab(new RUsageTab(), QString::fromUtf8("Apkrovos ir prognozės"));
   m_tabWidgetR->addTab(new QLabel("TEST2"), QString::fromUtf8("Apžvalga"));
+}
 
-  // WIP
-  /*auto c = newContainer(&g_measures);
-  c->addColumn<QString, &RMeasure::name,       &RMeasure::setName>       ("name");
-  c->addColumn<QString, &RMeasure::identifier, &RMeasure::setIdentifier> ("ident");
+/**********************************************************************************************/
 
-  QTableView* v = new QTableView();
-  v->setModel(new RModel1D(c, this));
-  v->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-  //v->horizontalHeader()->set
-  v->verticalHeader()->setDefaultSectionSize(20); //setHeight
+void RMainWindow :: importData()
+{
+  QString fileName = QFileDialog::getOpenFileName
+      (this, QString::fromUtf8("Importuoti"), QString(),
+       QString("Microsoft Excel bylos (*.xls)"));
 
-  m_tabWidgetL->addTab(v, QString::fromUtf8("Priemonės"));*/
+  if (!fileName.isNull())
+  {
+    RValidator    parser;
 
+    parser.validate(fileName, m_data);
+  }
 }
 
 /**********************************************************************************************/

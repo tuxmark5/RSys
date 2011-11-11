@@ -13,7 +13,7 @@ class RPaletteDock: public QDockWidget
   Q_OBJECT
 
   private:
-    _M QTableView*    m_filter;
+    _M RTableView*    m_filter;
     _M bool           m_mode;
 
     _M RModel1D*      m_model;

@@ -36,8 +36,18 @@ QVariant RModel2D :: data(const QModelIndex& index, int role) const
 {
   R_GUARD(index.isValid(), QVariant());
 
-  //int width   = m_container->width();
-  //int height  = m_container->height();
+  int width   = m_containerX->height();
+  int height  = m_containerY->height();
+
+  R_GUARD(index.column()  < width,  QVariant());
+  R_GUARD(index.row()     < height, QVariant());
+
+  switch (role)
+  {
+    case Qt::EditRole:
+    case Qt::DisplayRole:
+      return m_getter(index.column(), index.row());
+  }
 
   return QVariant();
 }
@@ -100,13 +110,28 @@ int RModel2D :: rowCount(const QModelIndex& parent) const
 
 /**********************************************************************************************/
 
-bool RModel2D ::setData(const QModelIndex& index, const QVariant& value, int role)
+bool RModel2D :: setData(const QModelIndex& index, const QVariant& value, int role)
 {
   R_GUARD(index.isValid(),      false);
   R_GUARD(role == Qt::EditRole, false);
 
-  //m_container->set(index.column(), index.row(), value);
+  if (m_setter)
+    m_setter(index.column(), index.row(), value);
   return true;
+}
+
+/**********************************************************************************************/
+
+void RModel2D :: setGetter(Getter&& getter)
+{
+  m_getter = std::forward<Getter>(getter);
+}
+
+/**********************************************************************************************/
+
+void RModel2D :: setSetter(Setter&& setter)
+{
+  m_setter = std::forward<Setter>(setter);
 }
 
 /**********************************************************************************************/

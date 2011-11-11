@@ -59,6 +59,7 @@ SOURCES             +=                              \
   src/RSys/Interface/RModel1D.cc                    \
   src/RSys/Interface/RModel2D.cc                    \
   src/RSys/Interface/RPaletteDock.cc                \
+  src/RSys/Interface/RPlannedTab.cc                 \
   src/RSys/Interface/RRowObserverAdapter.cc         \
   src/RSys/Interface/RTab.cc                        \
   src/RSys/Interface/RTableView.cc                  \
@@ -101,6 +102,7 @@ HEADERS             +=                              \
   include/RSys/Interface/RModel1D.hh                \
   include/RSys/Interface/RModel2D.hh                \
   include/RSys/Interface/RPaletteDock.hh            \
+  include/RSys/Interface/RPlannedTab.hh             \
   include/RSys/Interface/RRowObserverAdapter.hh     \
   include/RSys/Interface/RSubmissionTab.hh          \
   include/RSys/Interface/RSystemAdmTab.hh           \
@@ -110,12 +112,14 @@ HEADERS             +=                              \
   include/RSys/Interface/RUsageTab.hh               \
   include/RSys/Interface/RUsageWidget.hh            \
   include/RSys/Util/RAccessorAdapter.hh             \
+  include/RSys/Util/RCompose.hh                     \
   include/RSys/Util/RContainer.hh                   \
   include/RSys/Util/RDynAccessor.hh                 \
   include/RSys/Util/REntity2D.hh                    \
   include/RSys/Util/RFunAccessor.hh                 \
   include/RSys/Util/RFunctional.hh                  \
   include/RSys/Util/RFT.hh                          \
+  include/RSys/Util/RJoin.hh                        \
   include/RSys/Util/RMemAccessor.hh                 \
   include/RSys/Util/ROList.hh                       \
   include/RSys/Tests/RTests.hh                      \

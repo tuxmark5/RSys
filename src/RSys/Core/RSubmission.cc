@@ -50,3 +50,11 @@ void RSubmission :: setMeasureName(const QString& measureName)
 }
 
 /**********************************************************************************************/
+
+void RSubmission :: setMeasure1Name(const QString& measureName)
+{
+  m_measureName = measureName;
+  // TODO: lookup measure
+}
+
+/**********************************************************************************************/

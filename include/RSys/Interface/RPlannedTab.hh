@@ -1,21 +1,21 @@
-#ifndef RSYS_INTERFACE_RSYSTEM_ADM_TAB_HH
-#define RSYS_INTERFACE_RSYSTEM_ADM_TAB_HH
+#ifndef RSYS_INTERFACE_RPLANNED_TAB_HH
+#define RSYS_INTERFACE_RPLANNED_TAB_HH
 
 /**********************************************************************************************/
 #include <RSys/Interface/RTab.hh>
 /********************************************* RS *********************************************/
-/*                                       RSystemAdmTab                                        */
+/*                                        RPlannedTab                                         */
 /**********************************************************************************************/
 
-class RSystemAdmTab: public RTab
+class RPlannedTab: public RTab
 {
   Q_OBJECT
 
   public:
-    _M Vacuum         RSystemAdmTab(Getter2&& getter, Setter2&& setter, RMainWindow* parent = 0);
-    _V Vacuum         ~RSystemAdmTab();
+    _M Vacuum         RPlannedTab(RMainWindow* parent = 0);
+    _V Vacuum         ~RPlannedTab();
 };
 
 /**********************************************************************************************/
 
-#endif /* RSYS_INTERFACE_RSYSTEM_ADM_TAB_HH */
+#endif /* RSYS_INTERFACE_RPLANNED_TAB_HH */

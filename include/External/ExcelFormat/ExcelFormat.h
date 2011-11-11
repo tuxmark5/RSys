@@ -77,29 +77,30 @@ enum EXCEL_FONT_FAMILY {
 
 struct ExcelFont
 {
-	ExcelFont()
-	 :	_height(200),
+  ExcelFont():
+    _name(L"Arial"),
+    _height(200),
+    _weight(400), // FW_NORMAL
 		_options(0),
 		_color_index(0x7FFF),
-		_weight(400), // FW_NORMAL
 		_escapement_type(EXCEL_ESCAPEMENT_NONE),
 		_underline_type(EXCEL_UNDERLINE_NONE),
 		_font_family(EXCEL_FONT_FAMILY_DONTCARE),
-		_character_set(0), // ANSI_CHARSET
-		_name(L"Arial")
+    _character_set(0) // ANSI_CHARSET
+
 	{
 	}
 
-	ExcelFont(const Workbook::Font& font)
-	 :	_height(font.height_),
+  ExcelFont(const Workbook::Font& font):
+    _name(wstringFromSmallString(font.name_)),
+    _height(font.height_),
+    _weight(font.weight_),
 		_options(font.options_),
 		_color_index(font.colourIndex_),
-		_weight(font.weight_),
 		_escapement_type(font.escapementType_),
 		_underline_type(font.underlineType_),
 		_font_family(font.family_),
-		_character_set(font.characterSet_),
-		_name(wstringFromSmallString(font.name_))
+    _character_set(font.characterSet_)
 	{
 	}
 
@@ -593,7 +594,7 @@ struct CellFormat
 		if (xf.textProperties_ != _text_props)
 			return false;
 
-		if (xf.borderLines_ != _borderlines)
+    if (int(xf.borderLines_) != _borderlines)
 			return false;
 
 		if (xf.colour1_ != _color1)

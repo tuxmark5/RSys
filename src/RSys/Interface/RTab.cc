@@ -40,12 +40,13 @@ void RTab :: makeTable1DTab(RContainer* container)
 
 /**********************************************************************************************/
 
-void RTab :: makeTable2DTab(RContainer* containerX, RContainer* containerY)
+RModel2D* RTab :: makeTable2DTab(RContainer* containerX, RContainer* containerY)
 {
   RModel2D*   model     = new RModel2D(containerX, containerY, this);
   RTableView* tableView = new RTableView(model, this);
 
   layout()->addWidget(tableView);
+  return model;
 }
 
 /**********************************************************************************************/

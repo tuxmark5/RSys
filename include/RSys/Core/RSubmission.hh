@@ -29,6 +29,7 @@ class RSubmission: public RElement
     _M void             setDate1(const QDate& date1);
     _M void             setMeasure(RMeasure* measure);
     _M void             setMeasureName(const QString& measureName);
+    _M void             setMeasure1Name(const QString& measureName);
 };
 
 /**********************************************************************************************/

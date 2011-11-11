@@ -33,8 +33,10 @@ class RSystem;
 class RAbstractItemModel;
 class RMainWindow;
 class RModel1D;
+class RModel2D;
 class RRowObserverAdapter;
 class RTab;
+class RTableView;
 /**********************************************************************************************/
 // Util
 class RContainer;

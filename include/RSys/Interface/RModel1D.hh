@@ -12,7 +12,8 @@ class RModel1D: public RAbstractItemModel
 {
   Q_OBJECT
 
-  private:
+  public:
+    _F class RRowObserverAdapter;
     _T RRowObserverAdapter  RowAdapter;
 
   public:

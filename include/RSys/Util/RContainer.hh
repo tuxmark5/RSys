@@ -38,6 +38,7 @@ class RContainerI: public RContainer
     _T std::function<Entry*()>                          Allocator;
     _T QHash<int, Accessor*>                            ColumnMap;
     _T QList<QString>                                   HeaderList;
+    _T RContainerI<_List>                               Self;
 
   private:
     _M Allocator      m_allocator;
@@ -48,6 +49,12 @@ class RContainerI: public RContainer
   public:
     _M Vacuum         RContainerI(List* list):
       m_list(list) { }
+
+    _M Vacuum         RContainerI(List* list, const Self& other):
+      m_allocator(other.m_allocator),
+      m_list(list),
+      m_columns(other.m_columns),
+      m_headers(other.m_headers) { }
 
     _M Vacuum         ~RContainerI()
       { } // TODO: delete accessors
@@ -74,8 +81,15 @@ class RContainerI: public RContainer
     template <class   Value>
     _M RFunAccessor<Entry, Value>& addAccessor2(int column, int role)
     {
-      auto accessor = new RAccessorAdapterI<RFunAccessor<Entry, Value> >();
-      m_columns.insert((column << 8) | role, accessor);
+      int   index     = (column << 8) | role;
+      auto  accessor  = static_cast<RAccessorAdapterI<RFunAccessor<Entry, Value> >* >
+          (m_columns.value(index));
+
+      if (!accessor)
+      {
+        accessor = new RAccessorAdapterI<RFunAccessor<Entry, Value> >();
+        m_columns.insert(index, accessor);
+      }
       return accessor->m_accessor;
     }
 
@@ -103,7 +117,10 @@ class RContainerI: public RContainer
     _V bool           set(int x, int y, int role, const QVariant& variant)
     {
       if (Accessor* accessor = m_columns.value(x << 8 | role))
+      {
         accessor->set(*m_list->at(y), variant);
+        m_list->modify(y);
+      }
       return true;
     }
 
@@ -122,6 +139,10 @@ class RContainerI: public RContainer
 template <class List>
 RContainerI<List>* newContainer(List* list)
 { return new RContainerI<List>(list); }
+
+template <class List>
+RContainerI<List>* newContainer(List* list, const RContainerI<List>& other)
+{ return new RContainerI<List>(list, other); }
 
 /**********************************************************************************************/
 

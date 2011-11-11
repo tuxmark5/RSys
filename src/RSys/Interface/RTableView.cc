@@ -9,7 +9,7 @@
 Vacuum RTableView :: RTableView(QAbstractItemModel* model, QWidget* parent):
   QTableView(parent)
 {
-  horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+  horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
   verticalHeader()->setDefaultSectionSize(20);
   setModel(model);
 }
@@ -35,6 +35,15 @@ bool RTableView :: edit(const QModelIndex& index, EditTrigger trigger, QEvent* e
   if (QTableView::edit(index, trigger, event))
     return true;
   return false;
+}
+
+/**********************************************************************************************/
+
+void RTableView :: setStretch(bool stretch)
+{
+  auto mode = stretch ? QHeaderView::Stretch : QHeaderView::ResizeToContents;
+
+  horizontalHeader()->setResizeMode(mode);
 }
 
 /**********************************************************************************************/

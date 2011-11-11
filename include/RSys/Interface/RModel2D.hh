@@ -13,8 +13,14 @@ class RModel2D: public RAbstractItemModel
   Q_OBJECT
 
   public:
+    _T std::function<QVariant (int, int)>               Getter;
+    _T std::function<void (int, int, const QVariant&)>  Setter;
+
+  public:
     _M RContainer*    m_containerX;
     _M RContainer*    m_containerY;
+    _M Getter         m_getter;
+    _M Setter         m_setter;
 
   public:
     _M Vacuum         RModel2D(RContainer* containerX, RContainer* containerY, QObject* parent = 0);
@@ -27,6 +33,8 @@ class RModel2D: public RAbstractItemModel
     _V QModelIndex    parent(const QModelIndex& index) const;
     _V int            rowCount(const QModelIndex& parent = QModelIndex()) const;
     _V bool           setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
+    _M void           setGetter(Getter&& m_getter);
+    _M void           setSetter(Setter&& m_setter);
 };
 
 /**********************************************************************************************/

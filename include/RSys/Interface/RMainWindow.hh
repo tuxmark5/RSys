@@ -35,20 +35,28 @@ class RMainWindow: public QMainWindow
     _M RData*         m_data;
     _M RContainer*    m_divisionContainer;
     _M RContainer*    m_measureContainer;
+    _M RContainer*    m_measure1Container;
     _M RContainer*    m_submissionContainer;
+    _M RContainer*    m_submission1Container;
     _M RContainer*    m_systemContainer;
 
   public:
     _M Vacuum         RMainWindow(QWidget* parent = 0);
     _V Vacuum         ~RMainWindow();
+    _M void           connectActions();
     _M void           createActions();
     _M void           createContainers();
     _M void           createTabs();
     _M RData*         data() const { return m_data; }
     _M RContainer*    divisionContainer() const { return m_divisionContainer; }
     _M RContainer*    measureContainer() const { return m_measureContainer; }
+    _M RContainer*    measure1Container() const { return m_measure1Container; }
     _M RContainer*    submissionContainer() const { return m_submissionContainer; }
+    _M RContainer*    submission1Container() const { return m_submission1Container; }
     _M RContainer*    systemContainer() const { return m_systemContainer; }
+
+  public slots:
+    _M void           importData();
 
   private:
     _M void           addLeftTab(RTab* tab, const char* title, const char* toolTip);

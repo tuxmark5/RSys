@@ -38,6 +38,7 @@ Vacuum RPaletteDock :: RPaletteDock(RMainWindow* parent):
   createContainers(parent);
   m_model   = new RModel1D(m_divisionContainer, widget);
   m_filter  = new RTableView(m_model, widget);
+  m_filter->setStretch(true);
   layout->addWidget(m_filter, 1, 0, 1, 2);
 
   setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);

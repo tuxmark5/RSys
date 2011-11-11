@@ -84,10 +84,10 @@ namespace FT
   template <template <class> class, class>
   struct map;
 
-  template <template <class> class F, class X>
-  struct map<F, Id<X> >
+  template <template <class> class F>
+  struct map<F, Id<> >
   {
-    RET_C(F<X>);
+    RET(Id<>);
   };
 
   template <template <class> class F, class X, class... Rest>
@@ -151,6 +151,23 @@ namespace FT
   struct tail<Id<X, Rest...> >
   {
     RET(Id<Rest...>);
+  };
+
+  /* * * * * * * * * * * * * * * * * * * * * * * ** * * * * * * * * * * * * * * * * * * * * * */
+
+  template <class L>
+  struct last;
+
+  template <class X>
+  struct last<Id<X> >
+  {
+    RET(X);
+  };
+
+  template <class X, class... Rest>
+  struct last<Id<X, Rest...> >
+  {
+    RET_C(last<Id<Rest...> >);
   };
 
   /* * * * * * * * * * * * * * * * * * * * * * * ** * * * * * * * * * * * * * * * * * * * * * */
