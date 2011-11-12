@@ -6,7 +6,7 @@
 /**********************************************************************************************/
 
 Vacuum RMeasureTab :: RMeasureTab(RMainWindow* parent):
-  RTab("AAA", parent)
+  RTab(R_S("Paramos priemonės"), parent)
 {
   makeTable1DTab(parent->measureContainer());
 }

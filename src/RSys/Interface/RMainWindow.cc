@@ -1,12 +1,12 @@
 #include <QtGui/QAction>
 #include <QtGui/QFileDialog>
-#include <QtGui/QHeaderView>
-#include <QtGui/QLabel>
 #include <QtGui/QListView>
+#include <QtGui/QPushButton>
 #include <QtGui/QSplitter>
 #include <QtGui/QScrollArea>
 #include <QtGui/QTableView>
 #include <QtGui/QTabWidget>
+#include <QtGui/QVBoxLayout>
 
 #include <RSys/Core/RData.hh>
 #include <RSys/Core/RDivision.hh>
@@ -19,8 +19,10 @@
 #include <RSys/Interface/RMainMenuBar.hh>
 #include <RSys/Interface/RMainToolBar.hh>
 #include <RSys/Interface/RMainWindow.hh>
+#include <RSys/Interface/RMessage.hh>
 #include <RSys/Interface/RModel1D.hh>
 #include <RSys/Interface/RPaletteDock.hh>
+#include <RSys/Interface/RSearchForm.hh>
 
 #include <RSys/Interface/RDivisionTab.hh>
 #include <RSys/Interface/RMeasureAdmTab.hh>
@@ -40,39 +42,49 @@
 /**********************************************************************************************/
 
 Vacuum RMainWindow :: RMainWindow(QWidget* parent):
-  QMainWindow(parent)
+  QMainWindow(parent),
+  m_loginWidget(0),
+  m_searchForm(0)
 {
-  m_data        = new RData();
-  m_results     = new RResults(m_data);
+  m_data              = new RData();
+  m_results           = new RResults(m_data);
   createContainers();
 
   createActions();
   connectActions();
 
-  addToolBar(new RMainToolBar(this));
-  addToolBar(new RIntervalToolBar(this));
-  addDockWidget(Qt::RightDockWidgetArea, new RPaletteDock(this));
-  setMenuBar(new RMainMenuBar(this));
+  m_menuBar           = new RMainMenuBar(this);
+  m_toolBar           = new RMainToolBar(this);
+  m_intervalToolBar   = new RIntervalToolBar(this);
+  m_paletteDock       = new RPaletteDock(this);
 
-  m_tabWidgetL  = new QTabWidget(this);
+  setMenuBar(m_menuBar);
+  addToolBar(m_toolBar);
+  addToolBar(m_intervalToolBar);
+  addDockWidget(Qt::RightDockWidgetArea, m_paletteDock);
+
+  m_widgetL           = new QWidget(this);
+  m_layoutL           = new QVBoxLayout(m_widgetL);
+  m_tabWidgetL        = new QTabWidget(this);
+  m_tabWidgetR        = new QTabWidget(this);
+
+  m_layoutL->setMargin(0);
+  m_layoutL->setSpacing(5);
   m_tabWidgetL->setTabPosition(QTabWidget::South);
-
-  m_tabWidgetR  = new QTabWidget(this);
   m_tabWidgetR->setTabPosition(QTabWidget::South);
 
-  m_splitter    = new QSplitter(this);
-  m_splitter->addWidget(m_tabWidgetL);
+  m_splitter          = new QSplitter(this);
+  m_layoutL->addWidget(m_tabWidgetL);
+  m_splitter->addWidget(m_widgetL);
   m_splitter->addWidget(m_tabWidgetR);
 
   createTabs();
-  setCentralWidget(m_splitter);
-
-  //setCentralWidget(new RLoginWidget(this));
+  logout();
 }
 
 /**********************************************************************************************/
 
-RMainWindow :: ~RMainWindow()
+Vacuum RMainWindow :: ~RMainWindow()
 {
   //delete m_results;
 }
@@ -97,9 +109,18 @@ void RMainWindow :: addRightTab(RTab* tab, const char* title, const char* toolTi
 
 /**********************************************************************************************/
 
+void RMainWindow :: addStatusWidget(QWidget* widget)
+{
+  m_layoutL->insertWidget(0, widget);
+}
+
+/**********************************************************************************************/
+
 void RMainWindow :: connectActions()
 {
+  QAction::connect(m_disconnectAction, SIGNAL(triggered()), this, SLOT(logout()));
   QAction::connect(m_importAction, SIGNAL(triggered()), this, SLOT(importData()));
+  QAction::connect(m_searchAction, SIGNAL(toggled(bool)), this, SLOT(setShowSearchForm(bool)));
 }
 
 /**********************************************************************************************/
@@ -237,16 +258,16 @@ void RMainWindow :: createTabs()
   RMeasureAdmTab*   dmTab = new RMeasureAdmTab(dmGetter, dmSetter, this);
   RSystemAdmTab*    dsTab = new RSystemAdmTab(dsGetter, dsSetter, this);
 
-  addLeftTab(new RMeasureTab(this),     "Priemonės", "Priemonės TOOL");
-  addLeftTab(new RDivisionTab(this),    "Padaliniai", "Padaliniai TOOL");
-  addLeftTab(new RSystemTab(this),      "IS", "IS TOOL");
-  addLeftTab(dmTab,                     "Priemonių adm.", "Priemonės TOOL");
-  addLeftTab(dsTab,                     "IS adm.", "IS TOOL");
-  addLeftTab(new RSubmissionTab(this),  "Istoriniai duom.", "IS TOOL");
-  addLeftTab(new RPlannedTab(this),     "Planuojami kiekiai", "IS TOOL");
+  addLeftTab(new RMeasureTab(this),     "Priemonės", "Paramos priemonės");
+  addLeftTab(new RDivisionTab(this),    "Padaliniai", "Padaliniai");
+  addLeftTab(new RSystemTab(this),      "IS", "Informacinės sistemos");
+  addLeftTab(dmTab,                     "Priemonių adm.", "Paramos priemonių administravimas");
+  addLeftTab(dsTab,                     "IS adm.", "Informacinių sistemų pasiskirstymas");
+  addLeftTab(new RSubmissionTab(this),  "Istoriniai duom.", "Istoriniai duomenys");
+  addLeftTab(new RPlannedTab(this),     "Planuojami kiekiai", "Planuojami paramos priemonių kiekiai");
 
-  addRightTab(new RUsageTab(this),      "Apkrovos ir prognozės", "ZEL");
-  m_tabWidgetR->addTab(new QLabel("TEST2"), QString::fromUtf8("Apžvalga"));
+  addRightTab(new RUsageTab(this),      "Apkrovos ir prognozės", "Individualios padalinių/sistemų apkrovos ir prognozės");
+  //addRightTab(new RUsageTab(this),      "Apžvalga", "ZEL");
 }
 
 /**********************************************************************************************/
@@ -262,7 +283,87 @@ void RMainWindow :: importData()
     RValidator    parser;
 
     parser.validate(fileName, m_data);
+    showMessage(QString::fromUtf8("Duomenys sėkmingai (o gal ir ne) importuoti\n"
+                                  "Vytautai, man čia reikia, kad tavo kodas išspjautų tik vieną žinutę\n"
+                                  "Tam padaryk kokį naują signalą, o visas perteklines žinutes į logą galim\n"
+                                  "kraut"), 15000);
   }
+}
+
+/**********************************************************************************************/
+
+void RMainWindow :: login()
+{
+  R_GUARD(m_loginWidget, Vacuum);
+
+  setInterfaceEnabled(true);
+  m_loginWidget = 0; // deleted by QMainWindow::setCentralWidget
+}
+
+/**********************************************************************************************/
+
+void RMainWindow :: logout()
+{
+  R_GUARD(!m_loginWidget, Vacuum);
+
+  m_loginWidget = new RLoginWidget(0);
+  connect(m_loginWidget, SIGNAL(loggedIn()), this, SLOT(login()));
+  setInterfaceEnabled(false);
+  setCentralWidget(m_loginWidget);
+}
+
+/**********************************************************************************************/
+
+void RMainWindow :: onSearchFormDestroyed()
+{
+  m_searchAction->setChecked(false);
+  m_searchForm = 0;
+}
+
+/**********************************************************************************************/
+
+void RMainWindow :: setInterfaceEnabled(bool enabled)
+{
+  if (enabled)
+    setCentralWidget(m_splitter);
+
+  m_menuBar->setEnabled(enabled);
+  m_toolBar->setEnabled(enabled);
+  m_intervalToolBar->setEnabled(enabled);
+  m_paletteDock->setEnabled(enabled);
+  m_paletteDock->setVisible(enabled);
+  m_splitter->setVisible(enabled);
+
+  if (!enabled)
+    m_splitter->setParent(0);
+}
+
+/**********************************************************************************************/
+
+void RMainWindow :: setShowSearchForm(bool show)
+{
+  if (!m_searchForm && show)
+  {
+    m_searchForm = new RSearchForm(this);
+
+    addStatusWidget(m_searchForm);
+    // handle untoggle
+    QAction::connect(m_searchAction, SIGNAL(toggled(bool)), m_searchForm, SLOT(onCloseClicked()));
+    // handle RStatusWidget's "X" button
+    QAction::connect(m_searchForm, SIGNAL(destroyed()), this, SLOT(onSearchFormDestroyed()));
+  }
+  else
+  {
+    m_searchAction->setChecked(false);
+    m_searchForm = 0;
+  }
+}
+
+/**********************************************************************************************/
+
+void RMainWindow :: showMessage(const QString& message, int timeout)
+{
+  addStatusWidget(new RMessage(message, timeout));
 }
 
 /**********************************************************************************************/

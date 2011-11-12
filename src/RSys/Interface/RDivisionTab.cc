@@ -6,7 +6,7 @@
 /**********************************************************************************************/
 
 Vacuum RDivisionTab :: RDivisionTab(RMainWindow* parent):
-  RTab("AAA", parent)
+  RTab(R_S("Padaliniai"), parent)
 {
   makeTable1DTab(parent->divisionContainer());
 }

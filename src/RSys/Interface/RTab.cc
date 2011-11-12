@@ -15,7 +15,7 @@ Vacuum RTab :: RTab(const QString& title, QWidget* parent):
   QVBoxLayout*  layout  = new QVBoxLayout(this);
   QLabel*       label   = new QLabel(title);
 
-  label->setFrameStyle(QLabel::HLine | QLabel::Plain);
+  label->setFrameStyle(QLabel::Box | QLabel::Plain);
   label->setLineWidth(1);
   label->setMinimumHeight(20);
 

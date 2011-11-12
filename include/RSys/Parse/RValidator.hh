@@ -1,22 +1,23 @@
-#ifndef RVALIDATOR_HH
-#define RVALIDATOR_HH
+#ifndef RSYS_PARSE_RVALIDATOR_HH
+#define RSYS_PARSE_RVALIDATOR_HH
 
+/**********************************************************************************************/
+#include <RSys/Core/RData.hh>
+#include <RSys/Core/RDivision.hh>
 #include <RSys/Core/RMeasure.hh>
 #include <RSys/Core/RSystem.hh>
-#include <RSys/Core/RDivision.hh>
 #include <RSys/Core/RSubmission.hh>
 #include <RSys/Import/RIDocument.hh>
 #include <RSys/Import/RXLSDocument.hh>
-#include <RSys/Core/RData.hh>
-
+/********************************************* RS *********************************************/
+/*                                         RValidator                                         */
+/**********************************************************************************************/
 
 class RValidator: public QObject
 {
-
-    Q_OBJECT
+  Q_OBJECT
 
   public:
-
     _M  RDivision *   getDivision(RData *data, const QString &identifier);
     _M  RSystem *     getSystem(RData *data, const QString &identifier);
     _M  RMeasure *    getMeasure(RData *data, const QString &identifier);
@@ -37,9 +38,10 @@ class RValidator: public QObject
     // FIXME: Kaip galima būtų realizuoti galimybę grupuoti žinutes?
     // Pavyzdžiui, jei turime 200 pranešimų apie to pačio tipo
     // klaidą. Taip pat, kaip užtikrinti ID unikalumą?
-    _M  void          log(RLEVEL level, RID id, QString message);
+    _M  void          log(RMessageLevel level, RID id, QString message);
     _M  void          parsed(double part);
-
 };
 
-#endif // RVALIDATOR_HH
+/**********************************************************************************************/
+
+#endif /* RSYS_PARSE_RVALIDATOR_HH */

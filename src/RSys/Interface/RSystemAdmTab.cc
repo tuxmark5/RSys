@@ -7,7 +7,7 @@
 /**********************************************************************************************/
 
 Vacuum RSystemAdmTab :: RSystemAdmTab(Getter2&& getter, Setter2&& setter, RMainWindow* parent):
-  RTab("AAA", parent)
+  RTab(R_S("Informacinių sistemų paskirstymas padaliniuose"), parent)
 {
   RModel2D* model = makeTable2DTab(parent->systemContainer(), parent->divisionContainer());
 

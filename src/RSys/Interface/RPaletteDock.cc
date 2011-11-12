@@ -21,6 +21,8 @@ Vacuum RPaletteDock :: RPaletteDock(RMainWindow* parent):
   QToolButton*  divisionsMode = new QToolButton(widget);
   QToolButton*  systemsMode   = new QToolButton(widget);
 
+  setMaximumWidth(300);
+
   layout->addWidget(divisionsMode, 0, 0);
   divisionsMode->setDefaultAction(parent->m_divisionsStateAction);
   divisionsMode->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);

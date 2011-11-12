@@ -6,7 +6,7 @@
 /**********************************************************************************************/
 
 Vacuum RSystemTab :: RSystemTab(RMainWindow* parent):
-  RTab("AAA", parent)
+  RTab(R_S("Informacinės sistemos"), parent)
 {
   makeTable1DTab(parent->systemContainer());
 }

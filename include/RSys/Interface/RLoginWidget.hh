@@ -8,11 +8,12 @@
 /*                                        RLoginWidget                                        */
 /**********************************************************************************************/
 
-class RLoginWidget: public QGroupBox
+class RLoginWidget: public QWidget
 {
   Q_OBJECT
 
   private:
+    _M QGridLayout*   m_innerLayout;
     _M QLineEdit*     m_dbAddressField;
     _M QLineEdit*     m_dbNameField;
     _M QLineEdit*     m_usernameField;
@@ -22,6 +23,13 @@ class RLoginWidget: public QGroupBox
   public:
     _M Vacuum         RLoginWidget(QWidget* parent = 0);
     _V Vacuum         ~RLoginWidget();
+    _M QPushButton*   loginButton() const { return m_loginButton; }
+
+  protected slots:
+    _M void           onLoginPressed();
+
+  signals:
+    _M void           loggedIn();
 };
 
 /**********************************************************************************************/

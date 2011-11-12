@@ -19,6 +19,7 @@
 /**********************************************************************************************/
 #define FN(x)         decltype(x), x
 #define R_GUARD(x, r) if (!(x)) return r
+#define R_S(x)        QString::fromUtf8(x)
 /**********************************************************************************************/
 #define Vacuum
 /**********************************************************************************************/
@@ -33,11 +34,17 @@ class RUnit;
 /**********************************************************************************************/
 // Interface
 class RAbstractItemModel;
+class RIntervalToolBar;
+class RMainToolBar;
+class RMainMenuBar;
 class RMainWindow;
 class RModel1D;
 class RModel2D;
 class RResultsModel;
+class RLoginWidget;
+class RPaletteDock;
 class RRowObserverAdapter;
+class RSearchForm;
 class RTab;
 class RTableView;
 /**********************************************************************************************/
@@ -49,20 +56,32 @@ class RContainer;
 /**********************************************************************************************/
 // Qt
 class QDateEdit;
+class QGridLayout;
+class QHBoxLayout;
 class QLabel;
+class QLayoutItem;
 class QLineEdit;
 class QPushButton;
 class QScrollArea;
+class QSpinBox;
 class QSplitter;
+class QStackedLayout;
 class QTabWidget;
 class QTableView;
 class QVBoxLayout;
 /**********************************************************************************************/
 typedef long long                 RID;
-typedef enum {RDEBUG, RINFO, RWARNING, RERROR, RCRITICAL}
-                                  RLEVEL;
 typedef QMap<RMeasure*, double>   RMeasureMap;
 typedef QMap<RSystem*, bool>      RSystemMap;
+/**********************************************************************************************/
+enum RMessageLevel
+{
+  RDEBUG,
+  RINFO,
+  RWARNING,
+  RERROR,
+  RCRITICAL
+};
 /**********************************************************************************************/
 #include <RSys/Util/ROList.hh>
 /**********************************************************************************************/

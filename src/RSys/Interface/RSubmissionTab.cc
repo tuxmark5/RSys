@@ -6,7 +6,7 @@
 /**********************************************************************************************/
 
 Vacuum RSubmissionTab :: RSubmissionTab(RMainWindow* parent):
-  RTab("AAA", parent)
+  RTab(R_S("Istoriniai paramos priemonių paraiškų duomenys"), parent)
 {
   makeTable1DTab(parent->submissionContainer());
 }

@@ -57,12 +57,15 @@ SOURCES             +=                              \
   src/RSys/Interface/RMainWindow.cc                 \
   src/RSys/Interface/RMeasureAdmTab.cc              \
   src/RSys/Interface/RMeasureTab.cc                 \
+  src/RSys/Interface/RMessage.cc                    \
   src/RSys/Interface/RModel1D.cc                    \
   src/RSys/Interface/RModel2D.cc                    \
   src/RSys/Interface/RPaletteDock.cc                \
   src/RSys/Interface/RPlannedTab.cc                 \
   src/RSys/Interface/RResultsModel.cc               \
   src/RSys/Interface/RRowObserverAdapter.cc         \
+  src/RSys/Interface/RSearchForm.cc                 \
+  src/RSys/Interface/RStatusWidget.cc               \
   src/RSys/Interface/RTab.cc                        \
   src/RSys/Interface/RTableView.cc                  \
   src/RSys/Interface/RSubmissionTab.cc              \
@@ -105,12 +108,15 @@ HEADERS             +=                              \
   include/RSys/Interface/RMainWindow.hh             \
   include/RSys/Interface/RMeasureAdmTab.hh          \
   include/RSys/Interface/RMeasureTab.hh             \
+  include/RSys/Interface/RMessage.hh                \
   include/RSys/Interface/RModel1D.hh                \
   include/RSys/Interface/RModel2D.hh                \
   include/RSys/Interface/RPaletteDock.hh            \
   include/RSys/Interface/RPlannedTab.hh             \
   include/RSys/Interface/RResultsModel.hh           \
   include/RSys/Interface/RRowObserverAdapter.hh     \
+  include/RSys/Interface/RSearchForm.hh             \
+  include/RSys/Interface/RStatusWidget.hh           \
   include/RSys/Interface/RSubmissionTab.hh          \
   include/RSys/Interface/RSystemAdmTab.hh           \
   include/RSys/Interface/RSystemTab.hh              \

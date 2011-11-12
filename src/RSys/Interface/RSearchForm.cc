@@ -1,0 +1,80 @@
+#include <QtGui/QGridLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QPushButton>
+#include <QtGui/QRadioButton>
+#include <QtGui/QSpinBox>
+#include <QtGui/QStackedLayout>
+#include <RSys/Interface/RSearchForm.hh>
+
+/********************************************* RS *********************************************/
+/*                                        RSearchForm                                         */
+/**********************************************************************************************/
+
+Vacuum RSearchForm :: RSearchForm(QWidget* parent):
+  RStatusWidget(parent)
+{
+  QVBoxLayout*    layout          = new QVBoxLayout();
+  QHBoxLayout*    layout0         = new QHBoxLayout();
+  QWidget*        widget0         = new QWidget(this);
+  QWidget*        widget1         = new QWidget(this);
+  QHBoxLayout*    seasonLayout0   = new QHBoxLayout(widget0);
+  QGridLayout*    seasonLayout1   = new QGridLayout(widget1);
+
+  QRadioButton*   seasonRelevantButton;
+  QPushButton*    searchButton;
+
+  m_seasonLayout    = new QStackedLayout();
+
+  layout0->addWidget(new QLabel(R_S("Į sezoniškumą")));
+  layout0->addWidget(seasonRelevantButton = new QRadioButton(R_S("Atsižvelgiama")));
+  layout0->addWidget(new QRadioButton(R_S("Neatsižvelgiama")));
+  layout0->setSizeConstraint(QLayout::SetMaximumSize);
+
+  seasonLayout0->addWidget(new QLabel(R_S("Reikalingo intervalo ilgis:")));
+  seasonLayout0->addWidget(m_defaultBox = new QSpinBox());
+  seasonLayout0->addWidget(new QLabel(R_S("diena (-os)")));
+
+  seasonLayout1->addWidget(new QLabel(R_S("Darbai žiemą:")), 0, 0);
+  seasonLayout1->addWidget(m_winterBox = new QSpinBox(), 0, 1);
+  seasonLayout1->addWidget(new QLabel(R_S("diena (-os) Darbai pavasarį:")), 0, 2);
+  seasonLayout1->addWidget(m_springBox = new QSpinBox(), 0, 3);
+  seasonLayout1->addWidget(new QLabel(R_S("diena (-os)")), 0, 4);
+
+  seasonLayout1->addWidget(new QLabel(R_S("Darbai vasarą:")), 1, 0);
+  seasonLayout1->addWidget(m_summerBox = new QSpinBox(), 1, 1);
+  seasonLayout1->addWidget(new QLabel(R_S("diena (-os) Darbai rudenį:")), 1, 2);
+  seasonLayout1->addWidget(m_autumnBox = new QSpinBox(), 1, 3);
+  seasonLayout1->addWidget(new QLabel(R_S("diena (-os)")), 1, 4);
+
+  m_seasonLayout->addWidget(widget0);
+  m_seasonLayout->addWidget(widget1);
+  setSeasonRelevance(true);
+
+  layout->addLayout(layout0);
+  layout->addLayout(m_seasonLayout);
+  layout->addWidget(searchButton = new QPushButton(R_S("Ieškoti mažiausiai apkrauto intervalo")));
+
+  setLayout(layout);
+
+  seasonRelevantButton->setChecked(true);
+  QRadioButton::connect(seasonRelevantButton, SIGNAL(toggled(bool)),
+    this, SLOT(setSeasonRelevance(bool)));
+
+  //QPushButton::connect(searchButton, SIGNAL(clicked()), this, SLOT())
+}
+
+/**********************************************************************************************/
+
+Vacuum RSearchForm :: ~RSearchForm()
+{
+
+}
+
+/**********************************************************************************************/
+
+void RSearchForm :: setSeasonRelevance(bool relevant)
+{
+  m_seasonLayout->setCurrentIndex(relevant);
+}
+
+/**********************************************************************************************/

@@ -10,7 +10,7 @@
 /**********************************************************************************************/
 
 Vacuum RPlannedTab :: RPlannedTab(RMainWindow* parent):
-  RTab("AAA", parent)
+  RTab(R_S("Planuojami paramos priemonių kiekiai"), parent)
 {
   RData*    data = parent->data();
   RModel2D* model;

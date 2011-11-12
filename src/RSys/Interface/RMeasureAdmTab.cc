@@ -7,7 +7,7 @@
 /**********************************************************************************************/
 
 Vacuum RMeasureAdmTab :: RMeasureAdmTab(Getter2&& getter, Setter2&& setter, RMainWindow* parent):
-  RTab("AAA", parent)
+  RTab(R_S("Paramos priemonių administravimas"), parent)
 {
   RModel2D* model = makeTable2DTab(parent->measureContainer(), parent->divisionContainer());
 

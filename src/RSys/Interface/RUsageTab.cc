@@ -8,14 +8,12 @@
 #include <RSys/Interface/RUsageTab.hh>
 #include <RSys/Interface/RUsageWidget.hh>
 
-/**********************************************************************************************/
-// RUnit.hh
 /********************************************* RS *********************************************/
 /*                                         RUsageTab                                          */
 /**********************************************************************************************/
 
 Vacuum RUsageTab :: RUsageTab(RMainWindow* parent):
-  RTab(QString::fromUtf8("Apkrovos ir prognozės"), parent),
+  RTab(R_S("Individualios apkrovos ir prognozės"), parent),
   m_scrollArea(new QScrollArea(this)),
   m_systemsMode(false)
 {
