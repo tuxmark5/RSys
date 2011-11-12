@@ -15,11 +15,11 @@ class RResults
   public:
     _M Vacuum           RResults(RData* data);
     _M Vacuum           ~RResults();
-    _M void             addUsage0Field(RResultModel* model, RElement* element);
-    _M void             addUsage1Field(RResultModel* model, RElement* element);
-    _M void             addDeltaUsageField(RResultModel* model, RElement* element);
-    _M void             addDeltaPUsageField(RResultModel* model, RElement* element);
-    _M int              numRecords() const { return 0; }
+    _M void             addUsage0Field(RResultsModel* model, RUnit* unit);
+    _M void             addUsage1Field(RResultsModel* model, RUnit* unit);
+    _M void             addDeltaUsageField(RResultsModel* model, RUnit* unit);
+    _M void             addDeltaPUsageField(RResultsModel* model, RUnit* unit);
+    _M int              numRecords() const { return 20; }
 };
 
 /**********************************************************************************************/

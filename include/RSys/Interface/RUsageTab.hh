@@ -12,7 +12,7 @@ class RUsageTab: public RTab, public RIObserver
   Q_OBJECT
 
   private:
-    _T ROList<RElement*>  List;
+    _T ROList<RUnit*>  List;
 
   private:
     _M QScrollArea*   m_scrollArea;
@@ -20,6 +20,7 @@ class RUsageTab: public RTab, public RIObserver
     _M QWidget*       m_innerWidget;
     _M bool           m_systemsMode: 1;
 
+    _M RResults*      m_results;
     _M List*          m_current;
     _M List*          m_divisions;
     _M List*          m_systems;
@@ -37,7 +38,7 @@ class RUsageTab: public RTab, public RIObserver
 
   public slots:
     _M void           setMode(bool systems);
-    _M void           showElement(RElement* element, bool show);
+    _M void           updateElement(RElement* unit, int updateType);
 };
 
 /**********************************************************************************************/

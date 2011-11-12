@@ -13,6 +13,14 @@ class RData: public QObject
 
   public:
     _F class RElement;
+    _F class RUnit;
+
+  public:
+    _E ChangeType
+    {
+      TitleOrName   = 0,
+      Visibility    = 1
+    };
 
   private:
     _M RDivisionList      m_divisions;
@@ -32,7 +40,7 @@ class RData: public QObject
     _M RSystemList*       systems()       { return &m_systems; }
 
   signals:
-    _M void               visibilityChanged(RElement* element, bool visible);
+    _M void               elementChanged(RElement* element, int changeType);
 };
 
 /**********************************************************************************************/

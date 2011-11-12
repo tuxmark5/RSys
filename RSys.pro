@@ -46,6 +46,7 @@ SOURCES             +=                              \
   src/RSys/Import/RXLSDocument.cc                   \
   src/RSys/Import/RXLSTable.cc                      \
   src/RSys/Interface/RAbstractItemModel.cc          \
+  src/RSys/Interface/RChart.cc                      \
   src/RSys/Interface/RColumnObserverAdapter.cc      \
   src/RSys/Interface/RDivisionTab.cc                \
   src/RSys/Interface/RIntervalToolBar.cc            \
@@ -93,6 +94,7 @@ HEADERS             +=                              \
   include/RSys/Import/RXLSDocument.hh               \
   include/RSys/Import/RXLSTable.hh                  \
   include/RSys/Interface/RAbstractItemModel.hh      \
+  include/RSys/Interface/RChart.hh                  \
   include/RSys/Interface/RColumnObserverAdapter.hh  \
   include/RSys/Interface/RDivisionTab.hh            \
   include/RSys/Interface/RIntervalToolBar.hh        \

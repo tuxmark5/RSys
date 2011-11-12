@@ -1,18 +1,20 @@
 #include <QtCore/QEvent>
+#include <QtGui/QBoxLayout>
 #include <QtGui/QPushButton>
-#include <QtGui/QStackedLayout>
 #include <RSys/Interface/RLayerWidget.hh>
-
-// require(0, &createWidget, &process);
 
 /********************************************* RS *********************************************/
 /*                                        RLayerWidget                                        */
 /**********************************************************************************************/
 
 Vacuum RLayerWidget :: RLayerWidget(QWidget* parent):
-  QWidget(parent)
+  QWidget(parent),
+  m_widget(0)
 {
-  new QStackedLayout(this);
+  QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
+
+  layout->setMargin(0);
+  layout->setSpacing(0);
 }
 
 /**********************************************************************************************/
@@ -24,27 +26,31 @@ Vacuum RLayerWidget :: ~RLayerWidget()
 
 /**********************************************************************************************/
 
+void RLayerWidget :: createButtons(const ButtonCallback& callback)
+{
+  Q_UNUSED(callback);
+}
+
+/**********************************************************************************************/
+
 void RLayerWidget :: enterEvent(QEvent* event)
 {
   Q_UNUSED(event);
 
   int baseY = 0; //(height() - 3 * 25) / 2;
+  int i = 0;
   QPalette palette = this->palette();
 
   palette.setBrush(QPalette::Button, palette.highlightedText());
   palette.setBrush(QPalette::Window, palette.highlight());
 
-  for (int i = 0; i < 3; i++)
+  createButtons([baseY, &i, this, &palette](QPushButton* button) -> void
   {
-    QPushButton* button = new QPushButton(this);
-
-    //button->setFlat(true);
+    button->setParent(this);
+    button->setGeometry(10, baseY + 24 * i++, 20, 20);
     button->setPalette(palette);
-
-    button->setGeometry(10, baseY + 24 * i, 20, 20);
-    button->setText("XXXX");
     button->setVisible(true);
-  }
+  });
 }
 
 /**********************************************************************************************/
@@ -55,6 +61,7 @@ bool RLayerWidget :: event(QEvent* event)
   {
 
   }
+
   return QWidget::event(event);
 }
 
@@ -74,27 +81,19 @@ void RLayerWidget :: leaveEvent(QEvent* event)
 
 /**********************************************************************************************/
 
-QString RLayerWidget :: nameAt(int index) const
+void RLayerWidget :: setWidget(QWidget* widget)
 {
-  Q_UNUSED(index);
+  if (m_widget)
+  {
+    m_widget->setVisible(false);
+    m_widget->deleteLater();
+  }
 
-  return QString();
-}
-
-/**********************************************************************************************/
-
-int RLayerWidget :: numWidgets() const
-{
-  return 0;
-}
-
-/**********************************************************************************************/
-
-QWidget* RLayerWidget :: widgetAt(int index)
-{
-  Q_UNUSED(index);
-
-  return 0;
+  if ((m_widget = widget))
+  {
+    layout()->addWidget(m_widget);
+    m_widget->lower();
+  }
 }
 
 /**********************************************************************************************/

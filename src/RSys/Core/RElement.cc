@@ -17,7 +17,7 @@ Vacuum RElement :: RElement(RData* data):
 void RElement :: setVisible(bool visible)
 {
   m_visible = visible;
-  emit m_data->visibilityChanged(this, visible);
+  emit m_data->elementChanged(this, RData::Visibility);
 }
 
 /**********************************************************************************************/

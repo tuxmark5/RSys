@@ -12,15 +12,26 @@ class RUsageWidget: public RLayerWidget
   Q_OBJECT
 
   private:
-    _M RElement*      m_element;
+    _M RUnit*           m_unit;
+    _M RResults*        m_results;
+    _M RResultsModel*   m_model;
+    _M QString          m_title;
+    _M QLabel*          m_header;
 
   public:
-    _M Vacuum         RUsageWidget(RElement* element, QWidget* parent = 0);
-    _V Vacuum         ~RUsageWidget();
-    //_M
-    _V QString        nameAt(int index) const;
-    _V int            numWidgets() const;
-    _V QWidget*       widgetAt(int index);
+    _M Vacuum           RUsageWidget(RUnit* unit, RResults* results, QWidget* parent = 0);
+    _V Vacuum           ~RUsageWidget();
+    _M RResultsModel*   model() const { return m_model; }
+    _M void             updateHeader();
+
+  protected:
+    _V void             createButtons(const ButtonCallback& callback);
+    _M void             setTitle(const char* title);
+
+  public slots:
+    _M void             setBarChartMode();
+    _M void             setLineChartMode();
+    _M void             setTableMode();
 };
 
 /**********************************************************************************************/

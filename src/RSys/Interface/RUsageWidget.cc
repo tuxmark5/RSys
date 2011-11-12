@@ -1,24 +1,44 @@
-#include <KDChart/KDChartBarDiagram>
-#include <KDChart/KDChartCartesianAxis>
-#include <KDChart/KDChartLineDiagram>
-#include <KDChart/KDChartPieDiagram>
-#include <KDChart/KDChartPolarCoordinatePlane>
-#include <KDChart/KDChartWidget>
+#include <QtGui/QLabel>
+#include <QtGui/QPainter>
+#include <QtGui/QPushButton>
 #include <QtGui/QStackedLayout>
-#include <QtGui/QStandardItemModel>
+#include <RSys/Core/RUnit.hh>
+#include <RSys/Interface/RChart.hh>
+#include <RSys/Interface/RResultsModel.hh>
+#include <RSys/Interface/RTableView.hh>
 #include <RSys/Interface/RUsageWidget.hh>
+#include <RSys/Logic/RResults.hh>
+
+/**********************************************************************************************/
+
+template <class Class>
+Class* ensure(RUsageWidget* self)
+{
+  Class* object = qobject_cast<Class*>(self->widget());
+
+  if (!object)
+    self->setWidget(object = new Class(self->model()));
+  return object;
+}
 
 /********************************************* RS *********************************************/
 /*                                        RUsageWidget                                        */
 /**********************************************************************************************/
 
-Vacuum RUsageWidget :: RUsageWidget(RElement* element, QWidget* parent):
+Vacuum RUsageWidget :: RUsageWidget(RUnit* unit, RResults* results, QWidget* parent):
   RLayerWidget(parent),
-  m_element(element)
+  m_unit(unit),
+  m_results(results),
+  m_model(new RResultsModel(results, this))
 {
+  m_header = new QLabel();
+  m_header->setFrameStyle(QFrame::Box | QFrame::Plain);
+  layout()->addWidget(m_header);
+
   setMinimumWidth(600);
   setFixedHeight(200);
-  layout()->addWidget(widgetAt(0));
+
+  setBarChartMode();
 }
 
 /**********************************************************************************************/
@@ -29,173 +49,76 @@ Vacuum RUsageWidget :: ~RUsageWidget()
 
 /**********************************************************************************************/
 
-QString RUsageWidget :: nameAt(int index) const
+void RUsageWidget :: createButtons(const ButtonCallback& callback)
 {
+  QPushButton* buttonBar    = new QPushButton("B");
+  QPushButton* buttonLine   = new QPushButton("L");
+  QPushButton* buttonTable  = new QPushButton("T");
 
+  QPushButton::connect(buttonBar, SIGNAL(clicked()), this, SLOT(setBarChartMode()));
+  QPushButton::connect(buttonLine, SIGNAL(clicked()), this, SLOT(setLineChartMode()));
+  QPushButton::connect(buttonTable, SIGNAL(clicked()), this, SLOT(setTableMode()));
+
+  callback(buttonBar);
+  callback(buttonLine);
+  callback(buttonTable);
 }
 
 /**********************************************************************************************/
 
-int RUsageWidget :: numWidgets() const
+void RUsageWidget :: setBarChartMode()
 {
+  setTitle("Apkrovos");
+  m_model->removeFields();
+  m_results->addUsage1Field(m_model, m_unit);
 
+  ensure<RChart>(this)->setType(RChart::Bar);
 }
 
 /**********************************************************************************************/
-using namespace KDChart;
-#include <KDChart/KDChartDataValueAttributes>
-#include <KDChart/KDChartGridAttributes>
-#include <QtGui/QPainter>
-#include <KDChart/KDChartPaintContext>
-class Axis: public CartesianAxis //AbstractAxis
+
+void RUsageWidget :: setLineChartMode()
 {
-  public:
-   Axis(AbstractCartesianDiagram* parent = 0):
-     CartesianAxis(parent) { }
+  setTitle("Apkrovos");
+  m_model->removeFields();
+  m_results->addUsage1Field(m_model, m_unit);
 
-   void paintCtx(PaintContext* ctx)
-   {
-     CartesianCoordinatePlane* plane = dynamic_cast<CartesianCoordinatePlane*>(diagram()->coordinatePlane());
-     DataDimensionsList ddl = plane->gridDimensionsList();
+  ensure<RChart>(this)->setType(RChart::Line);
+}
 
-     DataDimension dimX = ddl.first(); //AbstractGrid::adjustedLowerUpperRange( ddl.first(), true, true );
+/**********************************************************************************************/
 
-     //ctx->
-
-     ctx->painter()->restore();
-     QPointF pt1(0, 0);
-     QPointF pt2(5, -50);
-     pt1 = plane->translate(pt1);
-     pt2 = plane->translate(pt2);
-
-     for (qreal x = dimX.start; x < dimX.end; x += 1)
-     {
-       ctx->painter()->drawRect(QRectF(pt1, pt2));
-     }
-     ctx->painter()->save();
-     //ddl.r
-     //diagram()->gre
-     //parent()->c
-     //for ()
-
-   }
-
-   QSize sizeHint() const { return QSize(); }
-   QSize minimumSize() const { return QSize(); }
-   QSize maximumSize() const { return QSize(); }
-   /*QSize maximumSize() const { return QSize(); }*/
-};
-
-QWidget* RUsageWidget :: widgetAt(int index)
+void RUsageWidget :: setTableMode()
 {
-  KDChart::Widget* widget = new KDChart::Widget(this);
+  setTitle("Apkrovų ir jų skirtumų lentelė");
+  m_model->removeFields();
+  m_model->setOrientation(Qt::Horizontal);
+  m_results->addUsage0Field(m_model, m_unit);
+  m_results->addUsage1Field(m_model, m_unit);
+  m_results->addDeltaUsageField(m_model, m_unit);
+  m_results->addDeltaPUsageField(m_model, m_unit);
 
-  //widget.resize( 600, 600 );
-  widget->setGlobalLeading( 5, 5, 5, 5 );
+  ensure<RTableView>(this)->setFrameStyle(QFrame::NoFrame);
+}
 
-  QVector< double > vec0,  vec1,  vec2;
+/**********************************************************************************************/
 
-  vec0 << 1 << -4 << -3 << -2 << -1 << 0
-       << 1 << 2 << 3 << 4 << 5;
-  vec1 << 2 << 16 << 9 << 4 << 1 << 0
-       << 1 << 4 << 9 << 16 << 25;
-  vec2 << 3 << -64 << -27 << -8 << -1 << 0
-       << 1 << 8 << 27 << 64 << 125;
+void RUsageWidget :: setTitle(const char* title)
+{
+  m_title = QString::fromUtf8(title);
+  updateHeader();
+}
 
-  /*widget->setDataset( 0, vec0, "v0" );
-  widget->setDataset( 1, vec1, "v1" );
-  widget->setDataset( 2, vec2, "v2" );
-  widget->setType( KDChart::Widget::Line );*/
+/**********************************************************************************************/
 
-  QStringList labels;
-  labels << "2011-01-02"
-         << "2011-02-02"
-         << "2011-03-02"
-         << "2011-04-02"
-         << "2011-05-02"
-         << "2011-06-02";
+void RUsageWidget :: updateHeader()
+{
+  QString text = QString("<b>%1</b> (<i>%2</i>): %3")
+      .arg(m_unit->identifier())
+      .arg(m_unit->name())
+      .arg(m_title);
 
-  QStandardItemModel* model = new QStandardItemModel();
-  int i = 0;
-  for (auto it = vec2.begin(); it != vec2.end(); ++it, ++i)
-  {
-    QStandardItem* item0 = new QStandardItem();
-    QStandardItem* item1 = new QStandardItem();
-
-    item0->setData(vec2[i], Qt::DisplayRole);
-    item1->setData(vec1[i], Qt::DisplayRole);
-    model->appendRow(QList<QStandardItem*>() << item0 << item1);
-
-    QStandardItem* item2 = new QStandardItem();
-    item2->setData(vec2[i], Qt::DisplayRole);
-    model->setVerticalHeaderItem(i, item2);
-  }
-
-  LineDiagram*    line        = new LineDiagram(); line->setModel(model);
-  CartesianAxis*  bottomAxis  = new CartesianAxis(line);
-  //Axis*           bottomAxis  = new Axis(line);
-  CartesianAxis*  leftAxis    = new CartesianAxis(line);
-
-
-  //line->setReferenceDiagram();
-
-
-
-  TextAttributes ta = bottomAxis->textAttributes();
-
-  //ta.setRotation(90);
-  //ta.set
-  bottomAxis->setTextAttributes(ta);
-
-  bottomAxis->setLabels(labels);
-  bottomAxis->setPosition(CartesianAxis::Top);
-  bottomAxis->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
-
-  leftAxis->setPosition(CartesianAxis::Left);
-  //leftAxis->
-
-  RulerAttributes       ra = bottomAxis->rulerAttributes();
-  DataValueAttributes   da = line->dataValueAttributes();
-
-  da.setDataLabel("Z");
-  //da.setTextAttributes();
-  da.setVisible(true);
-
-  line->setDataValueAttributes(da);
-
-
-
-  //ra.setTickMarkPen(3.5, QPen(Qt::red));
-  //ra.setMajorTickMarkPen(QPen(Qt::green));
-  //ra.setLabelMargin(0);
-  bottomAxis->setRulerAttributes(ra);
-
-  line->addAxis(bottomAxis);
-  line->addAxis(leftAxis);
-  widget->coordinatePlane()->replaceDiagram(line);
-
-  CartesianCoordinatePlane* plane = dynamic_cast<CartesianCoordinatePlane*>(line->coordinatePlane());
-  GridAttributes ga = plane->gridAttributes(Qt::Horizontal);
-
-  ga.setGridStepWidth(2);
-  plane->setGridAttributes(Qt::Horizontal, ga);
-
-
-
-  widget->setGlobalLeading(0, -5, 0, 0);
-
-
-
-  // Draw a line around the
-  // third sections
-  // for example
-  QPen piePen;
-  piePen.setWidth( 3 );
-  piePen.setColor( Qt::white );
-  //widget.pieDiagram()->setPen( 2,  piePen );
-  //((KDChart::PolarCoordinatePlane*)widget.coordinatePlane())->setStartPosition( 90 );
-
-  return widget;
+  m_header->setText(text);
 }
 
 /**********************************************************************************************/

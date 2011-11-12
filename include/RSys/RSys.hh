@@ -10,6 +10,7 @@
 /*                                            RSys                                            */
 /**********************************************************************************************/
 #define _C static const
+#define _E enum
 #define _F friend
 #define _M
 #define _S static
@@ -28,13 +29,14 @@ class RElement;
 class RMeasure;
 class RSubmission;
 class RSystem;
+class RUnit;
 /**********************************************************************************************/
 // Interface
 class RAbstractItemModel;
 class RMainWindow;
 class RModel1D;
 class RModel2D;
-class RResultModel;
+class RResultsModel;
 class RRowObserverAdapter;
 class RTab;
 class RTableView;

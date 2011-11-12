@@ -1,3 +1,4 @@
+#include <RSys/Core/RData.hh>
 #include <RSys/Core/RUnit.hh>
 
 /********************************************* RS *********************************************/
@@ -14,6 +15,7 @@ Vacuum RUnit :: RUnit(RData* data):
 void RUnit :: setIdentifier(const QString& identifier)
 {
   m_identifier = identifier;
+  emit m_data->elementChanged(this, RData::TitleOrName);
 }
 
 /**********************************************************************************************/
@@ -21,6 +23,7 @@ void RUnit :: setIdentifier(const QString& identifier)
 void RUnit :: setName(const QString& name)
 {
   m_name = name;
+  emit m_data->elementChanged(this, RData::TitleOrName);
 }
 
 /**********************************************************************************************/

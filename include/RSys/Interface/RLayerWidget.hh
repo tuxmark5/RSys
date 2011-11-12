@@ -13,14 +13,19 @@ class RLayerWidget: public QWidget
   Q_OBJECT
 
   public:
+    _T std::function<void (QPushButton*)> ButtonCallback;
+
+  private:
+    _M QWidget*       m_widget;
+
+  public:
     _M Vacuum         RLayerWidget(QWidget* parent = 0);
     _V Vacuum         ~RLayerWidget();
-    _V QString        nameAt(int index) const;
-    _V int            numWidgets() const;
-    //_M void           setWidget(QWidget* widget);
-    _V QWidget*       widgetAt(int index);
+    _M void           setWidget(QWidget* widget);
+    _V QWidget*       widget() const { return m_widget; }
 
   protected:
+    _V void           createButtons(const ButtonCallback& callback);
     _V void           enterEvent(QEvent* event);
     _V bool           event(QEvent* event);
     _V void           leaveEvent(QEvent* event);

@@ -1,3 +1,4 @@
+#include <QtCore/QDate>
 #include <RSys/Interface/RResultsModel.hh>
 #include <RSys/Logic/RResults.hh>
 
@@ -7,8 +8,11 @@
 
 Vacuum RResultsModel :: RResultsModel(RResults* results, QObject* parent):
   RAbstractItemModel(parent),
-  m_results(results)
+  m_results(results),
+  m_orientation(Qt::Horizontal),
+  m_numFields(0)
 {
+  // l(1)
 }
 
 /**********************************************************************************************/
@@ -19,7 +23,18 @@ Vacuum RResultsModel :: ~RResultsModel()
 
 /**********************************************************************************************/
 
+int RResultsModel :: addField(Getter&& getter)
+{
+  m_fields.insert(0xFF00 | m_numFields, std::forward<Getter>(getter));
+  return m_numFields++;
+}
 
+/**********************************************************************************************/
+
+void RResultsModel ::addGetter(int field, int role, Getter&& getter)
+{
+  m_fields.insert((role << 8) | field, std::forward<Getter>(getter));
+}
 
 /**********************************************************************************************/
 
@@ -30,15 +45,14 @@ int RResultsModel :: columnCount(const QModelIndex& parent) const
   if (m_orientation == Qt::Horizontal)
     return m_results->numRecords();
   else
-    return m_fields.size();
+    return m_numFields;
 }
 
 /**********************************************************************************************/
 
 QVariant RResultsModel :: data(const QModelIndex& index, int role) const
 {
-  R_GUARD(index.isValid(),          QVariant());
-  R_GUARD(role == Qt::DisplayRole,  QVariant());
+  R_GUARD(index.isValid(), QVariant());
 
   int   field;
   int   record;
@@ -54,7 +68,8 @@ QVariant RResultsModel :: data(const QModelIndex& index, int role) const
     record    = index.row();
   }
 
-  return std::get<1>(m_fields.at(field))(record);
+  Getter getter = m_fields.value((role << 8) | field);
+  return getter ? getter(record) : QVariant();
 }
 
 /**********************************************************************************************/
@@ -63,14 +78,16 @@ QVariant RResultsModel :: headerData(int section, Qt::Orientation orientation, i
 {
   R_GUARD(role == Qt::DisplayRole, QVariant());
 
-  if (m_orientation == orientation)
+  if (m_orientation != orientation)
   {
-    return std::get<0>(m_fields.at(section));
+    Getter getter = m_fields.value(0xFF00 | section);
+    return getter ? getter(0) : QVariant();
   }
   else
   {
-    //return QDate();
-    return QVariant();
+    QDate date(2000, 01, 01);
+
+    return date.addMonths(section);
   }
 }
 
@@ -94,6 +111,14 @@ QModelIndex RResultsModel :: parent(const QModelIndex& index) const
 
 /**********************************************************************************************/
 
+void RResultsModel :: removeFields()
+{
+  m_fields.clear();
+  m_numFields = 0;
+}
+
+/**********************************************************************************************/
+
 int RResultsModel :: rowCount(const QModelIndex& parent) const
 {
   R_GUARD(!parent.isValid(), 0);
@@ -101,7 +126,14 @@ int RResultsModel :: rowCount(const QModelIndex& parent) const
   if (m_orientation == Qt::Vertical)
     return m_results->numRecords();
   else
-    return m_fields.size();
+    return m_numFields;
+}
+
+/**********************************************************************************************/
+
+void RResultsModel :: setOrientation(Orientation orientation)
+{
+  m_orientation = orientation;
 }
 
 /**********************************************************************************************/

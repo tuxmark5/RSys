@@ -153,14 +153,14 @@ void RMainWindow :: createContainers()
   cd->addColumn("Aprašymas");
   cd->addAccessor2<QString>(0, Qt::DisplayRole) >> &RDivision::identifier << &RDivision::setIdentifier;
   cd->addAccessor2<QString>(1, Qt::DisplayRole) >> &RDivision::name       << &RDivision::setName;
-  cd->setAlloc([]() { return new RDivision(0); });
+  cd->setAlloc([=]() { return new RDivision(m_data); });
 
   auto cm = newContainer(m_data->measures());
   cm->addColumn("Pavadinimas");
   cm->addColumn("Aprašymas");
   cm->addAccessor2<QString>(0, Qt::DisplayRole) >> &RMeasure::identifier << &RMeasure::setIdentifier;
   cm->addAccessor2<QString>(1, Qt::DisplayRole) >> &RMeasure::name       << &RMeasure::setName;
-  cm->setAlloc([]() { return new RMeasure(0); });
+  cm->setAlloc([=]() { return new RMeasure(m_data); });
 
   auto cu = newContainer(m_data->submissions());
   cu->addColumn("Priemonė");
@@ -175,7 +175,7 @@ void RMainWindow :: createContainers()
     >> &RSubmission::date0 << &RSubmission::setDate0;
   cu->addAccessor2<QDate>(3, Qt::DisplayRole)
     >> &RSubmission::date1 << &RSubmission::setDate1;
-  cu->setAlloc([]() { return new RSubmission(0); });
+  cu->setAlloc([=]() { return new RSubmission(m_data); });
 
   auto cu1 = newContainer(m_data->submissions1(), *cu);
   cu->addAccessor2<QString>(0, Qt::DisplayRole)
@@ -186,7 +186,7 @@ void RMainWindow :: createContainers()
   cs->addColumn("Aprašymas");
   cs->addAccessor2<QString>(0, Qt::DisplayRole) >> &RSystem::identifier << &RSystem::setIdentifier;
   cs->addAccessor2<QString>(1, Qt::DisplayRole) >> &RSystem::name       << &RSystem::setName;
-  cs->setAlloc([]() { return new RSystem(0); });
+  cs->setAlloc([=]() { return new RSystem(m_data); });
 
   m_divisionContainer     = cd;
   m_measureContainer      = cm;

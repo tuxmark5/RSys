@@ -19,14 +19,14 @@ Vacuum RUsageTab :: RUsageTab(RMainWindow* parent):
   m_scrollArea(new QScrollArea(this)),
   m_systemsMode(false)
 {
-  RData::connect(parent->data(), SIGNAL(visibilityChanged(RElement*,bool)),
-    this, SLOT(showElement(RElement*,bool)));
+  RData::connect(parent->data(), SIGNAL(elementChanged(RElement*,int)),
+    this, SLOT(updateElement(RElement*,int)));
   QAction::connect(parent->systemsStateAction(), SIGNAL(toggled(bool)),
     this, SLOT(setMode(bool)));
 
   m_innerLayout = new QVBoxLayout();
   m_innerLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
-  m_innerLayout->setSpacing(0);
+  //m_innerLayout->setSpacing(0);
 
   m_innerWidget = new QWidget();
   m_innerWidget->setLayout(m_innerLayout);
@@ -34,8 +34,9 @@ Vacuum RUsageTab :: RUsageTab(RMainWindow* parent):
   m_scrollArea->setWidget(m_innerWidget);
   layout()->addWidget(m_scrollArea);
 
-  m_divisions   = parent->data()->divisions()->cast<RElement*>();
-  m_systems     = parent->data()->systems()->cast<RElement*>();
+  m_results     = parent->results();
+  m_divisions   = parent->data()->divisions()->cast<RUnit*>();
+  m_systems     = parent->data()->systems()->cast<RUnit*>();
   m_current     = m_divisions;
   setMode(false);
 }
@@ -63,8 +64,8 @@ void RUsageTab :: insert1(int i0, int i1)
 {
   for (; i0 < i1; i0++)
   {
-    RElement*     element = m_current->at(i0);
-    RUsageWidget* widget  = new RUsageWidget(element);
+    RUnit*        unit    = m_current->at(i0);
+    RUsageWidget* widget  = new RUsageWidget(unit, m_results);
 
     m_innerLayout->insertWidget(i0, widget);
   }
@@ -78,7 +79,7 @@ void RUsageTab :: populateWidgets()
 
   for (auto it = m_current->begin(); it != m_current->end(); ++it)
   {
-    RUsageWidget* widget = new RUsageWidget(*it);
+    RUsageWidget* widget = new RUsageWidget(*it, m_results);
 
     m_innerLayout->addWidget(widget);
     widget->setVisible((*it)->visible());
@@ -109,7 +110,7 @@ bool RUsageTab :: remove0(int i0, int i1)
 void RUsageTab :: resizeEvent(QResizeEvent* event)
 {
   QWidget*  viewport  = m_scrollArea->viewport();
-  int       newWidth  = qMax(viewport->width(), 500);
+  int       newWidth  = qMax(viewport->width(), m_innerWidget->minimumWidth());
 
   m_innerWidget->setFixedWidth(newWidth);
   RTab::resizeEvent(event);
@@ -129,13 +130,23 @@ void RUsageTab :: setMode(bool systems)
 
 /**********************************************************************************************/
 
-void RUsageTab :: showElement(RElement* element, bool show)
+void RUsageTab :: updateElement(RElement* element, int updateType)
 {
-  int index = m_current->indexOf(element);
+  RUnit*          unit    = static_cast<RUnit*>(element);
+  int             index   = m_current->indexOf(unit);
+  R_GUARD(index != -1, Vacuum);
+  RUsageWidget*   widget  = qobject_cast<RUsageWidget*>(m_innerLayout->itemAt(index)->widget());
+  R_GUARD(widget, Vacuum);
 
-  if (index != -1)
+  switch (updateType)
   {
-    m_innerLayout->itemAt(index)->widget()->setVisible(show);
+    case RData::TitleOrName:
+      widget->updateHeader();
+      break;
+
+    case RData::Visibility:
+      widget->setVisible(unit->visible());
+      break;
   }
 }
 
