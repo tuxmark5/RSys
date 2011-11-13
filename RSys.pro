@@ -69,6 +69,8 @@ SOURCES             +=                              \
   src/RSys/Interface/RTab.cc                        \
   src/RSys/Interface/RTableView.cc                  \
   src/RSys/Interface/RSubmissionTab.cc              \
+  src/RSys/Interface/RSummaryTab.cc                 \
+  src/RSys/Interface/RSummaryWidget.cc              \
   src/RSys/Interface/RSystemAdmTab.cc               \
   src/RSys/Interface/RSystemTab.cc                  \
   src/RSys/Interface/RUsageTab.cc                   \
@@ -118,6 +120,8 @@ HEADERS             +=                              \
   include/RSys/Interface/RSearchForm.hh             \
   include/RSys/Interface/RStatusWidget.hh           \
   include/RSys/Interface/RSubmissionTab.hh          \
+  include/RSys/Interface/RSummaryTab.hh             \
+  include/RSys/Interface/RSummaryWidget.hh          \
   include/RSys/Interface/RSystemAdmTab.hh           \
   include/RSys/Interface/RSystemTab.hh              \
   include/RSys/Interface/RTab.hh                    \

@@ -15,28 +15,22 @@
 Vacuum RUsageTab :: RUsageTab(RMainWindow* parent):
   RTab(R_S("Individualios apkrovos ir prognozės"), parent),
   m_scrollArea(new QScrollArea(this)),
-  m_systemsMode(false)
+  m_results(parent->results()),
+  m_units(0)
 {
   RData::connect(parent->data(), SIGNAL(elementChanged(RElement*,int)),
     this, SLOT(updateElement(RElement*,int)));
-  QAction::connect(parent->systemsStateAction(), SIGNAL(toggled(bool)),
-    this, SLOT(setMode(bool)));
+  QAction::connect(parent, SIGNAL(unitsChanged(RUnitList*)),
+    this, SLOT(setUnits(RUnitList*)));
 
   m_innerLayout = new QVBoxLayout();
   m_innerLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
-  //m_innerLayout->setSpacing(0);
 
   m_innerWidget = new QWidget();
   m_innerWidget->setLayout(m_innerLayout);
 
   m_scrollArea->setWidget(m_innerWidget);
   layout()->addWidget(m_scrollArea);
-
-  m_results     = parent->results();
-  m_divisions   = parent->data()->divisions()->cast<RUnit*>();
-  m_systems     = parent->data()->systems()->cast<RUnit*>();
-  m_current     = m_divisions;
-  setMode(false);
 }
 
 /**********************************************************************************************/
@@ -47,7 +41,7 @@ Vacuum RUsageTab :: ~RUsageTab()
 
 /**********************************************************************************************/
 
-void RUsageTab :: destroyWidgets()
+void RUsageTab :: clearUnits()
 {
   int count = m_innerLayout->count();
 
@@ -62,7 +56,7 @@ void RUsageTab :: insert1(int i0, int i1)
 {
   for (; i0 < i1; i0++)
   {
-    RUnit*        unit    = m_current->at(i0);
+    RUnit*        unit    = m_units->at(i0);
     RUsageWidget* widget  = new RUsageWidget(unit, m_results);
 
     m_innerLayout->insertWidget(i0, widget);
@@ -71,11 +65,11 @@ void RUsageTab :: insert1(int i0, int i1)
 
 /**********************************************************************************************/
 
-void RUsageTab :: populateWidgets()
+void RUsageTab :: populateUnits()
 {
   m_innerWidget->setVisible(false);
 
-  for (auto it = m_current->begin(); it != m_current->end(); ++it)
+  for (auto it = m_units->begin(); it != m_units->end(); ++it)
   {
     RUsageWidget* widget = new RUsageWidget(*it, m_results);
 
@@ -116,14 +110,19 @@ void RUsageTab :: resizeEvent(QResizeEvent* event)
 
 /**********************************************************************************************/
 
-void RUsageTab :: setMode(bool systems)
+void RUsageTab :: setUnits(RUnitList* units)
 {
-  destroyWidgets();
-  m_current->removeObserver(this);
-  m_current       = systems ? m_systems : m_divisions;
-  m_systemsMode   = systems;
-  m_current->addObserver(this);
-  populateWidgets();
+  if (m_units)
+  {
+    clearUnits();
+    m_units->removeObserver(this);
+  }
+
+  if ((m_units = units))
+  {
+    populateUnits();
+    m_units->addObserver(this);
+  }
 }
 
 /**********************************************************************************************/
@@ -131,7 +130,7 @@ void RUsageTab :: setMode(bool systems)
 void RUsageTab :: updateElement(RElement* element, int updateType)
 {
   RUnit*          unit    = static_cast<RUnit*>(element);
-  int             index   = m_current->indexOf(unit);
+  int             index   = m_units->indexOf(unit);
   R_GUARD(index != -1, Vacuum);
   RUsageWidget*   widget  = qobject_cast<RUsageWidget*>(m_innerLayout->itemAt(index)->widget());
   R_GUARD(widget, Vacuum);

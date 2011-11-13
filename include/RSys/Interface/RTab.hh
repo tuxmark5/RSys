@@ -1,5 +1,5 @@
-#ifndef RSYS_INTERFACE_RUSAGE_TAB_HH
-#define RSYS_INTERFACE_RUSAGE_TAB_HH
+#ifndef RSYS_INTERFACE_RTAB_HH
+#define RSYS_INTERFACE_RTAB_HH
 
 /**********************************************************************************************/
 #include <RSys/RSys.hh>
@@ -25,4 +25,4 @@ class RTab: public QWidget
 
 /**********************************************************************************************/
 
-#endif /* RSYS_INTERFACE_RUSAGE_TAB_HH */
+#endif /* RSYS_INTERFACE_RTAB_HH */

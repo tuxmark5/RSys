@@ -70,7 +70,7 @@ void RUsageWidget :: setBarChartMode()
 {
   setTitle("Apkrovos");
   m_model->removeFields();
-  m_results->addUsage1Field(m_model, m_unit);
+  m_model->addField(RResultsModel::Usage1, m_unit);
 
   ensure<RChart>(this)->setType(RChart::Bar);
 }
@@ -81,7 +81,7 @@ void RUsageWidget :: setLineChartMode()
 {
   setTitle("Apkrovos");
   m_model->removeFields();
-  m_results->addUsage1Field(m_model, m_unit);
+  m_model->addField(RResultsModel::Usage1, m_unit);
 
   ensure<RChart>(this)->setType(RChart::Line);
 }
@@ -93,10 +93,8 @@ void RUsageWidget :: setTableMode()
   setTitle("Apkrovų ir jų skirtumų lentelė");
   m_model->removeFields();
   m_model->setOrientation(Qt::Horizontal);
-  m_results->addUsage0Field(m_model, m_unit);
-  m_results->addUsage1Field(m_model, m_unit);
-  m_results->addDeltaUsageField(m_model, m_unit);
-  m_results->addDeltaPUsageField(m_model, m_unit);
+  m_model->addField(RResultsModel::Usage0, m_unit);
+  m_model->addField(RResultsModel::Usage1, m_unit);
 
   ensure<RTableView>(this)->setFrameStyle(QFrame::NoFrame);
 }

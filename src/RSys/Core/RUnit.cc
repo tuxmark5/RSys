@@ -5,16 +5,26 @@
 /*                                           RUnit                                            */
 /**********************************************************************************************/
 
-Vacuum RUnit :: RUnit(RData* data):
-  RElement(data)
+Vacuum RUnit :: RUnit(Type type, RData* data):
+  RElement(data),
+  m_type(type)
 {
+}
+
+/**********************************************************************************************/
+
+Vacuum RUnit :: ~RUnit()
+{
+  m_data->m_unitHash[m_type].remove(m_identifier, this);
 }
 
 /**********************************************************************************************/
 
 void RUnit :: setIdentifier(const QString& identifier)
 {
+  m_data->m_unitHash[m_type].remove(m_identifier, this);
   m_identifier = identifier;
+  m_data->m_unitHash[m_type].insert(m_identifier, this);
   emit m_data->elementChanged(this, RData::TitleOrName);
 }
 

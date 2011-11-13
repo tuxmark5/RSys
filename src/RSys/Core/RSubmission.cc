@@ -1,3 +1,4 @@
+#include <RSys/Core/RData.hh>
 #include <RSys/Core/RMeasure.hh>
 #include <RSys/Core/RSubmission.hh>
 
@@ -37,24 +38,31 @@ void RSubmission :: setDate1(const QDate& date1)
 
 void RSubmission :: setMeasure(RMeasure* measure)
 {
-  m_measure     = measure;
-  m_measureName = measure ? measure->identifier() : QString();
+  m_measure       = measure;
+  m_measureName   = measure ? measure->identifier() : QString();
 }
 
 /**********************************************************************************************/
 
 void RSubmission :: setMeasureName(const QString& measureName)
 {
-  m_measureName = measureName;
-  // TODO: lookup measure
+  m_measureName   = measureName;
+  m_measure       = m_data->measure(m_measureName);
 }
 
 /**********************************************************************************************/
 
 void RSubmission :: setMeasure1Name(const QString& measureName)
 {
-  m_measureName = measureName;
-  // TODO: lookup measure
+  m_measureName   = measureName;
+  m_measure       = m_data->measure(m_measureName);
+
+  if (!m_measure && !m_measureName.isEmpty())
+  {
+    m_measure = new RMeasure(m_data);
+    m_measure->setIdentifier(m_measureName);
+    m_data->measures1()->append(m_measure);
+  }
 }
 
 /**********************************************************************************************/

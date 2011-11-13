@@ -1,3 +1,4 @@
+#include <RSys/Core/RUnit.hh>
 #include <RSys/Interface/RResultsModel.hh>
 #include <RSys/Logic/RResults.hh>
 
@@ -18,46 +19,41 @@ Vacuum RResults :: ~RResults()
 
 /**********************************************************************************************/
 #include <math.h>
-void RResults :: addUsage0Field(RResultsModel* model, RUnit* unit)
+auto RResults :: field(ResultType type, RUnit* unit) -> Getter
 {
-  int id = model->addField([](int x) -> QVariant
+  switch (type)
   {
-    return "Ind";
-  });
+    case Usage0: return [](int x) -> QVariant
+    {
+      return 2.0 * x + sin(x);
+    };
 
-  model->addGetter(id, Qt::DisplayRole, [](int x) -> QVariant
-  {
-    return 2.0 * x + sin(x);
-  });
+    case Usage1: return [](int x) -> QVariant
+    {
+      return 40.0 - (2.0 * x + sin(x));
+    };
+
+    case Identifier: return [=](int) -> QVariant
+    {
+      return unit->identifier();
+    };
+  }
+
+  return Getter();
 }
 
 /**********************************************************************************************/
 
-void RResults :: addUsage1Field(RResultsModel* model, RUnit* unit)
+void RResults :: registerField(RUnit* unit, RResultsModel* model, int key)
 {
-  int id = model->addField([](int x) -> QVariant
-  {
-    return "Ind2";
-  });
-
-  model->addGetter(id, Qt::DisplayRole, [](int x) -> QVariant
-  {
-    return 40.0 - (2.0 * x + sin(x));
-  });
+  m_fields.insertMulti(unit, Field(model, key));
 }
 
 /**********************************************************************************************/
 
-void RResults :: addDeltaUsageField(RResultsModel* model, RUnit* unit)
+void RResults :: unregisterField(RUnit* unit, RResultsModel* model, int key)
 {
-
-}
-
-/**********************************************************************************************/
-
-void RResults :: addDeltaPUsageField(RResultsModel* model, RUnit* unit)
-{
-
+  m_fields.remove(unit, Field(model, key));
 }
 
 /**********************************************************************************************/

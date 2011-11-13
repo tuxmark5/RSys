@@ -45,6 +45,7 @@ class RLoginWidget;
 class RPaletteDock;
 class RRowObserverAdapter;
 class RSearchForm;
+class RSummaryWidget;
 class RTab;
 class RTableView;
 /**********************************************************************************************/
@@ -89,6 +90,7 @@ typedef ROList<RDivision*>        RDivisionList;
 typedef ROList<RMeasure*>         RMeasureList;
 typedef ROList<RSubmission*>      RSubmissionList;
 typedef ROList<RSystem*>          RSystemList;
+typedef ROList<RUnit*>            RUnitList;
 /**********************************************************************************************/
 
 #endif /* RSYS_RSYS_HH */

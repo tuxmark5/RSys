@@ -75,9 +75,13 @@ class RMainWindow: public QMainWindow
     _M void                 login();
     _M void                 logout();
     _M void                 onSearchFormDestroyed();
+    _M void                 onUnitModeChanged(bool systems);
     _M void                 setInterfaceEnabled(bool enabled);
     _M void                 setShowSearchForm(bool show);
     _M void                 showMessage(const QString& message, int timeout = 5000);
+
+  signals:
+    _M void                 unitsChanged(RUnitList* units);
 
   private:
     _M void                 addLeftTab(RTab* tab, const char* title, const char* toolTip);

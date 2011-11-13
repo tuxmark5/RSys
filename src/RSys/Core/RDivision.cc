@@ -6,7 +6,7 @@
 /**********************************************************************************************/
 
 Vacuum RDivision :: RDivision(RData* data):
-  RUnit(data)
+  RUnit(Division, data)
 {
 }
 

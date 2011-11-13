@@ -1,5 +1,5 @@
-#ifndef RSYS_INTERFACE_RTAB_HH
-#define RSYS_INTERFACE_RTAB_HH
+#ifndef RSYS_INTERFACE_RUSAGE_TAB_HH
+#define RSYS_INTERFACE_RUSAGE_TAB_HH
 
 /**********************************************************************************************/
 #include <RSys/Interface/RTab.hh>
@@ -12,18 +12,12 @@ class RUsageTab: public RTab, public RIObserver
   Q_OBJECT
 
   private:
-    _T ROList<RUnit*>  List;
-
-  private:
     _M QScrollArea*   m_scrollArea;
     _M QVBoxLayout*   m_innerLayout;
     _M QWidget*       m_innerWidget;
-    _M bool           m_systemsMode: 1;
 
     _M RResults*      m_results;
-    _M List*          m_current;
-    _M List*          m_divisions;
-    _M List*          m_systems;
+    _M RUnitList*     m_units;
 
   public:
     _M Vacuum         RUsageTab(RMainWindow* parent = 0);
@@ -32,15 +26,15 @@ class RUsageTab: public RTab, public RIObserver
     _V bool           remove0(int i0, int i1);
     _V void           resizeEvent(QResizeEvent* event);
 
-  protected:
-    _M void           destroyWidgets();
-    _M void           populateWidgets();
-
   public slots:
-    _M void           setMode(bool systems);
+    _M void           setUnits(RUnitList* units);
     _M void           updateElement(RElement* unit, int updateType);
+
+  protected:
+    _V void           clearUnits();
+    _V void           populateUnits();
 };
 
 /**********************************************************************************************/
 
-#endif /* RSYS_INTERFACE_RTAB_HH */
+#endif /* RSYS_INTERFACE_RUSAGE_TAB_HH */

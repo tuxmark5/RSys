@@ -29,6 +29,7 @@
 #include <RSys/Interface/RMeasureTab.hh>
 #include <RSys/Interface/RPlannedTab.hh>
 #include <RSys/Interface/RSubmissionTab.hh>
+#include <RSys/Interface/RSummaryTab.hh>
 #include <RSys/Interface/RSystemAdmTab.hh>
 #include <RSys/Interface/RSystemTab.hh>
 #include <RSys/Interface/RUsageTab.hh>
@@ -79,6 +80,8 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   m_splitter->addWidget(m_tabWidgetR);
 
   createTabs();
+  onUnitModeChanged(false);
+
   logout();
 }
 
@@ -121,6 +124,7 @@ void RMainWindow :: connectActions()
   QAction::connect(m_disconnectAction, SIGNAL(triggered()), this, SLOT(logout()));
   QAction::connect(m_importAction, SIGNAL(triggered()), this, SLOT(importData()));
   QAction::connect(m_searchAction, SIGNAL(toggled(bool)), this, SLOT(setShowSearchForm(bool)));
+  QAction::connect(m_systemsStateAction, SIGNAL(toggled(bool)), this, SLOT(onUnitModeChanged(bool)));
 }
 
 /**********************************************************************************************/
@@ -267,7 +271,7 @@ void RMainWindow :: createTabs()
   addLeftTab(new RPlannedTab(this),     "Planuojami kiekiai", "Planuojami paramos priemonių kiekiai");
 
   addRightTab(new RUsageTab(this),      "Apkrovos ir prognozės", "Individualios padalinių/sistemų apkrovos ir prognozės");
-  //addRightTab(new RUsageTab(this),      "Apžvalga", "ZEL");
+  addRightTab(new RSummaryTab(this),    "Apžvalga", "Apžvalga");
 }
 
 /**********************************************************************************************/
@@ -318,6 +322,16 @@ void RMainWindow :: onSearchFormDestroyed()
 {
   m_searchAction->setChecked(false);
   m_searchForm = 0;
+}
+
+/**********************************************************************************************/
+
+void RMainWindow :: onUnitModeChanged(bool systems)
+{
+  if (systems)
+    emit unitsChanged(m_data->systems()->cast<RUnit*>());
+  else
+    emit unitsChanged(m_data->divisions()->cast<RUnit*>());
 }
 
 /**********************************************************************************************/

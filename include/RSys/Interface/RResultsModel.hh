@@ -15,29 +15,45 @@ class RResultsModel: public RAbstractItemModel
     _F class          RResults;
 
   public:
+    _E FieldType
+    {
+      Usage0,
+      Usage1
+    };
+
+  public:
     _T std::function<QVariant (int)>  Getter;
+    _T std::function<void()>          Lambda;
     _T Qt::Orientation                Orientation;
-    _T QHash<int, Getter>             FieldHash;
+    _T QList<int>                     FieldList;
+    _T QHash<int, Getter>             GetterHash;
+    _T QHash<int, RUnit*>             UnitHash;
 
   public:
     _M RResults*      m_results;
     _M Orientation    m_orientation;
-    _M FieldHash      m_fields;
-    _M int            m_numFields;
+    _M FieldList      m_fields;
+    _M GetterHash     m_getters;
+    _M UnitHash       m_units;
+    _M int            m_lastKey;
 
   public:
     _M Vacuum         RResultsModel(RResults* results, QObject* parent = 0);
     _V Vacuum         ~RResultsModel();
-    _M int            addField(Getter&& getter);
+    _M int            addField(FieldType type, RUnit* unit);
     _M void           addGetter(int field, int role, Getter&& getter);
     _V int            columnCount(const QModelIndex& parent = QModelIndex()) const;
     _V QVariant       data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     _V QVariant       headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     _V QModelIndex    index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
+    _M int            insertField(int index, FieldType type, RUnit* unit);
     _V QModelIndex    parent(const QModelIndex& index) const;
+    _M void           removeDimension(int id, Qt::Orientation orientation, const Lambda& lambda);
+    _M void           removeField(int id);
     _M void           removeFields();
     _V int            rowCount(const QModelIndex& parent = QModelIndex()) const;
     _M void           setOrientation(Orientation orientation);
+    _M void           updateField(int fieldId);
 };
 
 /**********************************************************************************************/

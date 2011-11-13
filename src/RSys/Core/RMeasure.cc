@@ -6,24 +6,8 @@
 /**********************************************************************************************/
 
 Vacuum RMeasure :: RMeasure(RData* data):
-  RElement(data)
+  RUnit(Measure, data)
 {
-}
-
-/**********************************************************************************************/
-
-void RMeasure :: setIdentifier(const QString& identifier)
-{
-  m_identifier = identifier;
-  //m_data->update(this);
-}
-
-/**********************************************************************************************/
-
-void RMeasure :: setName(const QString& name)
-{
-  m_name = name;
-  //m_data->update(this);
 }
 
 /**********************************************************************************************/
