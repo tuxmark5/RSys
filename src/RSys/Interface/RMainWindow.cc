@@ -36,6 +36,7 @@
 
 #include <RSys/Logic/RResults.hh>
 #include <RSys/Parse/RValidator.hh>
+#include <RSys/Store/RDatabase.hh>
 #include <RSys/Util/RContainer.hh>
 
 /********************************************* RS *********************************************/
@@ -47,6 +48,7 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   m_loginWidget(0),
   m_searchForm(0)
 {
+  m_database          = new RDatabase(this);
   m_data0             = new RData();
   m_data              = new RData();
   m_results           = new RResults(m_data);

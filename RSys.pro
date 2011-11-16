@@ -77,6 +77,7 @@ SOURCES             +=                              \
   src/RSys/Interface/RUsageWidget.cc                \
   src/RSys/Logic/RCalculator.cc                     \
   src/RSys/Logic/RResults.cc                        \
+  src/RSys/Store/RDatabase.cc                       \
   src/RSys/Tests/RTests.cc                          \
   src/RSys/Tests/TestRXLSDocument.cc                \
   src/RSys/Parse/RValidator.cc                      \
@@ -130,6 +131,7 @@ HEADERS             +=                              \
   include/RSys/Interface/RUsageWidget.hh            \
   include/RSys/Logic/RCalculator.hh                 \
   include/RSys/Logic/RResults.hh                    \
+  include/RSys/Store/RDatabase.hh                   \
   include/RSys/Util/RAccessorAdapter.hh             \
   include/RSys/Util/RCompose.hh                     \
   include/RSys/Util/RContainer.hh                   \

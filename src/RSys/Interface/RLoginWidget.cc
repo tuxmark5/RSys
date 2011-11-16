@@ -57,7 +57,10 @@ Vacuum RLoginWidget :: ~RLoginWidget()
 
 void RLoginWidget :: onLoginPressed()
 {
-  QString   userName = m_usernameField->text();
+  QString   dbAddress   = m_dbAddressField->text();
+  QString   dbName      = m_dbNameField->text();
+  QString   userName    = m_usernameField->text();
+  QString   password    = m_passwordField->text();
 
   if (userName == "user")
   {
