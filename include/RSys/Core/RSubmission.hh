@@ -19,6 +19,8 @@ class RSubmission: public RElement
 
   public:
     _M Vacuum           RSubmission(RData* data);
+    _M Vacuum           RSubmission(RSubmission& other, RData* data);
+    _V Vacuum           ~RSubmission();
     _M int              count() const { return m_count; }
     _M QDate            date0() const { return m_date0; }
     _M QDate            date1() const { return m_date1; }

@@ -87,6 +87,13 @@ bool RSummaryWidget :: remove0(int i0, int i1)
 
 /**********************************************************************************************/
 
+void RSummaryWidget :: resetObservable()
+{
+  setUnits(m_units);
+}
+
+/**********************************************************************************************/
+
 void RSummaryWidget :: setUnits(RUnitList* units)
 {
   if (m_units)

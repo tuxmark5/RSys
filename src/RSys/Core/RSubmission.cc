@@ -15,6 +15,23 @@ Vacuum RSubmission :: RSubmission(RData* data):
 
 /**********************************************************************************************/
 
+Vacuum RSubmission :: RSubmission(RSubmission& other, RData* data):
+  RElement(other, data),
+  m_measure(other.m_measure ? other.m_measure->buddy() : 0),
+  m_date0(other.m_date0),
+  m_date1(other.m_date1),
+  m_count(other.m_count)
+{
+}
+
+/**********************************************************************************************/
+
+Vacuum RSubmission :: ~RSubmission()
+{
+}
+
+/**********************************************************************************************/
+
 void RSubmission :: setCount(int count)
 {
   m_count = count;

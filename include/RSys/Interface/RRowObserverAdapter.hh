@@ -22,6 +22,7 @@ class RRowObserverAdapter: public RIObserver
     _V void           modify1(int i0, int i1);
     _V bool           remove0(int i0, int i1);
     _V void           remove1(int i0, int i1);
+    _V void           resetObservable();
     _M void           setModifier(int modifier);
 };
 

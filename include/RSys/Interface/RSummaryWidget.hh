@@ -28,6 +28,7 @@ class RSummaryWidget: public RLayerWidget, public RIObserver
     _V void             insert1(int i0, int i1);
     _M RResultsModel*   model() const { return m_resultsModel; }
     _V bool             remove0(int i0, int i1);
+    _V void             resetObservable();
     _M void             setFieldType(FieldType type);
 
   public slots:

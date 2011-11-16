@@ -146,6 +146,17 @@ QModelIndex RModel1D :: parent(const QModelIndex& index) const
 
 /**********************************************************************************************/
 
+bool RModel1D :: removeRows(int row, int count, const QModelIndex& parent)
+{
+  Q_UNUSED(count);
+  R_GUARD(writable(),         false);
+  R_GUARD(!parent.isValid(),  false);
+
+  return m_container->remove(row);
+}
+
+/**********************************************************************************************/
+
 int RModel1D :: rowCount(const QModelIndex& parent) const
 {
   R_GUARD(!parent.isValid(), 0);

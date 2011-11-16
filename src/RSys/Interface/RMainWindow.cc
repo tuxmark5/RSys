@@ -47,6 +47,7 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   m_loginWidget(0),
   m_searchForm(0)
 {
+  m_data0             = new RData();
   m_data              = new RData();
   m_results           = new RResults(m_data);
   createContainers();
@@ -119,10 +120,20 @@ void RMainWindow :: addStatusWidget(QWidget* widget)
 
 /**********************************************************************************************/
 
+void RMainWindow :: commit()
+{
+  *m_data0 = *m_data;
+  showMessage(R_S("Duomenys išsaugoti."));
+}
+
+/**********************************************************************************************/
+
 void RMainWindow :: connectActions()
 {
   QAction::connect(m_disconnectAction, SIGNAL(triggered()), this, SLOT(logout()));
+  QAction::connect(m_commitAction, SIGNAL(triggered()), this, SLOT(commit()));
   QAction::connect(m_importAction, SIGNAL(triggered()), this, SLOT(importData()));
+  QAction::connect(m_rollbackAction, SIGNAL(triggered()), this, SLOT(rollback()));
   QAction::connect(m_searchAction, SIGNAL(toggled(bool)), this, SLOT(setShowSearchForm(bool)));
   QAction::connect(m_systemsStateAction, SIGNAL(toggled(bool)), this, SLOT(onUnitModeChanged(bool)));
 }
@@ -143,6 +154,10 @@ void RMainWindow :: createActions()
 
   m_importAction          = R_ACTION(":/icons/import.png",      "Importuoti");
   m_importAction->setShortcut(QKeySequence("Ctrl+I"));
+
+  m_commitAction          = R_ACTION(":/icons/import.png",      "COMMIT");
+
+  m_rollbackAction        = R_ACTION(":/icons/import.png",      "ROLLBACK");
 
   m_disconnectAction      = R_ACTION(":/icons/disconnect.png",  "Atsijungti");
   m_disconnectAction->setShortcut(QKeySequence("Alt+D"));
@@ -332,6 +347,14 @@ void RMainWindow :: onUnitModeChanged(bool systems)
     emit unitsChanged(m_data->systems()->cast<RUnit*>());
   else
     emit unitsChanged(m_data->divisions()->cast<RUnit*>());
+}
+
+/**********************************************************************************************/
+
+void RMainWindow :: rollback()
+{
+  *m_data = *m_data0;
+  showMessage(R_S("Duomenys atstatyti."));
 }
 
 /**********************************************************************************************/

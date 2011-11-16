@@ -7,7 +7,18 @@
 
 Vacuum RUnit :: RUnit(Type type, RData* data):
   RElement(data),
-  m_type(type)
+  m_type(type),
+  m_numRefs(0)
+{
+}
+
+/**********************************************************************************************/
+
+Vacuum RUnit :: RUnit(RUnit& unit, RData* data):
+  RElement(unit, data),
+  m_type(unit.m_type),
+  m_identifier(unit.m_identifier),
+  m_name(unit.m_name)
 {
 }
 
@@ -23,7 +34,7 @@ Vacuum RUnit :: ~RUnit()
 void RUnit :: setIdentifier(const QString& identifier)
 {
   m_data->m_unitHash[m_type].remove(m_identifier, this);
-  m_identifier = identifier;
+  m_identifier = identifier.toUpper();
   m_data->m_unitHash[m_type].insert(m_identifier, this);
   emit m_data->elementChanged(this, RData::TitleOrName);
 }

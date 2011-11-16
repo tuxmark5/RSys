@@ -1,5 +1,6 @@
 #include <KDChart/KDChartBarDiagram>
 #include <KDChart/KDChartLegend>
+#include <KDChart/KDChartLineAttributes> // ?
 #include <KDChart/KDChartLineDiagram>
 #include <RSys/Interface/RChart.hh>
 #include <RSys/Interface/RResultsModel.hh>
@@ -57,6 +58,13 @@ void RChart :: setDiagram(Diagram* diagram)
     m_diagram->setModel(m_model);
     coordinatePlane()->replaceDiagram(m_diagram);
   }
+
+  /*QModelIndex               index(m_model->index(5, 0));
+  KDChart::LineAttributes   la(m_diagram->lineAttributes(index));
+
+  la.setDisplayArea(true);
+  la.setTransparency(0.5);
+  m_diagram->setLineAttributes(index, la);*/
 }
 
 /**********************************************************************************************/

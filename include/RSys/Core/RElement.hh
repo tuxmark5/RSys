@@ -11,12 +11,14 @@ class RElement
 {
   public:
     _M RData*           m_data;
+    _M RElement*        m_buddy;
     _M RID              m_id;
     _M bool             m_valid: 1;
     _M bool             m_visible: 1;
 
   public:
     _M Vacuum           RElement(RData* data);
+    _M Vacuum           RElement(RElement& element, RData* data);
     _V Vacuum           ~RElement();
     _M bool             isValid() const { return m_valid; }
     _M bool             visible() const { return m_visible; }

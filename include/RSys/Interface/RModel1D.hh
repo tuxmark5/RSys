@@ -32,6 +32,7 @@ class RModel1D: public RAbstractItemModel
     _V QModelIndex    index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
     _V QVariant       lastRowData(const QModelIndex& index, int role) const;
     _V QModelIndex    parent(const QModelIndex& index) const;
+    _V bool           removeRows(int row, int count, const QModelIndex& parent = QModelIndex());
     _V int            rowCount(const QModelIndex& parent = QModelIndex()) const;
     _M void           setContainer(RContainer* container);
     _V bool           setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);

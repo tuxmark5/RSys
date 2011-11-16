@@ -3,6 +3,7 @@
 
 /**********************************************************************************************/
 #include <functional>
+#include <type_traits>
 #include <QtCore/QList>
 #include <RSys/Util/RFT.hh>
 /********************************************* RS *********************************************/
@@ -18,6 +19,8 @@ class RIObserver
     _V void     modify1(int i0, int i1) { Q_UNUSED(i0); Q_UNUSED(i1); }
     _V bool     remove0(int i0, int i1) { Q_UNUSED(i0); Q_UNUSED(i1); return true; }
     _V void     remove1(int i0, int i1) { Q_UNUSED(i0); Q_UNUSED(i1); }
+    _V void     resetObservable0() { }
+    _V void     resetObservable() { }
 };
 
 /**********************************************************************************************/
@@ -63,6 +66,16 @@ class ROList
       for (RODispatcher* d = m_dispatcher; d; d = d->m_nextDispatcher)
         result &= (d->m_observer->*fun)(args...);
       return result;
+    }
+
+    template <typename Fun, typename... Args>
+    void notifySafe(Fun fun, Args... args)
+    {
+      std::vector<RIObserver*> observers;
+      for (RODispatcher* d = m_dispatcher; d; d = d->m_nextDispatcher)
+        observers.push_back(d->m_observer);
+      for (auto it = observers.begin(); it != observers.end(); ++it)
+        ((*it)->*fun)(args...);
     }
 
     template <typename Lambda, typename Fun0, typename Fun1, typename... Args>
@@ -122,16 +135,33 @@ class ROList
       return reinterpret_cast<ROList<Value2>*>(this);
     }
 
+    template <class List, class... Args>
+    _M void clone(List& list, Args... args)
+    {
+      for (auto it = list.begin(); it != list.end(); ++it)
+        m_list.append(new typename std::remove_pointer<Value>::type(**it, args...));
+      notifySafe(&RIObserver::resetObservable);
+    }
+
+    _M void deleteAll()
+    {
+      notifySafe(&RIObserver::resetObservable0);
+      for (auto it = begin(); it != end(); ++it)
+        delete *it;
+      m_list.clear();
+      notifySafe(&RIObserver::resetObservable);
+    }
+
     _M void modify(int i)
     {
       notify(&RIObserver::modify0, i, i + 1);
       notify(&RIObserver::modify1, i, i + 1);
     }
 
-    _M void remove(int i)
+    _M bool removeAt(int i)
     {
-      guarded(&RIObserver::remove0, &RIObserver::remove1, [=]() -> bool
-      { return this->m_list.remove(i), true; }, i, i + 1);
+      return guarded(&RIObserver::remove0, &RIObserver::remove1, [=]() -> bool
+      { return this->m_list.removeAt(i), true; }, i, i + 1);
     }
 
     _M void removeObserver(RIObserver* observer)

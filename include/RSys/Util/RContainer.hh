@@ -18,7 +18,7 @@ class RContainer
     _V QVariant       get(int x, int y, int role) const                     = 0;
     _V QString        header(int x) const                                   = 0;
     _V int            height() const                                        = 0;
-    //_V void           remove(int x)                               = 0;
+    _V bool           remove(int x)                                         = 0;
     _V void           removeObserver(RIObserver* observer)                  = 0;
     _V bool           set(int x, int y, int role, const QVariant& variant)  = 0;
     _V int            width() const                                         = 0;
@@ -110,6 +110,9 @@ class RContainerI: public RContainer
 
     _V int            height() const
     { return m_list->length(); }
+
+    _V bool           remove(int x)
+    { return m_list->removeAt(x); }
 
     _V void           removeObserver(RIObserver* observer)
     { m_list->removeObserver(observer); }

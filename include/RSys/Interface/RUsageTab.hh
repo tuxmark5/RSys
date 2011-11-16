@@ -24,6 +24,8 @@ class RUsageTab: public RTab, public RIObserver
     _V Vacuum         ~RUsageTab();
     _V void           insert1(int i0, int i1);
     _V bool           remove0(int i0, int i1);
+    _V void           resetObservable0();
+    _V void           resetObservable();
     _V void           resizeEvent(QResizeEvent* event);
 
   public slots:

@@ -26,12 +26,11 @@ class RUnit: public RElement
     _M QString          m_identifier;
     _M QString          m_name;
     _M int              m_numRefs;
-
-    _M UsageVector      m_usage0;
-    _M UsageVector      m_usage1; // not sure about this one
+    _M UsageVector      m_usage; // MARTYNO FIELD
 
   public:
     _M Vacuum           RUnit(Type type, RData* data);
+    _M Vacuum           RUnit(RUnit& unit, RData* data);
     _V Vacuum           ~RUnit();
     _M QString          identifier() const { return m_identifier; }
     _M QString          name() const { return m_name; }

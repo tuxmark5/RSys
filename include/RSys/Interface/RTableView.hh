@@ -17,6 +17,9 @@ class RTableView: public QTableView
     _V Vacuum       ~RTableView();
     _M void         setStretch(bool stretch);
 
+  public slots:
+    _M void         deleteRows();
+
   protected:
     _V bool         edit(const QModelIndex& index, EditTrigger trigger, QEvent* event);
 };

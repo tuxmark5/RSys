@@ -16,7 +16,8 @@ class RDivision: public RUnit
 
   public:
     _M Vacuum         RDivision(RData* data);
-    //_M RMeasure*      me
+    _M Vacuum         RDivision(RDivision& division, RData* data);
+    _V Vacuum         ~RDivision();
     _M void           setMeasure(RMeasure* measure, double value);
     _M void           setMeasure1(RMeasure* measure, double value);
     _M void           setSystem(RSystem* system, bool value);

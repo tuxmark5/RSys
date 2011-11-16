@@ -99,6 +99,22 @@ bool RUsageTab :: remove0(int i0, int i1)
 
 /**********************************************************************************************/
 
+void RUsageTab :: resetObservable0()
+{
+  if (m_units)
+    clearUnits();
+}
+
+/**********************************************************************************************/
+
+void RUsageTab :: resetObservable()
+{
+  if (m_units)
+    populateUnits();
+}
+
+/**********************************************************************************************/
+
 void RUsageTab :: resizeEvent(QResizeEvent* event)
 {
   QWidget*  viewport  = m_scrollArea->viewport();

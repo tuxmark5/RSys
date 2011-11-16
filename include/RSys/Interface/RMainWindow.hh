@@ -35,6 +35,8 @@ class RMainWindow: public QMainWindow
     _M QAction*             m_openAction;
     _M QAction*             m_saveAction;
     _M QAction*             m_importAction;
+    _M QAction*             m_commitAction;
+    _M QAction*             m_rollbackAction;
     _M QAction*             m_disconnectAction;
     _M QAction*             m_exitAction;
     _M QAction*             m_searchAction;
@@ -42,6 +44,7 @@ class RMainWindow: public QMainWindow
     _M QAction*             m_systemsStateAction;
     _M QAction*             m_helpAction;
 
+    _M RData*               m_data0;
     _M RData*               m_data;
     _M RResults*            m_results;
 
@@ -71,11 +74,13 @@ class RMainWindow: public QMainWindow
     _M QAction*             systemsStateAction() const { return m_systemsStateAction; }
 
   public slots:
+    _M void                 commit();
     _M void                 importData();
     _M void                 login();
     _M void                 logout();
     _M void                 onSearchFormDestroyed();
     _M void                 onUnitModeChanged(bool systems);
+    _M void                 rollback();
     _M void                 setInterfaceEnabled(bool enabled);
     _M void                 setShowSearchForm(bool show);
     _M void                 showMessage(const QString& message, int timeout = 5000);
