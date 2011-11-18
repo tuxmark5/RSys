@@ -12,6 +12,7 @@ class RUsageTab: public RTab, public RIObserver
   Q_OBJECT
 
   private:
+    _M RMainWindow*   m_mainWindow;
     _M QScrollArea*   m_scrollArea;
     _M QVBoxLayout*   m_innerLayout;
     _M QWidget*       m_innerWidget;
@@ -28,13 +29,14 @@ class RUsageTab: public RTab, public RIObserver
     _V void           resetObservable();
     _V void           resizeEvent(QResizeEvent* event);
 
+  protected:
+    _V void           clearUnits();
+    _M RUsageWidget*  createWidget(RUnit* unit);
+    _V void           populateUnits();
+
   public slots:
     _M void           setUnits(RUnitList* units);
     _M void           updateElement(RElement* unit, int updateType);
-
-  protected:
-    _V void           clearUnits();
-    _V void           populateUnits();
 };
 
 /**********************************************************************************************/

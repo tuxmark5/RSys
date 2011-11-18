@@ -12,13 +12,14 @@ Vacuum RResultsModel :: RResultsModel(RResults* results, QObject* parent):
   m_orientation(Qt::Horizontal),
   m_lastKey(0)
 {
-  // l(1)
+  m_results->registerModel(this);
 }
 
 /**********************************************************************************************/
 
 Vacuum RResultsModel :: ~RResultsModel()
 {
+  m_results->unregisterModel(this);
   removeFields();
 }
 
@@ -87,9 +88,7 @@ QVariant RResultsModel :: headerData(int section, Qt::Orientation orientation, i
   }
   else
   {
-    QDate date(2000, 01, 01);
-
-    return date.addMonths(section);
+    return std::get<0>(m_results->interval(section));
   }
 }
 

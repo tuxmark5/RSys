@@ -14,6 +14,7 @@
 
 Vacuum RUsageTab :: RUsageTab(RMainWindow* parent):
   RTab(R_S("Individualios apkrovos ir prognozės"), parent),
+  m_mainWindow(parent),
   m_scrollArea(new QScrollArea(this)),
   m_results(parent->results()),
   m_units(0)
@@ -52,12 +53,23 @@ void RUsageTab :: clearUnits()
 
 /**********************************************************************************************/
 
+RUsageWidget* RUsageTab :: createWidget(RUnit* unit)
+{
+  RUsageWidget* widget = new RUsageWidget(unit, m_results);
+
+  connect(m_mainWindow, SIGNAL(searchModeChanged(bool)), widget, SLOT(setSearchInterval(bool)));
+
+  return widget;
+}
+
+/**********************************************************************************************/
+
 void RUsageTab :: insert1(int i0, int i1)
 {
   for (; i0 < i1; i0++)
   {
     RUnit*        unit    = m_units->at(i0);
-    RUsageWidget* widget  = new RUsageWidget(unit, m_results);
+    RUsageWidget* widget  = createWidget(unit);
 
     m_innerLayout->insertWidget(i0, widget);
   }
@@ -71,7 +83,7 @@ void RUsageTab :: populateUnits()
 
   for (auto it = m_units->begin(); it != m_units->end(); ++it)
   {
-    RUsageWidget* widget = new RUsageWidget(*it, m_results);
+    RUsageWidget* widget = createWidget(*it);
 
     m_innerLayout->addWidget(widget);
     widget->setVisible((*it)->visible());
