@@ -6,6 +6,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
 #include <QtCore/QString>
+#include <QtCore/QDate>
 /********************************************* RS *********************************************/
 /*                                            RSys                                            */
 /**********************************************************************************************/
@@ -77,6 +78,7 @@ class QVBoxLayout;
 typedef long long                 RID;
 typedef QMap<RMeasure*, double>   RMeasureMap;
 typedef QMap<RSystem*, bool>      RSystemMap;
+typedef QMap<RDivision*, double>  RDivisionMap;
 /**********************************************************************************************/
 enum RMessageLevel
 {

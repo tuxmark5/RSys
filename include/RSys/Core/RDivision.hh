@@ -3,12 +3,15 @@
 
 /**********************************************************************************************/
 #include <RSys/Core/RUnit.hh>
+#include <RSys/Logic/RResults.hh>
 /********************************************* RS *********************************************/
 /*                                         RDivision                                          */
 /**********************************************************************************************/
 
 class RDivision: public RUnit
 {
+  _F class RResults;
+
   public:
     _M RMeasureMap    m_measureMap;
     _M RMeasureMap    m_measureMap1;  // planned measures
@@ -20,7 +23,7 @@ class RDivision: public RUnit
     _V Vacuum         ~RDivision();
     _M void           setMeasure(RMeasure* measure, double value);
     _M void           setMeasure1(RMeasure* measure, double value);
-    _M void           setSystem(RSystem* system, bool value);
+    _M void           setSystem(RSystem* system, double value);
 };
 
 /**********************************************************************************************/

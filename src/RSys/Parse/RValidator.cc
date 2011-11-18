@@ -296,7 +296,7 @@ bool RValidator::validateDivisionsSystems(RITable *table, RData *data)
         }
         else
         {
-          division->m_systemMap[system] = table->cell(i, j).toBool();
+          division->m_systemMap[system] = table->cell(i, j).toDouble();
           updatedRelations++;
         }
       }

@@ -51,7 +51,7 @@ void RDivision :: setMeasure1(RMeasure* measure, double value)
 
 /**********************************************************************************************/
 
-void RDivision :: setSystem(RSystem* system, bool value)
+void RDivision :: setSystem(RSystem* system, double value)
 {
   if (!value)
     m_systemMap.remove(system);

@@ -9,6 +9,11 @@
 
 class RMeasure: public RUnit
 {
+  _F class RResults;
+
+  private:
+    _M RSystemMap       m_systemUsage;
+    _M RDivisionMap     m_divisionUsage;
   public:
     _M RID              m_groupId;
 

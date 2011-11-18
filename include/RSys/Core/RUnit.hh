@@ -10,8 +10,11 @@
 
 class RUnit: public RElement
 {
+  _F class RResults;
+
   public:
-    _T QVector<double>  UsageVector;
+    _T QVector<double>     UsageVector;
+    _T QMap<QDate, double> RUsageMap;
 
   public:
     _E Type
@@ -21,6 +24,9 @@ class RUnit: public RElement
       System    = 2
     };
 
+  private:
+    _M RUsageMap        m_usageChangeMap; // paraiškų per dieną skaičiaus pokytis
+    _M RUsageMap        m_usageMap;       // paraiškų per dieną pradedant nuo datos
   public:
     _M Type             m_type;
     _M QString          m_identifier;
