@@ -3,15 +3,12 @@
 
 /**********************************************************************************************/
 #include <RSys/Core/RUnit.hh>
-#include <RSys/Logic/RResults.hh>
 /********************************************* RS *********************************************/
 /*                                         RDivision                                          */
 /**********************************************************************************************/
 
 class RDivision: public RUnit
 {
-  _F class RResults;
-
   public:
     _M RMeasureMap    m_measureMap;
     _M RMeasureMap    m_measureMap1;  // planned measures

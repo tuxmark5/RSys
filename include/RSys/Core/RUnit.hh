@@ -10,7 +10,7 @@
 
 class RUnit: public RElement
 {
-  _F class RResults;
+  _F class RCalculator;
 
   public:
     _T QVector<double>     UsageVector;

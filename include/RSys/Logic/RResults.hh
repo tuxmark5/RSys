@@ -2,12 +2,7 @@
 #define RSYS_LOGIC_RRESULTS_HH
 
 /**********************************************************************************************/
-#include <RSys/Core/RData.hh>
-#include <RSys/Core/RUnit.hh>
-#include <RSys/Core/RDivision.hh>
-#include <RSys/Core/RMeasure.hh>
-#include <RSys/Core/RSystem.hh>
-#include <RSys/Core/RSubmission.hh>
+#include <RSys/RSys.hh>
 #include <QtCore/QDate>
 #include <QtCore/QSet>
 /********************************************* RS *********************************************/
@@ -17,8 +12,6 @@
 class RResults: public QObject
 {
   Q_OBJECT
-  private:
-    _T QMap<RUnit*, double>               RUnitMap;
 
   public:
     _T std::function<QVariant (int)>      Getter;
@@ -51,12 +44,6 @@ class RResults: public QObject
     _M int              m_numRecords;
     _M int              m_seasonalLengths[4];
 
-  private:
-    _M void             updateMeasures(RDivision* division, RMeasureMap& measures);
-    _M void             updateUsages(RSubmissionList* submissions);
-    _M void             updateUsageChanges(RUnitMap* units, RSubmission* submission);
-    _M void             updateUsages(RUnitList* units);
-
   public:
     _M Vacuum           RResults(RData* data, QObject* parent = 0);
     _M Vacuum           ~RResults();
@@ -69,7 +56,6 @@ class RResults: public QObject
     _M void             registerModel(RResultsModel* model) { m_models.insert(model); }
     _M int*             seasonalLengths() { return m_seasonalLengths; }
     _M void             unregisterField(RUnit* unit, RResultsModel* model, int key);
-    _M void             update();
     _M void             unregisterModel(RResultsModel* model) { m_models.remove(model); }
 
   public slots:

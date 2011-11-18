@@ -1,46 +1,100 @@
-#include <QtCore/QDate>
 #include <RSys/Logic/RCalculator.hh>
-#include <random>
+#include <RSys/Core/RData.hh>
+#include <RSys/Core/RUnit.hh>
+#include <RSys/Core/RDivision.hh>
+#include <RSys/Core/RMeasure.hh>
+#include <RSys/Core/RSystem.hh>
+#include <RSys/Core/RSubmission.hh>
 
 /********************************************* RS *********************************************/
 /*                                        RCalculator                                         */
 /**********************************************************************************************/
 
-Vacuum RCalculator :: RCalculator()
+Vacuum RCalculator :: RCalculator(RData* data):
+  m_data(data)
 {
-
 }
 
 /**********************************************************************************************/
 
 Vacuum RCalculator :: ~RCalculator()
 {
-
 }
 
 /**********************************************************************************************/
 
-QVector<double> RCalculator :: calcUsages(RDivision* division, QDate from, QDate to)
+void RCalculator :: update()
 {
-  QVector<double>   random;
-  std::mt19937      eng(time(NULL));
-
-  std::uniform_real_distribution<double> gen(0.0, 2.0);
-
-  while (from < to)
+  for (auto it = m_data->systems()->begin(); it != m_data->systems()->end(); it++)
   {
-    random.append(gen(eng));
-    from.addDays(1);
+    (*it)->m_usageMap.clear();
+    (*it)->m_usageChangeMap.clear();
   }
-
-  return random;
+  for (auto it = m_data->measures()->begin(); it != m_data->measures()->end(); it++)
+  {
+    (*it)->m_systemUsage.clear();
+    (*it)->m_divisionUsage.clear();
+  }
+  for (auto it = m_data->divisions()->begin(); it != m_data->divisions()->end(); it++)
+  {
+    (*it)->m_usageMap.clear();
+    (*it)->m_usageChangeMap.clear();
+    updateMeasures(*it, (*it)->m_measureMap);
+    updateMeasures(*it, (*it)->m_measureMap1);
+  }
+  updateUsages(m_data->submissions());
+  updateUsages(m_data->submissions1());
+  updateUsages((RUnitList*)m_data->divisions());
+  updateUsages((RUnitList*)m_data->systems());
 }
 
 /**********************************************************************************************/
 
-QVector<double> RCalculator :: calcUsages(RSystem* system, QDate from, QDate to)
+void RCalculator :: updateMeasures(RDivision* division, RMeasureMap& measures)
 {
-  return calcUsages((RDivision*) 0, from, to);
+  for (auto divIt = measures.begin(); divIt != measures.end(); divIt++)
+  {
+    divIt.key()->m_divisionUsage.insert(division, divIt.value());
+    for (auto sysIt = division->m_systemMap.begin(); sysIt != division->m_systemMap.end(); sysIt++)
+    {
+      divIt.key()->m_systemUsage[sysIt.key()] += sysIt.value() * divIt.value();
+    }
+  }
 }
 
 /**********************************************************************************************/
+
+void RCalculator :: updateUsages(RSubmissionList* submissions)
+{
+  for (auto it = submissions->begin(); it != submissions->end(); it++)
+  {
+    updateUsageChanges((RUnitMap*) &(*it)->measure()->m_divisionUsage, *it);
+    updateUsageChanges((RUnitMap*) &(*it)->measure()->m_systemUsage, *it);
+  }
+}
+
+/**********************************************************************************************/
+
+void RCalculator :: updateUsageChanges(RUnitMap* units, RSubmission* submission)
+{
+  for (auto it = units->begin(); it != units->end(); it++)
+  {
+    double usage = submission->count() * it.value();
+    it.key()->m_usageChangeMap[submission->date0()] += usage;
+    it.key()->m_usageChangeMap[submission->date1().addDays(1)] -= usage;
+  }
+}
+
+void RCalculator :: updateUsages(RUnitList* units)
+{
+  for (auto unitIt = units->begin(); unitIt != units->end(); unitIt++)
+  {
+    double usage = 0;
+    for (auto usageIt = (*unitIt)->m_usageChangeMap.begin();
+              usageIt != (*unitIt)->m_usageChangeMap.begin(); usageIt++)
+    {
+      usage += usageIt.value();
+      (*unitIt)->m_usageMap.insert(usageIt.key(), usage);
+    }
+  }
+}

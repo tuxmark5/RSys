@@ -9,11 +9,22 @@
 
 class RCalculator
 {
+  private:
+    _T QMap<RUnit*, double>               RUnitMap;
+
+  private:
+    _M RData*           m_data;
+
+  private:
+    _M void             updateMeasures(RDivision* division, RMeasureMap& measures);
+    _M void             updateUsages(RSubmissionList* submissions);
+    _M void             updateUsageChanges(RUnitMap* units, RSubmission* submission);
+    _M void             updateUsages(RUnitList* units);
+
   public:
-    _M Vacuum           RCalculator();
+    _M Vacuum           RCalculator(RData* data);
     _M Vacuum           ~RCalculator();
-    _M QVector<double>  calcUsages(RDivision* division, QDate from, QDate to);
-    _M QVector<double>  calcUsages(RSystem* system, QDate from, QDate to);
+    _M void             update();
 };
 
 /**********************************************************************************************/

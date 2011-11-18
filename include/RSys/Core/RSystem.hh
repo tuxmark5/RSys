@@ -3,15 +3,12 @@
 
 /**********************************************************************************************/
 #include <RSys/Core/RUnit.hh>
-#include <RSys/Logic/RResults.hh>
 /********************************************* RS *********************************************/
 /*                                          RSystem                                           */
 /**********************************************************************************************/
 
 class RSystem: public RUnit
 {
-  _F class RResults;
-
   public:
     _M Vacuum           RSystem(RData* data);
     _M Vacuum           RSystem(RSystem& system, RData* data);

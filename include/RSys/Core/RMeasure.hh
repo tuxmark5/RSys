@@ -9,7 +9,7 @@
 
 class RMeasure: public RUnit
 {
-  _F class RResults;
+  _F class RCalculator;
 
   private:
     _M RSystemMap       m_systemUsage;
