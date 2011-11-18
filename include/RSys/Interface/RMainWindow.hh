@@ -2,8 +2,9 @@
 #define RSYS_INTERFACE_RMAIN_WINDOW_HH
 
 /**********************************************************************************************/
-#include <RSys/RSys.hh>
+#include <QtCore/QDate>
 #include <QtGui/QMainWindow>
+#include <RSys/RSys.hh>
 /********************************************* RS *********************************************/
 /*                                        RMainWindow                                         */
 /**********************************************************************************************/
@@ -86,12 +87,12 @@ class RMainWindow: public QMainWindow
     _M void                 onUnitModeChanged(bool systems);
     _M void                 rollback();
     _M void                 setInterfaceEnabled(bool enabled);
+    _M void                 setInterval(QDate date0, QDate date1);
     _M void                 setShowSearchForm(bool show);
     _M void                 showMessage(const QString& message, int timeout = 5000);
 
-  signals:
-    _M void                 searchModeChanged(bool search = true);
-    _M void                 unitsChanged(RUnitList* units);
+  protected:
+    _V void                 closeEvent(QCloseEvent* event);
 
   private:
     _M void                 addLeftTab(RTab* tab, const char* title, const char* toolTip);
@@ -99,6 +100,10 @@ class RMainWindow: public QMainWindow
 
   private slots:
     _M void                 findIntervalNow();
+
+  signals:
+    _M void                 searchModeChanged(bool search = true);
+    _M void                 unitsChanged(RUnitList* units);
 };
 
 /**********************************************************************************************/

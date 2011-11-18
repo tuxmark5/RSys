@@ -64,7 +64,7 @@ RInterval RResults :: findLowUsageInterval(RUnit* unit)
     if (m_seasonalLengths[0] > 0)
     {
       uint  mod   = qHash(unit->identifier()) % 20;
-      QDate base  = QDate(2012, 02, 01).addMonths(mod);
+      QDate base  = QDate(2012, 02, 01).addDays(mod);
 
       return RInterval(base, base.addDays(m_seasonalLengths[0]));
     }

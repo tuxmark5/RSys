@@ -1,6 +1,8 @@
 #include <QtGui/QAction>
+#include <QtGui/QCloseEvent>
 #include <QtGui/QFileDialog>
 #include <QtGui/QListView>
+#include <QtGui/QMessageBox>
 #include <QtGui/QPushButton>
 #include <QtGui/QSplitter>
 #include <QtGui/QScrollArea>
@@ -92,7 +94,7 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   createTabs();
   onUnitModeChanged(false);
 
-  connect(m_intervalToolBar, SIGNAL(intervalChanged(QDate,QDate)), m_results, SLOT(setInterval(QDate,QDate)));
+  connect(m_intervalToolBar, SIGNAL(intervalChanged(QDate,QDate)), this, SLOT(setInterval(QDate,QDate)));
   connect(m_intervalToolBar, SIGNAL(message(QString,int)), this, SLOT(showMessage(QString,int)));
 
   m_intervalToolBar->onApplyClicked();
@@ -137,6 +139,25 @@ void RMainWindow :: addStatusWidget(QWidget* widget)
 
 /**********************************************************************************************/
 
+void RMainWindow :: closeEvent(QCloseEvent* event)
+{
+  int button = QMessageBox::question(this, R_S("Išeiti"), R_S("Ar tikrai norite išeiti?"),
+    QMessageBox::Ok | QMessageBox::Cancel);
+
+  switch (button)
+  {
+    case QMessageBox::Ok:
+      event->accept();
+      return;
+
+    case QMessageBox::Cancel:
+      event->ignore();
+      return;
+  }
+}
+
+/**********************************************************************************************/
+
 void RMainWindow :: commit()
 {
   *m_data0 = *m_data;
@@ -149,6 +170,7 @@ void RMainWindow :: connectActions()
 {
   QAction::connect(m_disconnectAction, SIGNAL(triggered()), this, SLOT(logout()));
   QAction::connect(m_commitAction, SIGNAL(triggered()), this, SLOT(commit()));
+  QAction::connect(m_exitAction, SIGNAL(triggered()), this, SLOT(close()));
   QAction::connect(m_importAction, SIGNAL(triggered()), this, SLOT(importData()));
   QAction::connect(m_rollbackAction, SIGNAL(triggered()), this, SLOT(rollback()));
   QAction::connect(m_searchAction, SIGNAL(toggled(bool)), this, SLOT(setShowSearchForm(bool)));
@@ -401,6 +423,15 @@ void RMainWindow :: setInterfaceEnabled(bool enabled)
 
   if (!enabled)
     m_splitter->setParent(0);
+}
+
+/**********************************************************************************************/
+
+void RMainWindow :: setInterval(QDate date0, QDate date1)
+{
+  m_results->setInterval(date0, date1);
+  if (m_searchForm)
+    emit searchModeChanged();
 }
 
 /**********************************************************************************************/
