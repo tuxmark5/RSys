@@ -2,6 +2,7 @@
 #define RSYS_INTERFACE_RUSAGE_WIDGET_HH
 
 /**********************************************************************************************/
+#include <QtCore/QDate>
 #include <RSys/Interface/RLayerWidget.hh>
 /********************************************* RS *********************************************/
 /*                                        RUsageWidget                                        */
@@ -17,6 +18,7 @@ class RUsageWidget: public RLayerWidget
     _M RResultsModel*   m_model;
     _M QString          m_title;
     _M QLabel*          m_header;
+    _M RInterval        m_lowInterval;
 
   public:
     _M Vacuum           RUsageWidget(RUnit* unit, RResults* results, QWidget* parent = 0);
@@ -31,6 +33,7 @@ class RUsageWidget: public RLayerWidget
   public slots:
     _M void             setBarChartMode();
     _M void             setLineChartMode();
+    _M void             setSearchInterval(bool search);
     _M void             setTableMode();
 };
 

@@ -28,7 +28,9 @@ class RMainWindow: public QMainWindow
 
     _M QSplitter*           m_splitter;
     _M QWidget*             m_widgetL;
+    _M QWidget*             m_widgetR;
     _M QVBoxLayout*         m_layoutL;
+    _M QVBoxLayout*         m_layoutR;
     _M QTabWidget*          m_tabWidgetL;
     _M QTabWidget*          m_tabWidgetR;
 
@@ -69,6 +71,7 @@ class RMainWindow: public QMainWindow
     _M RContainer*          measureContainer() const { return m_measureContainer; }
     _M RContainer*          measure1Container() const { return m_measure1Container; }
     _M RResults*            results() const { return m_results; }
+    _M QAction*             searchIntervalAction() const { return m_searchAction; }
     _M RContainer*          submissionContainer() const { return m_submissionContainer; }
     _M RContainer*          submission1Container() const { return m_submission1Container; }
     _M RContainer*          systemContainer() const { return m_systemContainer; }
@@ -87,11 +90,15 @@ class RMainWindow: public QMainWindow
     _M void                 showMessage(const QString& message, int timeout = 5000);
 
   signals:
+    _M void                 searchModeChanged(bool search = true);
     _M void                 unitsChanged(RUnitList* units);
 
   private:
     _M void                 addLeftTab(RTab* tab, const char* title, const char* toolTip);
     _M void                 addRightTab(RTab* tab, const char* title, const char* toolTip);
+
+  private slots:
+    _M void                 findIntervalNow();
 };
 
 /**********************************************************************************************/

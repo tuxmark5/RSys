@@ -68,22 +68,34 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   addDockWidget(Qt::RightDockWidgetArea, m_paletteDock);
 
   m_widgetL           = new QWidget(this);
+  m_widgetR           = new QWidget(this);
   m_layoutL           = new QVBoxLayout(m_widgetL);
+  m_layoutR           = new QVBoxLayout(m_widgetR);
   m_tabWidgetL        = new QTabWidget(this);
   m_tabWidgetR        = new QTabWidget(this);
 
   m_layoutL->setMargin(0);
+  m_layoutR->setMargin(0);
+
   m_layoutL->setSpacing(5);
+  m_layoutR->setSpacing(5);
+
   m_tabWidgetL->setTabPosition(QTabWidget::South);
   m_tabWidgetR->setTabPosition(QTabWidget::South);
 
   m_splitter          = new QSplitter(this);
   m_layoutL->addWidget(m_tabWidgetL);
+  m_layoutR->addWidget(m_tabWidgetR);
   m_splitter->addWidget(m_widgetL);
-  m_splitter->addWidget(m_tabWidgetR);
+  m_splitter->addWidget(m_widgetR);
 
   createTabs();
   onUnitModeChanged(false);
+
+  connect(m_intervalToolBar, SIGNAL(intervalChanged(QDate,QDate)), m_results, SLOT(setInterval(QDate,QDate)));
+  connect(m_intervalToolBar, SIGNAL(message(QString,int)), this, SLOT(showMessage(QString,int)));
+
+  m_intervalToolBar->onApplyClicked();
 
   logout();
 }
@@ -117,7 +129,10 @@ void RMainWindow :: addRightTab(RTab* tab, const char* title, const char* toolTi
 
 void RMainWindow :: addStatusWidget(QWidget* widget)
 {
-  m_layoutL->insertWidget(0, widget);
+  if (m_widgetL->width() > 0)
+    m_layoutL->insertWidget(0, widget);
+  else
+    m_layoutR->insertWidget(0, widget);
 }
 
 /**********************************************************************************************/
@@ -293,6 +308,17 @@ void RMainWindow :: createTabs()
 
 /**********************************************************************************************/
 
+void RMainWindow :: findIntervalNow()
+{
+  if (m_searchForm)
+  {
+    m_searchForm->getSeasonalLengths(m_results->seasonalLengths());
+    emit searchModeChanged(true);
+  }
+}
+
+/**********************************************************************************************/
+
 void RMainWindow :: importData()
 {
   QString fileName = QFileDialog::getOpenFileName
@@ -387,15 +413,18 @@ void RMainWindow :: setShowSearchForm(bool show)
 
     addStatusWidget(m_searchForm);
     // handle untoggle
-    QAction::connect(m_searchAction, SIGNAL(toggled(bool)), m_searchForm, SLOT(onCloseClicked()));
+    connect(m_searchAction, SIGNAL(toggled(bool)), m_searchForm, SLOT(onCloseClicked()));
     // handle RStatusWidget's "X" button
-    QAction::connect(m_searchForm, SIGNAL(destroyed()), this, SLOT(onSearchFormDestroyed()));
+    connect(m_searchForm, SIGNAL(destroyed()), this, SLOT(onSearchFormDestroyed()));
+    connect(m_searchForm, SIGNAL(findIntervalPressed()), this, SLOT(findIntervalNow()));
   }
   else
   {
     m_searchAction->setChecked(false);
     m_searchForm = 0;
   }
+
+  emit searchModeChanged(show);
 }
 
 /**********************************************************************************************/

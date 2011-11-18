@@ -20,13 +20,10 @@ Vacuum RSearchForm :: RSearchForm(QWidget* parent):
   QHBoxLayout*    seasonLayout0   = new QHBoxLayout(widget0);
   QGridLayout*    seasonLayout1   = new QGridLayout(widget1);
 
-  QRadioButton*   seasonRelevantButton;
-  QPushButton*    searchButton;
-
   m_seasonLayout    = new QStackedLayout();
 
   layout0->addWidget(new QLabel(R_S("Į sezoniškumą")));
-  layout0->addWidget(seasonRelevantButton = new QRadioButton(R_S("Atsižvelgiama")));
+  layout0->addWidget(m_seasonalRelevanceButton = new QRadioButton(R_S("Atsižvelgiama")));
   layout0->addWidget(new QRadioButton(R_S("Neatsižvelgiama")));
   layout0->setSizeConstraint(QLayout::SetMaximumSize);
 
@@ -43,7 +40,7 @@ Vacuum RSearchForm :: RSearchForm(QWidget* parent):
   seasonLayout1->addWidget(new QLabel(R_S("Darbai vasarą:")), 1, 0);
   seasonLayout1->addWidget(m_summerBox = new QSpinBox(), 1, 1);
   seasonLayout1->addWidget(new QLabel(R_S("diena (-os) Darbai rudenį:")), 1, 2);
-  seasonLayout1->addWidget(m_autumnBox = new QSpinBox(), 1, 3);
+  seasonLayout1->addWidget(m_fallBox = new QSpinBox(), 1, 3);
   seasonLayout1->addWidget(new QLabel(R_S("diena (-os)")), 1, 4);
 
   m_seasonLayout->addWidget(widget0);
@@ -52,15 +49,15 @@ Vacuum RSearchForm :: RSearchForm(QWidget* parent):
 
   layout->addLayout(layout0);
   layout->addLayout(m_seasonLayout);
-  layout->addWidget(searchButton = new QPushButton(R_S("Ieškoti mažiausiai apkrauto intervalo")));
+  layout->addWidget(m_searchButton = new QPushButton(R_S("Ieškoti mažiausiai apkrauto intervalo")));
 
   setLayout(layout);
 
-  seasonRelevantButton->setChecked(true);
-  QRadioButton::connect(seasonRelevantButton, SIGNAL(toggled(bool)),
-    this, SLOT(setSeasonRelevance(bool)));
+  m_seasonalRelevanceButton->setChecked(true);
 
-  //QPushButton::connect(searchButton, SIGNAL(clicked()), this, SLOT())
+  QRadioButton::connect(m_seasonalRelevanceButton, SIGNAL(toggled(bool)),
+    this, SLOT(setSeasonRelevance(bool)));
+  QPushButton::connect(m_searchButton, SIGNAL(clicked()), this, SIGNAL(findIntervalPressed()));
 }
 
 /**********************************************************************************************/
@@ -68,6 +65,26 @@ Vacuum RSearchForm :: RSearchForm(QWidget* parent):
 Vacuum RSearchForm :: ~RSearchForm()
 {
 
+}
+
+/**********************************************************************************************/
+
+void RSearchForm :: getSeasonalLengths(int* lengths)
+{
+  if (m_seasonalRelevanceButton->isChecked())
+  {
+    lengths[0] = m_springBox->value();
+    lengths[1] = m_summerBox->value();
+    lengths[2] = m_fallBox->value();
+    lengths[3] = m_winterBox->value();
+  }
+  else
+  {
+    lengths[0] = m_defaultBox->value();
+    lengths[1] = lengths[0];
+    lengths[2] = lengths[0];
+    lengths[3] = lengths[0];
+  }
 }
 
 /**********************************************************************************************/

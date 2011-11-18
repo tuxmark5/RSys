@@ -88,6 +88,17 @@ void RUsageWidget :: setLineChartMode()
 
 /**********************************************************************************************/
 
+void RUsageWidget :: setSearchInterval(bool search)
+{
+  if (search)
+    m_lowInterval = m_results->findLowUsageInterval(m_unit);
+  else
+    m_lowInterval = RInterval();
+  updateHeader();
+}
+
+/**********************************************************************************************/
+
 void RUsageWidget :: setTableMode()
 {
   setTitle("Apkrovų ir jų skirtumų lentelė");
@@ -115,6 +126,13 @@ void RUsageWidget :: updateHeader()
       .arg(m_unit->identifier())
       .arg(m_unit->name())
       .arg(m_title);
+
+  if (!std::get<0>(m_lowInterval).isNull())
+  {
+    text += R_S("<br/><u>Mažiausios apkrovos intervalas:</u> nuo <b>%1</b> iki <b>%2</b>")
+      .arg(std::get<0>(m_lowInterval).toString(Qt::DefaultLocaleShortDate))
+      .arg(std::get<1>(m_lowInterval).toString(Qt::DefaultLocaleShortDate));
+  }
 
   m_header->setText(text);
 }

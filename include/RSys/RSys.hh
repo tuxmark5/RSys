@@ -48,6 +48,7 @@ class RSearchForm;
 class RSummaryWidget;
 class RTab;
 class RTableView;
+class RUsageWidget;
 /**********************************************************************************************/
 // Logic
 class RResults;
@@ -59,6 +60,8 @@ class RDatabase;
 class RContainer;
 /**********************************************************************************************/
 // Qt
+class QComboBox;
+class QDate;
 class QDateEdit;
 class QGridLayout;
 class QHBoxLayout;
@@ -66,6 +69,7 @@ class QLabel;
 class QLayoutItem;
 class QLineEdit;
 class QPushButton;
+class QRadioButton;
 class QScrollArea;
 class QSpinBox;
 class QSplitter;
@@ -75,6 +79,7 @@ class QTableView;
 class QVBoxLayout;
 /**********************************************************************************************/
 typedef long long                 RID;
+typedef std::tuple<QDate, QDate>  RInterval;
 typedef QMap<RMeasure*, double>   RMeasureMap;
 typedef QMap<RSystem*, bool>      RSystemMap;
 /**********************************************************************************************/
