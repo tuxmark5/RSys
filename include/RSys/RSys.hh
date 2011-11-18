@@ -52,8 +52,8 @@ class RTableView;
 class RUsageWidget;
 /**********************************************************************************************/
 // Logic
-class RResults;
 class RCalculator;
+class RResults;
 /**********************************************************************************************/
 // Store
 class RDatabase;
@@ -96,9 +96,12 @@ enum RMessageLevel
 };
 /**********************************************************************************************/
 #include <RSys/Util/ROList.hh>
+#include <RSys/Util/RSharedPtr.hh>
 /**********************************************************************************************/
+typedef RSharedPtr<RMeasure>      RMeasurePtr;
 typedef ROList<RDivision*>        RDivisionList;
 typedef ROList<RMeasure*>         RMeasureList;
+typedef ROList<RMeasurePtr>       RMeasurePtrList;
 typedef ROList<RSubmission*>      RSubmissionList;
 typedef ROList<RSystem*>          RSystemList;
 typedef ROList<RUnit*>            RUnitList;

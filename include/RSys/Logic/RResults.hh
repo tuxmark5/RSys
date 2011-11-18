@@ -2,9 +2,9 @@
 #define RSYS_LOGIC_RRESULTS_HH
 
 /**********************************************************************************************/
-#include <RSys/RSys.hh>
 #include <QtCore/QDate>
 #include <QtCore/QSet>
+#include <RSys/RSys.hh>
 /********************************************* RS *********************************************/
 /*                                          RResults                                          */
 /**********************************************************************************************/
@@ -33,7 +33,11 @@ class RResults: public QObject
     };
 
   private:
-    _M RData*           m_data;
+    _M RCalculator*     m_calculator0;
+    _M RCalculator*     m_calculator1;
+    _M RData*           m_data0;
+    _M RData*           m_data1;
+
     _M FieldHash        m_fields;
     _M ModelSet         m_models;
 
@@ -45,7 +49,7 @@ class RResults: public QObject
     _M int              m_seasonalLengths[4];
 
   public:
-    _M Vacuum           RResults(RData* data, QObject* parent = 0);
+    _M Vacuum           RResults(RData* data0, RData* data1, QObject* parent = 0);
     _M Vacuum           ~RResults();
     _M Getter           field(ResultType type, RUnit* unit);
     _M RInterval        findLowUsageInterval(RUnit* unit);
@@ -59,6 +63,7 @@ class RResults: public QObject
     _M void             unregisterModel(RResultsModel* model) { m_models.remove(model); }
 
   public slots:
+    _M void             reset();
     _M void             setInterval(QDate date0, QDate date1);
 };
 

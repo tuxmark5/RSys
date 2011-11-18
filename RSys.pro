@@ -143,6 +143,7 @@ HEADERS             +=                              \
   include/RSys/Util/RJoin.hh                        \
   include/RSys/Util/RMemAccessor.hh                 \
   include/RSys/Util/ROList.hh                       \
+  include/RSys/Util/RSharedPtr.hh                   \
   include/RSys/Tests/RTests.hh                      \
   include/RSys/Tests/TestRXLSDocument.hh            \
   include/RSys/Parse/RValidator.hh                  \

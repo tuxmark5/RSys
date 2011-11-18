@@ -135,6 +135,13 @@ class ROList
       return reinterpret_cast<ROList<Value2>*>(this);
     }
 
+    _M void clear()
+    {
+      notifySafe(&RIObserver::resetObservable0);
+      m_list.clear();
+      notifySafe(&RIObserver::resetObservable);
+    }
+
     template <class List, class... Args>
     _M void clone(List& list, Args... args)
     {
@@ -177,6 +184,13 @@ class ROList
           return;
         }
       }
+    }
+
+    _M void removeOne(const Value& x)
+    {
+      int index = indexOf(x);
+      if (index != -1)
+        removeAt(index);
     }
 
     _M const Value&     at(int x)               const { return m_list.at(x);      }

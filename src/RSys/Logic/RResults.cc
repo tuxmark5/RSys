@@ -1,17 +1,22 @@
-#include <RSys/Interface/RResultsModel.hh>
-#include <RSys/Logic/RResults.hh>
 #include <RSys/Core/RUnit.hh>
+#include <RSys/Interface/RResultsModel.hh>
+#include <RSys/Logic/RCalculator.hh>
+#include <RSys/Logic/RResults.hh>
 #include <math.h>
 
 /********************************************* RS *********************************************/
 /*                                          RResults                                          */
 /**********************************************************************************************/
 
-Vacuum RResults :: RResults(RData* data, QObject* parent):
+Vacuum RResults :: RResults(RData* data0, RData* data1, QObject* parent):
   QObject(parent),
-  m_data(data),
+  m_data0(data0),
+  m_data1(data1),
   m_numRecords(0)
 {
+  m_calculator0 = new RCalculator(m_data0);
+  m_calculator1 = new RCalculator(m_data1);
+
   m_seasonalLengths[0] = 0;
   m_seasonalLengths[1] = 0;
   m_seasonalLengths[2] = 0;
@@ -22,6 +27,8 @@ Vacuum RResults :: RResults(RData* data, QObject* parent):
 
 Vacuum RResults :: ~RResults()
 {
+  delete m_calculator0;
+  delete m_calculator1;
 }
 
 /**********************************************************************************************/
@@ -88,6 +95,12 @@ auto RResults :: intervalFun() -> IntervalFun
 void RResults :: registerField(RUnit* unit, RResultsModel* model, int key)
 {
   m_fields.insertMulti(unit, Field(model, key));
+}
+
+/**********************************************************************************************/
+
+void RResults :: reset()
+{
 }
 
 /**********************************************************************************************/
