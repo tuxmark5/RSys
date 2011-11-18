@@ -1,10 +1,14 @@
 #include <RSys/Logic/RCalculator.hh>
 #include <RSys/Core/RData.hh>
-#include <RSys/Core/RUnit.hh>
 #include <RSys/Core/RDivision.hh>
 #include <RSys/Core/RMeasure.hh>
 #include <RSys/Core/RSystem.hh>
 #include <RSys/Core/RSubmission.hh>
+#include <QVector>
+#include <QDate>
+
+#define FROM(x) std::get<0>(x)
+#define TO(x)   std::get<1>(x)
 
 /********************************************* RS *********************************************/
 /*                                        RCalculator                                         */
@@ -85,6 +89,8 @@ void RCalculator :: updateUsageChanges(RUnitMap* units, RSubmission* submission)
   }
 }
 
+/**********************************************************************************************/
+
 void RCalculator :: updateUsages(RUnitList* units)
 {
   for (auto unitIt = units->begin(); unitIt != units->end(); unitIt++)
@@ -97,4 +103,59 @@ void RCalculator :: updateUsages(RUnitList* units)
       (*unitIt)->m_usageMap.insert(usageIt.key(), usage);
     }
   }
+}
+
+/**********************************************************************************************/
+
+void RCalculator :: setIntervalFun(IntervalFun intervalFun, int numIntervals)
+{
+  m_intervalFun = intervalFun;
+  m_numIntervals = numIntervals;
+  calculateIntervals((RUnitList*) m_data->divisions());
+  calculateIntervals((RUnitList*) m_data->systems());
+}
+
+/**********************************************************************************************/
+
+void RCalculator :: calculateIntervals(RUnitList* units)
+{
+  QVector<RInterval> intervals;
+  for (int i = 0; i < m_numIntervals; i++)
+  {
+    intervals.push_back(m_intervalFun(i));
+  }
+  for (auto unitIt = units->begin(); unitIt != units->end(); unitIt++)
+  {
+    (*unitIt)->m_usage.resize(m_numIntervals);
+    for (int i = 0; i < m_numIntervals; i++)
+    {
+      (*unitIt)->m_usage[i] = calculateUsage(intervals[i], (*unitIt)->m_usageMap);
+    }
+  }
+}
+
+/**********************************************************************************************/
+
+double RCalculator :: calculateUsage(RInterval interval, RUsageMap& usageMap)
+{
+  double usage = 0, curUsage;
+  QDate curDate = FROM(interval);
+  RUsageMap :: iterator it = usageMap.upperBound(curDate);
+  if (it == usageMap.begin())
+  {
+    curUsage = 0;
+  } else {
+    it--;
+    curUsage = it.value();
+    it++;
+  }
+  while (it != usageMap.end() && it.key() < TO(interval))
+  {
+    usage += curDate.daysTo(it.key()) * curUsage;
+    curUsage = it.value();
+    curDate = it.key();
+    it++;
+  }
+  usage += curDate.daysTo(TO(interval)) * curUsage;
+  return usage;
 }
