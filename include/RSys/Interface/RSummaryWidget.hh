@@ -27,7 +27,7 @@ class RSummaryWidget: public RLayerWidget, public RIObserver
     _M RResults*        m_results;
     _M RResultsModel*   m_resultsModel;
     _M int              m_fieldType;
-    _M RUnitList*       m_units;
+    _M RUnitPtrList*    m_units;
 
   public:
     _M Vacuum           RSummaryWidget(RResults* results, QWidget* parent = 0);
@@ -42,7 +42,7 @@ class RSummaryWidget: public RLayerWidget, public RIObserver
   public slots:
     _M void             setMode();
     _M void             setMode(int mode);
-    _M void             setUnits(RUnitList* units);
+    _M void             setUnits(RUnitPtrList* units);
     _M void             updateElement(RElement* unit, int updateType);
 
   protected:

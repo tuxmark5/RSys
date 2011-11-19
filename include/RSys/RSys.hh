@@ -57,6 +57,7 @@ class RResults;
 /**********************************************************************************************/
 // Store
 class RDatabase;
+class REntity1D;
 /**********************************************************************************************/
 // Util
 class RContainer;
@@ -99,15 +100,23 @@ enum RMessageLevel
 #include <RSys/Util/ROList.hh>
 #include <RSys/Util/RSharedPtr.hh>
 /**********************************************************************************************/
+typedef RSharedPtr<RDivision>           RDivisionPtr;
 typedef RSharedPtr<RMeasure>            RMeasurePtr;
 typedef RSharedPtr<RSubmission>         RSubmissionPtr;
+typedef RSharedPtr<RSystem>             RSystemPtr;
+typedef RSharedPtr<RUnit>               RUnitPtr;
 
 typedef ROList<RDivision*>              RDivisionList;
 typedef ROList<RMeasure*>               RMeasureList;
-typedef ROList<RMeasurePtr>             RMeasurePtrList;
-typedef ROList<RSubmissionPtr>          RSubmissionList;
+typedef ROList<RSystem*>                RSubmissionList;
 typedef ROList<RSystem*>                RSystemList;
 typedef ROList<RUnit*>                  RUnitList;
+
+typedef ROList<RDivisionPtr>            RDivisionPtrList;
+typedef ROList<RMeasurePtr>             RMeasurePtrList;
+typedef ROList<RSubmissionPtr>          RSubmissionPtrList;
+typedef ROList<RSystemPtr>              RSystemPtrList;
+typedef ROList<RUnitPtr>                RUnitPtrList;
 
 typedef std::function<RInterval (int)>  RIntervalFun;
 /**********************************************************************************************/

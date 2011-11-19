@@ -4,13 +4,15 @@
 #include <QtGui/QPushButton>
 #include <RSys/Interface/RLoginWidget.hh>
 #include <RSys/Interface/RMessage.hh>
+#include <RSys/Store/RDatabase.hh>
 
 /********************************************* RS *********************************************/
 /*                                        RLoginWidget                                        */
 /**********************************************************************************************/
 
-Vacuum RLoginWidget :: RLoginWidget(QWidget* parent):
-  QWidget(parent)
+Vacuum RLoginWidget :: RLoginWidget(RDatabase* database, QWidget* parent):
+  QWidget(parent),
+  m_database(database)
 {
   QGridLayout*  layout0 = new QGridLayout(this);
   QGroupBox*    group   = new QGroupBox("Prisijungimo duomenys", this);
@@ -44,6 +46,8 @@ Vacuum RLoginWidget :: RLoginWidget(QWidget* parent):
   m_innerLayout->addWidget(m_loginButton, 4, 1);
   layout0->addWidget(group, 0, 0);
 
+  m_dbAddressField->setText("127.0.0.1");
+  m_dbNameField->setText("test.db");
   m_usernameField->setText("user");
 }
 
@@ -62,7 +66,7 @@ void RLoginWidget :: onLoginPressed()
   QString   userName    = m_usernameField->text();
   QString   password    = m_passwordField->text();
 
-  if (userName == "user")
+  if (m_database->login(dbAddress, dbName, userName, password))
   {
     emit loggedIn();
   }

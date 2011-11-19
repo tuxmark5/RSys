@@ -80,13 +80,13 @@ class RContainerI: public RContainer
     }
 
     template <class   Value>
-    _M RFunAccessor<Entry, Value>& addAccessor2(int column, int role)
+    _M RFunAccessor<Entry, Value>& addAccessor2(int column, int role, bool create = false)
     {
       int   index     = (column << 8) | role;
       auto  accessor  = static_cast<RAccessorAdapterI<RFunAccessor<Entry, Value> >* >
           (m_columns.value(index));
 
-      if (!accessor)
+      if (!accessor || create)
       {
         accessor = new RAccessorAdapterI<RFunAccessor<Entry, Value> >();
         m_columns.insert(index, accessor);

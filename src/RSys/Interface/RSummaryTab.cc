@@ -15,7 +15,7 @@ Vacuum RSummaryTab :: RSummaryTab(RMainWindow* parent):
 
   RData::connect(parent->data(), SIGNAL(elementChanged(RElement*,int)),
     m_widget, SLOT(updateElement(RElement*,int)));
-  connect(parent, SIGNAL(unitsChanged(RUnitList*)), m_widget, SLOT(setUnits(RUnitList*)));
+  connect(parent, SIGNAL(unitsChanged(RUnitPtrList*)), m_widget, SLOT(setUnits(RUnitPtrList*)));
 
   static_cast<QVBoxLayout*>(layout())->setSizeConstraint(QLayout::SetMinAndMaxSize);
   layout()->addWidget(m_widget);

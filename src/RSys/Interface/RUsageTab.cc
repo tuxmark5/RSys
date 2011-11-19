@@ -28,8 +28,8 @@ Vacuum RUsageTab :: RUsageTab(RMainWindow* parent):
 
   RData::connect(parent->data(), SIGNAL(elementChanged(RElement*,int)),
     this, SLOT(updateElement(RElement*,int)));
-  QAction::connect(parent, SIGNAL(unitsChanged(RUnitList*)),
-    this, SLOT(setUnits(RUnitList*)));
+  QAction::connect(parent, SIGNAL(unitsChanged(RUnitPtrList*)),
+    this, SLOT(setUnits(RUnitPtrList*)));
 
   m_innerLayout = new QVBoxLayout();
   m_innerLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
@@ -159,7 +159,7 @@ void RUsageTab :: setMode()
 
 /**********************************************************************************************/
 
-void RUsageTab :: setUnits(RUnitList* units)
+void RUsageTab :: setUnits(RUnitPtrList* units)
 {
   if (m_units)
   {

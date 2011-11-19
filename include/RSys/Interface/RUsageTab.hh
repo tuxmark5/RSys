@@ -18,7 +18,7 @@ class RUsageTab: public RTab, public RIObserver
     _M QWidget*       m_innerWidget;
 
     _M RResults*      m_results;
-    _M RUnitList*     m_units;
+    _M RUnitPtrList*  m_units;
 
   public:
     _M Vacuum         RUsageTab(RMainWindow* parent = 0);
@@ -36,7 +36,7 @@ class RUsageTab: public RTab, public RIObserver
 
   public slots:
     _M void           setMode();
-    _M void           setUnits(RUnitList* units);
+    _M void           setUnits(RUnitPtrList* units);
     _M void           updateElement(RElement* unit, int updateType);
 };
 

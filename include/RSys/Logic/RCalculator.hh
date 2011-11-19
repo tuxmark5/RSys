@@ -23,11 +23,11 @@ class RCalculator
 
   private:
     _M void             updateMeasures(RDivision* division, RMeasureMap& measures);
-    _M void             updateUsages(RSubmissionList* submissions);
+    _M void             updateUsages(RSubmissionPtrList* submissions);
     _M void             updateUsageChanges(RUnitMap* units, RSubmission* submission);
-    _M void             updateUsages(RUnitList* units);
+    _M void             updateUsages(RUnitPtrList* units);
     _M void             calculateIntervals();
-    _M void             calculateIntervals(RUnitList* units);
+    _M void             calculateIntervals(RUnitPtrList* units);
     _M double           calculateUsage(RInterval interval, RUsageMap& usageMap);
 
   public:

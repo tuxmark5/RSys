@@ -13,23 +13,24 @@ class RLoginWidget: public QWidget
   Q_OBJECT
 
   private:
-    _M QGridLayout*   m_innerLayout;
-    _M QLineEdit*     m_dbAddressField;
-    _M QLineEdit*     m_dbNameField;
-    _M QLineEdit*     m_usernameField;
-    _M QLineEdit*     m_passwordField;
-    _M QPushButton*   m_loginButton;
+    _M RDatabase*       m_database;
+    _M QGridLayout*     m_innerLayout;
+    _M QLineEdit*       m_dbAddressField;
+    _M QLineEdit*       m_dbNameField;
+    _M QLineEdit*       m_usernameField;
+    _M QLineEdit*       m_passwordField;
+    _M QPushButton*     m_loginButton;
 
   public:
-    _M Vacuum         RLoginWidget(QWidget* parent = 0);
-    _V Vacuum         ~RLoginWidget();
-    _M QPushButton*   loginButton() const { return m_loginButton; }
+    _M Vacuum           RLoginWidget(RDatabase* database, QWidget* parent = 0);
+    _V Vacuum           ~RLoginWidget();
+    _M QPushButton*     loginButton() const { return m_loginButton; }
 
   protected slots:
-    _M void           onLoginPressed();
+    _M void             onLoginPressed();
 
   signals:
-    _M void           loggedIn();
+    _M void             loggedIn();
 };
 
 /**********************************************************************************************/

@@ -66,8 +66,11 @@ class RSharedPtr
     _M Self&          operator = (const Self& ptr)
     { ptr.retain(); release(); m_value = ptr.m_value; return *this; }
 
-    _M Vacuum         operator Value* ()
+    _M Vacuum         operator Value* () const
     { return m_value; }
+
+    _M bool           operator == (const Self& ptr) const
+    { return m_value == ptr.m_value; }
 };
 
 /**********************************************************************************************/
@@ -78,6 +81,12 @@ namespace std
   struct remove_pointer<RSharedPtr<Value> >
   { typedef Value type; };
 }
+
+/**********************************************************************************************/
+
+template <class Value>
+uint qHash(const RSharedPtr<Value>& ptr)
+{ return qHash(ptr.get()); }
 
 /**********************************************************************************************/
 

@@ -78,6 +78,7 @@ SOURCES             +=                              \
   src/RSys/Logic/RCalculator.cc                     \
   src/RSys/Logic/RResults.cc                        \
   src/RSys/Store/RDatabase.cc                       \
+  src/RSys/Store/REntity1D.cc                       \
   src/RSys/Tests/RTests.cc                          \
   src/RSys/Tests/TestRXLSDocument.cc                \
   src/RSys/Parse/RValidator.cc                      \
@@ -132,6 +133,7 @@ HEADERS             +=                              \
   include/RSys/Logic/RCalculator.hh                 \
   include/RSys/Logic/RResults.hh                    \
   include/RSys/Store/RDatabase.hh                   \
+  include/RSys/Store/REntity1D.hh                   \
   include/RSys/Util/RAccessorAdapter.hh             \
   include/RSys/Util/RAlgorithm.hh                   \
   include/RSys/Util/RCompose.hh                     \

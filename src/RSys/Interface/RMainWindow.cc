@@ -50,10 +50,10 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   m_loginWidget(0),
   m_searchForm(0)
 {
-  m_database          = new RDatabase(this);
   m_data0             = new RData();
   m_data1             = new RData();
   m_results           = new RResults(m_data0, m_data1);
+  m_database          = new RDatabase(m_data1, this);
   createContainers();
 
   createActions();
@@ -160,8 +160,15 @@ void RMainWindow :: closeEvent(QCloseEvent* event)
 
 void RMainWindow :: commit()
 {
-  *m_data0 = *m_data1;
-  showMessage(R_S("Duomenys išsaugoti."));
+  if (m_database->commit())
+  {
+    *m_data0 = *m_data1;
+    showMessage(R_S("Duomenys išsaugoti."));
+  }
+  else
+  {
+    showMessage(R_S("KLAIDA: Nepavyko išsaugoti duomenų."));
+  }
 }
 
 /**********************************************************************************************/
@@ -257,8 +264,8 @@ void RMainWindow :: createContainers()
   cu->setAlloc([=]() { return new RSubmission(m_data1); });
 
   auto cu1 = newContainer(m_data1->submissions1(), *cu);
-  cu->addAccessor2<QString>(0, Qt::DisplayRole)
-    << &RSubmission::setMeasure1Name;
+  cu1->addAccessor2<QString>(0, Qt::DisplayRole, true)
+    >> &RSubmission::measureName << &RSubmission::setMeasure1Name;
 
   auto cs = newContainer(m_data1->systems());
   cs->addColumn("Pavadinimas");
@@ -281,8 +288,8 @@ void RMainWindow :: createTabs()
 {
   auto dmGetter = [=](int x, int y) -> QVariant
   {
-    RDivision*  division  = m_data1->divisions()->at(y);
-    RMeasure*   measure   = m_data1->measures()->at(x);
+    RDivision*  division  = m_data1->divisions()->at(y).get();
+    RMeasure*   measure   = m_data1->measures()->at(x).get();
     double      value     = division->m_measureMap.value(measure, 0);
 
     return value == 0.0 ? QVariant() : value;
@@ -290,16 +297,16 @@ void RMainWindow :: createTabs()
 
   auto dmSetter = [=](int x, int y, const QVariant& var) -> void
   {
-    RDivision*  division  = m_data1->divisions()->at(y);
-    RMeasure*   measure   = m_data1->measures()->at(x);
+    RDivision*  division  = m_data1->divisions()->at(y).get();
+    RMeasure*   measure   = m_data1->measures()->at(x).get();
 
     division->setMeasure(measure, var.toDouble());
   };
 
   auto dsGetter = [=](int x, int y) -> QVariant
   {
-    RDivision*  division  = m_data1->divisions()->at(y);
-    RSystem*    system    = m_data1->systems()->at(x);
+    RDivision*  division  = m_data1->divisions()->at(y).get();
+    RSystem*    system    = m_data1->systems()->at(x).get();
     int         value     = division->m_systemMap.value(system, 0);
 
     return value == 1 ? 1 : QVariant();
@@ -307,8 +314,8 @@ void RMainWindow :: createTabs()
 
   auto dsSetter = [=](int x, int y, const QVariant& var) -> void
   {
-    RDivision*  division  = m_data1->divisions()->at(y);
-    RSystem*    system    = m_data1->systems()->at(x);
+    RDivision*  division  = m_data1->divisions()->at(y).get();
+    RSystem*    system    = m_data1->systems()->at(x).get();
 
     division->setSystem(system, var.toInt());
   };
@@ -366,7 +373,8 @@ void RMainWindow :: login()
   R_GUARD(m_loginWidget, Vacuum);
 
   setInterfaceEnabled(true);
-  m_loginWidget = 0; // deleted by QMainWindow::setCentralWidget
+  m_loginWidget   = 0; // deleted by QMainWindow::setCentralWidget
+  *m_data0        = *m_data1;
 }
 
 /**********************************************************************************************/
@@ -375,7 +383,7 @@ void RMainWindow :: logout()
 {
   R_GUARD(!m_loginWidget, Vacuum);
 
-  m_loginWidget = new RLoginWidget(0);
+  m_loginWidget = new RLoginWidget(m_database);
   connect(m_loginWidget, SIGNAL(loggedIn()), this, SLOT(login()));
   setInterfaceEnabled(false);
   setCentralWidget(m_loginWidget);
@@ -394,17 +402,20 @@ void RMainWindow :: onSearchFormDestroyed()
 void RMainWindow :: onUnitModeChanged(bool systems)
 {
   if (systems)
-    emit unitsChanged(m_data1->systems()->cast<RUnit*>());
+    emit unitsChanged(m_data1->systems()->cast<RUnitPtr>());
   else
-    emit unitsChanged(m_data1->divisions()->cast<RUnit*>());
+    emit unitsChanged(m_data1->divisions()->cast<RUnitPtr>());
 }
 
 /**********************************************************************************************/
 
 void RMainWindow :: rollback()
 {
-  *m_data1 = *m_data0;
-  showMessage(R_S("Duomenys atstatyti."));
+  if (m_database->rollback())
+  {
+    *m_data1 = *m_data0;
+    showMessage(R_S("Duomenys atstatyti."));
+  }
 }
 
 /**********************************************************************************************/

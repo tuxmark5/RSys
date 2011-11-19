@@ -7,7 +7,7 @@ RDivision *RValidator::getDivision(RData *data, const QString &identifier)
   {
     if ((*it)->identifier() == identifier)
     {
-      return *it;
+      return it->get();
     }
   }
   return NULL;
@@ -20,7 +20,7 @@ RSystem *RValidator::getSystem(RData *data, const QString &identifier)
   {
     if ((*it)->identifier() == identifier)
     {
-      return *it;
+      return it->get();
     }
   }
   return NULL;
@@ -33,7 +33,7 @@ RMeasure *RValidator::getMeasure(RData *data, const QString &identifier)
   {
     if ((*it)->identifier() == identifier)
     {
-      return *it;
+      return it->get();
     }
   }
   return NULL;
@@ -115,7 +115,7 @@ bool RValidator::validate(RITable *table, RData *data)
 
 bool RValidator::validateMeasures(RITable *table, RData *data)
 {
-  RMeasureList *list = data->measures();
+  RMeasurePtrList *list = data->measures();
   int added = 0;
   bool errors = false;
   for (int i = 1; i < table->height(); i++)
@@ -142,7 +142,7 @@ bool RValidator::validateMeasures(RITable *table, RData *data)
       }
       // Priemonė.
       // FIXME: Kryptys yra ignoruojamos.
-      RMeasure *measure = new RMeasure(data);
+      RMeasurePtr measure = new RMeasure(data);
       measure->setIdentifier(table->cell(0, i).toString().toUpper());
       measure->setName(table->cell(1, i).toString());
       list->append(measure);
@@ -161,7 +161,7 @@ bool RValidator::validateMeasures(RITable *table, RData *data)
 
 bool RValidator::validateDivisions(RITable *table, RData *data)
 {
-  RDivisionList *list = data->divisions();
+  RDivisionPtrList *list = data->divisions();
   bool errors = false;                  // Ar buvo klaidų.
   int added = 0;
   for (int i = 1; i < table->height(); i++)
@@ -193,7 +193,7 @@ bool RValidator::validateDivisions(RITable *table, RData *data)
       errors = true;
       continue;
     }
-    RDivision *division = new RDivision(data);
+    RDivisionPtr division = new RDivision(data);
     division->setIdentifier(table->cell(0, i).toString().toUpper());
     division->setName(table->cell(1, i).toString());
     list->append(division);
@@ -211,7 +211,7 @@ bool RValidator::validateDivisions(RITable *table, RData *data)
 
 bool RValidator::validateSystems(RITable *table, RData *data)
 {
-  RSystemList *list = data->systems();
+  RSystemPtrList *list = data->systems();
   bool errors = false;                  // Ar buvo klaidų.
   int added = 0;
   for (int i = 1; i < table->height(); i++)
@@ -243,7 +243,7 @@ bool RValidator::validateSystems(RITable *table, RData *data)
       errors = true;
       continue;
     }
-    RSystem *system = new RSystem(data);
+    RSystemPtr system = new RSystem(data);
     system->setIdentifier(table->cell(0, i).toString().toUpper());
     system->setName(table->cell(1, i).toString());
     list->append(system);
@@ -367,7 +367,7 @@ bool RValidator::validateDivisionsMeasures(RITable *table, RData *data)
 
 bool RValidator:: validateSubmissions(RITable *table, RData *data)
 {
-  RSubmissionList *list = data->submissions();
+  RSubmissionPtrList *list = data->submissions();
   int added = 0;
   bool errors = false;
 
@@ -394,7 +394,7 @@ bool RValidator:: validateSubmissions(RITable *table, RData *data)
       errors = true;
       continue;
     }
-    RSubmission *submission = new RSubmission(data);
+    RSubmissionPtr submission = new RSubmission(data);
     RMeasure *measure = this->getMeasure(
           data, table->cell(0, i).toString().toUpper());
     if (!measure)

@@ -22,10 +22,12 @@ class RElement
     _M Vacuum           RElement(RElement& element, RData* data);
     _V Vacuum           ~RElement();
     _M RData*           data() const { return m_data; }
+    _M RID              id() const { return m_id; }
     _M bool             isValid() const { return m_valid; }
     _M bool             visible() const { return m_visible; }
     _M int              release() { return --m_numRefs; }
     _M void             retain() { m_numRefs++; }
+    _M void             setId(RID id);
     _M void             setValid(bool valid);
     _M void             setVisible(bool visible);
 };

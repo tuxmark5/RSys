@@ -17,8 +17,8 @@ Vacuum RPlannedTab :: RPlannedTab(RMainWindow* parent):
 
   auto getter = [=](int x, int y) -> QVariant
   {
-    RDivision*  division  = data->divisions()->at(y);
-    RMeasure*   measure   = data->measures()->at(x);
+    RDivision*  division  = data->divisions()->at(y).get();
+    RMeasure*   measure   = data->measures()->at(x).get();
     double      value     = division->m_measureMap1.value(measure, 0);
 
     return value == 0.0 ? QVariant() : value;
@@ -26,8 +26,8 @@ Vacuum RPlannedTab :: RPlannedTab(RMainWindow* parent):
 
   auto setter = [=](int x, int y, const QVariant& var) -> void
   {
-    RDivision*  division  = data->divisions()->at(y);
-    RMeasure*   measure   = data->measures()->at(x);
+    RDivision*  division  = data->divisions()->at(y).get();
+    RMeasure*   measure   = data->measures()->at(x).get();
 
     division->setMeasure1(measure, var.toDouble());
   };

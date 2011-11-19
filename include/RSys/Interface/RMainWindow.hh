@@ -105,7 +105,7 @@ class RMainWindow: public QMainWindow
 
   signals:
     _M void                 searchModeChanged(bool search = true);
-    _M void                 unitsChanged(RUnitList* units);
+    _M void                 unitsChanged(RUnitPtrList* units);
 };
 
 /**********************************************************************************************/

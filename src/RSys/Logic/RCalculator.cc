@@ -44,13 +44,13 @@ void RCalculator :: update()
   {
     (*it)->m_usageMap.clear();
     (*it)->m_usageChangeMap.clear();
-    updateMeasures(*it, (*it)->m_measureMap);
-    updateMeasures(*it, (*it)->m_measureMap1);
+    updateMeasures(it->get(), (*it)->m_measureMap);
+    updateMeasures(it->get(), (*it)->m_measureMap1);
   }
   updateUsages(m_data->submissions());
   updateUsages(m_data->submissions1());
-  updateUsages((RUnitList*)m_data->divisions());
-  updateUsages((RUnitList*)m_data->systems());
+  updateUsages((RUnitPtrList*) m_data->divisions());
+  updateUsages((RUnitPtrList*) m_data->systems());
 
   calculateIntervals();
 }
@@ -71,7 +71,7 @@ void RCalculator :: updateMeasures(RDivision* division, RMeasureMap& measures)
 
 /**********************************************************************************************/
 
-void RCalculator :: updateUsages(RSubmissionList* submissions)
+void RCalculator :: updateUsages(RSubmissionPtrList* submissions)
 {
   for (auto it = submissions->begin(); it != submissions->end(); it++)
   {
@@ -94,7 +94,7 @@ void RCalculator :: updateUsageChanges(RUnitMap* units, RSubmission* submission)
 
 /**********************************************************************************************/
 
-void RCalculator :: updateUsages(RUnitList* units)
+void RCalculator :: updateUsages(RUnitPtrList* units)
 {
   for (auto unitIt = units->begin(); unitIt != units->end(); unitIt++)
   {
@@ -123,12 +123,12 @@ void RCalculator :: calculateIntervals()
 {
   if (m_numIntervals > 0)
   {
-    calculateIntervals((RUnitList*) m_data->divisions());
-    calculateIntervals((RUnitList*) m_data->systems());
+    calculateIntervals((RUnitPtrList*) m_data->divisions());
+    calculateIntervals((RUnitPtrList*) m_data->systems());
   }
 }
 
-void RCalculator :: calculateIntervals(RUnitList* units)
+void RCalculator :: calculateIntervals(RUnitPtrList* units)
 {
   QVector<RInterval> intervals;
   for (int i = 0; i < m_numIntervals; i++)

@@ -152,7 +152,7 @@ void RSummaryWidget :: setMode(int mode)
 
 /**********************************************************************************************/
 
-void RSummaryWidget :: setUnits(RUnitList* units)
+void RSummaryWidget :: setUnits(RUnitPtrList* units)
 {
   if (m_units)
   {

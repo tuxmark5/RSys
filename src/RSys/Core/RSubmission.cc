@@ -33,6 +33,14 @@ Vacuum RSubmission :: ~RSubmission()
 
 /**********************************************************************************************/
 
+RID RSubmission :: measureId() const
+{
+  R_GUARD(m_measure, 0);
+  return m_measure->id();
+}
+
+/**********************************************************************************************/
+
 void RSubmission :: setCount(int count)
 {
   m_count = count;
@@ -62,10 +70,22 @@ void RSubmission :: setMeasure(RMeasure* measure)
 
 /**********************************************************************************************/
 
+void RSubmission :: setMeasureId(RID id)
+{
+  RMeasurePtrList* measures = m_data->measures();
+
+  for (auto it = measures->begin(); it != measures->end(); ++it)
+    if ((*it)->id() == id)
+      return setMeasure(*it);
+}
+
+/**********************************************************************************************/
+
 void RSubmission :: setMeasureName(const QString& measureName)
 {
   m_measureName   = measureName.toUpper();
   m_measure       = m_data->measure(m_measureName);
+  qDebug() << "NAME0";
 }
 
 /**********************************************************************************************/

@@ -9,7 +9,7 @@ void TestRValidator::testReadingMeasures()
 
   RValidator validator;
   RData data;
-  RMeasureList *measures = data.measures();
+  RMeasurePtrList *measures = data.measures();
 
   QCOMPARE(validator.validateMeasures(document.tableAt(0), &data), true);
 
@@ -44,7 +44,7 @@ void TestRValidator::testReadingSystems()
 
   RValidator validator;
   RData data;
-  RSystemList *systems = data.systems();
+  RSystemPtrList *systems = data.systems();
 
   QCOMPARE(validator.validateSystems(document.tableAt(2), &data), true);
 
@@ -67,7 +67,7 @@ void TestRValidator::testReadingDivisions()
 
   RValidator validator;
   RData data;
-  RDivisionList *divisions = data.divisions();
+  RDivisionPtrList *divisions = data.divisions();
 
   QCOMPARE(validator.validateDivisions(document.tableAt(1), &data), true);
 
@@ -89,14 +89,14 @@ void TestRValidator::testReadingDivisionsSystems()
 
   RValidator validator;
   RData data;
-  RDivisionList *divisions = data.divisions();
-  RSystemList *systems = data.systems();
+  RDivisionPtrList *divisions = data.divisions();
+  RSystemPtrList *systems = data.systems();
 
   QCOMPARE(validator.validateDivisions(document.tableAt(1), &data), true);
   QCOMPARE(validator.validateSystems(document.tableAt(2), &data), true);
   QCOMPARE(validator.validateDivisionsSystems(document.tableAt(3), &data), true);
 
-  RDivision *division = divisions->at(10);
+  RDivision *division = divisions->at(10).get();
 
   QCOMPARE(
         division->identifier(),
@@ -110,9 +110,9 @@ void TestRValidator::testReadingDivisionsSystems()
   QCOMPARE(
         systems->at(2)->identifier(),
         QString::fromUtf8("IS3"));
-  QCOMPARE(division->m_systemMap[systems->at(0)], 1.0);
-  QCOMPARE(division->m_systemMap[systems->at(1)], 1.0);
-  QCOMPARE(division->m_systemMap.contains(systems->at(2)), 0);
+  QCOMPARE(division->m_systemMap[systems->at(0).get()], 1.0);
+  QCOMPARE(division->m_systemMap[systems->at(1).get()], 1.0);
+  QCOMPARE(division->m_systemMap.contains(systems->at(2).get()), 0);
   QCOMPARE(division->m_systemMap.size(), 2);
 }
 
@@ -125,14 +125,14 @@ void TestRValidator::testReadingDivisionsMeasures()
 
   RValidator validator;
   RData data;
-  RDivisionList *divisions = data.divisions();
-  RMeasureList *measures = data.measures();
+  RDivisionPtrList *divisions = data.divisions();
+  RMeasurePtrList *measures = data.measures();
 
   QCOMPARE(validator.validateMeasures(document.tableAt(0), &data), true);
   QCOMPARE(validator.validateDivisions(document.tableAt(1), &data), true);
   QCOMPARE(validator.validateDivisionsMeasures(document.tableAt(4), &data), true);
 
-  RDivision *division = divisions->at(6);
+  RDivision *division = divisions->at(6).get();
 
   QCOMPARE(
         division->identifier(),
@@ -149,10 +149,10 @@ void TestRValidator::testReadingDivisionsMeasures()
   QCOMPARE(
         measures->at(3)->identifier(),
         QString::fromUtf8("P1-4"));
-  QCOMPARE(division->m_measureMap[measures->at(0)], 1.0);
-  QCOMPARE(division->m_measureMap[measures->at(1)], 0.5);
-  QCOMPARE(division->m_measureMap[measures->at(2)], 1.0);
-  QCOMPARE(division->m_measureMap.contains(measures->at(3)), false);
+  QCOMPARE(division->m_measureMap[measures->at(0).get()], 1.0);
+  QCOMPARE(division->m_measureMap[measures->at(1).get()], 0.5);
+  QCOMPARE(division->m_measureMap[measures->at(2).get()], 1.0);
+  QCOMPARE(division->m_measureMap.contains(measures->at(3).get()), false);
   QCOMPARE(division->m_measureMap.size(), 6);
 }
 
@@ -165,7 +165,7 @@ void TestRValidator::testReadingSubmissions()
 
   RValidator validator;
   RData data;
-  RSubmissionList *submissions = data.submissions();
+  RSubmissionPtrList *submissions = data.submissions();
 
   QCOMPARE(validator.validateMeasures(document.tableAt(0), &data), true);
   QCOMPARE(validator.validateSubmissions(document.tableAt(5), &data), true);

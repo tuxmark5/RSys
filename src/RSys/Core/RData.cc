@@ -18,13 +18,13 @@ Vacuum RData :: RData():
 
 void RData :: clear()
 {
-  m_divisions.deleteAll();      // deps: measures, systems
+  m_divisions.clear();          // deps: measures, systems
   m_submissions.clear();        // deps: measures
   m_submissions1.clear();       // deps: measures
 
-  m_measures.deleteAll();       // deps: -
+  m_measures.clear();           // deps: -
   m_measures1.deleteAll();      // deps: -
-  m_systems.deleteAll();        // deps: -
+  m_systems.clear();            // deps: -
 }
 
 /**********************************************************************************************/
