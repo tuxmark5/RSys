@@ -157,6 +157,20 @@ int RResultsModel :: insertField(int index, int type, RUnit* unit)
 
 /**********************************************************************************************/
 
+QString RResultsModel :: longTitleForField(int type)
+{
+  switch (type & 0x0F)
+  {
+    case Usage0:    return R_S("Pradinės apkrovos");
+    case Usage1:    return R_S("Galinės apkrovos");
+    case UsageD:    return R_S("Apkrovų skirtumai");
+    case UsageDP:   return R_S("Procentiniai apkrovų skirtumai");
+  }
+  return QString();
+}
+
+/**********************************************************************************************/
+
 QModelIndex RResultsModel :: parent(const QModelIndex& index) const
 {
   Q_UNUSED(index);

@@ -13,6 +13,9 @@ class RMainMenuBar: public QMenuBar
   Q_OBJECT
 
   public:
+    _M QMenu*       m_viewMenu;
+
+  public:
     _M Vacuum       RMainMenuBar(RMainWindow* parent = 0);
     _V Vacuum       ~RMainMenuBar();
 };

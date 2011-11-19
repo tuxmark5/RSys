@@ -37,7 +37,7 @@ void RLayerWidget :: enterEvent(QEvent* event)
 {
   Q_UNUSED(event);
 
-  int baseY = 0; //(height() - 3 * 25) / 2;
+  int baseY = 20; //(height() - 3 * 25) / 2;
   int i = 0;
   QPalette palette = this->palette();
 
@@ -47,7 +47,7 @@ void RLayerWidget :: enterEvent(QEvent* event)
   createButtons([baseY, &i, this, &palette](QPushButton* button) -> void
   {
     button->setParent(this);
-    button->setGeometry(10, baseY + 24 * i++, 20, 20);
+    button->setGeometry(10, baseY + 24 * i++, 80, 20);
     button->setPalette(palette);
     button->setVisible(true);
   });

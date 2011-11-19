@@ -35,6 +35,7 @@ class RMainWindow: public QMainWindow
     _M QTabWidget*          m_tabWidgetL;
     _M QTabWidget*          m_tabWidgetR;
 
+    _M QMenu*               m_viewMenu;
     _M QAction*             m_openAction;
     _M QAction*             m_saveAction;
     _M QAction*             m_importAction;
@@ -71,6 +72,7 @@ class RMainWindow: public QMainWindow
     _M RContainer*          divisionContainer() const { return m_divisionContainer; }
     _M RContainer*          measureContainer() const { return m_measureContainer; }
     _M RContainer*          measure1Container() const { return m_measure1Container; }
+    _M RMainMenuBar*        menuBar() const { return m_menuBar; }
     _M RResults*            results() const { return m_results; }
     _M QAction*             searchIntervalAction() const { return m_searchAction; }
     _M RContainer*          submissionContainer() const { return m_submissionContainer; }

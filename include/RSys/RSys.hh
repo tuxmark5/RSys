@@ -70,6 +70,7 @@ class QHBoxLayout;
 class QLabel;
 class QLayoutItem;
 class QLineEdit;
+class QMenu;
 class QPushButton;
 class QRadioButton;
 class QScrollArea;

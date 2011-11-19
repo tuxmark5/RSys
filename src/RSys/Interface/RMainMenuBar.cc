@@ -10,7 +10,7 @@ Vacuum RMainMenuBar :: RMainMenuBar(RMainWindow* parent):
 {
   QMenu* systemMenu   = new QMenu("&Sistema",  this);
   QMenu* editMenu     = new QMenu("&Keisti",   this);
-  QMenu* viewMenu     = new QMenu("&Rodyti",   this);
+  m_viewMenu          = new QMenu("&Rodyti",   this);
   QMenu* helpMenu     = new QMenu("&Apie",     this);
 
   systemMenu->addAction(parent->m_openAction);
@@ -26,14 +26,14 @@ Vacuum RMainMenuBar :: RMainMenuBar(RMainWindow* parent):
 
   editMenu->addAction(parent->m_searchAction);
 
-  viewMenu->addAction(parent->m_divisionsStateAction);
-  viewMenu->addAction(parent->m_systemsStateAction);
+  m_viewMenu->addAction(parent->m_divisionsStateAction);
+  m_viewMenu->addAction(parent->m_systemsStateAction);
 
   helpMenu->addAction(parent->m_helpAction);
 
   addMenu(systemMenu);
   addMenu(editMenu);
-  addMenu(viewMenu);
+  addMenu(m_viewMenu);
   addMenu(helpMenu);
 }
 

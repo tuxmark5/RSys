@@ -1,6 +1,9 @@
+#include <QtGui/QAction>
+#include <QtGui/QMenu>
 #include <QtGui/QPushButton>
 #include <RSys/Core/RData.hh>
 #include <RSys/Core/RUnit.hh>
+#include <RSys/Interface/RChart.hh>
 #include <RSys/Interface/RResultsModel.hh>
 #include <RSys/Interface/RSummaryWidget.hh>
 #include <RSys/Interface/RTableView.hh>
@@ -29,7 +32,7 @@ Vacuum RSummaryWidget :: RSummaryWidget(RResults* results, QWidget* parent):
   m_units(0)
 {
   setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-  setUsage1TableMode();
+  setMode(RResultsModel::Usage1 | Table);
 }
 
 /**********************************************************************************************/
@@ -51,19 +54,31 @@ int RSummaryWidget :: countVisible(int till)
 
 /**********************************************************************************************/
 
+#define MODE(menu, name, mode) menu->addAction(R_S(name), this, SLOT(setMode()))->setData(int(mode));
+
 void RSummaryWidget :: createButtons(const ButtonCallback& callback)
 {
-  QPushButton* buttonBar    = new QPushButton("B");
-  QPushButton* buttonLine   = new QPushButton("L");
-  QPushButton* buttonTable  = new QPushButton("T");
+  QPushButton*  button        = new QPushButton(R_S("Rodyti"));
+  QMenu*        menu          = new QMenu();
+  QMenu*        usage1        = menu->addMenu(R_S("Apkrovas"));
+  QMenu*        usageD        = menu->addMenu(R_S("Skirtumus"));
+  QMenu*        usageDP       = menu->addMenu(R_S("Procentinius skirtumus"));
 
-  /*QPushButton::connect(buttonBar, SIGNAL(clicked()), this, SLOT(setBarChartMode()));
-  QPushButton::connect(buttonLine, SIGNAL(clicked()), this, SLOT(setLineChartMode()));
-  QPushButton::connect(buttonTable, SIGNAL(clicked()), this, SLOT(setTableMode()));*/
+  MODE(usage1,  "Stulpeline diagrama", RResultsModel::Usage1 | Bar);
+  MODE(usage1,  "Linijine diagrama",   RResultsModel::Usage1 | Line);
+  MODE(usage1,  "Lentele",             RResultsModel::Usage1 | Table);
 
-  callback(buttonBar);
-  callback(buttonLine);
-  callback(buttonTable);
+  MODE(usageD,  "Stulpeline diagrama", RResultsModel::UsageD | Bar);
+  MODE(usageD,  "Linijine diagrama",   RResultsModel::UsageD | Line);
+  MODE(usageD,  "Lentele",             RResultsModel::UsageD | Table);
+
+  MODE(usageDP, "Stulpeline diagrama", RResultsModel::UsageDP | Bar);
+  MODE(usageDP, "Linijine diagrama",   RResultsModel::UsageDP | Line);
+  MODE(usageDP, "Lentele",             RResultsModel::UsageDP | Table);
+
+  connect(menu, SIGNAL(aboutToHide()), menu, SLOT(deleteLater()));
+  button->setMenu(menu);
+  callback(button);
 }
 
 /**********************************************************************************************/
@@ -94,6 +109,49 @@ void RSummaryWidget :: resetObservable()
 
 /**********************************************************************************************/
 
+void RSummaryWidget :: setMode()
+{
+  if (QAction* action = qobject_cast<QAction*>(sender()))
+  {
+    setMode(action->data().toInt());
+  }
+}
+
+/**********************************************************************************************/
+
+void RSummaryWidget :: setMode(int mode)
+{
+  m_fieldType = (mode & 0x0FF) | RResultsModel::Identifier;
+  setUnits(m_units);
+  //setTitle(RResultsModel::longTitleForField(mode));
+
+  switch (mode & 0xF00)
+  {
+    case Bar:
+      if (RChart* chart = ensure<RChart>(this))
+      {
+        chart->setType(RChart::Bar);
+        chart->setShowLegend(true);
+      }
+      break;
+
+    case Line:
+      if (RChart* chart = ensure<RChart>(this))
+      {
+        chart->setType(RChart::Line);
+        chart->setShowLegend(true);
+      }
+      break;
+
+    case Table:
+      m_resultsModel->setOrientation(Qt::Horizontal);
+      ensure<RTableView>(this)->setFrameStyle(QFrame::NoFrame);
+      break;
+  }
+}
+
+/**********************************************************************************************/
+
 void RSummaryWidget :: setUnits(RUnitList* units)
 {
   if (m_units)
@@ -112,22 +170,6 @@ void RSummaryWidget :: setUnits(RUnitList* units)
         m_resultsModel->addField(m_fieldType, *it);
     }
   }
-}
-
-/**********************************************************************************************/
-
-void RSummaryWidget :: setUsage1BarMode()
-{
-
-}
-
-/**********************************************************************************************/
-
-void RSummaryWidget :: setUsage1TableMode()
-{
-  m_fieldType = RResultsModel::Usage1 | RResultsModel::Identifier;
-  setUnits(m_units);
-  ensure<RTableView>(this);
 }
 
 /**********************************************************************************************/

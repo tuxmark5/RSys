@@ -15,17 +15,14 @@ Vacuum RChart :: RChart(RResultsModel* model, QWidget* parent):
   m_diagram(0),
   m_legend(0)
 {
+  setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+
   m_axisX     = new KDChart::CartesianAxis();
   m_axisY     = new KDChart::CartesianAxis();
-  //m_legend    = new KDChart::Legend();
 
   m_axisX->setPosition(Axis::Top);
   m_axisY->setPosition(Axis::Left);
-  //m_legend->setPosition(KDChart::Position::North);
-
   model->setOrientation(Qt::Vertical);
-
-  //addLegend(m_legend);
 }
 
 /**********************************************************************************************/
@@ -69,6 +66,20 @@ void RChart :: setDiagram(Diagram* diagram)
 
 /**********************************************************************************************/
 
+void RChart :: setShowLegend(bool show)
+{
+  if (!m_legend && show)
+  {
+    m_legend  = new KDChart::Legend();
+    m_legend->addDiagram(m_diagram);
+    m_legend->setPosition(KDChart::Position::West);
+    m_legend->setTitleText(QString());
+    addLegend(m_legend);
+  }
+}
+
+/**********************************************************************************************/
+
 void RChart :: setType(ChartType type)
 {
   Diagram* diagram = 0;
@@ -87,6 +98,8 @@ void RChart :: setType(ChartType type)
       return;
   }
 
+  if (m_legend)
+    m_legend->addDiagram(diagram);
   setDiagram(diagram);
 }
 

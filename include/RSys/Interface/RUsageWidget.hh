@@ -12,6 +12,16 @@ class RUsageWidget: public RLayerWidget
 {
   Q_OBJECT
 
+  public:
+    _E Mode
+    {
+      Usage1Bar,
+      Usage1Line,
+      UsageDBar,
+      UsageDLine,
+      UsageTable
+    };
+
   private:
     _M RUnit*           m_unit;
     _M RResults*        m_results;
@@ -23,6 +33,7 @@ class RUsageWidget: public RLayerWidget
   public:
     _M Vacuum           RUsageWidget(RUnit* unit, RResults* results, QWidget* parent = 0);
     _V Vacuum           ~RUsageWidget();
+    _S QMenu*           createModeMenu(QObject* receiver, const char* slot);
     _M RResultsModel*   model() const { return m_model; }
     _M void             updateHeader();
 
@@ -31,10 +42,9 @@ class RUsageWidget: public RLayerWidget
     _M void             setTitle(const char* title);
 
   public slots:
-    _M void             setBarChartMode();
-    _M void             setLineChartMode();
+    _M void             setMode();
+    _M void             setMode(int mode);
     _M void             setSearchInterval(bool search);
-    _M void             setTableMode();
 };
 
 /**********************************************************************************************/

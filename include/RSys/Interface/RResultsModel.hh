@@ -51,13 +51,14 @@ class RResultsModel: public RAbstractItemModel
     _V QVariant       headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     _V QModelIndex    index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
     _M int            insertField(int index, int type, RUnit* unit);
+    _S QString        longTitleForField(int type);
     _V QModelIndex    parent(const QModelIndex& index) const;
     _M void           removeDimension(int id, Qt::Orientation orientation, const Lambda& lambda);
     _M void           removeField(int id);
     _M void           removeFields();
     _V int            rowCount(const QModelIndex& parent = QModelIndex()) const;
     _M void           setOrientation(Orientation orientation);
-    _M QString        titleForField(int type);
+    _S QString        titleForField(int type);
     _M void           updateField(int fieldId);
 };
 

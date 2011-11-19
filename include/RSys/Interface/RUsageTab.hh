@@ -35,6 +35,7 @@ class RUsageTab: public RTab, public RIObserver
     _V void           populateUnits();
 
   public slots:
+    _M void           setMode();
     _M void           setUnits(RUnitList* units);
     _M void           updateElement(RElement* unit, int updateType);
 };

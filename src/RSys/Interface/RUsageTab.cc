@@ -4,6 +4,7 @@
 #include <RSys/Core/RData.hh>
 #include <RSys/Core/RDivision.hh>
 #include <RSys/Core/RSystem.hh>
+#include <RSys/Interface/RMainMenuBar.hh>
 #include <RSys/Interface/RMainWindow.hh>
 #include <RSys/Interface/RUsageTab.hh>
 #include <RSys/Interface/RUsageWidget.hh>
@@ -19,6 +20,12 @@ Vacuum RUsageTab :: RUsageTab(RMainWindow* parent):
   m_results(parent->results()),
   m_units(0)
 {
+  QMenu* menu = RUsageWidget::createModeMenu(this, SLOT(setMode()));
+
+  menu->setTitle(R_S("Pateikti visus rezultatus"));
+  parent->menuBar()->m_viewMenu->addSeparator();
+  parent->menuBar()->m_viewMenu->addMenu(menu);
+
   RData::connect(parent->data(), SIGNAL(elementChanged(RElement*,int)),
     this, SLOT(updateElement(RElement*,int)));
   QAction::connect(parent, SIGNAL(unitsChanged(RUnitList*)),
@@ -134,6 +141,20 @@ void RUsageTab :: resizeEvent(QResizeEvent* event)
 
   m_innerWidget->setFixedWidth(newWidth);
   RTab::resizeEvent(event);
+}
+
+/**********************************************************************************************/
+
+void RUsageTab :: setMode()
+{
+  if (QAction* action = qobject_cast<QAction*>(sender()))
+  {
+    int mode = action->data().toInt();
+
+    for (int i = 0; i < m_innerLayout->count(); i++)
+      if (RUsageWidget* widget = qobject_cast<RUsageWidget*>(m_innerLayout->itemAt(i)->widget()))
+        widget->setMode(mode);
+  }
 }
 
 /**********************************************************************************************/

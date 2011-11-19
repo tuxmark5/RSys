@@ -1,5 +1,6 @@
+#include <QtGui/QAction>
 #include <QtGui/QLabel>
-#include <QtGui/QPainter>
+#include <QtGui/QMenu>
 #include <QtGui/QPushButton>
 #include <QtGui/QStackedLayout>
 #include <RSys/Core/RUnit.hh>
@@ -38,7 +39,7 @@ Vacuum RUsageWidget :: RUsageWidget(RUnit* unit, RResults* results, QWidget* par
   setMinimumWidth(600);
   setFixedHeight(200);
 
-  setBarChartMode();
+  setMode(Usage1Bar);
 }
 
 /**********************************************************************************************/
@@ -49,41 +50,99 @@ Vacuum RUsageWidget :: ~RUsageWidget()
 
 /**********************************************************************************************/
 
+
 void RUsageWidget :: createButtons(const ButtonCallback& callback)
 {
-  QPushButton* buttonBar    = new QPushButton("B");
-  QPushButton* buttonLine   = new QPushButton("L");
-  QPushButton* buttonTable  = new QPushButton("T");
+  QPushButton*  button  = new QPushButton(R_S("Rodyti"));
+  QMenu*        menu    = createModeMenu(this, SLOT(setMode()));
 
-  QPushButton::connect(buttonBar, SIGNAL(clicked()), this, SLOT(setBarChartMode()));
-  QPushButton::connect(buttonLine, SIGNAL(clicked()), this, SLOT(setLineChartMode()));
-  QPushButton::connect(buttonTable, SIGNAL(clicked()), this, SLOT(setTableMode()));
+  connect(menu, SIGNAL(aboutToHide()), menu, SLOT(deleteLater()));
 
-  callback(buttonBar);
-  callback(buttonLine);
-  callback(buttonTable);
+  button->setMenu(menu);
+  callback(button);
 }
 
 /**********************************************************************************************/
 
-void RUsageWidget :: setBarChartMode()
-{
-  setTitle("Apkrovos");
-  m_model->removeFields();
-  m_model->addField(RResultsModel::Usage1, m_unit);
+#define MODE(menu, name, mode) menu->addAction(R_S(name), receiver, slot)->setData(int(mode))
 
-  ensure<RChart>(this)->setType(RChart::Bar);
+QMenu* RUsageWidget :: createModeMenu(QObject* receiver, const char* slot)
+{
+  QMenu*        menu          = new QMenu();
+  QMenu*        usage1        = menu->addMenu(R_S("Apkrovas"));
+  QMenu*        usageD        = menu->addMenu(R_S("Skirtumus"));
+
+  MODE(usage1,  "Stulpeline diagrama",  Usage1Bar);
+  MODE(usage1,  "Linijine diagrama",    Usage1Line);
+
+  MODE(usageD,  "Stulpeline diagrama",  UsageDBar);
+  MODE(usageD,  "Linijine diagrama",    UsageDLine);
+
+  MODE(menu,    "Sumarine lentele",     UsageTable);
+
+  return menu;
 }
 
 /**********************************************************************************************/
 
-void RUsageWidget :: setLineChartMode()
+void RUsageWidget :: setMode()
 {
-  setTitle("Apkrovos");
-  m_model->removeFields();
-  m_model->addField(RResultsModel::Usage1, m_unit);
+  if (QAction* action = qobject_cast<QAction*>(sender()))
+  {
+    setMode(action->data().toInt());
+  }
+}
 
-  ensure<RChart>(this)->setType(RChart::Line);
+/**********************************************************************************************/
+
+void RUsageWidget :: setMode(int mode)
+{
+  switch (mode)
+  {
+    case Usage1Bar:
+      setTitle("Apkrovos");
+      m_model->removeFields();
+      m_model->addField(RResultsModel::Usage1, m_unit);
+
+      ensure<RChart>(this)->setType(RChart::Bar);
+      break;
+
+    case Usage1Line:
+      setTitle("Apkrovos");
+      m_model->removeFields();
+      m_model->addField(RResultsModel::Usage1, m_unit);
+
+      ensure<RChart>(this)->setType(RChart::Line);
+      break;
+
+    case UsageDBar:
+      setTitle("Apkrovų skirtumai");
+      m_model->removeFields();
+      m_model->addField(RResultsModel::UsageD, m_unit);
+
+      ensure<RChart>(this)->setType(RChart::Bar);
+      break;
+
+    case UsageDLine:
+      setTitle("Apkrovų skirtumai");
+      m_model->removeFields();
+      m_model->addField(RResultsModel::UsageD, m_unit);
+
+      ensure<RChart>(this)->setType(RChart::Line);
+      break;
+
+    case UsageTable:
+      setTitle("Apkrovų ir jų skirtumų lentelė");
+      m_model->removeFields();
+      m_model->setOrientation(Qt::Horizontal);
+      m_model->addField(RResultsModel::Usage0, m_unit);
+      m_model->addField(RResultsModel::Usage1, m_unit);
+      m_model->addField(RResultsModel::UsageD, m_unit);
+      m_model->addField(RResultsModel::UsageDP, m_unit);
+
+      ensure<RTableView>(this)->setFrameStyle(QFrame::NoFrame);
+      break;
+  }
 }
 
 /**********************************************************************************************/
@@ -95,21 +154,6 @@ void RUsageWidget :: setSearchInterval(bool search)
   else
     m_lowInterval = RInterval();
   updateHeader();
-}
-
-/**********************************************************************************************/
-
-void RUsageWidget :: setTableMode()
-{
-  setTitle("Apkrovų ir jų skirtumų lentelė");
-  m_model->removeFields();
-  m_model->setOrientation(Qt::Horizontal);
-  m_model->addField(RResultsModel::Usage0, m_unit);
-  m_model->addField(RResultsModel::Usage1, m_unit);
-  m_model->addField(RResultsModel::UsageD, m_unit);
-  m_model->addField(RResultsModel::UsageDP, m_unit);
-
-  ensure<RTableView>(this)->setFrameStyle(QFrame::NoFrame);
 }
 
 /**********************************************************************************************/

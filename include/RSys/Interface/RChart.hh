@@ -45,6 +45,7 @@ class RChart: public KDChart::Chart
     _M void             setDiagramType(Diagram* diagram);
 
   public slots:
+    _M void             setShowLegend(bool show);
     _M void             setType(ChartType type);
 };
 
