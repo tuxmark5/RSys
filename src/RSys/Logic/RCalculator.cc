@@ -100,7 +100,7 @@ void RCalculator :: updateUsages(RUnitList* units)
   {
     double usage = 0;
     for (auto usageIt = (*unitIt)->m_usageChangeMap.begin();
-              usageIt != (*unitIt)->m_usageChangeMap.begin(); usageIt++)
+              usageIt != (*unitIt)->m_usageChangeMap.end(); usageIt++)
     {
       usage += usageIt.value();
       (*unitIt)->m_usageMap.insert(usageIt.key(), usage);
