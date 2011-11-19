@@ -82,40 +82,40 @@ void RIntervalToolBar :: onApplyClicked()
   switch (m_intervalLen->currentIndex())
   {
     case ByWeek:
-      date0 = date0.addDays(-(date0.dayOfWeek() - 1));
-      date1 = date1.addDays(-(date1.dayOfWeek() - 1));
-      num   = date0.daysTo(date1) / 7;
-      fun   = [date0](int x) -> RInterval
+      date0   = date0.addDays(-(date0.dayOfWeek() - 1));
+      date1   = date1.addDays(-(date1.dayOfWeek() - 1));
+      num     = date0.daysTo(date1) / 7;
+      fun     = [date0](int x) -> RInterval
       {
         return RInterval(date0.addDays(x * 7), date0.addDays(x * 7 + 7));
       };
       break;
 
     case ByMonth:
-      date0 = QDate(date0.year(), date0.month(),     1);
-      date1 = QDate(date1.year(), date1.month() + 1, 1);
-      num   = date0.daysTo(date1) / 30;
-      fun   = [date0](int x) -> RInterval
+      date0   = QDate(date0.year(), date0.month(), 1);
+      date1   = QDate(date1.year(), date1.month(), 1).addMonths(1);
+      num     = (date1.year() - date0.year()) * 12 + (date1.month() - date0.month());
+      fun     = [date0](int x) -> RInterval
       {
         return RInterval(date0.addMonths(x), date0.addMonths(x + 1));
       };
       break;
 
     case ByQuarter:
-      date0 = QDate(date0.year(), date0.month() - date0.month() % 4, 1);
-      date1 = QDate(date1.year(), date1.month() - date1.month() % 4, 1);
-      num   = date0.daysTo(date1) / 120;
-      fun   = [date0](int x) -> RInterval
+      date0   = QDate(date0.year(), date0.month() - date0.month() % 4, 1);
+      date1   = QDate(date1.year(), date1.month() - date1.month() % 4, 1);
+      num     = date0.daysTo(date1) / 120;
+      fun     = [date0](int x) -> RInterval
       {
         return RInterval(date0.addMonths(x * 4), date0.addMonths(x * 4 + 4));
       };
       break;
 
     case ByYear:
-      date0 = QDate(date0.year(), 1, 1);
-      date1 = QDate(date1.year(), 1, 1);
-      num   = date1.year() - date0.year() + 1;
-      fun   = [date0](int x) -> RInterval
+      date0   = QDate(date0.year(), 1, 1);
+      date1   = QDate(date1.year(), 1, 1);
+      num     = date1.year() - date0.year() + 1;
+      fun     = [date0](int x) -> RInterval
       {
         return RInterval(date0.addYears(x), date0.addYears(x + 1));
       };
@@ -126,7 +126,7 @@ void RIntervalToolBar :: onApplyClicked()
           .arg(date0.toString(Qt::DefaultLocaleShortDate))
           .arg(date1.toString(Qt::DefaultLocaleShortDate)), 8000);
 
-  m_results->setInterval(fun, num);
+  m_results->setInterval(std::move(fun), num);
 
   //emit intervalChanged(date0(), date1());
 }
