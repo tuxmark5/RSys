@@ -11,6 +11,7 @@ class RMeasure: public RUnit
 {
   public:
     _F class RCalculator;
+    _F class RData;
 
   private:
     _M RID              m_groupId;
