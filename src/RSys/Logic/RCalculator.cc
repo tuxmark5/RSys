@@ -15,7 +15,8 @@
 /**********************************************************************************************/
 
 Vacuum RCalculator :: RCalculator(RData* data):
-  m_data(data)
+  m_data(data),
+  m_numIntervals(0)
 {
 }
 
@@ -50,6 +51,8 @@ void RCalculator :: update()
   updateUsages(m_data->submissions1());
   updateUsages((RUnitList*)m_data->divisions());
   updateUsages((RUnitList*)m_data->systems());
+
+  calculateIntervals();
 }
 
 /**********************************************************************************************/
@@ -111,11 +114,19 @@ void RCalculator :: setIntervalFun(IntervalFun intervalFun, int numIntervals)
 {
   m_intervalFun = intervalFun;
   m_numIntervals = numIntervals;
-  calculateIntervals((RUnitList*) m_data->divisions());
-  calculateIntervals((RUnitList*) m_data->systems());
+  calculateIntervals();
 }
 
 /**********************************************************************************************/
+
+void RCalculator :: calculateIntervals()
+{
+  if (m_numIntervals > 0)
+  {
+    calculateIntervals((RUnitList*) m_data->divisions());
+    calculateIntervals((RUnitList*) m_data->systems());
+  }
+}
 
 void RCalculator :: calculateIntervals(RUnitList* units)
 {
