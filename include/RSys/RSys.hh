@@ -99,10 +99,12 @@ enum RMessageLevel
 #include <RSys/Util/RSharedPtr.hh>
 /**********************************************************************************************/
 typedef RSharedPtr<RMeasure>      RMeasurePtr;
+typedef RSharedPtr<RSubmission>   RSubmissionPtr;
+
 typedef ROList<RDivision*>        RDivisionList;
 typedef ROList<RMeasure*>         RMeasureList;
 typedef ROList<RMeasurePtr>       RMeasurePtrList;
-typedef ROList<RSubmission*>      RSubmissionList;
+typedef ROList<RSubmissionPtr>    RSubmissionList;
 typedef ROList<RSystem*>          RSystemList;
 typedef ROList<RUnit*>            RUnitList;
 /**********************************************************************************************/

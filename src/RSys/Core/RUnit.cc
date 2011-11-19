@@ -7,8 +7,7 @@
 
 Vacuum RUnit :: RUnit(Type type, RData* data):
   RElement(data),
-  m_type(type),
-  m_numRefs(0)
+  m_type(type)
 {
 }
 

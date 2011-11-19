@@ -3,6 +3,7 @@
 #include <RSys/Core/RMeasure.hh>
 #include <RSys/Core/RSubmission.hh>
 #include <RSys/Core/RSystem.hh>
+#include <RSys/Util/RAlgorithm.hh>
 
 /********************************************* RS *********************************************/
 /*                                           RData                                            */
@@ -17,8 +18,8 @@ Vacuum RData :: RData()
 void RData :: clear()
 {
   m_divisions.deleteAll();      // deps: measures, systems
-  m_submissions.deleteAll();    // deps: measures
-  m_submissions1.deleteAll();   // deps: measures
+  m_submissions.clear();        // deps: measures
+  m_submissions1.clear();       // deps: measures
 
   m_measures.deleteAll();       // deps: -
   m_measures1.deleteAll();      // deps: -
@@ -57,15 +58,9 @@ void RData :: operator = (RData& data)
   m_submissions1.clone(data.m_submissions1, this);
   m_divisions.clone(data.m_divisions, this);
 
-  for (int i = 0; i < 3; i++)
-  {
-    RUnitMultiHash& dst = m_unitHash[i];
-    RUnitMultiHash& src = data.m_unitHash[i];
-
-    dst.clear();
-    for (auto it = src.begin(); it != src.end(); ++it)
-      dst.insert(it.key(), it.value()->buddy());
-  }
+  r_cloneMap(m_unitHash[0], data.m_unitHash[0]);
+  r_cloneMap(m_unitHash[1], data.m_unitHash[1]);
+  r_cloneMap(m_unitHash[2], data.m_unitHash[2]);
 }
 
 /**********************************************************************************************/
