@@ -13,6 +13,7 @@ class RElement
     _M RData*           m_data;
     _M RElement*        m_buddy;
     _M RID              m_id;
+    _M int              m_numRefs;
     _M bool             m_valid: 1;
     _M bool             m_visible: 1;
 
@@ -23,6 +24,8 @@ class RElement
     _M RData*           data() const { return m_data; }
     _M bool             isValid() const { return m_valid; }
     _M bool             visible() const { return m_visible; }
+    _M int              release() { return --m_numRefs; }
+    _M void             retain() { m_numRefs++; }
     _M void             setValid(bool valid);
     _M void             setVisible(bool visible);
 };

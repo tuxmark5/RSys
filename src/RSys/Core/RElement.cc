@@ -9,6 +9,7 @@ Vacuum RElement :: RElement(RData* data):
   m_data(data),
   m_buddy(0),
   m_id(0),
+  m_numRefs(0),
   m_valid(true),
   m_visible(true)
 {
@@ -20,6 +21,7 @@ Vacuum RElement :: RElement(RElement& element, RData* data):
   m_data(data),
   m_buddy(&element),
   m_id(element.m_id),
+  m_numRefs(0),
   m_valid(element.m_valid),
   m_visible(element.m_visible)
 {

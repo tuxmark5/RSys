@@ -170,7 +170,7 @@ void TestRValidator::testReadingSubmissions()
   QCOMPARE(validator.validateMeasures(document.tableAt(0), &data), true);
   QCOMPARE(validator.validateSubmissions(document.tableAt(5), &data), true);
 
-  RSubmission *submission = submissions->at(0);
+  RSubmission *submission = submissions->at(0).get();
   QCOMPARE(
         submission->measure()->identifier(),
         QString::fromUtf8("P1-1"));
@@ -184,7 +184,7 @@ void TestRValidator::testReadingSubmissions()
 
   QCOMPARE(submissions->size(), 1242);
 
-  submission = submissions->at(1241);
+  submission = submissions->at(1241).get();
 
   QCOMPARE(
         submission->measure()->identifier(),

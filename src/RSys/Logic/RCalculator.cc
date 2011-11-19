@@ -75,8 +75,8 @@ void RCalculator :: updateUsages(RSubmissionList* submissions)
 {
   for (auto it = submissions->begin(); it != submissions->end(); it++)
   {
-    updateUsageChanges((RUnitMap*) &(*it)->measure()->m_divisionUsage, *it);
-    updateUsageChanges((RUnitMap*) &(*it)->measure()->m_systemUsage, *it);
+    updateUsageChanges((RUnitMap*) &(*it)->measure()->m_divisionUsage, it->get());
+    updateUsageChanges((RUnitMap*) &(*it)->measure()->m_systemUsage, it->get());
   }
 }
 
