@@ -65,6 +65,7 @@ class RResults: public QObject
   public slots:
     _M void             reset();
     _M void             setInterval(QDate date0, QDate date1);
+    _M void             setInterval(RIntervalFun fun, int num);
 };
 
 /**********************************************************************************************/

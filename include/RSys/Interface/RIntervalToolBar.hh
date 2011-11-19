@@ -13,7 +13,19 @@ class RIntervalToolBar: public QToolBar
 {
   Q_OBJECT
 
+  public:
+    _E IntervalLength
+    {
+      ByWeek    = 0,
+      ByMonth   = 1,
+      ByQuarter = 2,
+      ByYear    = 3,
+      By10      = 4,
+      By12      = 5
+    };
+
   private:
+    _M RResults*      m_results;
     _M QDateEdit*     m_interval0;
     _M QDateEdit*     m_interval1;
     _M QComboBox*     m_intervalLen;
