@@ -118,8 +118,25 @@ int RResultsModel :: insertField(int index, FieldType type, RUnit* unit)
 
     case Usage1:
       addGetter(fieldKey, Qt::DisplayRole, m_results->field(RResults::Usage1, unit));
-      addGetter(fieldKey, 0xFF, m_results->field(RResults::Identifier, unit));
       break;
+
+    case UsageD:
+      addGetter(fieldKey, Qt::DisplayRole, m_results->field(RResults::DeltaUsage, unit));
+      break;
+
+    case UsageDP:
+      addGetter(fieldKey, Qt::DisplayRole, m_results->field(RResults::DeltaPUsage, unit));
+      break;
+  }
+
+  if (type & Identifier)
+  {
+    addGetter(fieldKey, 0xFF, m_results->field(RResults::Identifier, unit));
+  }
+  else
+  {
+    QVariant title = titleForField(type);
+    addGetter(fieldKey, 0xFF, [title](int) -> QVariant { return title; });
   }
 
   if (m_orientation == Qt::Horizontal)
@@ -225,6 +242,20 @@ int RResultsModel :: rowCount(const QModelIndex& parent) const
 void RResultsModel :: setOrientation(Orientation orientation)
 {
   m_orientation = orientation;
+}
+
+/**********************************************************************************************/
+
+QString RResultsModel :: titleForField(FieldType type)
+{
+  switch (type & 0x0F)
+  {
+    case Usage0:    return "Prad.";
+    case Usage1:    return "Pab.";
+    case UsageD:    return "Skirt.";
+    case UsageDP:   return "Skirt.%";
+  }
+  return QString();
 }
 
 /**********************************************************************************************/

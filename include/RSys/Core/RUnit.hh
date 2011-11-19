@@ -44,6 +44,7 @@ class RUnit: public RElement
     _M void               setIdentifier(const QString& identifier);
     _M void               setName(const QString& name);
     _M const UsageVector& usage() const { return m_usage; }
+    _M double             usageAt(int x) const { return x < m_usage.size() ? m_usage.at(x) : 0.0; }
 };
 
 /**********************************************************************************************/

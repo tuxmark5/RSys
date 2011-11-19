@@ -106,6 +106,8 @@ void RUsageWidget :: setTableMode()
   m_model->setOrientation(Qt::Horizontal);
   m_model->addField(RResultsModel::Usage0, m_unit);
   m_model->addField(RResultsModel::Usage1, m_unit);
+  m_model->addField(RResultsModel::UsageD, m_unit);
+  m_model->addField(RResultsModel::UsageDP, m_unit);
 
   ensure<RTableView>(this)->setFrameStyle(QFrame::NoFrame);
 }

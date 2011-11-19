@@ -44,12 +44,32 @@ auto RResults :: field(ResultType type, RUnit* unit) -> Getter
 
     case Usage0: return [this, unit](int x) -> QVariant
     {
-      return (this->m_interval0.year() - 1995) + 2.0 * x + sin(x);
+      if (RUnit* buddy = unit->buddy())
+        return buddy->usageAt(x);
+      return 0.0;
     };
 
     case Usage1: return [this, unit](int x) -> QVariant
     {
-      return x < unit->usage().size() ? unit->usage().at(x) : 0.0;
+      return unit->usageAt(x);
+    };
+
+    case DeltaUsage: return [this, unit](int x) -> QVariant
+    {
+      if (RUnit* buddy = unit->buddy())
+        return unit->usageAt(x) - buddy->usageAt(x);
+      return unit->usageAt(x);
+    };
+
+    case DeltaPUsage: return [this, unit](int x) -> QVariant
+    {
+      if (RUnit* buddy = unit->buddy())
+      {
+        double usage0 = buddy->usageAt(x);
+        double usage1 = unit->usageAt(x);
+        return (usage1 - usage0) / usage1 * 100.0;
+      }
+      return QVariant();
     };
 
     case Identifier: return [=](int) -> QVariant
@@ -104,8 +124,7 @@ void RResults :: reset()
 }
 
 /**********************************************************************************************/
-#include <RSys/Core/RData.hh>
-#include <RSys/Core/RDivision.hh>
+
 void RResults :: setInterval(QDate date0, QDate date1)
 {
   m_interval0     = date0;
@@ -113,22 +132,13 @@ void RResults :: setInterval(QDate date0, QDate date1)
   m_intervalFun   = intervalFun();
   m_numRecords    = date0.daysTo(date1) / 30; // temporary HACK
 
-  for (auto it = m_models.begin(); it != m_models.end(); ++it)
-    emit (*it)->reset();
-
+  m_calculator0->update();
+  m_calculator0->setIntervalFun(m_intervalFun, m_numRecords);
   m_calculator1->update();
   m_calculator1->setIntervalFun(m_intervalFun, m_numRecords);
 
-  /*auto d = m_data1->divisions();
-  for (auto it = d->begin(); it != d->end(); ++it)
-  {
-    qDebug() << (*it)->identifier() << "X" << (*it)->usage().size();
-
-    auto usage = (*it)->usage();
-
-    for (auto it1 = usage.begin(); it1 != usage.end(); ++it1)
-      qDebug() << *it1;
-  }*/
+  for (auto it = m_models.begin(); it != m_models.end(); ++it)
+    emit (*it)->reset();
 }
 
 /**********************************************************************************************/

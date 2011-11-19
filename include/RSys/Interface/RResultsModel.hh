@@ -17,8 +17,12 @@ class RResultsModel: public RAbstractItemModel
   public:
     _E FieldType
     {
-      Usage0,
-      Usage1
+      Usage0      = 0x00,
+      Usage1      = 0x01,
+      UsageD      = 0x02,
+      UsageDP     = 0x03,
+      Title       = 0x00,
+      Identifier  = 0x10
     };
 
   public:
@@ -53,6 +57,7 @@ class RResultsModel: public RAbstractItemModel
     _M void           removeFields();
     _V int            rowCount(const QModelIndex& parent = QModelIndex()) const;
     _M void           setOrientation(Orientation orientation);
+    _M QString        titleForField(FieldType type);
     _M void           updateField(int fieldId);
 };
 
