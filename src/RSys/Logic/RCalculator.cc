@@ -152,6 +152,9 @@ double RCalculator :: calculateUsage(RInterval interval, RUsageMap& usageMap)
   double usage = 0, curUsage;
   QDate curDate = FROM(interval);
   RUsageMap :: iterator it = usageMap.upperBound(curDate);
+  if (it == usageMap.end()) {
+    return 0;
+  }
   if (it == usageMap.begin())
   {
     curUsage = 0;
