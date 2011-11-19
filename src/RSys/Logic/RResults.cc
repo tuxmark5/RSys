@@ -67,7 +67,7 @@ auto RResults :: field(ResultType type, RUnit* unit) -> Getter
       {
         double usage0 = buddy->usageAt(x);
         double usage1 = unit->usageAt(x);
-        return (usage1 - usage0) / usage1 * 100.0;
+        return (usage1 - usage0) / usage1 * 100.0; // usage0?
       }
       return QVariant();
     };

@@ -18,7 +18,7 @@ class RSummaryWidget: public RLayerWidget, public RIObserver
   private:
     _M RResults*        m_results;
     _M RResultsModel*   m_resultsModel;
-    _M FieldType        m_fieldType;
+    _M int              m_fieldType;
     _M RUnitList*       m_units;
 
   public:

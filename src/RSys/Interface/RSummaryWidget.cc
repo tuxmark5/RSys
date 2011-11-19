@@ -125,7 +125,7 @@ void RSummaryWidget :: setUsage1BarMode()
 
 void RSummaryWidget :: setUsage1TableMode()
 {
-  m_fieldType = RResultsModel::Usage1;
+  m_fieldType = RResultsModel::Usage1 | RResultsModel::Identifier;
   setUnits(m_units);
   ensure<RTableView>(this);
 }

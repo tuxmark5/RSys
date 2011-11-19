@@ -25,7 +25,7 @@ Vacuum RResultsModel :: ~RResultsModel()
 
 /**********************************************************************************************/
 
-int RResultsModel :: addField(FieldType type, RUnit* unit)
+int RResultsModel :: addField(int type, RUnit* unit)
 {
   return insertField(m_fields.size(), type, unit);
 }
@@ -103,14 +103,14 @@ QModelIndex RResultsModel :: index(int row, int column, const QModelIndex& paren
 
 /**********************************************************************************************/
 
-int RResultsModel :: insertField(int index, FieldType type, RUnit* unit)
+int RResultsModel :: insertField(int index, int type, RUnit* unit)
 {
   int fieldKey = m_lastKey++;
 
   m_units.insert(fieldKey, unit);
   m_results->registerField(unit, this, fieldKey);
 
-  switch (type)
+  switch (type & 0x0F)
   {
     case Usage0:
       addGetter(fieldKey, Qt::DisplayRole, m_results->field(RResults::Usage0, unit));
@@ -246,7 +246,7 @@ void RResultsModel :: setOrientation(Orientation orientation)
 
 /**********************************************************************************************/
 
-QString RResultsModel :: titleForField(FieldType type)
+QString RResultsModel :: titleForField(int type)
 {
   switch (type & 0x0F)
   {

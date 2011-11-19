@@ -44,20 +44,20 @@ class RResultsModel: public RAbstractItemModel
   public:
     _M Vacuum         RResultsModel(RResults* results, QObject* parent = 0);
     _V Vacuum         ~RResultsModel();
-    _M int            addField(FieldType type, RUnit* unit);
+    _M int            addField(int type, RUnit* unit);
     _M void           addGetter(int field, int role, Getter&& getter);
     _V int            columnCount(const QModelIndex& parent = QModelIndex()) const;
     _V QVariant       data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     _V QVariant       headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     _V QModelIndex    index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
-    _M int            insertField(int index, FieldType type, RUnit* unit);
+    _M int            insertField(int index, int type, RUnit* unit);
     _V QModelIndex    parent(const QModelIndex& index) const;
     _M void           removeDimension(int id, Qt::Orientation orientation, const Lambda& lambda);
     _M void           removeField(int id);
     _M void           removeFields();
     _V int            rowCount(const QModelIndex& parent = QModelIndex()) const;
     _M void           setOrientation(Orientation orientation);
-    _M QString        titleForField(FieldType type);
+    _M QString        titleForField(int type);
     _M void           updateField(int fieldId);
 };
 
