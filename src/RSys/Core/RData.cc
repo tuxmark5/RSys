@@ -9,7 +9,8 @@
 /*                                           RData                                            */
 /**********************************************************************************************/
 
-Vacuum RData :: RData()
+Vacuum RData :: RData():
+  m_purgeEnabled(true)
 {
 }
 
@@ -48,7 +49,9 @@ RMeasure* RData :: measure(const QString& identifier) const
 
 void RData :: operator = (RData& data)
 {
+  m_purgeEnabled = false;
   clear();
+  m_purgeEnabled = true;
 
   m_measures.clone(data.m_measures, this);
   m_measures1.clone(data.m_measures1, this);
@@ -61,6 +64,38 @@ void RData :: operator = (RData& data)
   r_cloneMap(m_unitHash[0], data.m_unitHash[0]);
   r_cloneMap(m_unitHash[1], data.m_unitHash[1]);
   r_cloneMap(m_unitHash[2], data.m_unitHash[2]);
+}
+
+/**********************************************************************************************/
+
+void RData :: purgeDivision(RDivision* division)
+{
+  R_GUARD(m_purgeEnabled, Vacuum);
+
+  for (auto it = m_measures.begin(); it != m_measures.end(); ++it)
+    (*it)->m_divisionUsage.remove(division);
+}
+
+/**********************************************************************************************/
+
+void RData :: purgeMeasure(RMeasure* measure)
+{
+  R_GUARD(m_purgeEnabled, Vacuum);
+
+  for (auto it = m_divisions.begin(); it != m_divisions.end(); ++it)
+    (*it)->m_measureMap.remove(measure);
+}
+
+/**********************************************************************************************/
+
+void RData :: purgeSystem(RSystem* system)
+{
+  R_GUARD(m_purgeEnabled, Vacuum);
+
+  for (auto it = m_divisions.begin(); it != m_divisions.end(); ++it)
+    (*it)->m_systemMap.remove(system);
+  for (auto it = m_measures.begin(); it != m_measures.end(); ++it)
+    (*it)->m_systemUsage.remove(system);
 }
 
 /**********************************************************************************************/

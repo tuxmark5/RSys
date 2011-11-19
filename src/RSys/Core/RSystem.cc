@@ -21,6 +21,7 @@ Vacuum RSystem :: RSystem(RSystem& system, RData* data):
 
 Vacuum RSystem :: ~RSystem()
 {
+  m_data->purgeSystem(this);
 }
 
 /**********************************************************************************************/

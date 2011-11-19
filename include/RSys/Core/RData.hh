@@ -33,6 +33,7 @@ class RData: public QObject
     _M RSubmissionList        m_submissions1;   // planned submissions
     _M RSystemList            m_systems;
     _M RUnitMultiHash         m_unitHash[3];
+    _M bool                   m_purgeEnabled: 1;
 
   public:
     _M Vacuum                 RData();
@@ -43,6 +44,9 @@ class RData: public QObject
     _M RMeasureList*          measures()      { return &m_measures; }
     _M RMeasureList*          measures1()     { return &m_measures1; }
     _M void                   operator = (RData& data);
+    _M void                   purgeDivision(RDivision* division);
+    _M void                   purgeMeasure(RMeasure* measure);
+    _M void                   purgeSystem(RSystem* system);
     _M RSubmissionList*       submissions()   { return &m_submissions; }
     _M RSubmissionList*       submissions1()  { return &m_submissions1; }
     _M RSystem*               system(const QString& identifier) const;

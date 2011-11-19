@@ -22,6 +22,7 @@ Vacuum RMeasure :: RMeasure(RMeasure& measure, RData* data):
 
 Vacuum RMeasure :: ~RMeasure()
 {
+  m_data->purgeMeasure(this);
 }
 
 /**********************************************************************************************/

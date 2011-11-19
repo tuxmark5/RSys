@@ -26,6 +26,7 @@ Vacuum RDivision :: RDivision(RDivision& division, RData* data):
 
 Vacuum RDivision :: ~RDivision()
 {
+  m_data->purgeDivision(this);
 }
 
 /**********************************************************************************************/
