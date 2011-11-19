@@ -83,7 +83,7 @@ class QVBoxLayout;
 typedef long long                 RID;
 typedef std::tuple<QDate, QDate>  RInterval;
 typedef QMap<RMeasure*, double>   RMeasureMap;
-typedef QMap<RSystem*, bool>      RSystemMap;
+typedef QMap<RSystem*, double>    RSystemMap;
 typedef QMap<RDivision*, double>  RDivisionMap;
 /**********************************************************************************************/
 enum RMessageLevel

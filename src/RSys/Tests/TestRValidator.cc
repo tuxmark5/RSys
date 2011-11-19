@@ -110,8 +110,8 @@ void TestRValidator::testReadingDivisionsSystems()
   QCOMPARE(
         systems->at(2)->identifier(),
         QString::fromUtf8("IS3"));
-  QCOMPARE(division->m_systemMap[systems->at(0)], 1);
-  QCOMPARE(division->m_systemMap[systems->at(1)], 1);
+  QCOMPARE(division->m_systemMap[systems->at(0)], 1.0);
+  QCOMPARE(division->m_systemMap[systems->at(1)], 1.0);
   QCOMPARE(division->m_systemMap.contains(systems->at(2)), 0);
   QCOMPARE(division->m_systemMap.size(), 2);
 }
