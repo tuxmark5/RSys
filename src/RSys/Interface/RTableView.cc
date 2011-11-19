@@ -15,6 +15,7 @@ Vacuum RTableView :: RTableView(QAbstractItemModel* model, QWidget* parent):
   setContextMenuPolicy(Qt::ActionsContextMenu);
   setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
   setModel(model);
+  //setSortingEnabled(true);
 
   if (RModel1D* model = qobject_cast<RModel1D*>(this->model()))
   {

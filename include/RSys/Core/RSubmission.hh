@@ -4,14 +4,24 @@
 /**********************************************************************************************/
 #include <QtCore/QDate>
 #include <RSys/Core/RElement.hh>
+/**********************************************************************************************/
+
+struct RPhantomMeasureDeleter
+{
+  static void f(RMeasure* measure);
+};
+
 /********************************************* RS *********************************************/
 /*                                        RSubmission                                         */
 /**********************************************************************************************/
 
 class RSubmission: public RElement
 {
+  public:
+    _T RSharedPtr<RMeasure, RPhantomMeasureDeleter> MeasurePtr;
+
   protected:
-    _M RMeasure*        m_measure;
+    _M MeasurePtr       m_measure;
     _M QString          m_measureName;
     _M QDate            m_date0;
     _M QDate            m_date1;
@@ -24,7 +34,7 @@ class RSubmission: public RElement
     _M int              count() const { return m_count; }
     _M QDate            date0() const { return m_date0; }
     _M QDate            date1() const { return m_date1; }
-    _M RMeasure*        measure() const { return m_measure; }
+    _M RMeasure*        measure() const { return m_measure.get(); }
     _M QString          measureName() const { return m_measureName; }
     _M void             setCount(int count);
     _M void             setDate0(const QDate& date0);

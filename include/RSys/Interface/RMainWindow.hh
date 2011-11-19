@@ -49,7 +49,7 @@ class RMainWindow: public QMainWindow
 
     _M RDatabase*           m_database;
     _M RData*               m_data0;
-    _M RData*               m_data;
+    _M RData*               m_data1;
     _M RResults*            m_results;
 
     _M RContainer*          m_divisionContainer;
@@ -67,7 +67,7 @@ class RMainWindow: public QMainWindow
     _M void                 createActions();
     _M void                 createContainers();
     _M void                 createTabs();
-    _M RData*               data() const { return m_data; }
+    _M RData*               data() const { return m_data1; }
     _M RContainer*          divisionContainer() const { return m_divisionContainer; }
     _M RContainer*          measureContainer() const { return m_measureContainer; }
     _M RContainer*          measure1Container() const { return m_measure1Container; }

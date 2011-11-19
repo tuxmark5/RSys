@@ -40,7 +40,7 @@ class RContainerI: public RContainer
     _T QList<QString>                                   HeaderList;
     _T RContainerI<_List>                               Self;
 
-  private:
+  public:
     _M Allocator      m_allocator;
     _M List*          m_list;
     _M ColumnMap      m_columns;
@@ -50,7 +50,8 @@ class RContainerI: public RContainer
     _M Vacuum         RContainerI(List* list):
       m_list(list) { }
 
-    _M Vacuum         RContainerI(List* list, const Self& other):
+    template <class List2>
+    _M Vacuum         RContainerI(List* list, const List2& other):
       m_allocator(other.m_allocator),
       m_list(list),
       m_columns(other.m_columns),
@@ -143,8 +144,8 @@ template <class List>
 RContainerI<List>* newContainer(List* list)
 { return new RContainerI<List>(list); }
 
-template <class List>
-RContainerI<List>* newContainer(List* list, const RContainerI<List>& other)
+template <class List, class List2>
+RContainerI<List>* newContainer(List* list, const RContainerI<List2>& other)
 { return new RContainerI<List>(list, other); }
 
 /**********************************************************************************************/

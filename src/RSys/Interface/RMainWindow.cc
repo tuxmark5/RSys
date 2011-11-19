@@ -52,8 +52,8 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
 {
   m_database          = new RDatabase(this);
   m_data0             = new RData();
-  m_data              = new RData();
-  m_results           = new RResults(m_data);
+  m_data1             = new RData();
+  m_results           = new RResults(m_data0, m_data1);
   createContainers();
 
   createActions();
@@ -160,7 +160,7 @@ void RMainWindow :: closeEvent(QCloseEvent* event)
 
 void RMainWindow :: commit()
 {
-  *m_data0 = *m_data;
+  *m_data0 = *m_data1;
   showMessage(R_S("Duomenys išsaugoti."));
 }
 
@@ -227,21 +227,21 @@ void RMainWindow :: createActions()
 
 void RMainWindow :: createContainers()
 {
-  auto cd = newContainer(m_data->divisions());
+  auto cd = newContainer(m_data1->divisions());
   cd->addColumn("Pavadinimas");
   cd->addColumn("Aprašymas");
   cd->addAccessor2<QString>(0, Qt::DisplayRole) >> &RDivision::identifier << &RDivision::setIdentifier;
   cd->addAccessor2<QString>(1, Qt::DisplayRole) >> &RDivision::name       << &RDivision::setName;
-  cd->setAlloc([=]() { return new RDivision(m_data); });
+  cd->setAlloc([=]() { return new RDivision(m_data1); });
 
-  auto cm = newContainer(m_data->measures());
+  auto cm = newContainer(m_data1->measures());
   cm->addColumn("Pavadinimas");
   cm->addColumn("Aprašymas");
   cm->addAccessor2<QString>(0, Qt::DisplayRole) >> &RMeasure::identifier << &RMeasure::setIdentifier;
   cm->addAccessor2<QString>(1, Qt::DisplayRole) >> &RMeasure::name       << &RMeasure::setName;
-  cm->setAlloc([=]() { return new RMeasure(m_data); });
+  cm->setAlloc([=]() { return new RMeasure(m_data1); });
 
-  auto cu = newContainer(m_data->submissions());
+  auto cu = newContainer(m_data1->submissions());
   cu->addColumn("Priemonė");
   cu->addColumn("Kiekis");
   cu->addColumn("Pradžia");
@@ -254,22 +254,22 @@ void RMainWindow :: createContainers()
     >> &RSubmission::date0 << &RSubmission::setDate0;
   cu->addAccessor2<QDate>(3, Qt::DisplayRole)
     >> &RSubmission::date1 << &RSubmission::setDate1;
-  cu->setAlloc([=]() { return new RSubmission(m_data); });
+  cu->setAlloc([=]() { return new RSubmission(m_data1); });
 
-  auto cu1 = newContainer(m_data->submissions1(), *cu);
+  auto cu1 = newContainer(m_data1->submissions1(), *cu);
   cu->addAccessor2<QString>(0, Qt::DisplayRole)
     << &RSubmission::setMeasure1Name;
 
-  auto cs = newContainer(m_data->systems());
+  auto cs = newContainer(m_data1->systems());
   cs->addColumn("Pavadinimas");
   cs->addColumn("Aprašymas");
   cs->addAccessor2<QString>(0, Qt::DisplayRole) >> &RSystem::identifier << &RSystem::setIdentifier;
   cs->addAccessor2<QString>(1, Qt::DisplayRole) >> &RSystem::name       << &RSystem::setName;
-  cs->setAlloc([=]() { return new RSystem(m_data); });
+  cs->setAlloc([=]() { return new RSystem(m_data1); });
 
   m_divisionContainer     = cd;
   m_measureContainer      = cm;
-  m_measure1Container     = newContainer(m_data->measures1(), *cm);
+  m_measure1Container     = newContainer(m_data1->measures1(), *cm);
   m_submissionContainer   = cu;
   m_submission1Container  = cu1;
   m_systemContainer       = cs;
@@ -281,8 +281,8 @@ void RMainWindow :: createTabs()
 {
   auto dmGetter = [=](int x, int y) -> QVariant
   {
-    RDivision*  division  = m_data->divisions()->at(y);
-    RMeasure*   measure   = m_data->measures()->at(x);
+    RDivision*  division  = m_data1->divisions()->at(y);
+    RMeasure*   measure   = m_data1->measures()->at(x);
     double      value     = division->m_measureMap.value(measure, 0);
 
     return value == 0.0 ? QVariant() : value;
@@ -290,16 +290,16 @@ void RMainWindow :: createTabs()
 
   auto dmSetter = [=](int x, int y, const QVariant& var) -> void
   {
-    RDivision*  division  = m_data->divisions()->at(y);
-    RMeasure*   measure   = m_data->measures()->at(x);
+    RDivision*  division  = m_data1->divisions()->at(y);
+    RMeasure*   measure   = m_data1->measures()->at(x);
 
     division->setMeasure(measure, var.toDouble());
   };
 
   auto dsGetter = [=](int x, int y) -> QVariant
   {
-    RDivision*  division  = m_data->divisions()->at(y);
-    RSystem*    system    = m_data->systems()->at(x);
+    RDivision*  division  = m_data1->divisions()->at(y);
+    RSystem*    system    = m_data1->systems()->at(x);
     int         value     = division->m_systemMap.value(system, 0);
 
     return value == 1 ? 1 : QVariant();
@@ -307,8 +307,8 @@ void RMainWindow :: createTabs()
 
   auto dsSetter = [=](int x, int y, const QVariant& var) -> void
   {
-    RDivision*  division  = m_data->divisions()->at(y);
-    RSystem*    system    = m_data->systems()->at(x);
+    RDivision*  division  = m_data1->divisions()->at(y);
+    RSystem*    system    = m_data1->systems()->at(x);
 
     division->setSystem(system, var.toInt());
   };
@@ -351,7 +351,7 @@ void RMainWindow :: importData()
   {
     RValidator    parser;
 
-    parser.validate(fileName, m_data);
+    parser.validate(fileName, m_data1);
     showMessage(QString::fromUtf8("Duomenys sėkmingai (o gal ir ne) importuoti\n"
                                   "Vytautai, man čia reikia, kad tavo kodas išspjautų tik vieną žinutę\n"
                                   "Tam padaryk kokį naują signalą, o visas perteklines žinutes į logą galim\n"
@@ -394,16 +394,16 @@ void RMainWindow :: onSearchFormDestroyed()
 void RMainWindow :: onUnitModeChanged(bool systems)
 {
   if (systems)
-    emit unitsChanged(m_data->systems()->cast<RUnit*>());
+    emit unitsChanged(m_data1->systems()->cast<RUnit*>());
   else
-    emit unitsChanged(m_data->divisions()->cast<RUnit*>());
+    emit unitsChanged(m_data1->divisions()->cast<RUnit*>());
 }
 
 /**********************************************************************************************/
 
 void RMainWindow :: rollback()
 {
-  *m_data = *m_data0;
+  *m_data1 = *m_data0;
   showMessage(R_S("Duomenys atstatyti."));
 }
 

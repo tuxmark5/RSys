@@ -9,13 +9,14 @@
 
 class RMeasure: public RUnit
 {
-  _F class RCalculator;
+  public:
+    _F class RCalculator;
 
   private:
+    _M RID              m_groupId;
+
     _M RSystemMap       m_systemUsage;
     _M RDivisionMap     m_divisionUsage;
-  public:
-    _M RID              m_groupId;
 
   public:
     _M Vacuum           RMeasure(RData* data);

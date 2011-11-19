@@ -20,6 +20,7 @@ class RElement
     _M Vacuum           RElement(RData* data);
     _M Vacuum           RElement(RElement& element, RData* data);
     _V Vacuum           ~RElement();
+    _M RData*           data() const { return m_data; }
     _M bool             isValid() const { return m_valid; }
     _M bool             visible() const { return m_visible; }
     _M void             setValid(bool valid);

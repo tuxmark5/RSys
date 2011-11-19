@@ -57,9 +57,15 @@ void RData :: operator = (RData& data)
   m_submissions1.clone(data.m_submissions1, this);
   m_divisions.clone(data.m_divisions, this);
 
-  m_unitHash[0] = data.m_unitHash[0];
-  m_unitHash[1] = data.m_unitHash[1];
-  m_unitHash[2] = data.m_unitHash[2];
+  for (int i = 0; i < 3; i++)
+  {
+    RUnitMultiHash& dst = m_unitHash[i];
+    RUnitMultiHash& src = data.m_unitHash[i];
+
+    dst.clear();
+    for (auto it = src.begin(); it != src.end(); ++it)
+      dst.insert(it.key(), it.value()->buddy());
+  }
 }
 
 /**********************************************************************************************/
