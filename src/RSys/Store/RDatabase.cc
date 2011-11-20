@@ -4,6 +4,11 @@
 #include <RSys/Store/REntity1D.hh>
 #include <RSys/Store/REntity2D.hh>
 
+/**********************************************************************************************/
+using namespace std::placeholders;
+/**********************************************************************************************/
+typedef REntity2DI<RDivision, RMeasure, double> DivisionMeasureE;
+typedef REntity2DI<RDivision, RSystem, double>  DivisionSystemE;
 /********************************************* RS *********************************************/
 /*                                         RDatabase                                          */
 /**********************************************************************************************/
@@ -34,7 +39,30 @@ Vacuum RDatabase :: RDatabase(RData* data, QObject* parent):
   ue->addField<QDate>   ("date0")   >> &RSubmission::date0      << &RSubmission::setDate0;
   ue->addField<QDate>   ("date0")   >> &RSubmission::date1      << &RSubmission::setDate1;
 
-  m_entities << de << me << se << ue;
+  auto toDivision   = [=](const QVariant& var) -> RDivision* { return data->division(var.toLongLong()); };
+  auto toMeasure    = [=](const QVariant& var) -> RMeasure*  { return data->measure(var.toLongLong()); };
+  auto toSystem     = [=](const QVariant& var) -> RSystem*   { return data->system(var.toLongLong()); };
+  auto fromDivision = [ ](RDivision* unit)     -> QVariant   { return unit->id(); };
+  auto fromMeasure  = [ ](RMeasure* unit)      -> QVariant   { return unit->id(); };
+  auto fromSystem   = [ ](RSystem* unit)       -> QVariant   { return unit->id(); };
+  auto setMeasure   = [ ](RDivision* d, RMeasure* m, double v) { d->setMeasure(m, v); };
+  auto setSystem    = [ ](RDivision* d, RSystem* s, double v) { d->setSystem(s, v); };
+
+  auto mae = new DivisionMeasureE("measureAdm", "division", "measure", "weight");
+  (*data)[RDivision::onMeasureSet] << std::bind(&DivisionMeasureE::onSet, mae, _1, _2, _3);
+  (*data)[RDivision::onMeasureUnset] << std::bind(&DivisionMeasureE::onUnset, mae, _1, _2);
+  mae->setKey0(fromDivision, toDivision);
+  mae->setKey1(fromMeasure, toMeasure);
+  mae->setSetter(setMeasure);
+
+  auto sae = new DivisionSystemE("systemAdm", "division", "system", "weight");
+  (*data)[RDivision::onSystemSet] << std::bind(&DivisionSystemE::onSet, sae, _1, _2, _3);
+  (*data)[RDivision::onSystemUnset] << std::bind(&DivisionSystemE::onUnset, sae, _1, _2);
+  sae->setKey0(fromDivision, toDivision);
+  sae->setKey1(fromSystem, toSystem);
+  sae->setSetter(setSystem);
+
+  m_entities << de << me << se << ue << mae << sae;
 }
 
 /**********************************************************************************************/

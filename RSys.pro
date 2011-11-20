@@ -79,6 +79,7 @@ SOURCES             +=                              \
   src/RSys/Logic/RResults.cc                        \
   src/RSys/Store/RDatabase.cc                       \
   src/RSys/Store/REntity1D.cc                       \
+  src/RSys/Store/REntity2D.cc                       \
   src/RSys/Tests/RTests.cc                          \
   src/RSys/Tests/TestRXLSDocument.cc                \
   src/RSys/Parse/RValidator.cc                      \
@@ -149,6 +150,7 @@ HEADERS             +=                              \
   include/RSys/Util/RMemAccessor.hh                 \
   include/RSys/Util/ROList.hh                       \
   include/RSys/Util/RSharedPtr.hh                   \
+  include/RSys/Util/RSignal.hh                      \
   include/RSys/Tests/RTests.hh                      \
   include/RSys/Tests/TestRXLSDocument.hh            \
   include/RSys/Parse/RValidator.hh                  \

@@ -296,7 +296,7 @@ bool RValidator::validateDivisionsSystems(RITable *table, RData *data)
         }
         else
         {
-          division->m_systemMap[system] = table->cell(i, j).toDouble();
+          division->setSystem(system, table->cell(i, j).toDouble());
           updatedRelations++;
         }
       }
@@ -350,7 +350,7 @@ bool RValidator::validateDivisionsMeasures(RITable *table, RData *data)
         }
         else
         {
-          division->m_measureMap[measure] = table->cell(i, j).toDouble();
+          division->setMeasure(measure, table->cell(i, j).toDouble());
           updatedRelations++;
         }
       }
