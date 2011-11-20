@@ -1,0 +1,8 @@
+* aptartas apkrovų skaičiavimo algoritmo problematika:
+* aptartos naujos vartotojo interfeiso problemos;
+* aptarti sistemos testavimo rezultatai;
+* baigtas pirmasis ciklas;
+* suformuluoti antrojo ciklo tikslai (sistemos intrakcija su duomenų baze, pilnai veikiantis apkrovų ir prognozės skaičiavimo algoritmas);
+* nuspręsta pirma (ateinančią savaitę) integruoti SQLite, o po to pakeisti DB backendą į PostgreSQL;
+* aptarta vartotojo interfeiso testavimo specifika (apklausų formos ir kt.);
+* aptarti esminių sistemos komponentų kodo peržiūros rezultatai;

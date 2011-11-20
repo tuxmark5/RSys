@@ -18,7 +18,7 @@ Vacuum REntity1D :: ~REntity1D()
 
 /**********************************************************************************************/
 
-void REntity1D :: buildExprs()
+void REntity1D :: init()
 {
   int         numFields   = this->numFields();
   QString     wildcards;

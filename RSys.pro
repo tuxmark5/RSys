@@ -133,7 +133,9 @@ HEADERS             +=                              \
   include/RSys/Logic/RCalculator.hh                 \
   include/RSys/Logic/RResults.hh                    \
   include/RSys/Store/RDatabase.hh                   \
+  include/RSys/Store/REntity.hh                     \
   include/RSys/Store/REntity1D.hh                   \
+  include/RSys/Store/REntity2D.hh                   \
   include/RSys/Util/RAccessorAdapter.hh             \
   include/RSys/Util/RAlgorithm.hh                   \
   include/RSys/Util/RCompose.hh                     \

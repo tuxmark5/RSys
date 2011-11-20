@@ -2,6 +2,7 @@
 #include <RSys/Core/RData.hh>
 #include <RSys/Store/RDatabase.hh>
 #include <RSys/Store/REntity1D.hh>
+#include <RSys/Store/REntity2D.hh>
 
 /********************************************* RS *********************************************/
 /*                                         RDatabase                                          */
@@ -113,7 +114,7 @@ bool RDatabase :: select()
 
   for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
   {
-    (*it)->buildExprs();
+    (*it)->init();
     if (!(*it)->select(query))
     {
       qDebug() << "FAIL";

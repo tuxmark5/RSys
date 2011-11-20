@@ -14,7 +14,7 @@ class RDatabase: public QObject
   Q_OBJECT
 
   public:
-    _T QList<REntity1D*>  EntityList;
+    _T QList<REntity*>  EntityList;
 
   private:
     _M RData*         m_data;

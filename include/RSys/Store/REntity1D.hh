@@ -1,17 +1,18 @@
-#ifndef RSYS_STORE_RENTITY_1D
-#define RSYS_STORE_RENTITY_1D
+#ifndef RSYS_STORE_RENTITY_1D_HH
+#define RSYS_STORE_RENTITY_1D_HH
 
 /**********************************************************************************************/
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
 #include <RSys/Store/RDatabase.hh>
+#include <RSys/Store/REntity.hh>
 #include <RSys/Util/RAccessorAdapter.hh>
 #include <RSys/Util/RFunAccessor.hh>
 /********************************************* RS *********************************************/
 /*                                         REntity1D                                          */
 /**********************************************************************************************/
 
-class REntity1D
+class REntity1D: public REntity
 {
   public:
     _E State
@@ -30,12 +31,7 @@ class REntity1D
   public:
     _M Vacuum             REntity1D(const QString& entity, RDatabase* database);
     _V Vacuum             ~REntity1D();
-    _M void               buildExprs();
-    _V bool               commit(QSqlQuery& query) = 0;
-    _V QString            fieldName(int i) const = 0;
-    _V int                numFields() const = 0;
-    _V void               rollback() = 0;
-    _V bool               select(QSqlQuery& query) = 0;
+    _V void               init();
 };
 
 /**********************************************************************************************/
@@ -200,4 +196,4 @@ REntity1DI<Value>* newEntity1D(const QString& entity, ROList<Value>* list, RData
 
 /**********************************************************************************************/
 
-#endif /* RSYS_STORE_RENTITY_1D */
+#endif /* RSYS_STORE_RENTITY_1D_HH */
