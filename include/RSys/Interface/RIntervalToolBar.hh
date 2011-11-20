@@ -36,9 +36,14 @@ class RIntervalToolBar: public QToolBar
     _V Vacuum         ~RIntervalToolBar();
     _M QDate          date0() const;
     _M QDate          date1() const;
+    _M void           modifyDate(int deltaYear, int deltaMonth);
     _M void           setValid(bool valid);
 
   public slots:
+    _M void           decMonth();
+    _M void           decYear();
+    _M void           incMonth();
+    _M void           incYear();
     _M void           onApplyClicked();
     _M bool           validate(bool emitMessage = false);
 

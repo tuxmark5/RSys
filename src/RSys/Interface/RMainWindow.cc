@@ -66,6 +66,7 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
 
   setMenuBar(m_menuBar);
   addToolBar(m_toolBar);
+  addToolBarBreak();
   addToolBar(m_intervalToolBar);
   addDockWidget(Qt::RightDockWidgetArea, m_paletteDock);
 
@@ -383,6 +384,8 @@ void RMainWindow :: logout()
 {
   R_GUARD(!m_loginWidget, Vacuum);
 
+  m_data0->clear();
+  m_data1->clear();
   m_loginWidget = new RLoginWidget(m_database);
   connect(m_loginWidget, SIGNAL(loggedIn()), this, SLOT(login()));
   setInterfaceEnabled(false);

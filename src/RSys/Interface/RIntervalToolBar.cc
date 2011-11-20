@@ -14,9 +14,13 @@ Vacuum RIntervalToolBar :: RIntervalToolBar(RMainWindow* parent):
   QToolBar("Intervalo nustatymai", parent),
   m_results(parent->results())
 {
-  QDate currDate  = QDate::currentDate();
-  QDate date1     = QDate(currDate.year(), currDate.month(), 1);
-  QDate date0     = date1.addYears(-1);
+  QDate         currDate  = QDate::currentDate();
+  QDate         date1     = QDate(currDate.year(), currDate.month(), 1);
+  QDate         date0     = date1.addYears(-1);
+  QPushButton*  decMonth  = new QPushButton("-");
+  QPushButton*  decYear   = new QPushButton("-");
+  QPushButton*  incMonth  = new QPushButton("+");
+  QPushButton*  incYear   = new QPushButton("+");
 
   m_interval0     = new QDateEdit(date0, this);
   m_interval1     = new QDateEdit(date1, this);
@@ -34,7 +38,26 @@ Vacuum RIntervalToolBar :: RIntervalToolBar(RMainWindow* parent):
   addWidget(m_interval1);
   addWidget(new QLabel("po"));
   addWidget(m_intervalLen);
+  addSeparator();
+  addWidget(decYear);
+  addWidget(new QLabel("Metai"));
+  addWidget(incYear);
+  addSeparator();
+  addWidget(decMonth);
+  addWidget(new QLabel(R_S("Mėnuo")));
+  addWidget(incMonth);
+  addSeparator();
   addWidget(m_applyButton);
+
+  connect(decMonth, SIGNAL(clicked()), this, SLOT(decMonth()));
+  connect(decYear,  SIGNAL(clicked()), this, SLOT(decYear()));
+  connect(incMonth, SIGNAL(clicked()), this, SLOT(incMonth()));
+  connect(incYear,  SIGNAL(clicked()), this, SLOT(incYear()));
+
+  decMonth->setFixedWidth(25);
+  decYear->setFixedWidth(25);
+  incMonth->setFixedWidth(25);
+  incYear->setFixedWidth(25);
 
   m_intervalLen->addItem(R_S("savaites"),     (int) ByWeek);
   m_intervalLen->addItem(R_S("mėnesius"),     (int) ByMonth);
@@ -66,6 +89,48 @@ QDate RIntervalToolBar :: date0() const
 QDate RIntervalToolBar :: date1() const
 {
   return m_interval1->date();
+}
+
+/**********************************************************************************************/
+
+void RIntervalToolBar :: decMonth()
+{
+  modifyDate(0, -1);
+}
+
+/**********************************************************************************************/
+
+void RIntervalToolBar :: decYear()
+{
+  modifyDate(-1, 0);
+}
+
+/**********************************************************************************************/
+
+void RIntervalToolBar :: incMonth()
+{
+  modifyDate(0, +1);
+}
+
+/**********************************************************************************************/
+
+void RIntervalToolBar :: incYear()
+{
+  modifyDate(+1, 0);
+}
+
+/**********************************************************************************************/
+
+void RIntervalToolBar :: modifyDate(int deltaYear, int deltaMonth)
+{
+  QDate date0 = m_interval0->date();
+  QDate date1 = m_interval1->date();
+
+  date0 = date0.addYears(deltaYear).addMonths(deltaMonth);
+  date1 = date1.addYears(deltaYear).addMonths(deltaMonth);
+
+  m_interval0->setDate(date0);
+  m_interval1->setDate(date1);
 }
 
 /**********************************************************************************************/
