@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sqlite3 test.db < static/init.sql
+mv test.db ../RSys-build-desktop/bin/
