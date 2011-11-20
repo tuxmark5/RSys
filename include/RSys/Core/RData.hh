@@ -6,13 +6,14 @@
 #include <RSys/Core/RMeasure.hh>
 #include <RSys/Core/RSubmission.hh>
 #include <RSys/Core/RSystem.hh>
+#include <RSys/Util/RSignal.hh>
 /**********************************************************************************************/
 typedef QMultiHash<QString, RUnit*> RUnitMultiHash;
 /********************************************* RS *********************************************/
 /*                                           RData                                            */
 /**********************************************************************************************/
 
-class RData: public QObject
+class RData: public QObject, public RSignal
 {
   Q_OBJECT
 
@@ -40,8 +41,10 @@ class RData: public QObject
   public:
     _M Vacuum                 RData();
     _M void                   clear();
+    _M RDivision*             division(RID id) const;
     _M RDivision*             division(const QString& identifier) const;
     _M RDivisionPtrList*      divisions()     { return &m_divisions; }
+    _M RMeasure*              measure(RID id) const;
     _M RMeasure*              measure(const QString& identifier) const;
     _M RMeasurePtrList*       measures()      { return &m_measures; }
     _M RMeasureList*          measures1()     { return &m_measures1; }
@@ -51,6 +54,7 @@ class RData: public QObject
     _M void                   purgeSystem(RSystem* system);
     _M RSubmissionPtrList*    submissions()   { return &m_submissions; }
     _M RSubmissionPtrList*    submissions1()  { return &m_submissions1; }
+    _M RSystem*               system(RID id) const;
     _M RSystem*               system(const QString& identifier) const;
     _M RSystemPtrList*        systems()       { return &m_systems; }
 

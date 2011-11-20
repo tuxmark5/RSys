@@ -10,11 +10,18 @@
 class REntity
 {
   public:
+    _E State
+    {
+      Insert = 0x00,
+      Remove = 0x01,
+      Update = 0x02,
+      Select = 0x03
+    };
+
+  public:
     _V Vacuum             ~REntity() { }
-    _V void               init()                    = 0;
     _V bool               commit(QSqlQuery& query)  = 0;
-    _V QString            fieldName(int i) const    = 0;
-    _V int                numFields() const         = 0;
+    _V void               init()                    = 0;
     _V void               rollback()                = 0;
     _V bool               select(QSqlQuery& query)  = 0;
 };

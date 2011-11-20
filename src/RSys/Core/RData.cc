@@ -29,10 +29,30 @@ void RData :: clear()
 
 /**********************************************************************************************/
 
+RDivision* RData :: division(RID id) const
+{
+  for (auto it = m_divisions.begin(); it != m_divisions.end(); ++it)
+    if ((*it)->id() == id)
+      return it->get();
+  return 0;
+}
+
+/**********************************************************************************************/
+
 RDivision* RData :: division(const QString& identifier) const
 {
   if (RUnit* unit = m_unitHash[RUnit::Division].value(identifier))
     return static_cast<RDivision*>(unit);
+  return 0;
+}
+
+/**********************************************************************************************/
+
+RMeasure* RData :: measure(RID id) const
+{
+  for (auto it = m_measures.begin(); it != m_measures.end(); ++it)
+    if ((*it)->id() == id)
+      return it->get();
   return 0;
 }
 
@@ -96,6 +116,16 @@ void RData :: purgeSystem(RSystem* system)
     (*it)->m_systemMap.remove(system);
   for (auto it = m_measures.begin(); it != m_measures.end(); ++it)
     (*it)->m_systemUsage.remove(system);
+}
+
+/**********************************************************************************************/
+
+RSystem* RData :: system(RID id) const
+{
+  for (auto it = m_systems.begin(); it != m_systems.end(); ++it)
+    if ((*it)->id() == id)
+      return it->get();
+  return 0;
 }
 
 /**********************************************************************************************/

@@ -14,15 +14,6 @@
 
 class REntity1D: public REntity
 {
-  public:
-    _E State
-    {
-      Insert = 0x00,
-      Remove = 0x01,
-      Update = 0x02,
-      Select = 0x03
-    };
-
   protected:
     _M QString            m_entityName;
     _M RDatabase*         m_database;
@@ -31,7 +22,9 @@ class REntity1D: public REntity
   public:
     _M Vacuum             REntity1D(const QString& entity, RDatabase* database);
     _V Vacuum             ~REntity1D();
+    _V QString            fieldName(int i) const    = 0;
     _V void               init();
+    _V int                numFields() const         = 0;
 };
 
 /**********************************************************************************************/

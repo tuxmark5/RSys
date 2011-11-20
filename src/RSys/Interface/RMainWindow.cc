@@ -290,7 +290,7 @@ void RMainWindow :: createTabs()
   {
     RDivision*  division  = m_data1->divisions()->at(y).get();
     RMeasure*   measure   = m_data1->measures()->at(x).get();
-    double      value     = division->m_measureMap.value(measure, 0);
+    double      value     = division->measure(measure);
 
     return value == 0.0 ? QVariant() : value;
   };
@@ -307,7 +307,7 @@ void RMainWindow :: createTabs()
   {
     RDivision*  division  = m_data1->divisions()->at(y).get();
     RSystem*    system    = m_data1->systems()->at(x).get();
-    int         value     = division->m_systemMap.value(system, 0);
+    int         value     = division->system(system);
 
     return value == 1 ? 1 : QVariant();
   };
