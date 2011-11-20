@@ -30,25 +30,28 @@ class RIntervalToolBar: public QToolBar
     _M QDateEdit*     m_interval1;
     _M QComboBox*     m_intervalLen;
     _M QPushButton*   m_applyButton;
+    _M bool           m_validInterval: 1;
 
   public:
     _M Vacuum         RIntervalToolBar(RMainWindow* parent = 0);
     _V Vacuum         ~RIntervalToolBar();
     _M QDate          date0() const;
     _M QDate          date1() const;
+    _V bool           eventFilter(QObject* watched, QEvent* event);
+    _M bool           isIntervalValid() const { return m_validInterval; }
     _M void           modifyDate(int deltaYear, int deltaMonth);
     _M void           setValid(bool valid);
 
   public slots:
+    _M bool           applyInterval();
     _M void           decMonth();
     _M void           decYear();
     _M void           incMonth();
     _M void           incYear();
-    _M void           onApplyClicked();
     _M bool           validate(bool emitMessage = false);
 
   signals:
-    _M void           intervalChanged(QDate date0, QDate date1);
+    _M void           intervalChanged();
     _M void           message(QString message, int timeout);
 };
 

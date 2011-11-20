@@ -1,5 +1,6 @@
 #include <QtGui/QComboBox>
 #include <QtGui/QDateEdit>
+#include <QtGui/QKeyEvent>
 #include <QtGui/QLabel>
 #include <QtGui/QPushButton>
 #include <RSys/Interface/RIntervalToolBar.hh>
@@ -12,7 +13,8 @@
 
 Vacuum RIntervalToolBar :: RIntervalToolBar(RMainWindow* parent):
   QToolBar("Intervalo nustatymai", parent),
-  m_results(parent->results())
+  m_results(parent->results()),
+  m_validInterval(true)
 {
   QDate         currDate  = QDate::currentDate();
   QDate         date1     = QDate(currDate.year(), currDate.month(), 1);
@@ -29,7 +31,9 @@ Vacuum RIntervalToolBar :: RIntervalToolBar(RMainWindow* parent):
 
   QDateEdit::connect(m_interval0, SIGNAL(dateChanged(QDate)), this, SLOT(validate()));
   QDateEdit::connect(m_interval1, SIGNAL(dateChanged(QDate)), this, SLOT(validate()));
-  QDateEdit::connect(m_applyButton, SIGNAL(clicked()), this, SLOT(onApplyClicked()));
+  QDateEdit::connect(m_applyButton, SIGNAL(clicked()), this, SLOT(applyInterval()));
+  m_interval0->installEventFilter(this);
+  m_interval1->installEventFilter(this);
 
   setContentsMargins(0, 0, 0, 0);
   addWidget(new QLabel(" Rodyti: nuo"));
@@ -79,65 +83,9 @@ Vacuum RIntervalToolBar :: ~RIntervalToolBar()
 
 /**********************************************************************************************/
 
-QDate RIntervalToolBar :: date0() const
+bool RIntervalToolBar :: applyInterval()
 {
-  return m_interval0->date();
-}
-
-/**********************************************************************************************/
-
-QDate RIntervalToolBar :: date1() const
-{
-  return m_interval1->date();
-}
-
-/**********************************************************************************************/
-
-void RIntervalToolBar :: decMonth()
-{
-  modifyDate(0, -1);
-}
-
-/**********************************************************************************************/
-
-void RIntervalToolBar :: decYear()
-{
-  modifyDate(-1, 0);
-}
-
-/**********************************************************************************************/
-
-void RIntervalToolBar :: incMonth()
-{
-  modifyDate(0, +1);
-}
-
-/**********************************************************************************************/
-
-void RIntervalToolBar :: incYear()
-{
-  modifyDate(+1, 0);
-}
-
-/**********************************************************************************************/
-
-void RIntervalToolBar :: modifyDate(int deltaYear, int deltaMonth)
-{
-  QDate date0 = m_interval0->date();
-  QDate date1 = m_interval1->date();
-
-  date0 = date0.addYears(deltaYear).addMonths(deltaMonth);
-  date1 = date1.addYears(deltaYear).addMonths(deltaMonth);
-
-  m_interval0->setDate(date0);
-  m_interval1->setDate(date1);
-}
-
-/**********************************************************************************************/
-
-void RIntervalToolBar :: onApplyClicked()
-{
-  R_GUARD(validate(true), Vacuum);
+  R_GUARD(validate(true), false);
 
   RIntervalFun  fun;
   int           num   = 0;
@@ -191,9 +139,82 @@ void RIntervalToolBar :: onApplyClicked()
           .arg(date0.toString(Qt::DefaultLocaleShortDate))
           .arg(date1.toString(Qt::DefaultLocaleShortDate)), 8000);
 
+  m_results->setInterval(m_interval0->date(), m_interval1->date());
   m_results->setInterval(std::move(fun), num);
+  emit intervalChanged();
+  return true;
+}
 
-  //emit intervalChanged(date0(), date1());
+/**********************************************************************************************/
+
+QDate RIntervalToolBar :: date0() const
+{
+  return m_interval0->date();
+}
+
+/**********************************************************************************************/
+
+QDate RIntervalToolBar :: date1() const
+{
+  return m_interval1->date();
+}
+
+/**********************************************************************************************/
+
+void RIntervalToolBar :: decMonth()
+{
+  modifyDate(0, -1);
+}
+
+/**********************************************************************************************/
+
+void RIntervalToolBar :: decYear()
+{
+  modifyDate(-1, 0);
+}
+
+/**********************************************************************************************/
+
+bool RIntervalToolBar :: eventFilter(QObject* watched, QEvent* event)
+{
+  if (watched == m_interval0 || watched == m_interval1)
+  {
+    if (event->type() == QEvent::KeyPress)
+    {
+      QKeyEvent* event1 = static_cast<QKeyEvent*>(event);
+      if (event1->key() == Qt::Key_Enter || event1->key() == Qt::Key_Return)
+        applyInterval();
+    }
+  }
+  return QToolBar::eventFilter(watched, event);
+}
+
+/**********************************************************************************************/
+
+void RIntervalToolBar :: incMonth()
+{
+  modifyDate(0, +1);
+}
+
+/**********************************************************************************************/
+
+void RIntervalToolBar :: incYear()
+{
+  modifyDate(+1, 0);
+}
+
+/**********************************************************************************************/
+
+void RIntervalToolBar :: modifyDate(int deltaYear, int deltaMonth)
+{
+  QDate date0 = m_interval0->date();
+  QDate date1 = m_interval1->date();
+
+  date0 = date0.addYears(deltaYear).addMonths(deltaMonth);
+  date1 = date1.addYears(deltaYear).addMonths(deltaMonth);
+
+  m_interval0->setDate(date0);
+  m_interval1->setDate(date1);
 }
 
 /**********************************************************************************************/
@@ -223,7 +244,7 @@ bool RIntervalToolBar :: validate(bool emitMessage)
 {
   QDate   date0       = m_interval0->date();
   QDate   date1       = m_interval1->date();
-  bool    okDeltaMax  = qAbs(date0.year() - date1.year()) < 10;
+  bool    okDeltaMax  = qAbs(date0.year() - date1.year()) <= 10;
   bool    okDeltaMin  = date0.daysTo(date1) != 1;
   bool    okOrder     = date0 < date1;
   bool    valid       = okDeltaMax && okDeltaMin && okOrder;
@@ -239,7 +260,7 @@ bool RIntervalToolBar :: validate(bool emitMessage)
   }
 
   setValid(valid);
-  return valid;
+  return (m_validInterval = valid);
 }
 
 /**********************************************************************************************/

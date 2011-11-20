@@ -129,9 +129,6 @@ void RResults :: setInterval(QDate date0, QDate date1)
 {
   m_interval0     = date0;
   m_interval1     = date1;
-  m_intervalFun   = intervalFun();
-  m_numRecords    = date0.daysTo(date1) / 30; // temporary HACK
-  //setInterval(m_intervalFun, m_numRecords);
 }
 
 /**********************************************************************************************/

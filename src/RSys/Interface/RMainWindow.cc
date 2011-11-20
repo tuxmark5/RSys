@@ -95,10 +95,10 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   createTabs();
   onUnitModeChanged(false);
 
-  connect(m_intervalToolBar, SIGNAL(intervalChanged(QDate,QDate)), this, SLOT(setInterval(QDate,QDate)));
+  connect(m_intervalToolBar, SIGNAL(intervalChanged()), this, SLOT(setInterval()));
   connect(m_intervalToolBar, SIGNAL(message(QString,int)), this, SLOT(showMessage(QString,int)));
 
-  m_intervalToolBar->onApplyClicked();
+  m_intervalToolBar->applyInterval();
 
   logout();
 }
@@ -340,10 +340,17 @@ void RMainWindow :: createTabs()
 
 void RMainWindow :: findIntervalNow()
 {
-  if (m_searchForm)
+  R_GUARD(m_searchForm, Vacuum);
+
+  if (m_intervalToolBar->isIntervalValid())
   {
+    m_intervalToolBar->applyInterval();
     m_searchForm->getSeasonalLengths(m_results->seasonalLengths());
     emit searchModeChanged(true);
+  }
+  else
+  {
+    showMessage(R_S("Pirma pasirinkite validų paieškos intervalą"));
   }
 }
 
@@ -441,9 +448,8 @@ void RMainWindow :: setInterfaceEnabled(bool enabled)
 
 /**********************************************************************************************/
 
-void RMainWindow :: setInterval(QDate date0, QDate date1)
+void RMainWindow :: setInterval()
 {
-  m_results->setInterval(date0, date1);
   if (m_searchForm)
     emit searchModeChanged();
 }

@@ -18,7 +18,7 @@ int main(int argc, char** argv)
   QApplication  app(argc, argv);
   RMainWindow   mainWnd;
 
-  mainWnd.show();
+  mainWnd.showMaximized();
   return app.exec();
 }
 
