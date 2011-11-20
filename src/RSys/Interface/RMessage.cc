@@ -6,7 +6,8 @@
 /**********************************************************************************************/
 
 Vacuum RMessage :: RMessage(const QString& message, int timeout, QWidget* parent):
-  RStatusWidget(parent)
+  RStatusWidget(parent),
+  m_owner(0)
 {
   QLabel* label = new QLabel(message);
 
@@ -32,6 +33,13 @@ QColor RMessage :: backgroundColorFor(RMessageLevel level)
     case RERROR:    return Qt::red;
   }
   return QColor();
+}
+
+/**********************************************************************************************/
+
+void RMessage :: setOwner(QObject* owner)
+{
+  m_owner = owner;
 }
 
 /**********************************************************************************************/

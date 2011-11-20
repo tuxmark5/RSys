@@ -215,6 +215,9 @@ void RIntervalToolBar :: modifyDate(int deltaYear, int deltaMonth)
 
   m_interval0->setDate(date0);
   m_interval1->setDate(date1);
+
+  if (isIntervalValid())
+    applyInterval();
 }
 
 /**********************************************************************************************/

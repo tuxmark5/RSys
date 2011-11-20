@@ -98,8 +98,6 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   connect(m_intervalToolBar, SIGNAL(intervalChanged()), this, SLOT(setInterval()));
   connect(m_intervalToolBar, SIGNAL(message(QString,int)), this, SLOT(showMessage(QString,int)));
 
-  m_intervalToolBar->applyInterval();
-
   logout();
 }
 
@@ -130,12 +128,20 @@ void RMainWindow :: addRightTab(RTab* tab, const char* title, const char* toolTi
 
 /**********************************************************************************************/
 
-void RMainWindow :: addStatusWidget(QWidget* widget)
+void RMainWindow :: addStatusWidget(QWidget* widget, QObject* owner)
 {
-  if (m_widgetL->width() > 0)
-    m_layoutL->insertWidget(0, widget);
-  else
-    m_layoutR->insertWidget(0, widget);
+  QVBoxLayout* layout = m_widgetL->width() > 0 ? m_layoutL : m_layoutR;
+
+  for (int i = 0; i < layout->count(); i++)
+  {
+    QWidget* widget = layout->itemAt(i)->widget();
+
+    if (RMessage* message = qobject_cast<RMessage*>(widget))
+      if (message->owner() == owner)
+        message->onCloseClicked();
+  }
+
+  layout->insertWidget(0, widget);
 }
 
 /**********************************************************************************************/
@@ -383,6 +389,7 @@ void RMainWindow :: login()
   setInterfaceEnabled(true);
   m_loginWidget   = 0; // deleted by QMainWindow::setCentralWidget
   *m_data0        = *m_data1;
+  m_intervalToolBar->applyInterval();
 }
 
 /**********************************************************************************************/
@@ -482,7 +489,10 @@ void RMainWindow :: setShowSearchForm(bool show)
 
 void RMainWindow :: showMessage(const QString& message, int timeout)
 {
-  addStatusWidget(new RMessage(message, timeout));
+  RMessage* widget = new RMessage(message, timeout);
+
+  widget->setOwner(sender());
+  addStatusWidget(widget, sender());
 }
 
 /**********************************************************************************************/

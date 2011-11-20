@@ -63,7 +63,7 @@ class RMainWindow: public QMainWindow
   public:
     _M Vacuum               RMainWindow(QWidget* parent = 0);
     _V Vacuum               ~RMainWindow();
-    _M void                 addStatusWidget(QWidget* widget);
+    _M void                 addStatusWidget(QWidget* widget, QObject* owner = 0);
     _M void                 connectActions();
     _M void                 createActions();
     _M void                 createContainers();
