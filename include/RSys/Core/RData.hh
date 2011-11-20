@@ -19,6 +19,7 @@ class RData: public QObject, public RSignal
 
   public:
     _F class RElement;
+    _F class RSubmission;
     _F class RUnit;
 
   public:
@@ -36,6 +37,8 @@ class RData: public QObject, public RSignal
     _M RSubmissionPtrList     m_submissions1;   // planned submissions
     _M RSystemPtrList         m_systems;
     _M RUnitMultiHash         m_unitHash[3];
+    _M QDate                  m_interval0;
+    _M QDate                  m_interval1;
     _M bool                   m_purgeEnabled: 1;
 
   public:

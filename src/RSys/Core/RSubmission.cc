@@ -85,7 +85,6 @@ void RSubmission :: setMeasureName(const QString& measureName)
 {
   m_measureName   = measureName.toUpper();
   m_measure       = m_data->measure(m_measureName);
-  qDebug() << "NAME0";
 }
 
 /**********************************************************************************************/
