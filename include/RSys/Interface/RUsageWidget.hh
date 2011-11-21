@@ -31,7 +31,7 @@ class RUsageWidget: public RLayerWidget
     _M RInterval        m_lowInterval;
 
   public:
-    _M Vacuum           RUsageWidget(RUnit* unit, RResults* results, QWidget* parent = 0);
+    _M Vacuum           RUsageWidget(int mode, RUnit* unit, RResults* results, QWidget* parent = 0);
     _V Vacuum           ~RUsageWidget();
     _S QMenu*           createModeMenu(QObject* receiver, const char* slot);
     _M RResultsModel*   model() const { return m_model; }

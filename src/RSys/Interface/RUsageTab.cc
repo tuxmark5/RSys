@@ -18,7 +18,8 @@ Vacuum RUsageTab :: RUsageTab(RMainWindow* parent):
   m_mainWindow(parent),
   m_scrollArea(new QScrollArea(this)),
   m_results(parent->results()),
-  m_units(0)
+  m_units(0),
+  m_defaultMode(RUsageWidget::Usage1Bar)
 {
   QMenu* menu = RUsageWidget::createModeMenu(this, SLOT(setMode()));
 
@@ -62,7 +63,7 @@ void RUsageTab :: clearUnits()
 
 RUsageWidget* RUsageTab :: createWidget(RUnit* unit)
 {
-  RUsageWidget* widget = new RUsageWidget(unit, m_results);
+  RUsageWidget* widget = new RUsageWidget(m_defaultMode, unit, m_results);
 
   connect(m_mainWindow, SIGNAL(searchModeChanged(bool)), widget, SLOT(setSearchInterval(bool)));
 
@@ -149,11 +150,11 @@ void RUsageTab :: setMode()
 {
   if (QAction* action = qobject_cast<QAction*>(sender()))
   {
-    int mode = action->data().toInt();
+    m_defaultMode = action->data().toInt();
 
     for (int i = 0; i < m_innerLayout->count(); i++)
       if (RUsageWidget* widget = qobject_cast<RUsageWidget*>(m_innerLayout->itemAt(i)->widget()))
-        widget->setMode(mode);
+        widget->setMode(m_defaultMode);
   }
 }
 

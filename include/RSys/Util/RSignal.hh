@@ -37,15 +37,20 @@ struct Invocation<Result (Args...)>
 
   _M Connections&     m_connections;
   _M Key              m_signature;
+  _M bool             m_block;
 
-  _M Vacuum           Invocation(Connections0& connections, Key signature):
-    m_connections(reinterpret_cast<Connections&>(connections)), m_signature(signature) { }
+  _M Vacuum           Invocation(Connections0& connections, Key signature, bool block):
+    m_connections(reinterpret_cast<Connections&>(connections)),
+    m_signature(signature), m_block(block) { }
 
   _M void             operator ()(Args... args)
   {
-    auto it = m_connections.find(m_signature);
-    for (; it.key() == m_signature && it != m_connections.end(); ++it)
-      (*it)(args...);
+    if (!m_block)
+    {
+      auto it = m_connections.find(m_signature);
+      for (; it.key() == m_signature && it != m_connections.end(); ++it)
+        (*it)(args...);
+    }
   }
 
   _M Self&            operator <<(Slot&& slot)
@@ -66,11 +71,19 @@ struct RSignal
 
   private:
     _M Connections    m_connections;
+    _M bool           m_block;
 
   public:
+    _M Vacuum         RSignal():
+      m_block(false) { }
+
     template <class Signal>
     _M auto           operator[](Signal) -> Invocation<typename Signal::Signature>
-    { return Invocation<typename Signal::Signature>(m_connections, &typeid(Signal)); }
+    { return Invocation<typename Signal::Signature>(m_connections, &typeid(Signal), m_block); }
+
+    template <class Lambda>
+    _M void           withBlock(const Lambda& lambda)
+    { m_block = true; lambda(); m_block = false; }
 };
 
 /**********************************************************************************************/

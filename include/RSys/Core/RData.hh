@@ -43,6 +43,7 @@ class RData: public QObject, public RSignal
 
   public:
     _M Vacuum                 RData();
+    _M void                   calculateIntervals();
     _M void                   clear();
     _M RDivision*             division(RID id) const;
     _M RDivision*             division(const QString& identifier) const;
@@ -65,7 +66,6 @@ class RData: public QObject, public RSignal
     _M RSystemPtrList*        systems()       { return &m_systems; }
 
   private:
-    _M void                   calculateIntervals();
     _M void                   calculateIntervals(RSubmissionPtrList* submissions);
     _M void                   onDate0Change(RSubmission* submission, QDate date0);
     _M void                   onDate1Change(RSubmission* submission, QDate date1);

@@ -108,12 +108,8 @@ bool RDatabase :: login(const QString& addr, const QString& db, const QString& u
 
   if (m_database.open())
   {
-    if (select())
-    {
-      emit loggedIn();
-      return true;
-    }
-    m_database.close();
+    emit loggedIn();
+    return true;
   }
 
   return false;

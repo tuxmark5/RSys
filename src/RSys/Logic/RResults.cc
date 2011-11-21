@@ -174,3 +174,21 @@ void RResults :: unregisterField(RUnit* unit, RResultsModel* model, int key)
 }
 
 /**********************************************************************************************/
+
+void RResults :: update()
+{
+  m_calculator1->update();
+  m_calculator1->setIntervalFun(m_intervalFun, m_numRecords);
+
+  for (auto it = m_models.begin(); it != m_models.end(); ++it)
+    emit (*it)->reset();
+}
+
+/**********************************************************************************************/
+
+void RResults :: updateDelayed()
+{
+  QMetaObject::invokeMethod(this, "update", Qt::QueuedConnection);
+}
+
+/**********************************************************************************************/

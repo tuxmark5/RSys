@@ -64,11 +64,13 @@ class RResults: public QObject
     _M int*             seasonalLengths() { return m_seasonalLengths; }
     _M void             unregisterField(RUnit* unit, RResultsModel* model, int key);
     _M void             unregisterModel(RResultsModel* model) { m_models.remove(model); }
+    _M void             updateDelayed();
 
   public slots:
     _M void             reset();
     _M void             setInterval(QDate date0, QDate date1);
     _M void             setInterval(RIntervalFun fun, int num);
+    _M void             update();
 
   private:
     _S double           fieldDeltaUsage(RUnit* unit, int x);

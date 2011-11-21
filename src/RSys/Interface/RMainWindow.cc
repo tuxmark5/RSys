@@ -190,6 +190,15 @@ void RMainWindow :: connectActions()
   QAction::connect(m_rollbackAction, SIGNAL(triggered()), this, SLOT(rollback()));
   QAction::connect(m_searchAction, SIGNAL(toggled(bool)), this, SLOT(setShowSearchForm(bool)));
   QAction::connect(m_systemsStateAction, SIGNAL(toggled(bool)), this, SLOT(updateUnits()));
+
+  (*m_data1)[RSubmission::measureChange]  << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RSubmission::countChange]    << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RSubmission::date0Change]    << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RSubmission::date1Change]    << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RDivision::onMeasureSet]     << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RDivision::onMeasureUnset]   << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RDivision::onSystemSet]      << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RDivision::onSystemUnset]    << std::bind(&RResults::updateDelayed, m_results);
 }
 
 /**********************************************************************************************/
@@ -383,7 +392,12 @@ void RMainWindow :: importData()
   {
     RValidator    parser;
 
-    parser.validate(fileName, m_data1);
+    m_data1->withBlock([&]
+    {
+      parser.validate(fileName, m_data1);
+    });
+    m_data1->calculateIntervals();
+
     showMessage(QString::fromUtf8("Duomenys sėkmingai (o gal ir ne) importuoti\n"
                                   "Vytautai, man čia reikia, kad tavo kodas išspjautų tik vieną žinutę\n"
                                   "Tam padaryk kokį naują signalą, o visas perteklines žinutes į logą galim\n"
@@ -397,6 +411,12 @@ void RMainWindow :: importData()
 void RMainWindow :: login()
 {
   R_GUARD(m_loginWidget, Vacuum);
+
+  m_data1->withBlock([this]
+  {
+    m_database->select();
+  });
+  m_data1->calculateIntervals();
 
   setInterfaceEnabled(true);
   m_loginWidget   = 0; // deleted by QMainWindow::setCentralWidget

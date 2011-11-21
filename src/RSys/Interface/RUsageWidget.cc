@@ -26,7 +26,7 @@ Class* ensure(RUsageWidget* self)
 /*                                        RUsageWidget                                        */
 /**********************************************************************************************/
 
-Vacuum RUsageWidget :: RUsageWidget(RUnit* unit, RResults* results, QWidget* parent):
+Vacuum RUsageWidget :: RUsageWidget(int mode, RUnit* unit, RResults* results, QWidget* parent):
   RLayerWidget(parent),
   m_unit(unit),
   m_results(results),
@@ -39,7 +39,7 @@ Vacuum RUsageWidget :: RUsageWidget(RUnit* unit, RResults* results, QWidget* par
   setMinimumWidth(600);
   setFixedHeight(200);
 
-  setMode(Usage1Bar);
+  setMode(mode);
 }
 
 /**********************************************************************************************/

@@ -19,6 +19,7 @@ class RUsageTab: public RTab, public RIObserver
 
     _M RResults*      m_results;
     _M RUnitPtrList*  m_units;
+    _M int            m_defaultMode;
 
   public:
     _M Vacuum         RUsageTab(RMainWindow* parent = 0);
