@@ -89,10 +89,14 @@ bool RIntervalToolBar :: adjustInterval(QDate& date0, QDate& date1)
   RData*        data              = m_results->data1();
   bool          modified          = false;
   QDate         globalInterval0   = data->interval0();
-  QDate         globalInterval1   = data->interval1().addYears(5); // maksimalus prognozavimas
+  QDate         globalInterval1   = data->interval1();
 
-  if (date0 < globalInterval0) { date0 = globalInterval0; modified = true; }
-  if (date1 > globalInterval1) { date1 = globalInterval1; modified = true; }
+  if (globalInterval0.isValid() && globalInterval1.isValid())
+  {
+    globalInterval1 = globalInterval1.addYears(5); // maksimalus prognozavimas
+    if (date0 < globalInterval0) { date0 = globalInterval0; modified = true; }
+    if (date1 > globalInterval1) { date1 = globalInterval1; modified = true; }
+  }
   return modified;
 }
 
