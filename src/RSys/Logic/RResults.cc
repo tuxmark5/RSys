@@ -121,7 +121,7 @@ RInterval RResults :: findLowUsageInterval(RUnit* unit)
     }
   }
 
-  return RInterval();
+  return RInterval(QDate(2011, 02, 01), QDate(2011, 03, 01));
 }
 
 /**********************************************************************************************/

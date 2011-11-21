@@ -9,6 +9,7 @@ namespace KDChart
 {
   class AbstractCartesianDiagram;
   class CartesianAxis;
+  class CartesianCoordinatePlane;
   class Legend;
 }
 /********************************************* RS *********************************************/
@@ -28,6 +29,8 @@ class RChart: public KDChart::Chart
 
   public:
     _T KDChart::CartesianAxis               Axis;
+    _T KDChart::CartesianCoordinatePlane    CoordinatePlane;
+    _T KDChart::Chart                       Chart;
     _T KDChart::AbstractCartesianDiagram    Diagram;
     _T KDChart::Legend                      Legend;
 
@@ -43,10 +46,14 @@ class RChart: public KDChart::Chart
     _V Vacuum           ~RChart();
     _M void             setDiagram(Diagram* diagram);
     _M void             setDiagramType(Diagram* diagram);
+    _M void             setFillRange(QDate date0, QDate date1);
 
   public slots:
     _M void             setShowLegend(bool show);
     _M void             setType(ChartType type);
+
+  protected:
+    _M void             paintEvent(QPaintEvent* event);
 };
 
 /**********************************************************************************************/

@@ -3,6 +3,7 @@
 #include <KDChart/KDChartLineAttributes> // ?
 #include <KDChart/KDChartLineDiagram>
 #include <RSys/Interface/RChart.hh>
+#include <RSys/Interface/RCoordinatePlane.hh>
 #include <RSys/Interface/RResultsModel.hh>
 
 /********************************************* RS *********************************************/
@@ -15,6 +16,7 @@ Vacuum RChart :: RChart(RResultsModel* model, QWidget* parent):
   m_diagram(0),
   m_legend(0)
 {
+  replaceCoordinatePlane(new RCoordinatePlane());
   setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
   m_axisX     = new KDChart::CartesianAxis();
@@ -32,6 +34,17 @@ Vacuum RChart :: ~RChart()
   //setDiagram(0);
   //delete m_axisX;
   //delete m_axisY;
+}
+
+/**********************************************************************************************/
+
+void RChart :: paintEvent(QPaintEvent* event)
+{
+  QPainter p(this);
+
+  //p.fillRect(QRectF(10, 10, 100, 100), QColor(0, 0x50, 0));
+
+  Chart::paintEvent(event);
 }
 
 /**********************************************************************************************/
@@ -62,6 +75,30 @@ void RChart :: setDiagram(Diagram* diagram)
   la.setDisplayArea(true);
   la.setTransparency(0.5);
   m_diagram->setLineAttributes(index, la);*/
+}
+
+/**********************************************************************************************/
+
+void RChart :: setFillRange(QDate fill0, QDate fill1)
+{
+  RCoordinatePlane* plane = static_cast<RCoordinatePlane*>(coordinatePlane());
+
+  if (fill0.isValid() && fill1.isValid())
+  {
+    int     height      = m_diagram->numberOfAbscissaSegments();
+    QDate   interval0   = m_model->headerData(0, Qt::Vertical).toDate();
+    QDate   interval1   = m_model->headerData(height - 1, Qt::Vertical).toDate();
+    auto    hrange      = plane->horizontalRange();
+    double  scale       = (hrange.second - hrange.first) / interval0.daysTo(interval1);
+    double  fillX0      = interval0.daysTo(fill0) * scale;
+    double  fillX1      = interval0.daysTo(fill1) * scale;
+
+    plane->setFillRange(fillX0, fillX1);
+  }
+  else
+  {
+    plane->setFillEnabled(false);
+  }
 }
 
 /**********************************************************************************************/

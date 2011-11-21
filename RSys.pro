@@ -48,6 +48,7 @@ SOURCES             +=                              \
   src/RSys/Interface/RAbstractItemModel.cc          \
   src/RSys/Interface/RChart.cc                      \
   src/RSys/Interface/RColumnObserverAdapter.cc      \
+  src/RSys/Interface/RCoordinatePlane.cc            \
   src/RSys/Interface/RDivisionTab.cc                \
   src/RSys/Interface/RIntervalToolBar.cc            \
   src/RSys/Interface/RLayerWidget.cc                \
@@ -104,6 +105,7 @@ HEADERS             +=                              \
   include/RSys/Interface/RAbstractItemModel.hh      \
   include/RSys/Interface/RChart.hh                  \
   include/RSys/Interface/RColumnObserverAdapter.hh  \
+  include/RSys/Interface/RCoordinatePlane.hh        \
   include/RSys/Interface/RDivisionTab.hh            \
   include/RSys/Interface/RIntervalToolBar.hh        \
   include/RSys/Interface/RLayerWidget.hh            \

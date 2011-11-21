@@ -153,6 +153,10 @@ void RUsageWidget :: setSearchInterval(bool search)
     m_lowInterval = m_results->findLowUsageInterval(m_unit);
   else
     m_lowInterval = RInterval();
+
+  if (RChart* chart = qobject_cast<RChart*>(widget()))
+    chart->setFillRange(std::get<0>(m_lowInterval), std::get<1>(m_lowInterval));
+
   updateHeader();
 }
 
