@@ -116,7 +116,7 @@ bool RIntervalToolBar :: applyInterval()
 
   QString       msgText   = R_S("Rodomas intervalas: nuo <b>%1</b> iki <b>%2</b>")
     .arg(date0.toString(Qt::DefaultLocaleShortDate))
-    .arg(date1.toString(Qt::DefaultLocaleShortDate));
+    .arg(date1.addDays(-1).toString(Qt::DefaultLocaleShortDate));
 
   if (modified)
   {

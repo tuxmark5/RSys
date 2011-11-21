@@ -56,8 +56,8 @@ auto RResults :: field(ResultType type, RUnit* unit) -> Getter
 
     case Usage1Tooltip: return [this, unit](int x) -> QVariant
     {
-      return R_S("Intervalas: nuo %1 iki %2.\nApkrova: %3").
-        arg(intervalStr<0>(x), intervalStr<1>(x)).arg(unit->usageAt(x));
+      return R_S("Intervalas: %1.\nApkrova: %2").
+        arg(intervalStr(x)).arg(unit->usageAt(x));
     };
 
     case DeltaUsage: return [this, unit](int x) -> QVariant
@@ -67,8 +67,8 @@ auto RResults :: field(ResultType type, RUnit* unit) -> Getter
 
     case DeltaUsageTooltip: return [this, unit](int x) -> QVariant
     {
-      return R_S("Intervalas: nuo %1 iki %2.\nSkirtumas: %3").
-        arg(intervalStr<0>(x), intervalStr<1>(x)).arg(fieldDeltaUsage(unit, x));
+      return R_S("Intervalas: %1.\nSkirtumas: %2").
+        arg(intervalStr(x)).arg(fieldDeltaUsage(unit, x));
     };
 
     case DeltaPUsage: return [this, unit](int x) -> QVariant
@@ -127,6 +127,16 @@ auto RResults :: intervalFun() -> IntervalFun
   {
     return Interval(m_interval0.addMonths(x), m_interval0.addMonths(x + 1));
   };
+}
+
+/**********************************************************************************************/
+
+QString RResults :: intervalStr(int x)
+{
+  RInterval interval = m_intervalFun(x);
+  return QString("nuo %1 iki %2")
+   .arg(std::get<0>(interval).toString(Qt::DefaultLocaleShortDate))
+   .arg(std::get<1>(interval).addDays(-1).toString(Qt::DefaultLocaleShortDate));
 }
 
 /**********************************************************************************************/

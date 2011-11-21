@@ -20,6 +20,7 @@ Vacuum RPaletteDock :: RPaletteDock(RMainWindow* parent):
 {
   QWidget*      widget        = new QWidget(this);
   QGridLayout*  layout        = new QGridLayout(widget);
+  QHBoxLayout*  layout1       = new QHBoxLayout();
   QToolButton*  divisionsMode = new QToolButton(widget);
   QToolButton*  systemsMode   = new QToolButton(widget);
 
@@ -44,12 +45,18 @@ Vacuum RPaletteDock :: RPaletteDock(RMainWindow* parent):
   m_filter  = new RTableView(m_model, widget);
   m_filter->setStretch(true);
 
+  checkAll->setMinimumWidth(20);
+  uncheckAll->setMinimumWidth(20);
+  inverseChecks->setMinimumWidth(20);
+
+  layout1->addWidget(uncheckAll);
+  layout1->addWidget(inverseChecks);
+  layout1->addWidget(checkAll);
+
   layout->addWidget(divisionsMode,  0, 0);
-  layout->addWidget(systemsMode,    0, 2);
-  layout->addWidget(m_filter,       1, 0, 1, 3);
-  layout->addWidget(uncheckAll,     2, 0);
-  layout->addWidget(inverseChecks,  2, 1);
-  layout->addWidget(checkAll,       2, 2);
+  layout->addWidget(systemsMode,    0, 1);
+  layout->addWidget(m_filter,       1, 0, 1, 2);
+  layout->addLayout(layout1,        2, 0, 1, 2);
 
   setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   setMode(false);

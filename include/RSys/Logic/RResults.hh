@@ -74,16 +74,8 @@ class RResults: public QObject
 
   private:
     _S double           fieldDeltaUsage(RUnit* unit, int x);
-    _M template <int I> QString intervalStr(int x);
+    _M QString          intervalStr(int x);
 };
-
-/**********************************************************************************************/
-
-template <int I>
-QString RResults :: intervalStr(int x)
-{
-  return std::get<I>(m_intervalFun(x)).toString(Qt::DefaultLocaleShortDate);
-}
 
 /**********************************************************************************************/
 
