@@ -52,6 +52,7 @@ Vacuum RPaletteDock :: RPaletteDock(RMainWindow* parent):
   layout->addWidget(inverseChecks,  2, 2);
 
   setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+  setMode(false);
   setWidget(widget);
 
   connect(systemsMode, SIGNAL(toggled(bool)), this, SLOT(setMode(bool)));
@@ -111,7 +112,7 @@ void RPaletteDock :: inverseChecks()
   for (auto it = units->begin(); it != units->end(); ++it)
     (*it)->setVisibleRaw((*it)->visible() ^ true);
 
-  m_mainWindow->onUnitModeChanged();
+  m_mainWindow->updateUnits();
   m_model->notifyAllRowsChanged();
 }
 
@@ -131,7 +132,7 @@ void RPaletteDock :: setChecked(bool checked)
   for (auto it = units->begin(); it != units->end(); ++it)
     (*it)->setVisibleRaw(checked);
 
-  m_mainWindow->onUnitModeChanged();
+  m_mainWindow->updateUnits();
   m_model->notifyAllRowsChanged();
 }
 

@@ -94,7 +94,7 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   m_splitter->addWidget(m_widgetR);
 
   createTabs();
-  onUnitModeChanged();
+  updateUnits();
 
   connect(m_intervalToolBar, SIGNAL(intervalChanged()), this, SLOT(setInterval()));
   connect(m_intervalToolBar, SIGNAL(message(QString,int)), this, SLOT(showMessage(QString,int)));
@@ -189,7 +189,7 @@ void RMainWindow :: connectActions()
   QAction::connect(m_importAction, SIGNAL(triggered()), this, SLOT(importData()));
   QAction::connect(m_rollbackAction, SIGNAL(triggered()), this, SLOT(rollback()));
   QAction::connect(m_searchAction, SIGNAL(toggled(bool)), this, SLOT(setShowSearchForm(bool)));
-  QAction::connect(m_systemsStateAction, SIGNAL(toggled(bool)), this, SLOT(onUnitModeChanged()));
+  QAction::connect(m_systemsStateAction, SIGNAL(toggled(bool)), this, SLOT(updateUnits()));
 }
 
 /**********************************************************************************************/
@@ -428,13 +428,6 @@ void RMainWindow :: onSearchFormDestroyed()
 
 /**********************************************************************************************/
 
-void RMainWindow :: onUnitModeChanged()
-{
-  emit unitsChanged(currentUnits());
-}
-
-/**********************************************************************************************/
-
 void RMainWindow :: rollback()
 {
   if (m_database->rollback())
@@ -507,6 +500,13 @@ void RMainWindow :: showMessage(const QString& message, int timeout)
 
   widget->setOwner(sender());
   addStatusWidget(widget, sender());
+}
+
+/**********************************************************************************************/
+
+void RMainWindow :: updateUnits()
+{
+  emit unitsChanged(currentUnits());
 }
 
 /**********************************************************************************************/

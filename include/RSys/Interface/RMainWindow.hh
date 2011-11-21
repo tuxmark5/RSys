@@ -87,12 +87,12 @@ class RMainWindow: public QMainWindow
     _M void                 login();
     _M void                 logout();
     _M void                 onSearchFormDestroyed();
-    _M void                 onUnitModeChanged();
     _M void                 rollback();
     _M void                 setInterfaceEnabled(bool enabled);
     _M void                 setInterval();
     _M void                 setShowSearchForm(bool show);
     _M void                 showMessage(const QString& message, int timeout = 5000);
+    _M void                 updateUnits();
 
   protected:
     _V void                 closeEvent(QCloseEvent* event);

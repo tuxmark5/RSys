@@ -54,11 +54,21 @@ auto RResults :: field(ResultType type, RUnit* unit) -> Getter
       return unit->usageAt(x);
     };
 
+    case Usage1Tooltip: return [this, unit](int x) -> QVariant
+    {
+      return R_S("Intervalas: nuo %1 iki %2.\nApkrova: %3").
+        arg(intervalStr<0>(x), intervalStr<1>(x)).arg(unit->usageAt(x));
+    };
+
     case DeltaUsage: return [this, unit](int x) -> QVariant
     {
-      if (RUnit* buddy = unit->buddy())
-        return unit->usageAt(x) - buddy->usageAt(x);
-      return unit->usageAt(x);
+      return fieldDeltaUsage(unit, x);
+    };
+
+    case DeltaUsageTooltip: return [this, unit](int x) -> QVariant
+    {
+      return R_S("Intervalas: nuo %1 iki %2.\nSkirtumas: %3").
+        arg(intervalStr<0>(x), intervalStr<1>(x)).arg(fieldDeltaUsage(unit, x));
     };
 
     case DeltaPUsage: return [this, unit](int x) -> QVariant
@@ -79,6 +89,15 @@ auto RResults :: field(ResultType type, RUnit* unit) -> Getter
   }
 
   return Getter();
+}
+
+/**********************************************************************************************/
+
+double RResults :: fieldDeltaUsage(RUnit* unit, int x)
+{
+  if (RUnit* buddy = unit->buddy())
+    return unit->usageAt(x) - buddy->usageAt(x);
+  return unit->usageAt(x);
 }
 
 /**********************************************************************************************/
