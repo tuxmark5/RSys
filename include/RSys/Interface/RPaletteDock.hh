@@ -13,6 +13,7 @@ class RPaletteDock: public QDockWidget
   Q_OBJECT
 
   private:
+    _M RMainWindow*   m_mainWindow;
     _M RTableView*    m_filter;
     _M bool           m_mode;
 
@@ -27,7 +28,11 @@ class RPaletteDock: public QDockWidget
     _M QString        modeName() const;
 
   public slots:
+    _M void           checkAll();
+    _M void           inverseChecks();
+    _M void           setChecked(bool checked);
     _M void           setMode(bool mode);
+    _M void           uncheckAll();
 };
 
 /**********************************************************************************************/

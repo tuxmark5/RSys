@@ -27,7 +27,9 @@ class RResults: public QObject
       Date,
       Usage0,
       Usage1,
+      Usage1Tooltip,
       DeltaUsage,
+      DeltaUsageTooltip,
       DeltaPUsage,
       Identifier
     };
@@ -67,7 +69,19 @@ class RResults: public QObject
     _M void             reset();
     _M void             setInterval(QDate date0, QDate date1);
     _M void             setInterval(RIntervalFun fun, int num);
+
+  private:
+    _S double           fieldDeltaUsage(RUnit* unit, int x);
+    _M template <int I> QString intervalStr(int x);
 };
+
+/**********************************************************************************************/
+
+template <int I>
+QString RResults :: intervalStr(int x)
+{
+  return std::get<I>(m_intervalFun(x)).toString(Qt::DefaultLocaleShortDate);
+}
 
 /**********************************************************************************************/
 

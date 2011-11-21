@@ -1,5 +1,6 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QToolButton>
+#include <QtGui/QPushButton>
 #include <RSys/Core/RData.hh>
 #include <RSys/Core/RDivision.hh>
 #include <RSys/Core/RSystem.hh>
@@ -14,43 +15,63 @@
 /**********************************************************************************************/
 
 Vacuum RPaletteDock :: RPaletteDock(RMainWindow* parent):
-  QDockWidget(QString::fromUtf8("Rėžimas"), parent)
+  QDockWidget(QString::fromUtf8("Rėžimas"), parent),
+  m_mainWindow(parent)
 {
   QWidget*      widget        = new QWidget(this);
   QGridLayout*  layout        = new QGridLayout(widget);
   QToolButton*  divisionsMode = new QToolButton(widget);
   QToolButton*  systemsMode   = new QToolButton(widget);
 
+  QPushButton*  checkAll      = new QPushButton(R_S("\u2611"), widget);
+  QPushButton*  uncheckAll    = new QPushButton(R_S("\u2610"), widget);
+  QPushButton*  inverseChecks = new QPushButton(R_S("\u25EA"), widget);
+
   setMaximumWidth(300);
 
-  layout->addWidget(divisionsMode, 0, 0);
   divisionsMode->setDefaultAction(parent->m_divisionsStateAction);
   divisionsMode->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
   divisionsMode->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
   divisionsMode->setVisible(true);
 
-  layout->addWidget(systemsMode, 0, 1);
   systemsMode->setDefaultAction(parent->m_systemsStateAction);
   systemsMode->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
   systemsMode->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
   systemsMode->setVisible(true);
 
-  QToolButton::connect(systemsMode, SIGNAL(toggled(bool)), this, SLOT(setMode(bool)));
-
   createContainers(parent);
   m_model   = new RModel1D(m_divisionContainer, widget);
   m_filter  = new RTableView(m_model, widget);
   m_filter->setStretch(true);
-  layout->addWidget(m_filter, 1, 0, 1, 2);
+
+  layout->addWidget(divisionsMode,  0, 0);
+  layout->addWidget(systemsMode,    0, 2);
+  layout->addWidget(m_filter,       1, 0, 1, 3);
+  layout->addWidget(checkAll,       2, 0);
+  layout->addWidget(uncheckAll,     2, 1);
+  layout->addWidget(inverseChecks,  2, 2);
 
   setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+  setMode(false);
   setWidget(widget);
+
+  connect(systemsMode, SIGNAL(toggled(bool)), this, SLOT(setMode(bool)));
+  connect(checkAll, SIGNAL(clicked()), this, SLOT(checkAll()));
+  connect(uncheckAll, SIGNAL(clicked()), this, SLOT(uncheckAll()));
+  connect(inverseChecks, SIGNAL(clicked()), this, SLOT(inverseChecks()));
 }
 
 /**********************************************************************************************/
 
 Vacuum RPaletteDock :: ~RPaletteDock()
 {
+}
+
+/**********************************************************************************************/
+
+void RPaletteDock :: checkAll()
+{
+  setChecked(true);
 }
 
 /**********************************************************************************************/
@@ -84,9 +105,35 @@ void RPaletteDock :: createContainers(RMainWindow* main)
 
 /**********************************************************************************************/
 
+void RPaletteDock :: inverseChecks()
+{
+  RUnitPtrList* units = m_mainWindow->currentUnits();
+
+  for (auto it = units->begin(); it != units->end(); ++it)
+    (*it)->setVisibleRaw((*it)->visible() ^ true);
+
+  m_mainWindow->updateUnits();
+  m_model->notifyAllRowsChanged();
+}
+
+/**********************************************************************************************/
+
 QString RPaletteDock :: modeName() const
 {
   return m_mode ? "Padaliniai" : QString::fromUtf8("Informacinės sistemos");
+}
+
+/**********************************************************************************************/
+
+void RPaletteDock :: setChecked(bool checked)
+{
+  RUnitPtrList* units = m_mainWindow->currentUnits();
+
+  for (auto it = units->begin(); it != units->end(); ++it)
+    (*it)->setVisibleRaw(checked);
+
+  m_mainWindow->updateUnits();
+  m_model->notifyAllRowsChanged();
 }
 
 /**********************************************************************************************/
@@ -97,6 +144,13 @@ void RPaletteDock :: setMode(bool mode)
 
   m_mode = mode;
   m_model->setContainer(!mode ? m_divisionContainer : m_systemContainer);
+}
+
+/**********************************************************************************************/
+
+void RPaletteDock :: uncheckAll()
+{
+  setChecked(false);
 }
 
 /**********************************************************************************************/

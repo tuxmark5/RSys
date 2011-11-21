@@ -94,7 +94,7 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   m_splitter->addWidget(m_widgetR);
 
   createTabs();
-  onUnitModeChanged(false);
+  updateUnits();
 
   connect(m_intervalToolBar, SIGNAL(intervalChanged()), this, SLOT(setInterval()));
   connect(m_intervalToolBar, SIGNAL(message(QString,int)), this, SLOT(showMessage(QString,int)));
@@ -189,7 +189,7 @@ void RMainWindow :: connectActions()
   QAction::connect(m_importAction, SIGNAL(triggered()), this, SLOT(importData()));
   QAction::connect(m_rollbackAction, SIGNAL(triggered()), this, SLOT(rollback()));
   QAction::connect(m_searchAction, SIGNAL(toggled(bool)), this, SLOT(setShowSearchForm(bool)));
-  QAction::connect(m_systemsStateAction, SIGNAL(toggled(bool)), this, SLOT(onUnitModeChanged(bool)));
+  QAction::connect(m_systemsStateAction, SIGNAL(toggled(bool)), this, SLOT(updateUnits()));
 }
 
 /**********************************************************************************************/
@@ -345,6 +345,16 @@ void RMainWindow :: createTabs()
 
 /**********************************************************************************************/
 
+RUnitPtrList* RMainWindow :: currentUnits() const
+{
+  if (m_systemsStateAction->isChecked())
+    return m_data1->systems()->cast<RUnitPtr>();
+  else
+    return m_data1->divisions()->cast<RUnitPtr>();
+}
+
+/**********************************************************************************************/
+
 void RMainWindow :: findIntervalNow()
 {
   R_GUARD(m_searchForm, Vacuum);
@@ -414,16 +424,6 @@ void RMainWindow :: onSearchFormDestroyed()
 {
   m_searchAction->setChecked(false);
   m_searchForm = 0;
-}
-
-/**********************************************************************************************/
-
-void RMainWindow :: onUnitModeChanged(bool systems)
-{
-  if (systems)
-    emit unitsChanged(m_data1->systems()->cast<RUnitPtr>());
-  else
-    emit unitsChanged(m_data1->divisions()->cast<RUnitPtr>());
 }
 
 /**********************************************************************************************/
@@ -500,6 +500,13 @@ void RMainWindow :: showMessage(const QString& message, int timeout)
 
   widget->setOwner(sender());
   addStatusWidget(widget, sender());
+}
+
+/**********************************************************************************************/
+
+void RMainWindow :: updateUnits()
+{
+  emit unitsChanged(currentUnits());
 }
 
 /**********************************************************************************************/

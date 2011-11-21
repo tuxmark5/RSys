@@ -30,6 +30,7 @@ class RElement
     _M void             setId(RID id);
     _M void             setValid(bool valid);
     _M void             setVisible(bool visible);
+    _M void             setVisibleRaw(bool visible);
 };
 
 /**********************************************************************************************/

@@ -20,10 +20,10 @@ Vacuum RIntervalToolBar :: RIntervalToolBar(RMainWindow* parent):
   QDate         currDate  = QDate::currentDate();
   QDate         date1     = QDate(currDate.year(), currDate.month(), 1);
   QDate         date0     = date1.addYears(-1);
-  QPushButton*  decMonth  = new QPushButton("-");
-  QPushButton*  decYear   = new QPushButton("-");
-  QPushButton*  incMonth  = new QPushButton("+");
-  QPushButton*  incYear   = new QPushButton("+");
+  QPushButton*  decMonth  = new QPushButton(R_S("\u25C0"));
+  QPushButton*  decYear   = new QPushButton(R_S("\u25C0"));
+  QPushButton*  incMonth  = new QPushButton(R_S("\u25B6"));
+  QPushButton*  incYear   = new QPushButton(R_S("\u25B6"));
 
   m_interval0     = new QDateEdit(date0, this);
   m_interval1     = new QDateEdit(date1, this);
@@ -86,11 +86,13 @@ Vacuum RIntervalToolBar :: ~RIntervalToolBar()
 
 bool RIntervalToolBar :: adjustInterval(QDate& date0, QDate& date1)
 {
-  RData*        data      = m_results->data1();
-  bool          modified  = false;
+  RData*        data              = m_results->data1();
+  bool          modified          = false;
+  QDate         globalInterval0   = data->interval0();
+  QDate         globalInterval1   = data->interval1().addYears(5); // maksimalus prognozavimas
 
-  if (date0 < data->interval0()) { date0 = data->interval0(); modified = true; }
-  if (date1 > data->interval1()) { date1 = data->interval1(); modified = true; }
+  if (date0 < globalInterval0) { date0 = globalInterval0; modified = true; }
+  if (date1 > globalInterval1) { date1 = globalInterval1; modified = true; }
   return modified;
 }
 
@@ -301,6 +303,8 @@ bool RIntervalToolBar :: validate(bool emitMessage)
   QDate   date1       = m_interval1->date();
   int     error       = Correct;
 
+  adjustInterval(date0, date1);
+
   if (error == Correct)
     error = date0.daysTo(date1) != 1 ? Correct : TooShort;
 
@@ -308,10 +312,7 @@ bool RIntervalToolBar :: validate(bool emitMessage)
     error = date0 < date1 ? Correct : InvalidOrder;
 
   if (error == Correct)
-  {
-    adjustInterval(date0, date1);
     error = qAbs(date0.year() - date1.year()) <= 10 ? Correct : TooLong;
-  }
 
   if (emitMessage)
   {

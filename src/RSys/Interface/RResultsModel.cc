@@ -118,10 +118,12 @@ int RResultsModel :: insertField(int index, int type, RUnit* unit)
 
     case Usage1:
       addGetter(fieldKey, Qt::DisplayRole, m_results->field(RResults::Usage1, unit));
+      addGetter(fieldKey, Qt::ToolTipRole, m_results->field(RResults::Usage1Tooltip, unit));
       break;
 
     case UsageD:
       addGetter(fieldKey, Qt::DisplayRole, m_results->field(RResults::DeltaUsage, unit));
+      addGetter(fieldKey, Qt::ToolTipRole, m_results->field(RResults::DeltaUsageTooltip, unit));
       break;
 
     case UsageDP:
