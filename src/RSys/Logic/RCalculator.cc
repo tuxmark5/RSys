@@ -6,6 +6,8 @@
 #include <RSys/Core/RSubmission.hh>
 #include <QVector>
 #include <QDate>
+#include <cmath>
+#include <algorithm>
 
 #define FROM(x) std::get<0>(x)
 #define TO(x)   std::get<1>(x)
@@ -75,8 +77,11 @@ void RCalculator :: updateUsages(RSubmissionPtrList* submissions)
 {
   for (auto it = submissions->begin(); it != submissions->end(); it++)
   {
-    updateUsageChanges((RUnitMap*) &(*it)->measure()->m_divisionUsage, it->get());
-    updateUsageChanges((RUnitMap*) &(*it)->measure()->m_systemUsage, it->get());
+    if ((*it)->measure() != NULL)
+    {
+      updateUsageChanges((RUnitMap*) &(*it)->measure()->m_divisionUsage, it->get());
+      updateUsageChanges((RUnitMap*) &(*it)->measure()->m_systemUsage, it->get());
+    }
   }
 }
 
@@ -86,7 +91,8 @@ void RCalculator :: updateUsageChanges(RUnitMap* units, RSubmission* submission)
 {
   for (auto it = units->begin(); it != units->end(); it++)
   {
-    double usage = submission->count() * it.value();
+    double usage = submission->count() * it.value()
+                   / (submission->date0().daysTo(submission->date1()) + 1);
     it.key()->m_usageChangeMap[submission->date0()] += usage;
     it.key()->m_usageChangeMap[submission->date1().addDays(1)] -= usage;
   }
@@ -128,6 +134,8 @@ void RCalculator :: calculateIntervals()
   }
 }
 
+/**********************************************************************************************/
+
 void RCalculator :: calculateIntervals(RUnitPtrList* units)
 {
   QVector<RInterval> intervals;
@@ -161,6 +169,9 @@ double RCalculator :: calculateUsage(RInterval interval, RUsageMap& usageMap)
   } else {
     it--;
     curUsage = it.value();
+    // tolygus variantas: be tolesnių 2 eilučių
+    usage = -polynomialExterpolation(it, usageMap.begin(), usageMap.end(), curDate);
+    curDate = it.key();
     it++;
   }
   while (it != usageMap.end() && it.key() < TO(interval))
@@ -170,6 +181,144 @@ double RCalculator :: calculateUsage(RInterval interval, RUsageMap& usageMap)
     curDate = it.key();
     it++;
   }
-  usage += curDate.daysTo(TO(interval)) * curUsage;
+  // tolygus variantas: usage += curDate.daysTo(TO(interval)) * curUsage;
+  if (it != usageMap.begin())
+  {
+    usage += polynomialExterpolation(--it, usageMap.begin(), usageMap.end(), TO(interval));
+  } else {
+    return 0;
+  }
   return usage;
+}
+
+/**********************************************************************************************/
+
+double RCalculator :: polynomialExterpolation(QDate prevDate, double prevUsage,
+                                              QDate startDate, double mainUsage,
+                                              QDate endDate, double nextUsage,
+                                              QDate nextDate, QDate date)
+{
+  double matrix[3][4];
+  double coefficients[3]; // antro laipsnio polinomo koeficientai
+                          // (koeficientas prie laipsnio i yra indeksu 2 - i)
+  // susikuriame matricą, kurią išsprendę gausime ieškomos funkcijos koeficientus
+  // prevDate laikysime abscisės pradžia
+
+  for (int i = 1; i <= 3; i++)
+  {
+    matrix[0][3 - i] = pow(prevDate.daysTo(startDate), i) / i;
+    matrix[1][3 - i] = (pow(prevDate.daysTo(endDate), 3)
+                       - pow(prevDate.daysTo(startDate), 3)) / i;
+    matrix[2][3 - i] = (pow(prevDate.daysTo(nextDate), 3)
+                       - pow(prevDate.daysTo(endDate), 3)) / i;
+  }
+  // lygybių sprendiniai (norimos atitinkamų integralų reikšmės)
+  matrix[0][3] = prevDate.daysTo(startDate) * prevUsage;
+  matrix[1][3] = startDate.daysTo(endDate) * mainUsage;
+  matrix[2][3] = endDate.daysTo(nextDate) * nextUsage;
+  if (solveSystemOfLinearEquations(matrix, coefficients))
+  {
+    double answer = 0;
+    for (int i = 0; i < 3; i++)
+    {
+      answer += coefficients[i] / (3 - i) * (pow(prevDate.daysTo(date), 3 - i)
+                                            - pow(prevDate.daysTo(startDate), 3 - i));
+    }
+    return answer;
+  } else { // jei neišsprendžiame, laikome tolygiu
+    return startDate.daysTo(date) * mainUsage;
+  }
+}
+
+/**********************************************************************************************/
+
+bool RCalculator :: solveSystemOfLinearEquations(double matrix[3][4],
+                                                 double solution[3])
+{ // Gauso metodas
+  const int numRows = 3;
+  const int numCols = 4;
+  // žemiau pateiktas algoritmas teisingas, tik kai numRows + 1 == numCols
+  bool uniqueSolution = true;
+  for (int i = 0; i < numRows; i++)
+  {
+    int maxi = i;
+    for (int j = i + 1; j < numRows; j++)
+    {
+      if (abs(matrix[maxi][i]) < abs(matrix[j][i]))
+      {
+        maxi = j;
+      }
+    }
+    if (matrix[maxi][i] != 0)
+    {
+      for (int j = 0; j < numCols && i != maxi; j++) // sukeičiame matricas maxi, i
+      {
+        std::swap(matrix[maxi][j], matrix[i][j]);
+      }
+      for (int j = numCols - 1; j >= i; j--) // pasidarome matrix[i][i] == 1
+      {
+        matrix[i][j] /= matrix[i][i];
+      }
+      for (int j = i + 1; j < numRows; j++)
+      { // tolesnėse eilutėse i-ajame stulpelyje pasidarome 0
+        for (int k = numCols - 1; k >= i; k--)
+        {
+          matrix[j][k] -= matrix[i][k] * matrix[j][i];
+        }
+      }
+    } else {
+      uniqueSolution = false;
+    }
+  }
+  // formuoja sprendinį
+  for (int i = numRows - 1; i >= 0; i--)
+  {
+    solution[i] = matrix[i][numCols - 1];
+    for (int j = i + 1; j < numCols - 1; j++)
+    {
+      solution[i] -= solution[j] * matrix[i][j];
+    }
+  }
+  return uniqueSolution;
+}
+
+/**********************************************************************************************/
+
+double RCalculator :: polynomialExterpolation(RUsageMap :: iterator it,
+                                              RUsageMap :: iterator begin,
+                                              RUsageMap :: iterator end,
+                                              QDate date)
+{
+  QDate prevDate, startDate, endDate, nextDate;
+  double prevUsage, mainUsage, nextUsage;
+  if (it == begin)
+  {
+    prevDate = it.key();
+    prevUsage = 0;
+  }
+  else
+  {
+    it--;
+    prevDate = it.key();
+    prevUsage = it.value();
+    it++;
+  }
+  startDate = it.key();
+  mainUsage = it.value();
+  it++;
+  if (it == end)
+  {
+    return 0;
+  }
+  endDate = it.key();
+  nextUsage = it.value();
+  it++;
+  if (it == end)
+  {
+    nextDate = endDate;
+  } else {
+    nextDate = it.key();
+  }
+  return polynomialExterpolation(prevDate, prevUsage, startDate, mainUsage,
+                                 endDate, nextUsage, nextDate, date);
 }
