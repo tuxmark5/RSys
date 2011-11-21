@@ -10,6 +10,7 @@
 
 Vacuum RStatusWidget :: RStatusWidget(QWidget* parent):
   QFrame(parent),
+  m_timer(0),
   m_closing(false)
 {
   QHBoxLayout*    layout      = new QHBoxLayout(this);
@@ -47,6 +48,30 @@ void RStatusWidget :: animateHeight(int from, int to, const char* slot)
   {
     connect(animation, SIGNAL(finished()), this, slot);
   }
+}
+
+/**********************************************************************************************/
+
+void RStatusWidget :: enterEvent(QEvent* event)
+{
+  if (m_timer)
+  {
+    m_timer->stop();
+    setFrameStyle(Box | Raised);
+  }
+  QFrame::enterEvent(event);
+}
+
+/**********************************************************************************************/
+
+void RStatusWidget :: leaveEvent(QEvent* event)
+{
+  if (m_timer)
+  {
+    m_timer->start();
+    setFrameStyle(Box | Plain);
+  }
+  QFrame::leaveEvent(event);
 }
 
 /**********************************************************************************************/
@@ -94,13 +119,15 @@ void RStatusWidget :: setWidget(QWidget* widget)
 
 void RStatusWidget :: startTimer(int timeout)
 {
-  QTimer* timer = new QTimer(this);
+  R_GUARD(!m_timer, Vacuum);
 
-  connect(timer, SIGNAL(timeout()), this, SLOT(onCloseClicked()));
+  m_timer = new QTimer(this);
 
-  timer->setInterval(timeout);
-  timer->setSingleShot(true);
-  timer->start();
+  connect(m_timer, SIGNAL(timeout()), this, SLOT(onCloseClicked()));
+
+  m_timer->setInterval(timeout);
+  m_timer->setSingleShot(true);
+  m_timer->start();
 }
 
 /**********************************************************************************************/

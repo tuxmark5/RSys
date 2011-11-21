@@ -16,6 +16,27 @@ Vacuum RData :: RData():
 
 /**********************************************************************************************/
 
+void RData :: calculateIntervals()
+{
+  m_interval0 = QDate();
+  m_interval1 = QDate();
+  calculateIntervals(submissions());
+  calculateIntervals(submissions1());
+}
+
+/**********************************************************************************************/
+
+void RData :: calculateIntervals(RSubmissionPtrList* submissions)
+{
+  for (auto it = submissions->begin(); it != submissions->end(); ++it)
+  {
+    if (((*it)->date0() < m_interval0) || m_interval0.isNull()) m_interval0 = (*it)->date0();
+    if (((*it)->date1() > m_interval1) || m_interval1.isNull()) m_interval1 = (*it)->date1();
+  }
+}
+
+/**********************************************************************************************/
+
 void RData :: clear()
 {
   m_divisions.clear();          // deps: measures, systems
@@ -48,6 +69,14 @@ RDivision* RData :: division(const QString& identifier) const
 
 /**********************************************************************************************/
 
+void RData :: enableIntervalTracking()
+{
+  (*this)[RSubmission::date0Change] << std::bind(&RData::onDate0Change, this, _1, _2);
+  (*this)[RSubmission::date1Change] << std::bind(&RData::onDate1Change, this, _1, _2);
+}
+
+/**********************************************************************************************/
+
 RMeasure* RData :: measure(RID id) const
 {
   for (auto it = m_measures.begin(); it != m_measures.end(); ++it)
@@ -63,6 +92,30 @@ RMeasure* RData :: measure(const QString& identifier) const
   if (RUnit* unit = m_unitHash[RUnit::Measure].value(identifier))
     return static_cast<RMeasure*>(unit);
   return 0;
+}
+
+/**********************************************************************************************/
+
+void RData :: onDate0Change(RSubmission* submission, QDate date0)
+{
+  R_GUARD(!date0.isNull(), Vacuum);
+
+  if (date0 < m_interval0)
+    m_interval0 = date0;
+  else if (submission->date0() == m_interval0)
+    calculateIntervals();
+}
+
+/**********************************************************************************************/
+
+void RData :: onDate1Change(RSubmission* submission, QDate date1)
+{
+  R_GUARD(!date1.isNull(), Vacuum);
+
+  if (date1 > m_interval1)
+    m_interval1 = date1;
+  else if (submission->date1() == m_interval1)
+    calculateIntervals();
 }
 
 /**********************************************************************************************/

@@ -50,6 +50,7 @@ void RSubmission :: setCount(int count)
 
 void RSubmission :: setDate0(const QDate& date0)
 {
+  (*m_data)[date0Change](this, date0);
   m_date0 = date0;
 }
 
@@ -57,6 +58,7 @@ void RSubmission :: setDate0(const QDate& date0)
 
 void RSubmission :: setDate1(const QDate& date1)
 {
+  (*m_data)[date1Change](this, date1);
   m_date1 = date1;
 }
 
