@@ -127,6 +127,16 @@ QVariant RModel1D :: lastRowData(const QModelIndex& index, int role) const
 
 /**********************************************************************************************/
 
+void RModel1D :: notifyAllRowsChanged()
+{
+  QModelIndex left  = createIndex(0, 0, 0);
+  QModelIndex right = createIndex(m_container->height() - 1, m_container->width() - 1, 0);
+
+  emit dataChanged(left, right);
+}
+
+/**********************************************************************************************/
+
 void RModel1D :: notifyRowChanged(int row)
 {
   QModelIndex left  = createIndex(row, 0, 0);

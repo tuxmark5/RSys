@@ -65,6 +65,7 @@ class RMainWindow: public QMainWindow
     _V Vacuum               ~RMainWindow();
     _M void                 addStatusWidget(QWidget* widget, QObject* owner = 0);
     _M void                 connectActions();
+    _M RUnitPtrList*        currentUnits() const;
     _M void                 createActions();
     _M void                 createContainers();
     _M void                 createTabs();
@@ -86,7 +87,7 @@ class RMainWindow: public QMainWindow
     _M void                 login();
     _M void                 logout();
     _M void                 onSearchFormDestroyed();
-    _M void                 onUnitModeChanged(bool systems);
+    _M void                 onUnitModeChanged();
     _M void                 rollback();
     _M void                 setInterfaceEnabled(bool enabled);
     _M void                 setInterval();
