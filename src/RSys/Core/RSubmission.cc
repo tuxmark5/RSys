@@ -33,6 +33,15 @@ Vacuum RSubmission :: ~RSubmission()
 
 /**********************************************************************************************/
 
+QString RSubmission :: measureFullName() const
+{
+  if (m_measure)
+    return m_measure->fullName();
+  return R_S("(Nežinoma paramos priemonė)");
+}
+
+/**********************************************************************************************/
+
 RID RSubmission :: measureId() const
 {
   R_GUARD(m_measure, 0);

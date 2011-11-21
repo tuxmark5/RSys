@@ -93,18 +93,16 @@ void RPaletteDock :: createContainers(RMainWindow* main)
   cd->addAccessor2<int>    (0, Qt::CheckStateRole)
     >> f(getBool) * f(&RDivision::visible)
     << f(&RDivision::setVisible) * f(setBool);
-  cd->addAccessor2<QString>(0, Qt::DisplayRole)
-    >> &RDivision::identifier
-    << &RDivision::setIdentifier;
+  cd->addAccessor2<QString>(0, Qt::DisplayRole)   >> &RDivision::fullName;
+  cd->addAccessor2<QString>(0, Qt::ToolTipRole)   >> &RDivision::fullName;
 
   auto cs = newContainer(main->data()->systems());
   cs->addColumn("Sistema");
   cs->addAccessor2<int>     (0, Qt::CheckStateRole)
     >> f(getBool) * f(&RSystem::visible)
     << f(&RSystem::setVisible) * f(setBool);
-  cs->addAccessor2<QString> (0, Qt::DisplayRole)
-    >> &RSystem::identifier
-    << &RSystem::setIdentifier;
+  cs->addAccessor2<QString> (0, Qt::DisplayRole)  >> &RSystem::fullName;
+  cs->addAccessor2<QString> (0, Qt::ToolTipRole)  >> &RSystem::fullName;
 
   m_divisionContainer = cd;
   m_systemContainer   = cs;

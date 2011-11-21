@@ -35,6 +35,7 @@ class RSubmission: public RElement
     _M QDate            date0() const { return m_date0; }
     _M QDate            date1() const { return m_date1; }
     _M RMeasure*        measure() const { return m_measure.get(); }
+    _M QString          measureFullName() const;
     _M RID              measureId() const;
     _M QString          measureName() const { return m_measureName; }
     _M void             setCount(int count);

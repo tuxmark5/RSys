@@ -39,6 +39,7 @@ class RUnit: public RElement
     _M Vacuum             RUnit(RUnit& unit, RData* data);
     _V Vacuum             ~RUnit();
     _M RUnit*             buddy() const { return static_cast<RUnit*>(m_buddy); }
+    _M QString            fullName() const;
     _M QString            identifier() const { return m_identifier; }
     _M QString            name() const { return m_name; }
     _M void               setIdentifier(const QString& identifier);

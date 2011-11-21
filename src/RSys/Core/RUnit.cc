@@ -30,6 +30,13 @@ Vacuum RUnit :: ~RUnit()
 
 /**********************************************************************************************/
 
+QString RUnit :: fullName() const
+{
+  return QString("(%1) %2").arg(m_identifier, m_name);
+}
+
+/**********************************************************************************************/
+
 void RUnit :: setIdentifier(const QString& identifier)
 {
   m_data->m_unitHash[m_type].remove(m_identifier, this);

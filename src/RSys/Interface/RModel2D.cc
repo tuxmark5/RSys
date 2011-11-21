@@ -67,8 +67,6 @@ Qt::ItemFlags RModel2D :: flags(const QModelIndex& index) const
 
 QVariant RModel2D :: headerData(int section, Qt::Orientation orientation, int role) const
 {
-  R_GUARD(role == Qt::DisplayRole, QVariant());
-
   switch (orientation)
   {
     case Qt::Horizontal:

@@ -255,6 +255,7 @@ void RMainWindow :: createContainers()
   cd->addColumn("Pavadinimas");
   cd->addColumn("Aprašymas");
   cd->addAccessor2<QString>(0, Qt::DisplayRole) >> &RDivision::identifier << &RDivision::setIdentifier;
+  cd->addAccessor2<QString>(0, Qt::ToolTipRole) >> &RDivision::fullName;
   cd->addAccessor2<QString>(1, Qt::DisplayRole) >> &RDivision::name       << &RDivision::setName;
   cd->setAlloc([=]() { return new RDivision(m_data1); });
 
@@ -262,6 +263,7 @@ void RMainWindow :: createContainers()
   cm->addColumn("Pavadinimas");
   cm->addColumn("Aprašymas");
   cm->addAccessor2<QString>(0, Qt::DisplayRole) >> &RMeasure::identifier << &RMeasure::setIdentifier;
+  cm->addAccessor2<QString>(0, Qt::ToolTipRole) >> &RMeasure::fullName;
   cm->addAccessor2<QString>(1, Qt::DisplayRole) >> &RMeasure::name       << &RMeasure::setName;
   cm->setAlloc([=]() { return new RMeasure(m_data1); });
 
@@ -272,6 +274,8 @@ void RMainWindow :: createContainers()
   cu->addColumn("Pabaiga");
   cu->addAccessor2<QString>(0, Qt::DisplayRole)
     >> &RSubmission::measureName << &RSubmission::setMeasureName;
+  cu->addAccessor2<QString>(0, Qt::ToolTipRole)
+    >> &RSubmission::measureFullName;
   cu->addAccessor2<int>(1, Qt::DisplayRole)
     >> &RSubmission::count << &RSubmission::setCount;
   cu->addAccessor2<QDate>(2, Qt::DisplayRole)
@@ -288,6 +292,7 @@ void RMainWindow :: createContainers()
   cs->addColumn("Pavadinimas");
   cs->addColumn("Aprašymas");
   cs->addAccessor2<QString>(0, Qt::DisplayRole) >> &RSystem::identifier << &RSystem::setIdentifier;
+  cs->addAccessor2<QString>(0, Qt::ToolTipRole) >> &RSystem::fullName;
   cs->addAccessor2<QString>(1, Qt::DisplayRole) >> &RSystem::name       << &RSystem::setName;
   cs->setAlloc([=]() { return new RSystem(m_data1); });
 
