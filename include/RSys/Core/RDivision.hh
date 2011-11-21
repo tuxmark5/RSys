@@ -15,12 +15,6 @@ class RDivision: public RUnit
     _F class          RData;
     _F class          TestRValidator;
 
-  public:
-    _G(void,          onMeasureSet, RDivision* division, RMeasure* measure, double value);
-    _G(void,          onMeasureUnset, RDivision* division, RMeasure* measure);
-    _G(void,          onSystemSet, RDivision* division, RSystem* system, double value);
-    _G(void,          onSystemUnset, RDivision* division, RSystem* system);
-
   private:
     _M RMeasureMap    m_measureMap;
     _M RMeasureMap    m_measureMap1;  // planned measures
@@ -36,6 +30,12 @@ class RDivision: public RUnit
     _M void           setMeasure1(RMeasure* measure, double value);
     _M void           setSystem(RSystem* system, double value);
     _M double         system(RSystem* system) const { return m_systemMap.value(system, 0); }
+
+  public:
+    _G(void,          onMeasureSet, RDivision* division, RMeasure* measure, double value);
+    _G(void,          onMeasureUnset, RDivision* division, RMeasure* measure);
+    _G(void,          onSystemSet, RDivision* division, RSystem* system, double value);
+    _G(void,          onSystemUnset, RDivision* division, RSystem* system);
 };
 
 /**********************************************************************************************/

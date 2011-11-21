@@ -35,13 +35,13 @@ void RDivision :: setMeasure(RMeasure* measure, double value)
 {
   if (value <= 0.0)
   {
-    m_measureMap.remove(measure);
     (*m_data)[onMeasureUnset](this, measure);
+    m_measureMap.remove(measure);
   }
   else
   {
-    m_measureMap.insert(measure, value);
     (*m_data)[onMeasureSet](this, measure, value);
+    m_measureMap.insert(measure, value);
   }
 }
 
@@ -51,13 +51,13 @@ void RDivision :: setMeasure1(RMeasure* measure, double value)
 {
   if (value <= 0.0)
   {
-    m_measureMap1.remove(measure);
     (*m_data)[onMeasureUnset](this, measure);
+    m_measureMap1.remove(measure);
   }
   else
   {
-    m_measureMap1.insert(measure, value);
     (*m_data)[onMeasureSet](this, measure, value);
+    m_measureMap1.insert(measure, value);
   }
 }
 
@@ -67,13 +67,13 @@ void RDivision :: setSystem(RSystem* system, double value)
 {
   if (!value)
   {
-    m_systemMap.remove(system);
     (*m_data)[onSystemUnset](this, system);
+    m_systemMap.remove(system);
   }
   else
   {
-    m_systemMap.insert(system, value);
     (*m_data)[onSystemSet](this, system, value);
+    m_systemMap.insert(system, value);
   }
 }
 

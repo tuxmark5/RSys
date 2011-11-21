@@ -3,6 +3,7 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QLabel>
 #include <QtGui/QPushButton>
+#include <RSys/Core/RData.hh>
 #include <RSys/Interface/RIntervalToolBar.hh>
 #include <RSys/Interface/RMainWindow.hh>
 #include <RSys/Logic/RResults.hh>
@@ -83,15 +84,119 @@ Vacuum RIntervalToolBar :: ~RIntervalToolBar()
 
 /**********************************************************************************************/
 
+bool RIntervalToolBar :: adjustInterval(QDate& date0, QDate& date1)
+{
+  RData*        data      = m_results->data1();
+  bool          modified  = false;
+
+  if (date0 < data->interval0()) { date0 = data->interval0(); modified = true; }
+  if (date1 > data->interval1()) { date1 = data->interval1(); modified = true; }
+  return modified;
+}
+
+/**********************************************************************************************/
+
 bool RIntervalToolBar :: applyInterval()
 {
   R_GUARD(validate(true), false);
 
   RIntervalFun  fun;
-  int           num   = 0;
-  QDate         date0 = m_interval0->date();
-  QDate         date1 = m_interval1->date();
+  int           num       = 0;
+  QDate         date0     = m_interval0->date();
+  QDate         date1     = m_interval1->date();
+  bool          modified  = adjustInterval(date0, date1);
 
+  getInterval(date0, date1, fun, num);
+
+  QString       msgText   = R_S("Rodomas intervalas: nuo <b>%1</b> iki <b>%2</b>")
+    .arg(date0.toString(Qt::DefaultLocaleShortDate))
+    .arg(date1.toString(Qt::DefaultLocaleShortDate));
+
+  if (modified)
+  {
+    msgText += R_S("<br>Nes pateikti intervalo galai viršyja duomenų apimtis, tai"
+                   "<br>itervalas buvo pakoreguotas, kad atitiktų turimus duomenis.");
+  }
+
+  emit message(msgText, -1);
+
+  m_results->setInterval(m_interval0->date(), m_interval1->date());
+  m_results->setInterval(std::move(fun), num);
+  emit intervalChanged();
+  return true;
+}
+
+/**********************************************************************************************/
+
+QDate RIntervalToolBar :: date0() const
+{
+  return m_interval0->date();
+}
+
+/**********************************************************************************************/
+
+QDate RIntervalToolBar :: date1() const
+{
+  return m_interval1->date();
+}
+
+/**********************************************************************************************/
+
+void RIntervalToolBar :: decMonth()
+{
+  modifyDate(0, -1);
+}
+
+/**********************************************************************************************/
+
+void RIntervalToolBar :: decYear()
+{
+  modifyDate(-1, 0);
+}
+
+/**********************************************************************************************/
+
+void RIntervalToolBar :: emitErrorMessage(int error)
+{
+  switch (error)
+  {
+    case Correct:
+      break;
+
+    case TooLong:
+      emit message(R_S("Per ilgas intervalas. Ilgiausias leistinas intervalo ilgis yra 10 metų"), 8000);
+      break;
+
+    case TooShort:
+      emit message(R_S("Per trumpas intervalas."), 8000);
+      break;
+
+    case InvalidOrder:
+      emit message(R_S("Intervalo pabaigos data turi būti vėliau už intervalo pradžią."), 8000);
+      break;
+  }
+}
+
+/**********************************************************************************************/
+
+bool RIntervalToolBar :: eventFilter(QObject* watched, QEvent* event)
+{
+  if (watched == m_interval0 || watched == m_interval1)
+  {
+    if (event->type() == QEvent::KeyPress)
+    {
+      QKeyEvent* event1 = static_cast<QKeyEvent*>(event);
+      if (event1->key() == Qt::Key_Enter || event1->key() == Qt::Key_Return)
+        applyInterval();
+    }
+  }
+  return QToolBar::eventFilter(watched, event);
+}
+
+/**********************************************************************************************/
+
+void RIntervalToolBar :: getInterval(QDate& date0, QDate& date1, RIntervalFun& fun, int& num)
+{
   switch (m_intervalLen->currentIndex())
   {
     case ByWeek:
@@ -134,59 +239,6 @@ bool RIntervalToolBar :: applyInterval()
       };
       break;
   }
-
-  message(R_S("Rodomas intervalas: nuo <b>%1</b> iki <b>%2</b>")
-          .arg(date0.toString(Qt::DefaultLocaleShortDate))
-          .arg(date1.toString(Qt::DefaultLocaleShortDate)), 8000);
-
-  m_results->setInterval(m_interval0->date(), m_interval1->date());
-  m_results->setInterval(std::move(fun), num);
-  emit intervalChanged();
-  return true;
-}
-
-/**********************************************************************************************/
-
-QDate RIntervalToolBar :: date0() const
-{
-  return m_interval0->date();
-}
-
-/**********************************************************************************************/
-
-QDate RIntervalToolBar :: date1() const
-{
-  return m_interval1->date();
-}
-
-/**********************************************************************************************/
-
-void RIntervalToolBar :: decMonth()
-{
-  modifyDate(0, -1);
-}
-
-/**********************************************************************************************/
-
-void RIntervalToolBar :: decYear()
-{
-  modifyDate(-1, 0);
-}
-
-/**********************************************************************************************/
-
-bool RIntervalToolBar :: eventFilter(QObject* watched, QEvent* event)
-{
-  if (watched == m_interval0 || watched == m_interval1)
-  {
-    if (event->type() == QEvent::KeyPress)
-    {
-      QKeyEvent* event1 = static_cast<QKeyEvent*>(event);
-      if (event1->key() == Qt::Key_Enter || event1->key() == Qt::Key_Return)
-        applyInterval();
-    }
-  }
-  return QToolBar::eventFilter(watched, event);
 }
 
 /**********************************************************************************************/
@@ -247,23 +299,27 @@ bool RIntervalToolBar :: validate(bool emitMessage)
 {
   QDate   date0       = m_interval0->date();
   QDate   date1       = m_interval1->date();
-  bool    okDeltaMax  = qAbs(date0.year() - date1.year()) <= 10;
-  bool    okDeltaMin  = date0.daysTo(date1) != 1;
-  bool    okOrder     = date0 < date1;
-  bool    valid       = okDeltaMax && okDeltaMin && okOrder;
+  int     error       = Correct;
+
+  if (error == Correct)
+    error = date0.daysTo(date1) != 1 ? Correct : TooShort;
+
+  if (error == Correct)
+    error = date0 < date1 ? Correct : InvalidOrder;
+
+  if (error == Correct)
+  {
+    adjustInterval(date0, date1);
+    error = qAbs(date0.year() - date1.year()) <= 10 ? Correct : TooLong;
+  }
 
   if (emitMessage)
   {
-    if (!okDeltaMax)
-      emit message(R_S("Per ilgas intervalas. Ilgiausias leistinas intervalo ilgis yra 10 metų"), 8000);
-    else if (!okDeltaMin)
-      emit message(R_S("Per trumpas intervalas."), 8000);
-    else if (!okOrder)
-      emit message(R_S("Intervalo pabaigos data turi būti vėliau už intervalo pradžią."), 8000);
+    emitErrorMessage(error);
   }
 
-  setValid(valid);
-  return (m_validInterval = valid);
+  setValid(m_validInterval = (error == Correct));
+  return m_validInterval;
 }
 
 /**********************************************************************************************/

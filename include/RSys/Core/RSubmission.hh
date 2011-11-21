@@ -44,6 +44,12 @@ class RSubmission: public RElement
     _M void             setMeasureId(RID id);
     _M void             setMeasureName(const QString& measureName);
     _M void             setMeasure1Name(const QString& measureName);
+
+  public:
+    _G(void,            countChange, RSubmission* submission, int newCount);
+    _G(void,            date0Change, RSubmission* submission, QDate newDate0);
+    _G(void,            date1Change, RSubmission* submission, QDate newDate1);
+    _G(void,            measureChange, RSubmission* submission, RMeasure* measure);
 };
 
 /**********************************************************************************************/

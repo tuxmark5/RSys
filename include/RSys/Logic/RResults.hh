@@ -51,6 +51,7 @@ class RResults: public QObject
   public:
     _M Vacuum           RResults(RData* data0, RData* data1, QObject* parent = 0);
     _M Vacuum           ~RResults();
+    _M RData*           data1() const { return m_data1; }
     _M Getter           field(ResultType type, RUnit* unit);
     _M RInterval        findLowUsageInterval(RUnit* unit);
     _M RInterval        interval(int x) const { return m_intervalFun(x); }

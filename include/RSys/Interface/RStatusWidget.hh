@@ -14,6 +14,7 @@ class RStatusWidget: public QFrame
   Q_PROPERTY(int height READ height WRITE setFixedHeight)
 
   public:
+    _M QTimer*        m_timer;
     _M bool           m_closing: 1;
 
   public:
@@ -27,6 +28,10 @@ class RStatusWidget: public QFrame
   public slots:
     _M void           onCloseClicked();
     _M void           startTimer(int timeout = 1500);
+
+  protected:
+    _M void           enterEvent(QEvent* event);
+    _M void           leaveEvent(QEvent* event);
 };
 
 /**********************************************************************************************/

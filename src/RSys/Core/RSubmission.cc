@@ -43,6 +43,7 @@ RID RSubmission :: measureId() const
 
 void RSubmission :: setCount(int count)
 {
+  (*m_data)[countChange](this, count);
   m_count = count;
 }
 
@@ -50,6 +51,7 @@ void RSubmission :: setCount(int count)
 
 void RSubmission :: setDate0(const QDate& date0)
 {
+  (*m_data)[date0Change](this, date0);
   m_date0 = date0;
 }
 
@@ -57,6 +59,7 @@ void RSubmission :: setDate0(const QDate& date0)
 
 void RSubmission :: setDate1(const QDate& date1)
 {
+  (*m_data)[date1Change](this, date1);
   m_date1 = date1;
 }
 
@@ -64,6 +67,7 @@ void RSubmission :: setDate1(const QDate& date1)
 
 void RSubmission :: setMeasure(RMeasure* measure)
 {
+  (*m_data)[measureChange](this, measure);
   m_measure       = measure;
   m_measureName   = measure ? measure->identifier() : QString();
 }
@@ -83,25 +87,33 @@ void RSubmission :: setMeasureId(RID id)
 
 void RSubmission :: setMeasureName(const QString& measureName)
 {
+  RMeasurePtr measure1;
+
   m_measureName   = measureName.toUpper();
-  m_measure       = m_data->measure(m_measureName);
-  qDebug() << "NAME0";
+  measure1        = m_data->measure(m_measureName);
+  (*m_data)[measureChange](this, measure1.get());
+  m_measure       = measure1;
 }
 
 /**********************************************************************************************/
 
 void RSubmission :: setMeasure1Name(const QString& measureName)
 {
-  m_measureName   = measureName.toUpper();
-  m_measure       = m_data->measure(m_measureName);
+  RMeasurePtr measure1;
 
-  if (!m_measure && !m_measureName.isEmpty())
+  m_measureName   = measureName.toUpper();
+  measure1        = m_data->measure(m_measureName);
+
+  if (!measure1 && !m_measureName.isEmpty())
   {
-    m_measure = new RMeasure(m_data);
-    m_measure->release();
-    m_measure->setIdentifier(m_measureName);
-    m_data->measures1()->append(m_measure);
+    measure1 = new RMeasure(m_data);
+    measure1->release();
+    measure1->setIdentifier(m_measureName);
+    m_data->measures1()->append(measure1);
   }
+
+  (*m_data)[measureChange](this, measure1.get());
+  m_measure       = measure1;
 }
 
 /**********************************************************************************************/

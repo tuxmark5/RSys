@@ -122,5 +122,7 @@ typedef ROList<RUnitPtr>                RUnitPtrList;
 
 typedef std::function<RInterval (int)>  RIntervalFun;
 /**********************************************************************************************/
+using namespace std::placeholders;
+/**********************************************************************************************/
 
 #endif /* RSYS_RSYS_HH */

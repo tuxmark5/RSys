@@ -24,6 +24,14 @@ class RIntervalToolBar: public QToolBar
       By12      = 5
     };
 
+    _E IntervalError
+    {
+      Correct,
+      TooLong,
+      TooShort,
+      InvalidOrder
+    };
+
   private:
     _M RResults*      m_results;
     _M QDateEdit*     m_interval0;
@@ -38,6 +46,7 @@ class RIntervalToolBar: public QToolBar
     _M QDate          date0() const;
     _M QDate          date1() const;
     _V bool           eventFilter(QObject* watched, QEvent* event);
+    _M void           getInterval(QDate& date0, QDate& date1, RIntervalFun& fun, int& num);
     _M bool           isIntervalValid() const { return m_validInterval; }
     _M void           modifyDate(int deltaYear, int deltaMonth);
     _M void           setValid(bool valid);
@@ -49,6 +58,10 @@ class RIntervalToolBar: public QToolBar
     _M void           incMonth();
     _M void           incYear();
     _M bool           validate(bool emitMessage = false);
+
+  private:
+    _M bool           adjustInterval(QDate& date0, QDate& date1);
+    _M void           emitErrorMessage(int error);
 
   signals:
     _M void           intervalChanged();

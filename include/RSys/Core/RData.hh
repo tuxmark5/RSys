@@ -19,6 +19,7 @@ class RData: public QObject, public RSignal
 
   public:
     _F class RElement;
+    _F class RSubmission;
     _F class RUnit;
 
   public:
@@ -36,6 +37,8 @@ class RData: public QObject, public RSignal
     _M RSubmissionPtrList     m_submissions1;   // planned submissions
     _M RSystemPtrList         m_systems;
     _M RUnitMultiHash         m_unitHash[3];
+    _M QDate                  m_interval0;
+    _M QDate                  m_interval1;
     _M bool                   m_purgeEnabled: 1;
 
   public:
@@ -44,6 +47,9 @@ class RData: public QObject, public RSignal
     _M RDivision*             division(RID id) const;
     _M RDivision*             division(const QString& identifier) const;
     _M RDivisionPtrList*      divisions()     { return &m_divisions; }
+    _M void                   enableIntervalTracking();
+    _M QDate                  interval0() const { return m_interval0; }
+    _M QDate                  interval1() const { return m_interval1; }
     _M RMeasure*              measure(RID id) const;
     _M RMeasure*              measure(const QString& identifier) const;
     _M RMeasurePtrList*       measures()      { return &m_measures; }
@@ -57,6 +63,12 @@ class RData: public QObject, public RSignal
     _M RSystem*               system(RID id) const;
     _M RSystem*               system(const QString& identifier) const;
     _M RSystemPtrList*        systems()       { return &m_systems; }
+
+  private:
+    _M void                   calculateIntervals();
+    _M void                   calculateIntervals(RSubmissionPtrList* submissions);
+    _M void                   onDate0Change(RSubmission* submission, QDate date0);
+    _M void                   onDate1Change(RSubmission* submission, QDate date1);
 
   signals:
     _M void                   elementChanged(RElement* element, int changeType);

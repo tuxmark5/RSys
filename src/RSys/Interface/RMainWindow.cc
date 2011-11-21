@@ -52,6 +52,7 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
 {
   m_data0             = new RData();
   m_data1             = new RData();
+  m_data1->enableIntervalTracking();
   m_results           = new RResults(m_data0, m_data1);
   m_database          = new RDatabase(m_data1, this);
   createContainers();
@@ -377,6 +378,7 @@ void RMainWindow :: importData()
                                   "Vytautai, man čia reikia, kad tavo kodas išspjautų tik vieną žinutę\n"
                                   "Tam padaryk kokį naują signalą, o visas perteklines žinutes į logą galim\n"
                                   "kraut"), 15000);
+    m_intervalToolBar->applyInterval();
   }
 }
 
@@ -489,6 +491,11 @@ void RMainWindow :: setShowSearchForm(bool show)
 
 void RMainWindow :: showMessage(const QString& message, int timeout)
 {
+  if (timeout == -1)
+  {
+    timeout = 5000 + message.size() * 40;
+  }
+
   RMessage* widget = new RMessage(message, timeout);
 
   widget->setOwner(sender());
