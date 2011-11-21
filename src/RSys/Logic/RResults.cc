@@ -86,6 +86,11 @@ auto RResults :: field(ResultType type, RUnit* unit) -> Getter
     {
       return unit->identifier();
     };
+
+    case FullName: return [=](int) -> QVariant
+    {
+      return unit->fullName();
+    };
   }
 
   return Getter();

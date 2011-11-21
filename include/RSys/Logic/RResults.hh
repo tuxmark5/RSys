@@ -31,7 +31,8 @@ class RResults: public QObject
       DeltaUsage,
       DeltaUsageTooltip,
       DeltaPUsage,
-      Identifier
+      Identifier,
+      FullName
     };
 
   private:

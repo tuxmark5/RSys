@@ -78,18 +78,18 @@ QVariant RResultsModel :: data(const QModelIndex& index, int role) const
 
 QVariant RResultsModel :: headerData(int section, Qt::Orientation orientation, int role) const
 {
-  R_GUARD(role == Qt::DisplayRole, QVariant());
-
   if (m_orientation != orientation)
   {
     int     fieldKey  = m_fields.at(section);
-    Getter  getter    = m_getters.value(0xFF00 | fieldKey);
+    Getter  getter    = m_getters.value(0xFF0000 | (role << 8) | fieldKey);
     return  getter ? getter(0) : QVariant();
   }
-  else
+  else if (role == Qt::DisplayRole)
   {
     return std::get<0>(m_results->interval(section));
   }
+
+  return QVariant();
 }
 
 /**********************************************************************************************/
@@ -133,7 +133,8 @@ int RResultsModel :: insertField(int index, int type, RUnit* unit)
 
   if (type & Identifier)
   {
-    addGetter(fieldKey, 0xFF, m_results->field(RResults::Identifier, unit));
+    addGetter(fieldKey, Qt::DisplayRole | 0xFF00, m_results->field(RResults::Identifier, unit));
+    addGetter(fieldKey, Qt::ToolTipRole | 0xFF00, m_results->field(RResults::FullName, unit));
   }
   else
   {
