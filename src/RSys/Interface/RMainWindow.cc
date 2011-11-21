@@ -453,6 +453,7 @@ void RMainWindow :: rollback()
   if (m_database->rollback())
   {
     *m_data1 = *m_data0;
+    m_intervalToolBar->applyInterval();
     showMessage(R_S("Duomenys atstatyti."));
   }
 }

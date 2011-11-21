@@ -107,9 +107,9 @@ void RPaletteDock :: createContainers(RMainWindow* main)
 
 void RPaletteDock :: inverseChecks()
 {
-  RUnitPtrList* units = m_mainWindow->currentUnits();
+  UnitList units = selectedUnits();
 
-  for (auto it = units->begin(); it != units->end(); ++it)
+  for (auto it = units.begin(); it != units.end(); ++it)
     (*it)->setVisibleRaw((*it)->visible() ^ true);
 
   m_mainWindow->updateUnits();
@@ -125,11 +125,34 @@ QString RPaletteDock :: modeName() const
 
 /**********************************************************************************************/
 
+auto RPaletteDock :: selectedUnits() const -> UnitList
+{
+  QItemSelectionModel*  smodel    = m_filter->selectionModel();
+  QModelIndexList       selection = smodel->selectedRows();
+  RUnitPtrList*         units0    = m_mainWindow->currentUnits();
+  UnitList              units;
+
+  if (selection.size() < 2)
+  {
+    for (auto it = units0->begin(); it != units0->end(); ++it)
+      units.append(it->get());
+  }
+  else
+  {
+    for (auto it = selection.begin(); it != selection.end(); ++it)
+      units.append(units0->at(it->row()).get());
+  }
+
+  return units;
+}
+
+/**********************************************************************************************/
+
 void RPaletteDock :: setChecked(bool checked)
 {
-  RUnitPtrList* units = m_mainWindow->currentUnits();
+  UnitList units = selectedUnits();
 
-  for (auto it = units->begin(); it != units->end(); ++it)
+  for (auto it = units.begin(); it != units.end(); ++it)
     (*it)->setVisibleRaw(checked);
 
   m_mainWindow->updateUnits();

@@ -12,6 +12,9 @@ class RPaletteDock: public QDockWidget
 {
   Q_OBJECT
 
+  public:
+    _T QList<RUnit*>  UnitList;
+
   private:
     _M RMainWindow*   m_mainWindow;
     _M RTableView*    m_filter;
@@ -26,6 +29,7 @@ class RPaletteDock: public QDockWidget
     _V Vacuum         ~RPaletteDock();
     _M void           createContainers(RMainWindow* main);
     _M QString        modeName() const;
+    _M UnitList       selectedUnits() const;
 
   public slots:
     _M void           checkAll();
