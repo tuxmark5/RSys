@@ -86,11 +86,13 @@ Vacuum RIntervalToolBar :: ~RIntervalToolBar()
 
 bool RIntervalToolBar :: adjustInterval(QDate& date0, QDate& date1)
 {
-  RData*        data      = m_results->data1();
-  bool          modified  = false;
+  RData*        data              = m_results->data1();
+  bool          modified          = false;
+  QDate         globalInterval0   = data->interval0();
+  QDate         globalInterval1   = data->interval1().addYears(5); // maksimalus prognozavimas
 
-  if (date0 < data->interval0()) { date0 = data->interval0(); modified = true; }
-  if (date1 > data->interval1()) { date1 = data->interval1(); modified = true; }
+  if (date0 < globalInterval0) { date0 = globalInterval0; modified = true; }
+  if (date1 > globalInterval1) { date1 = globalInterval1; modified = true; }
   return modified;
 }
 
