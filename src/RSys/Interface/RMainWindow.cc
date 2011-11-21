@@ -218,9 +218,9 @@ void RMainWindow :: createActions()
   m_importAction          = R_ACTION(":/icons/import.png",      "Importuoti");
   m_importAction->setShortcut(QKeySequence("Ctrl+I"));
 
-  m_commitAction          = R_ACTION(":/icons/import.png",      "COMMIT");
+  m_commitAction          = R_ACTION(":/icons/commit.png",      "COMMIT");
 
-  m_rollbackAction        = R_ACTION(":/icons/import.png",      "ROLLBACK");
+  m_rollbackAction        = R_ACTION(":/icons/rollback.png",    "ROLLBACK");
 
   m_disconnectAction      = R_ACTION(":/icons/disconnect.png",  "Atsijungti");
   m_disconnectAction->setShortcut(QKeySequence("Alt+D"));
@@ -228,7 +228,7 @@ void RMainWindow :: createActions()
   m_exitAction            = R_ACTION(":/icons/exit.png",        "Išeiti");
   m_exitAction->setShortcut(QKeySequence("Ctrl+Shift+X"));
 
-  m_searchAction          = R_ACTION(":/icons/search.png",      "Ieškoti intervalo");
+  m_searchAction          = R_ACTION(":/icons/find_interval.png", "Mažiausiai apkrauti intervalai");
   m_searchAction->setCheckable(true);
   m_searchAction->setShortcut(QKeySequence("Ctrl+F"));
 
@@ -245,6 +245,10 @@ void RMainWindow :: createActions()
 
   m_helpAction            = R_ACTION(":/icons/help.png",        "Pagalba");
   m_helpAction->setShortcut(QKeySequence("F1"));
+
+  /*m_showMainToolbarAction = R_ACTION("Pagrindinė įrankių juosta");
+  m_showIntervalToolbarAction = R_ACTION("Intervalo juosta");
+  m_showPaletteAction*/
 }
 
 /**********************************************************************************************/

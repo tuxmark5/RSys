@@ -48,6 +48,10 @@ class RMainWindow: public QMainWindow
     _M QAction*             m_systemsStateAction;
     _M QAction*             m_helpAction;
 
+    _M QAction*             m_showMainToolbarAction;
+    _M QAction*             m_showIntervalToolbarAction;
+    _M QAction*             m_showPaletteAction;
+
     _M RDatabase*           m_database;
     _M RData*               m_data0;
     _M RData*               m_data1;
