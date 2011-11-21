@@ -301,6 +301,8 @@ bool RIntervalToolBar :: validate(bool emitMessage)
   QDate   date1       = m_interval1->date();
   int     error       = Correct;
 
+  adjustInterval(date0, date1);
+
   if (error == Correct)
     error = date0.daysTo(date1) != 1 ? Correct : TooShort;
 
@@ -308,10 +310,7 @@ bool RIntervalToolBar :: validate(bool emitMessage)
     error = date0 < date1 ? Correct : InvalidOrder;
 
   if (error == Correct)
-  {
-    adjustInterval(date0, date1);
     error = qAbs(date0.year() - date1.year()) <= 10 ? Correct : TooLong;
-  }
 
   if (emitMessage)
   {
