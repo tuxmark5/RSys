@@ -207,10 +207,10 @@ double RCalculator :: polynomialExterpolation(QDate prevDate, double prevUsage,
   for (int i = 1; i <= 3; i++)
   {
     matrix[0][3 - i] = pow(prevDate.daysTo(startDate), i) / i;
-    matrix[1][3 - i] = (pow(prevDate.daysTo(endDate), 3)
-                       - pow(prevDate.daysTo(startDate), 3)) / i;
-    matrix[2][3 - i] = (pow(prevDate.daysTo(nextDate), 3)
-                       - pow(prevDate.daysTo(endDate), 3)) / i;
+    matrix[1][3 - i] = (pow(prevDate.daysTo(endDate), i)
+                       - pow(prevDate.daysTo(startDate), i)) / i;
+    matrix[2][3 - i] = (pow(prevDate.daysTo(nextDate), i)
+                       - pow(prevDate.daysTo(endDate), i)) / i;
   }
   // lygybių sprendiniai (norimos atitinkamų integralų reikšmės)
   matrix[0][3] = prevDate.daysTo(startDate) * prevUsage;
