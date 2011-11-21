@@ -47,9 +47,9 @@ Vacuum RPaletteDock :: RPaletteDock(RMainWindow* parent):
   layout->addWidget(divisionsMode,  0, 0);
   layout->addWidget(systemsMode,    0, 2);
   layout->addWidget(m_filter,       1, 0, 1, 3);
-  layout->addWidget(checkAll,       2, 0);
-  layout->addWidget(uncheckAll,     2, 1);
-  layout->addWidget(inverseChecks,  2, 2);
+  layout->addWidget(uncheckAll,     2, 0);
+  layout->addWidget(inverseChecks,  2, 1);
+  layout->addWidget(checkAll,       2, 2);
 
   setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   setMode(false);
