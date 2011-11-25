@@ -8,7 +8,7 @@
 /*                                        RStatusWidget                                       */
 /**********************************************************************************************/
 
-Vacuum RStatusWidget :: RStatusWidget(QWidget* parent):
+Vacuum RStatusWidget :: RStatusWidget(QWidget* inner, QWidget* parent):
   QFrame(parent),
   m_timer(0),
   m_closing(false)
@@ -22,6 +22,9 @@ Vacuum RStatusWidget :: RStatusWidget(QWidget* parent):
   setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
 
   layout->setMargin(0);
+
+  if (inner)
+    setWidget(inner);
   layout->addWidget(closeButton);
 
   QPushButton::connect(closeButton, SIGNAL(clicked()), this, SLOT(onCloseClicked()));

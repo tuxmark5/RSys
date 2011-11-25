@@ -11,7 +11,7 @@
 /**********************************************************************************************/
 
 Vacuum RSearchForm :: RSearchForm(QWidget* parent):
-  RStatusWidget(parent)
+  QWidget(parent)
 {
   QVBoxLayout*    layout          = new QVBoxLayout();
   QHBoxLayout*    layout0         = new QHBoxLayout();

@@ -36,6 +36,7 @@ unix:QMAKE_LFLAGS   += -Wl,-rpath $$PWD/lib/External
 SOURCES             +=                              \
   src/External/ExcelFormat/BasicExcel.cpp           \
   src/External/ExcelFormat/ExcelFormat.cpp          \
+  src/RSys/Core/RAdminData.cc                       \
   src/RSys/Core/RData.cc                            \
   src/RSys/Core/RDivision.cc                        \
   src/RSys/Core/RElement.cc                         \
@@ -43,6 +44,7 @@ SOURCES             +=                              \
   src/RSys/Core/RSubmission.cc                      \
   src/RSys/Core/RSystem.cc                          \
   src/RSys/Core/RUnit.cc                            \
+  src/RSys/Core/RUser.cc                            \
   src/RSys/Import/RXLSDocument.cc                   \
   src/RSys/Import/RXLSTable.cc                      \
   src/RSys/Interface/RAbstractItemModel.cc          \
@@ -50,6 +52,7 @@ SOURCES             +=                              \
   src/RSys/Interface/RColumnObserverAdapter.cc      \
   src/RSys/Interface/RCoordinatePlane.cc            \
   src/RSys/Interface/RDivisionTab.cc                \
+  src/RSys/Interface/RImportForm.cc                 \
   src/RSys/Interface/RIntervalToolBar.cc            \
   src/RSys/Interface/RLayerWidget.cc                \
   src/RSys/Interface/RLoginWidget.cc                \
@@ -75,6 +78,7 @@ SOURCES             +=                              \
   src/RSys/Interface/RSystemAdmTab.cc               \
   src/RSys/Interface/RSystemTab.cc                  \
   src/RSys/Interface/RUsageTab.cc                   \
+  src/RSys/Interface/RUserTab.cc                    \
   src/RSys/Interface/RUsageWidget.cc                \
   src/RSys/Logic/RCalculator.cc                     \
   src/RSys/Logic/RResults.cc                        \
@@ -91,6 +95,7 @@ HEADERS             +=                              \
   include/External/ExcelFormat/ExcelFormat.h        \
   include/External/ExcelFormat/BasicExcel.hpp       \
   include/RSys/RSys.hh                              \
+  include/RSys/Core/RAdminData.hh                   \
   include/RSys/Core/RData.hh                        \
   include/RSys/Core/RDivision.hh                    \
   include/RSys/Core/RElement.hh                     \
@@ -98,6 +103,7 @@ HEADERS             +=                              \
   include/RSys/Core/RSubmission.hh                  \
   include/RSys/Core/RSystem.hh                      \
   include/RSys/Core/RUnit.hh                        \
+  include/RSys/Core/RUser.hh                        \
   include/RSys/Import/RITable.hh                    \
   include/RSys/Import/RIDocument.hh                 \
   include/RSys/Import/RXLSDocument.hh               \
@@ -107,6 +113,7 @@ HEADERS             +=                              \
   include/RSys/Interface/RColumnObserverAdapter.hh  \
   include/RSys/Interface/RCoordinatePlane.hh        \
   include/RSys/Interface/RDivisionTab.hh            \
+  include/RSys/Interface/RImportForm.hh             \
   include/RSys/Interface/RIntervalToolBar.hh        \
   include/RSys/Interface/RLayerWidget.hh            \
   include/RSys/Interface/RLoginWidget.hh            \
@@ -132,6 +139,7 @@ HEADERS             +=                              \
   include/RSys/Interface/RTab.hh                    \
   include/RSys/Interface/RTableView.hh              \
   include/RSys/Interface/RUsageTab.hh               \
+  include/RSys/Interface/RUserTab.hh                \
   include/RSys/Interface/RUsageWidget.hh            \
   include/RSys/Logic/RCalculator.hh                 \
   include/RSys/Logic/RResults.hh                    \

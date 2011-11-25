@@ -25,6 +25,7 @@
 #define Vacuum
 /**********************************************************************************************/
 // Core
+class RAdminData;
 class RData;
 class RDivision;
 class RElement;
@@ -32,6 +33,7 @@ class RMeasure;
 class RSubmission;
 class RSystem;
 class RUnit;
+class RUser;
 /**********************************************************************************************/
 // Interface
 class RAbstractItemModel;

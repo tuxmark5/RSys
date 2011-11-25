@@ -16,6 +16,7 @@
 #include <RSys/Core/RSubmission.hh>
 #include <RSys/Core/RSystem.hh>
 
+#include <RSys/Interface/RImportForm.hh>
 #include <RSys/Interface/RIntervalToolBar.hh>
 #include <RSys/Interface/RLoginWidget.hh>
 #include <RSys/Interface/RMainMenuBar.hh>
@@ -312,48 +313,11 @@ void RMainWindow :: createContainers()
 
 void RMainWindow :: createTabs()
 {
-  auto dmGetter = [=](int x, int y) -> QVariant
-  {
-    RDivision*  division  = m_data1->divisions()->at(y).get();
-    RMeasure*   measure   = m_data1->measures()->at(x).get();
-    double      value     = division->measure(measure);
-
-    return value == 0.0 ? QVariant() : value;
-  };
-
-  auto dmSetter = [=](int x, int y, const QVariant& var) -> void
-  {
-    RDivision*  division  = m_data1->divisions()->at(y).get();
-    RMeasure*   measure   = m_data1->measures()->at(x).get();
-
-    division->setMeasure(measure, var.toDouble());
-  };
-
-  auto dsGetter = [=](int x, int y) -> QVariant
-  {
-    RDivision*  division  = m_data1->divisions()->at(y).get();
-    RSystem*    system    = m_data1->systems()->at(x).get();
-    int         value     = division->system(system);
-
-    return value == 1 ? 1 : QVariant();
-  };
-
-  auto dsSetter = [=](int x, int y, const QVariant& var) -> void
-  {
-    RDivision*  division  = m_data1->divisions()->at(y).get();
-    RSystem*    system    = m_data1->systems()->at(x).get();
-
-    division->setSystem(system, var.toInt());
-  };
-
-  RMeasureAdmTab*   dmTab = new RMeasureAdmTab(dmGetter, dmSetter, this);
-  RSystemAdmTab*    dsTab = new RSystemAdmTab(dsGetter, dsSetter, this);
-
   addLeftTab(new RMeasureTab(this),     "Priemonės", "Paramos priemonės");
   addLeftTab(new RDivisionTab(this),    "Padaliniai", "Padaliniai");
   addLeftTab(new RSystemTab(this),      "IS", "Informacinės sistemos");
-  addLeftTab(dmTab,                     "Priemonių adm.", "Paramos priemonių administravimas");
-  addLeftTab(dsTab,                     "IS adm.", "Informacinių sistemų pasiskirstymas");
+  addLeftTab(new RMeasureAdmTab(this),  "Priemonių adm.", "Paramos priemonių administravimas");
+  addLeftTab(new RSystemAdmTab(this),   "IS adm.", "Informacinių sistemų pasiskirstymas");
   addLeftTab(new RSubmissionTab(this),  "Istoriniai duom.", "Istoriniai duomenys");
   addLeftTab(new RPlannedTab(this),     "Planuojami kiekiai", "Planuojami paramos priemonių kiekiai");
 
@@ -399,13 +363,16 @@ void RMainWindow :: importData()
 
   if (!fileName.isNull())
   {
-    RValidator    parser;
+    RValidator      parser;
+    RImportForm*    importForm;
 
-    m_data1->withBlock([&]
-    {
-      parser.validate(fileName, m_data1);
-    });
+    m_results->setUpdatesEnabled(false);
+    parser.validate(fileName, m_data1);
+    m_results->setUpdatesEnabled(true);
     m_data1->calculateIntervals();
+
+    importForm = new RImportForm();
+    addStatusWidget(new RStatusWidget(importForm));
 
     showMessage(QString::fromUtf8("Duomenys sėkmingai (o gal ir ne) importuoti\n"
                                   "Vytautai, man čia reikia, kad tavo kodas išspjautų tik vieną žinutę\n"
@@ -499,11 +466,13 @@ void RMainWindow :: setShowSearchForm(bool show)
 {
   if (!m_searchForm && show)
   {
+    RStatusWidget* statusWidget;
+
     m_searchForm = new RSearchForm(this);
 
-    addStatusWidget(m_searchForm);
+    addStatusWidget(statusWidget = new RStatusWidget(m_searchForm));
     // handle untoggle
-    connect(m_searchAction, SIGNAL(toggled(bool)), m_searchForm, SLOT(onCloseClicked()));
+    connect(m_searchAction, SIGNAL(toggled(bool)), statusWidget, SLOT(onCloseClicked()));
     // handle RStatusWidget's "X" button
     connect(m_searchForm, SIGNAL(destroyed()), this, SLOT(onSearchFormDestroyed()));
     connect(m_searchForm, SIGNAL(findIntervalPressed()), this, SLOT(findIntervalNow()));

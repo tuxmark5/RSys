@@ -18,7 +18,7 @@ class RStatusWidget: public QFrame
     _M bool           m_closing: 1;
 
   public:
-    _M Vacuum         RStatusWidget(QWidget* parent = 0);
+    _M Vacuum         RStatusWidget(QWidget* inner, QWidget* parent = 0);
     _V Vacuum         ~RStatusWidget();
     _M void           animateHeight(int from, int to, const char* slot);
     _M void           setBackgroundColor(const QColor& color);

@@ -2,12 +2,13 @@
 #define RSYS_INTERFACE_RSEARCH_FORM_HH
 
 /**********************************************************************************************/
-#include <RSys/Interface/RStatusWidget.hh>
+#include <QtGui/QWidget>
+#include <RSys/RSys.hh>
 /********************************************* RS *********************************************/
 /*                                        RSearchForm                                         */
 /**********************************************************************************************/
 
-class RSearchForm: public RStatusWidget
+class RSearchForm: public QWidget
 {
   Q_OBJECT
 

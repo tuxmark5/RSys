@@ -51,6 +51,8 @@ class RResults: public QObject
     _M int              m_numRecords;
     _M int              m_seasonalLengths[4];
 
+    _M bool             m_updatesEnabled: 1;
+
   public:
     _M Vacuum           RResults(RData* data0, RData* data1, QObject* parent = 0);
     _M Vacuum           ~RResults();
@@ -71,6 +73,7 @@ class RResults: public QObject
     _M void             reset();
     _M void             setInterval(QDate date0, QDate date1);
     _M void             setInterval(RIntervalFun fun, int num);
+    _M void             setUpdatesEnabled(bool enabled);
     _M void             update();
 
   private:

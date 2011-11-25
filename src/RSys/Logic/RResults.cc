@@ -12,7 +12,8 @@ Vacuum RResults :: RResults(RData* data0, RData* data1, QObject* parent):
   QObject(parent),
   m_data0(data0),
   m_data1(data1),
-  m_numRecords(0)
+  m_numRecords(0),
+  m_updatesEnabled(true)
 {
   m_calculator0 = new RCalculator(m_data0);
   m_calculator1 = new RCalculator(m_data1);
@@ -183,6 +184,13 @@ void RResults :: setInterval(RIntervalFun fun, int num)
 
 /**********************************************************************************************/
 
+void RResults :: setUpdatesEnabled(bool enabled)
+{
+  m_updatesEnabled = enabled;
+}
+
+/**********************************************************************************************/
+
 void RResults :: unregisterField(RUnit* unit, RResultsModel* model, int key)
 {
   m_fields.remove(unit, Field(model, key));
@@ -203,6 +211,8 @@ void RResults :: update()
 
 void RResults :: updateDelayed()
 {
+  R_GUARD(m_updatesEnabled, Vacuum);
+
   QMetaObject::invokeMethod(this, "update", Qt::QueuedConnection);
 }
 

@@ -1,21 +1,25 @@
-#ifndef RSYS_INTERFACE_RMEASURE_ADM_TAB_HH
-#define RSYS_INTERFACE_RMEASURE_ADM_TAB_HH
+#ifndef RSYS_INTERFACE_RUSER_TAB_HH
+#define RSYS_INTERFACE_RUSER_TAB_HH
 
 /**********************************************************************************************/
 #include <RSys/Interface/RTab.hh>
 /********************************************* RS *********************************************/
-/*                                       RMeasureAdmTab                                       */
+/*                                          RUserTab                                          */
 /**********************************************************************************************/
 
-class RMeasureAdmTab: public RTab
+class RUserTab: public RTab
 {
   Q_OBJECT
 
+  private:
+    _M RMainWindow*   m_mainWindow;
+    _M RContainer*    m_userContainer;
+
   public:
-    _M Vacuum         RMeasureAdmTab(RMainWindow* parent = 0);
-    _V Vacuum         ~RMeasureAdmTab();
+    _M Vacuum         RUserTab(RMainWindow* parent = 0);
+    _V Vacuum         ~RUserTab();
 };
 
 /**********************************************************************************************/
 
-#endif /* RSYS_INTERFACE_RMEASURE_ADM_TAB_HH */
+#endif /* RSYS_INTERFACE_RUSER_TAB_HH */

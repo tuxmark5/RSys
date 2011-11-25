@@ -6,7 +6,7 @@
 /**********************************************************************************************/
 
 Vacuum RMessage :: RMessage(const QString& message, int timeout, QWidget* parent):
-  RStatusWidget(parent),
+  RStatusWidget(0, parent),
   m_owner(0)
 {
   QLabel* label = new QLabel(message);
