@@ -87,17 +87,27 @@ Vacuum RIntervalToolBar :: ~RIntervalToolBar()
 bool RIntervalToolBar :: adjustInterval(QDate& date0, QDate& date1)
 {
   RData*        data              = m_results->data1();
-  bool          modified          = false;
+  bool          modified0         = false;
+  bool          modified1         = false;
   QDate         globalInterval0   = data->interval0();
   QDate         globalInterval1   = data->interval1();
 
   if (globalInterval0.isValid() && globalInterval1.isValid())
   {
     globalInterval1 = globalInterval1.addYears(5); // maksimalus prognozavimas
-    if (date0 < globalInterval0) { date0 = globalInterval0; modified = true; }
-    if (date1 > globalInterval1) { date1 = globalInterval1; modified = true; }
+    if (date0 < globalInterval0) { date0 = globalInterval0; modified0 = true; }
+    if (date1 > globalInterval1) { date1 = globalInterval1; modified1 = true; }
   }
-  return modified;
+
+  if (date0 >= date1)
+  {
+    /**/ if (modified0 && !modified1)
+      date1 = date0.addDays(1);
+    else if (!modified0 && modified1)
+      date0 = date1.addDays(-1);
+  }
+
+  return modified0 || modified1;
 }
 
 /**********************************************************************************************/
@@ -307,13 +317,14 @@ bool RIntervalToolBar :: validate(bool emitMessage)
   QDate   date1       = m_interval1->date();
   int     error       = Correct;
 
-  adjustInterval(date0, date1);
-
-  if (error == Correct)
-    error = date0.daysTo(date1) != 1 ? Correct : TooShort;
-
   if (error == Correct)
     error = date0 < date1 ? Correct : InvalidOrder;
+
+  //if (error == Correct)
+  //  error = date0.daysTo(date1) != 1 ? Correct : TooShort;
+
+  if (error == Correct)
+    adjustInterval(date0, date1);
 
   if (error == Correct)
     error = qAbs(date0.year() - date1.year()) <= 10 ? Correct : TooLong;
