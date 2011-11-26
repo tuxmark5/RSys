@@ -30,19 +30,20 @@ class RData: public QObject, public RSignal
     };
 
   private:
+    _M RUnitMultiHash         m_unitHash[3];
     _M RDivisionPtrList       m_divisions;
     _M RMeasurePtrList        m_measures;
     _M RMeasureList           m_measures1;      // planned measures / phantom
     _M RSubmissionPtrList     m_submissions;
     _M RSubmissionPtrList     m_submissions1;   // planned submissions
     _M RSystemPtrList         m_systems;
-    _M RUnitMultiHash         m_unitHash[3];
     _M QDate                  m_interval0;
     _M QDate                  m_interval1;
     _M bool                   m_purgeEnabled: 1;
 
   public:
     _M Vacuum                 RData();
+    _M Vacuum                 ~RData();
     _M void                   calculateIntervals();
     _M void                   clear();
     _M RDivision*             division(RID id) const;

@@ -25,7 +25,8 @@ Vacuum RUnit :: RUnit(RUnit& unit, RData* data):
 
 Vacuum RUnit :: ~RUnit()
 {
-  m_data->m_unitHash[m_type].remove(m_identifier, this);
+  if (m_data)
+    m_data->m_unitHash[m_type].remove(m_identifier, this);
 }
 
 /**********************************************************************************************/
