@@ -8,4 +8,7 @@ void run_all_tests(int argc, char *argv[])
 
   TestRValidator test2;
   QTest::qExec(&test2, argc, argv);
+
+  TestRParser test3;
+  QTest::qExec(&test3, argc, argv);
 }
