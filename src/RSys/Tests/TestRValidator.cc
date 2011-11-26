@@ -3,7 +3,7 @@
 
 void TestRValidator::testReadingMeasures()
 {
-  RXLSDocument document(QString::fromUtf8("../../RSys/static/test2.xls"));
+  RXLSDocument document(QString::fromUtf8("static/test2.xls"));
   QCOMPARE(document.nameAt(0),
            QString::fromUtf8("Paramos priemonės"));
 
@@ -38,7 +38,7 @@ void TestRValidator::testReadingMeasures()
 void TestRValidator::testReadingSystems()
 {
 
-  RXLSDocument document(QString::fromUtf8("../../RSys/static/test2.xls"));
+  RXLSDocument document(QString::fromUtf8("static/test2.xls"));
   QCOMPARE(document.nameAt(2),
            QString::fromUtf8("IS"));
 
@@ -61,7 +61,7 @@ void TestRValidator::testReadingSystems()
 void TestRValidator::testReadingDivisions()
 {
 
-  RXLSDocument document(QString::fromUtf8("../../RSys/static/test2.xls"));
+  RXLSDocument document(QString::fromUtf8("static/test2.xls"));
   QCOMPARE(document.nameAt(1),
            QString::fromUtf8("Padaliniai"));
 
@@ -83,7 +83,7 @@ void TestRValidator::testReadingDivisions()
 
 void TestRValidator::testReadingDivisionsSystems()
 {
-  RXLSDocument document(QString::fromUtf8("../../RSys/static/test2.xls"));
+  RXLSDocument document(QString::fromUtf8("static/test2.xls"));
   QCOMPARE(document.nameAt(3),
            QString::fromUtf8("IS-Padaliniai"));
 
@@ -119,7 +119,7 @@ void TestRValidator::testReadingDivisionsSystems()
 
 void TestRValidator::testReadingDivisionsMeasures()
 {
-  RXLSDocument document(QString::fromUtf8("../../RSys/static/test2.xls"));
+  RXLSDocument document(QString::fromUtf8("static/test2.xls"));
   QCOMPARE(document.nameAt(4),
            QString::fromUtf8("Paramos administravimas"));
 
@@ -159,7 +159,7 @@ void TestRValidator::testReadingDivisionsMeasures()
 
 void TestRValidator::testReadingSubmissions()
 {
-  RXLSDocument document(QString::fromUtf8("../../RSys/static/test2.xls"));
+  RXLSDocument document(QString::fromUtf8("static/test2.xls"));
   QCOMPARE(document.nameAt(5),
            QString::fromUtf8("Paramos kiekiai"));
 
@@ -200,7 +200,7 @@ void TestRValidator::testReadingSubmissions()
 
 void TestRValidator::testTableTypeDetection()
 {
-  RXLSDocument document(QString::fromUtf8("../../RSys/static/test2.xls"));
+  RXLSDocument document(QString::fromUtf8("static/test2.xls"));
   RValidator validator;
   RData data;
 
@@ -233,6 +233,6 @@ void TestRValidator::testImportingXLSFile()
   RData data;
 
   QCOMPARE(validator.validate(
-             QString::fromUtf8("../../RSys/static/test2.xls"), &data),
+             QString::fromUtf8("static/test2.xls"), &data),
            false);
 }

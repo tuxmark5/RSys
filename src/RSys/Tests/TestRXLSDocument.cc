@@ -4,7 +4,7 @@
 void TestRXLSDocument::testOpenningExampleFile()
 {
 
-  RXLSDocument document(QString::fromUtf8("../../RSys/static/test2.xls"));
+  RXLSDocument document(QString::fromUtf8("static/test2.xls"));
 //for (int i = 0; i < document.numTables(); i++)
 //{
 //  qDebug() << document.nameAt(i);
