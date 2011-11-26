@@ -11,9 +11,8 @@ class TestRParser: public QObject
 
   private:
   private slots:
-    _M void     testSomething();
     _M void     testNormalFile();
-  //_M void     testDetectionByColumns();
+    _M void     testDetectionByColumns();
 };
 
 #endif // TESTRPARSER_HH

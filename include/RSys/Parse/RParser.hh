@@ -36,10 +36,11 @@ struct RTableTypeGuessInfo
   QStringList tableName;
   QList<QStringList> columnsCaptions;
 
-  _M  Vacuum    RTableTypeGuessInfo();
+  _M  Vacuum    RTableTypeGuessInfo() {}
   _M  Vacuum    RTableTypeGuessInfo(
                   QStringList name,
-                  QList<QStringList> captions);
+                  QList<QStringList> captions
+                  ): tableName(name), columnsCaptions(captions) {}
 };
 
 
@@ -49,13 +50,14 @@ class RParser: public QObject
 
   private:
 
-    _M  RIDocument            *m_document;
+    _M  RIDocument *          m_document;
     _M  QMap<int, RDataType>  m_guesses;
     _M  QMap<RDataType, RTableTypeGuessInfo>
                               m_guessInfo;
 
+    _M  RIDocument *          open(const QString &filename);
     // Finds upper left corner of caption row in table. If fails, returns
-    // Null point.
+    // (-1, -1).
     _M  QPoint                findCaptionRow(
                                 RITable *table, RTableTypeGuessInfo info);
 
@@ -66,7 +68,7 @@ class RParser: public QObject
 
   public:
 
-    // TODO: Handle file open failure.
+    // TODO: Atskirti failo atidarymą ir Parser kūrimą, kad open galėtų gražinti false.
     _M  Vacuum                RParser(const QString &filename);
     _M  Vacuum                RParser(const QString &filename,
                                       QMap<RDataType, RTableTypeGuessInfo> guessInfo);
@@ -77,6 +79,10 @@ class RParser: public QObject
     _M  QMap<RDataType, RTableTypeGuessInfo>*
                               guessInfo();
     _M  QString               nameAt(int index);
+
+  signals:
+    _M  void          log(RMessageLevel level, RID id, QString message);
+    _M  void          parsed(double part);
 
 };
 

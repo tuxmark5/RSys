@@ -108,7 +108,7 @@ enum RDataType
   RDIVISIONSYSTEMS,
   RDIVISIONMEASURES,
   RSUBMISSION,
-  RUKNOWN
+  RUNKNOWN
 };
 /**********************************************************************************************/
 #include <RSys/Util/ROList.hh>

@@ -1,15 +1,14 @@
 #include <RSys/Parse/RParser.hh>
 
 
-RTableTypeGuessInfo::RTableTypeGuessInfo()
+RIDocument* RParser::open(const QString &filename)
 {
-}
-
-RTableTypeGuessInfo::RTableTypeGuessInfo(
-  QStringList name, QList<QStringList> captions)
-{
-  tableName = name;
-  captions = columnsCaptions;
+  RXLSDocument *document = new RXLSDocument(filename);
+  if (!document->isOpen())
+  {
+    log(RERROR, 20, R_S("Nepavyko atverti failo „%1“.").arg(filename));
+  }
+  return document;
 }
 
 QPoint RParser::findCaptionRow(
@@ -50,7 +49,7 @@ QPoint RParser::findCaptionRow(
       }
     }
   }
-  return QPoint();
+  return QPoint(-1, -1);
 }
 
 RDataType RParser::guessTableTypeByName(RITable *table)
@@ -65,26 +64,27 @@ RDataType RParser::guessTableTypeByName(RITable *table)
       }
     }
   }
-  return RUKNOWN;
+  return RUNKNOWN;
 }
 
 RDataType RParser::guessTableTypeByColumns(RITable *table)
 {
   for (auto it = m_guessInfo.begin(); it != m_guessInfo.end(); it++)
   {
+    const RTableTypeGuessInfo info = it.value();
     QPoint point = findCaptionRow(table, it.value());
-    if (!point.isNull())
+    if (point.x() != -1)
     {
       return it.key();
     }
   }
-  return RUKNOWN;
+  return RUNKNOWN;
 }
 
 RDataType RParser::guessTableType(RITable *table)
 {
   RDataType guess = guessTableTypeByName(table);
-  if (guess == RUKNOWN)
+  if (guess == RUNKNOWN)
   {
     guess = guessTableTypeByColumns(table);
   }
@@ -101,7 +101,7 @@ void RParser::makeGuessing()
 
 RParser::RParser(const QString &filename)
 {
-  m_document = new RXLSDocument(filename);
+  m_document = open(filename);
 
   m_guessInfo[RMEASURE] = RTableTypeGuessInfo(
         (QStringList() << R_S("Paramos priemones") << R_S("Paramos priemonės")),
@@ -190,7 +190,7 @@ RParser::RParser(
   const QString &filename,
   QMap<RDataType, RTableTypeGuessInfo> guessInfo)
 {
-  m_document = new RXLSDocument(filename);
+  m_document = open(filename);
   m_guessInfo = guessInfo;
   makeGuessing();
 }
