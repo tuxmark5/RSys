@@ -3,6 +3,7 @@
 
 #include <QStringList>
 #include <QPoint>
+#include <tuple>
 
 #include <RSys/Core/RData.hh>
 #include <RSys/Core/RDivision.hh>
@@ -18,6 +19,9 @@
 
  Workflow:
 
+  // Call to constructor.
+  1.  Create parser object.
+  // Call to open.
   1.  Read in Document.
   2.  For each table in document:
 
@@ -27,7 +31,14 @@
       2.  find captions row if sucess return;
       3.  return error;
 
-  3.  Return tables to guesses mapping.
+  // Call to guesses.
+  3.  Return tables std::tuple<
+        QString tableName,
+        int tableType, // 0x100 -- marker that disabled
+        int tableIndex>
+
+  // Call to read.
+  4.  Read data into given RData.
 
  */
 
@@ -55,7 +66,6 @@ class RParser: public QObject
     _M  QMap<RDataType, RTableTypeGuessInfo>
                               m_guessInfo;
 
-    _M  RIDocument *          open(const QString &filename);
     // Finds upper left corner of caption row in table. If fails, returns
     // (-1, -1).
     _M  QPoint                findCaptionRow(
@@ -69,12 +79,15 @@ class RParser: public QObject
   public:
 
     // TODO: Atskirti failo atidarymą ir Parser kūrimą, kad open galėtų gražinti false.
-    _M  Vacuum                RParser(const QString &filename);
-    _M  Vacuum                RParser(const QString &filename,
-                                      QMap<RDataType, RTableTypeGuessInfo> guessInfo);
+    _M  Vacuum                RParser();
+    _M  Vacuum                RParser(QMap<RDataType, RTableTypeGuessInfo> guessInfo);
     _M  Vacuum                ~RParser();
 
+    _M  bool                  open(const QString &filename);
+
     _M  QMap<int, RDataType>* guesses();
+    _M  QList<std::tuple<QString, int, int> >
+                              guessesList();
     _M  RIDocument*           document();
     _M  QMap<RDataType, RTableTypeGuessInfo>*
                               guessInfo();

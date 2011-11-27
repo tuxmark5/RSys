@@ -12,6 +12,7 @@ class TestRParser: public QObject
   private:
   private slots:
     _M void     testNormalFile();
+    _M void     testNotExistingFile();
     _M void     testDetectionByColumns();
 };
 

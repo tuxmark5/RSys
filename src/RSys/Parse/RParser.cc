@@ -1,14 +1,20 @@
 #include <RSys/Parse/RParser.hh>
 
 
-RIDocument* RParser::open(const QString &filename)
+bool RParser::open(const QString &filename)
 {
   RXLSDocument *document = new RXLSDocument(filename);
   if (!document->isOpen())
   {
     log(RERROR, 20, R_S("Nepavyko atverti failo „%1“.").arg(filename));
+    return false;
   }
-  return document;
+  else
+  {
+    m_document = document;
+    makeGuessing();
+    return true;
+  }
 }
 
 QPoint RParser::findCaptionRow(
@@ -99,10 +105,9 @@ void RParser::makeGuessing()
   }
 }
 
-RParser::RParser(const QString &filename)
+RParser::RParser()
 {
-  m_document = open(filename);
-
+  m_document = NULL;
   m_guessInfo[RMEASURE] = RTableTypeGuessInfo(
         (QStringList() << R_S("Paramos priemones") << R_S("Paramos priemonės")),
         (QList<QStringList>()
@@ -183,16 +188,12 @@ RParser::RParser(const QString &filename)
              << R_S("Kiekis"))
          )
         );
-  makeGuessing();
 }
 
-RParser::RParser(
-  const QString &filename,
-  QMap<RDataType, RTableTypeGuessInfo> guessInfo)
+RParser::RParser(QMap<RDataType, RTableTypeGuessInfo> guessInfo)
 {
-  m_document = open(filename);
+  m_document = NULL;
   m_guessInfo = guessInfo;
-  makeGuessing();
 }
 
 RParser::~RParser()
@@ -203,6 +204,16 @@ RParser::~RParser()
 QMap<int, RDataType>* RParser::guesses()
 {
   return &m_guesses;
+}
+
+QList<std::tuple<QString, int, int> > RParser::guessesList()
+{
+  QList<std::tuple<QString, int, int> > list;
+  for (auto it = m_guesses.begin(); it != m_guesses.end(); it++)
+  {
+    list << std::make_tuple(m_document->nameAt(it.key()), (int) it.value(), it.key());
+  }
+  return list;
 }
 
 RIDocument* RParser::document()
