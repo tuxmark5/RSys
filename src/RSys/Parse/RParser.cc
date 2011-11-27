@@ -17,6 +17,76 @@ bool RParser::open(const QString &filename)
   }
 }
 
+bool RParser::readMeasures(RData *data, RITable *table, int tableIndex)
+{
+  RMeasurePtrList *list = data->measures();
+  int added = 0;
+  bool errors = false;
+  QPoint start = findCaptionRow(table, m_guessInfo[RMEASURE]);
+  if (start.x() == -1)
+  {
+    this->log(
+          RERROR, 21,
+          R_S("Lakšte „%1“ nepavyko rasti eilutės su stulpelių antraštėmis.")
+          .arg(table->title()));
+    errors = true;
+  }
+  else
+  {
+    int codeColumn = start.x();
+    int nameColumn = start.x() + 1;
+    for (int rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
+    {
+      if (table->cell(codeColumn, rowIndex).isNull())
+      {
+        // Kryptis.
+        // FIXME: Kryptys (ir tuščios eilutės) yra ignoruojamos.
+        continue;
+      }
+      else
+      {
+        // Priemonė.
+        // FIXME: Kryptys yra ignoruojamos.
+        RMeasurePtr measure = new RMeasure(data);
+        measure->setIdentifier(table->cell(codeColumn, rowIndex).toString().toUpper());
+        measure->setName(table->cell(nameColumn, rowIndex).toString());
+        list->append(measure);
+        added++;
+      }
+    }
+  }
+  m_readRaport[tableIndex] = added;
+  return !errors;
+}
+
+bool RParser::readTable(RData *data, RDataType type, RITable *table, int tableIndex)
+{
+  switch (type)
+  {
+  case RMEASURE: return readMeasures(data, table, tableIndex);
+  }
+  return true;
+}
+
+bool RParser::read(RData *data, QList<std::tuple<QString, int, int> > guesses)
+{
+  bool allOk = true;
+  for (auto it : guesses)
+  {
+    int type = std::get<1>(it);
+    int index = std::get<2>(it);
+    if (type & 0x100)
+    {
+      // Ignore.
+    }
+    else
+    {
+      allOk &= readTable(data, (RDataType) type, m_document->tableAt(index), index);
+    }
+  }
+  return allOk;
+}
+
 QPoint RParser::findCaptionRow(
   RITable *table, RTableTypeGuessInfo info)
 {
@@ -214,6 +284,11 @@ QList<std::tuple<QString, int, int> > RParser::guessesList()
     list << std::make_tuple(m_document->nameAt(it.key()), (int) it.value(), it.key());
   }
   return list;
+}
+
+QMap<int, int> RParser::readRaport()
+{
+  return m_readRaport;
 }
 
 RIDocument* RParser::document()
