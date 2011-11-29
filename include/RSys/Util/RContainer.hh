@@ -113,7 +113,7 @@ class RContainerI: public RContainer
     { return m_list->length(); }
 
     _V bool           remove(int x)
-    { return m_list->removeAt(x); }
+    { m_list->at(x)->remove(); return m_list->removeAt(x); }
 
     _V void           removeObserver(RIObserver* observer)
     { m_list->removeObserver(observer); }

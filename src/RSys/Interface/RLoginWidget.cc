@@ -37,6 +37,7 @@ Vacuum RLoginWidget :: RLoginWidget(RDatabase* database, QWidget* parent):
   m_loginButton = new QPushButton("Prisijungti", this);
   m_loginButton->setDefault(true);
 
+  RDatabase::connect(m_database, SIGNAL(message(QString)), this, SLOT(showMessage(QString)));
   QLineEdit::connect(m_dbAddressField, SIGNAL(returnPressed()), this, SLOT(onLoginPressed()));
   QLineEdit::connect(m_dbNameField, SIGNAL(returnPressed()), this, SLOT(onLoginPressed()));
   QLineEdit::connect(m_usernameField, SIGNAL(returnPressed()), this, SLOT(onLoginPressed()));
@@ -59,6 +60,13 @@ Vacuum RLoginWidget :: ~RLoginWidget()
 
 /**********************************************************************************************/
 
+void RLoginWidget :: showMessage(const QString& message)
+{
+  m_innerLayout->addWidget(new RMessage(message), m_innerLayout->rowCount(), 0, 1, 2);
+}
+
+/**********************************************************************************************/
+
 void RLoginWidget :: onLoginPressed()
 {
   QString   dbAddress   = m_dbAddressField->text();
@@ -69,11 +77,6 @@ void RLoginWidget :: onLoginPressed()
   if (m_database->login(dbAddress, dbName, userName, password))
   {
     emit loggedIn();
-  }
-  else
-  {
-    QString text = QString::fromUtf8("Neteisingas vartotojo vardas arba slaptažodis");
-    m_innerLayout->addWidget(new RMessage(text), m_innerLayout->rowCount(), 0, 1, 2);
   }
 }
 

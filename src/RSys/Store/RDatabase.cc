@@ -77,11 +77,11 @@ void RDatabase :: createAdminDataEntities()
   auto setValue     = [ ](RUser* u, const QString& k, int v) { u->setProperty(k, v); };
 
   auto de = newEntity1D("users", m_data->users(), alloc<RUser>::make(m_data));
-  de->addField<RID>     ("id")    >> &RUser::id           << &RUser::setId;
-  de->addField<QString> ("user")  >> &RUser::userName     << &RUser::setUserName;
-  de->addField<QString> ("descr") >> &RUser::description  << &RUser::setDescription;
+  de->addField<RID>     ("uid")       >> &RUser::id           << &RUser::setId;
+  de->addField<QString> ("username")  >> &RUser::userName     << &RUser::setUserName;
+  de->addField<QString> ("descr")     >> &RUser::description  << &RUser::setDescription;
 
-  auto uae = new UserPropertyE("userAdm", "user", "key", "value");
+  auto uae = new UserPropertyE("userAdm", "uid", "key", "value");
   (*m_data)[RUser::propertySet]   << std::bind(&UserPropertyE::onSet, uae, _1, _2, _3);
   (*m_data)[RUser::propertyUnset] << std::bind(&UserPropertyE::onUnset, uae, _1, _2);
   uae->setKey0(fromUser,  toUser);
@@ -115,7 +115,7 @@ void RDatabase :: createDataEntities()
   ue->addField<RID>     ("measure") >> &RSubmission::measureId  << &RSubmission::setMeasureId;
   ue->addField<int>     ("count")   >> &RSubmission::count      << &RSubmission::setCount;
   ue->addField<QDate>   ("date0")   >> &RSubmission::date0      << &RSubmission::setDate0;
-  ue->addField<QDate>   ("date0")   >> &RSubmission::date1      << &RSubmission::setDate1;
+  ue->addField<QDate>   ("date1")   >> &RSubmission::date1      << &RSubmission::setDate1;
 
   auto toDivision   = [=](const QVariant& var) -> RDivision* { return m_data->division(var.toLongLong()); };
   auto toMeasure    = [=](const QVariant& var) -> RMeasure*  { return m_data->measure(var.toLongLong()); };
@@ -145,23 +145,54 @@ void RDatabase :: createDataEntities()
 
 /**********************************************************************************************/
 
+void RDatabase :: emitError(const QSqlError& error)
+{
+
+}
+
+/**********************************************************************************************/
+
 bool RDatabase :: login(const QString& addr, const QString& db, const QString& user, const QString& pass)
 {
-  R_GUARD(user == "user", false);
+  if (!m_database.isValid())
+  {
+    if (g_postgres)
+    {
+      m_database = QSqlDatabase::addDatabase("QPSQL");
+      m_database.setConnectOptions("connect_timeout=1");
+    }
+    else
+    {
+      m_database = QSqlDatabase::addDatabase("QSQLITE");
+    }
+  }
 
   if (!m_database.isValid())
-    m_database = QSqlDatabase::addDatabase("QSQLITE");
+  {
+    emit message(R_S("Nerastas <b>PostgreSQL</b> QT draiveris <b>QPSQL</b>"));
+    return false;
+  }
+
+
+  qDebug() << "S0";
+
   m_database.setHostName(addr);
   m_database.setDatabaseName(db);
   m_database.setUserName(user);
   m_database.setPassword(pass);
 
+  qDebug() << "S1";
+
   if (m_database.open())
   {
+    qDebug() << "ALL IS OK\n";
     emit loggedIn();
     return true;
   }
 
+  qDebug() << "S2" << m_database.lastError().text() << m_database.lastError().type();
+
+  emit message(R_S("Neteisingas vartotojo vardas arba slaptažodis"));
   return false;
 }
 

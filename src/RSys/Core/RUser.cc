@@ -51,6 +51,16 @@ int RUser :: property(const QString& name) const
 
 /**********************************************************************************************/
 
+void RUser :: remove()
+{
+  R_GUARD(m_created, Vacuum);
+
+  (*m_data)[onSql](R_S("DROP ROLE %1;").arg(m_userName));
+  m_created = false;
+}
+
+/**********************************************************************************************/
+
 void RUser :: setDescription(const QString& description)
 {
   m_description = description;
@@ -62,7 +72,7 @@ void RUser :: setPassword(const QString& password)
 {
   m_password = password;
   if (m_created)
-    (*m_data)[onSql](R_S("ALTER ROLE %1 SET PASSWORD = %2;").arg(m_userName, m_password));
+    (*m_data)[onSql](R_S("ALTER ROLE %1 WITH PASSWORD '%2';").arg(m_userName, m_password));
 }
 
 /**********************************************************************************************/

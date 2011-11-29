@@ -37,18 +37,25 @@ void REntity1D :: init()
     }
   }
 
-  m_exprs[Insert]  = QString("INSERT INTO %1(%2) VALUES(%3);")
-    .arg(m_entityName).arg(fields).arg(wildcards);
-
   m_exprs[Remove]  = QString("DELETE FROM %1 WHERE %2 = ?;")
     .arg(m_entityName).arg(field0);
-
-  //m_exprs[Update]  = m_exprs[Remove];
-  m_exprs[Update]  = QString("REPLACE INTO %1(%2,%3) VALUES(?,%4);")
-    .arg(m_entityName).arg(field0).arg(fields).arg(wildcards);
-
   m_exprs[Select]  = QString("SELECT %1,%2 FROM %3;")
     .arg(field0).arg(fields).arg(m_entityName);
+
+  if (g_postgres)
+  {
+    m_exprs[Insert]  = QString("INSERT INTO %1(%2,%3) VALUES(DEFAULT,%4) returning id;")
+      .arg(m_entityName, field0, fields, wildcards);
+    m_exprs[Update]  = QString("INSERT INTO %1(%2,%3) VALUES(?,%4);") // update
+      .arg(m_entityName, field0, fields, wildcards);
+  }
+  else
+  {
+    m_exprs[Insert]  = QString("INSERT INTO %1(%2) VALUES(%3);")
+      .arg(m_entityName).arg(fields).arg(wildcards);
+    m_exprs[Update]  = QString("REPLACE INTO %1(%2,%3) VALUES(?,%4);")
+      .arg(m_entityName).arg(field0).arg(fields).arg(wildcards);
+  }
 }
 
 /**********************************************************************************************/

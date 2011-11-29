@@ -38,10 +38,12 @@ class RDatabase: public QObject
   private:
     _M void           createAdminDataEntities();
     _M void           createDataEntities();
+    _M void           emitError(const QSqlError& error);
     _M void           initDb();
 
   signals:
     _M void           loggedIn();
+    _M void           message(const QString& text);
 };
 
 /**********************************************************************************************/

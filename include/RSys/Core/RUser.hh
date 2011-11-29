@@ -46,6 +46,7 @@ class RUser: public RElement
     _M bool             summaryAcc()      const { return m_properties.value("sum", 0); }
 
     _M int              property(const QString& name) const;
+    _M void             remove();
     _M void             setProperty(const QString& name, int value);
 
   public:

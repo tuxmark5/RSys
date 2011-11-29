@@ -82,7 +82,8 @@ class REntity1DI: public REntity1D,
       {
         qDebug() << "DOIN" << m_exprs[it.value()];
 
-        query.prepare(m_exprs[it.value()]);
+        qDebug() << "PREP" << query.prepare(m_exprs[it.value()]);
+        qDebug() << "LA" << query.lastError().text();
 
         switch (it.value())
         {
@@ -163,7 +164,8 @@ class REntity1DI: public REntity1D,
 
       if (query.exec())
       {
-        std::get<1>(m_fields.first())->set(entry, query.lastInsertId());
+        QVariant lastId = g_postgres ? query.first(), query.value(0) : query.lastInsertId();
+        std::get<1>(m_fields.first())->set(entry, lastId);
         return true;
       }
 

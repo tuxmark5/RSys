@@ -87,6 +87,7 @@ void RData :: enableIntervalTracking()
 
 RMeasure* RData :: measure(RID id) const
 {
+  qDebug() << "MEA QUE" << id;
   for (auto it = m_measures.begin(); it != m_measures.end(); ++it)
     if ((*it)->id() == id)
       return it->get();
@@ -97,6 +98,7 @@ RMeasure* RData :: measure(RID id) const
 
 RMeasure* RData :: measure(const QString& identifier) const
 {
+  qDebug() << "MEA QUX" << identifier;
   if (RUnit* unit = m_unitHash[RUnit::Measure].value(identifier))
     return static_cast<RMeasure*>(unit);
   return 0;

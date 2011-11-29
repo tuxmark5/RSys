@@ -23,6 +23,7 @@ class RElement: public RSharedData
     _M RData*           data() const { return m_data; }
     _M RID              id() const { return m_id; }
     _M bool             isValid() const { return m_valid; }
+    _V void             remove();
     _M bool             visible() const { return m_visible; }
     _M void             setId(RID id);
     _M void             setValid(bool valid);

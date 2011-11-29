@@ -33,6 +33,8 @@ Vacuum RDivision :: ~RDivision()
 
 void RDivision :: setMeasure(RMeasure* measure, double value)
 {
+  R_GUARD(measure, Vacuum);
+
   if (value <= 0.0)
   {
     (*m_data)[onMeasureUnset](this, measure);
@@ -49,6 +51,8 @@ void RDivision :: setMeasure(RMeasure* measure, double value)
 
 void RDivision :: setMeasure1(RMeasure* measure, double value)
 {
+  R_GUARD(measure, Vacuum);
+
   if (value <= 0.0)
   {
     (*m_data)[onMeasureUnset](this, measure);
@@ -65,6 +69,8 @@ void RDivision :: setMeasure1(RMeasure* measure, double value)
 
 void RDivision :: setSystem(RSystem* system, double value)
 {
+  R_GUARD(system, Vacuum);
+
   if (!value)
   {
     (*m_data)[onSystemUnset](this, system);

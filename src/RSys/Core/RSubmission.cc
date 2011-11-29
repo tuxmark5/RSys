@@ -85,11 +85,8 @@ void RSubmission :: setMeasure(RMeasure* measure)
 
 void RSubmission :: setMeasureId(RID id)
 {
-  RMeasurePtrList* measures = m_data->measures();
-
-  for (auto it = measures->begin(); it != measures->end(); ++it)
-    if ((*it)->id() == id)
-      return setMeasure(*it);
+  if (RMeasure* measure = m_data->measure(id))
+    setMeasure(measure);
 }
 
 /**********************************************************************************************/

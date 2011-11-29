@@ -26,6 +26,9 @@ class RLoginWidget: public QWidget
     _V Vacuum           ~RLoginWidget();
     _M QPushButton*     loginButton() const { return m_loginButton; }
 
+  public slots:
+    _M void             showMessage(const QString& message);
+
   protected slots:
     _M void             onLoginPressed();
 
