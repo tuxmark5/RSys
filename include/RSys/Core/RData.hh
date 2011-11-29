@@ -37,6 +37,7 @@ class RData: public QObject, public RSignal
     _M RSubmissionPtrList     m_submissions;
     _M RSubmissionPtrList     m_submissions1;   // planned submissions
     _M RSystemPtrList         m_systems;
+    _M RUserPtrList           m_users;
     _M QDate                  m_interval0;
     _M QDate                  m_interval1;
     _M bool                   m_purgeEnabled: 1;
@@ -65,6 +66,8 @@ class RData: public QObject, public RSignal
     _M RSystem*               system(RID id) const;
     _M RSystem*               system(const QString& identifier) const;
     _M RSystemPtrList*        systems()       { return &m_systems; }
+    _M RUser*                 user(RID id) const;
+    _M RUserPtrList*          users() { return &m_users; }
 
   private:
     _M void                   calculateIntervals(RSubmissionPtrList* submissions);

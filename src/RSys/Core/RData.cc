@@ -3,6 +3,7 @@
 #include <RSys/Core/RMeasure.hh>
 #include <RSys/Core/RSubmission.hh>
 #include <RSys/Core/RSystem.hh>
+#include <RSys/Core/RUser.hh>
 #include <RSys/Util/RAlgorithm.hh>
 
 /********************************************* RS *********************************************/
@@ -194,6 +195,16 @@ RSystem* RData :: system(const QString& identifier) const
 {
   if (RUnit* unit = m_unitHash[RUnit::System].value(identifier))
     return static_cast<RSystem*>(unit);
+  return 0;
+}
+
+/**********************************************************************************************/
+
+RUser* RData :: user(RID id) const
+{
+  for (auto it = m_users.begin(); it != m_users.end(); ++it)
+    if ((*it)->id() == id)
+      return it->get();
   return 0;
 }
 

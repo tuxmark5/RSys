@@ -15,6 +15,7 @@
 #include <RSys/Core/RMeasure.hh>
 #include <RSys/Core/RSubmission.hh>
 #include <RSys/Core/RSystem.hh>
+#include <RSys/Core/RUser.hh>
 
 #include <RSys/Interface/RImportForm.hh>
 #include <RSys/Interface/RIntervalToolBar.hh>
@@ -36,10 +37,13 @@
 #include <RSys/Interface/RSystemAdmTab.hh>
 #include <RSys/Interface/RSystemTab.hh>
 #include <RSys/Interface/RUsageTab.hh>
+#include <RSys/Interface/RUserAdmTab.hh>
+#include <RSys/Interface/RUserTab.hh>
 
 #include <RSys/Logic/RResults.hh>
 #include <RSys/Parse/RValidator.hh>
 #include <RSys/Store/RDatabase.hh>
+#include <RSys/Store/RSqlEntity.hh>
 #include <RSys/Util/RContainer.hh>
 
 /********************************************* RS *********************************************/
@@ -200,6 +204,7 @@ void RMainWindow :: connectActions()
   (*m_data1)[RDivision::onMeasureUnset]   << std::bind(&RResults::updateDelayed, m_results);
   (*m_data1)[RDivision::onSystemSet]      << std::bind(&RResults::updateDelayed, m_results);
   (*m_data1)[RDivision::onSystemUnset]    << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RUser::onSql]                << std::bind(&RSqlEntity::exec, m_database->sqlEntity(), _1);
 }
 
 /**********************************************************************************************/
@@ -319,10 +324,13 @@ void RMainWindow :: createTabs()
   addLeftTab(new RMeasureAdmTab(this),  "Priemonių adm.", "Paramos priemonių administravimas");
   addLeftTab(new RSystemAdmTab(this),   "IS adm.", "Informacinių sistemų pasiskirstymas");
   addLeftTab(new RSubmissionTab(this),  "Istoriniai duom.", "Istoriniai duomenys");
-  addLeftTab(new RPlannedTab(this),     "Planuojami kiekiai", "Planuojami paramos priemonių kiekiai");
+  addLeftTab(new RPlannedTab(this),     "Planuojami kiekiai", "Planuojami paramos priemonių kiekiai");  
 
   addRightTab(new RUsageTab(this),      "Apkrovos ir prognozės", "Individualios padalinių/sistemų apkrovos ir prognozės");
   addRightTab(new RSummaryTab(this),    "Apžvalga", "Apžvalga");
+
+  addLeftTab(new RUserTab(this),        "Naudotojai", "Sistemos naudotojai");
+  addRightTab(new RUserAdmTab(this),    "Naud. adm.", "Sistemos naudototojų administravimas");
 }
 
 /**********************************************************************************************/

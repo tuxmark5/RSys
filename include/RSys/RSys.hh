@@ -25,7 +25,6 @@
 #define Vacuum
 /**********************************************************************************************/
 // Core
-class RAdminData;
 class RData;
 class RDivision;
 class RElement;
@@ -62,6 +61,7 @@ class RDatabase;
 class REntity;
 class REntity1D;
 class REntity2D;
+class RSqlEntity;
 /**********************************************************************************************/
 // Util
 class RContainer;
@@ -109,6 +109,7 @@ typedef RSharedPtr<RMeasure>            RMeasurePtr;
 typedef RSharedPtr<RSubmission>         RSubmissionPtr;
 typedef RSharedPtr<RSystem>             RSystemPtr;
 typedef RSharedPtr<RUnit>               RUnitPtr;
+typedef RSharedPtr<RUser>               RUserPtr;
 
 typedef ROList<RDivision*>              RDivisionList;
 typedef ROList<RMeasure*>               RMeasureList;
@@ -121,6 +122,7 @@ typedef ROList<RMeasurePtr>             RMeasurePtrList;
 typedef ROList<RSubmissionPtr>          RSubmissionPtrList;
 typedef ROList<RSystemPtr>              RSystemPtrList;
 typedef ROList<RUnitPtr>                RUnitPtrList;
+typedef ROList<RUserPtr>                RUserPtrList;
 
 typedef std::function<RInterval (int)>  RIntervalFun;
 /**********************************************************************************************/

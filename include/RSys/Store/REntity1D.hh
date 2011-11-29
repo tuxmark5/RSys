@@ -43,16 +43,20 @@ class REntity1DI: public REntity1D,
     _T std::tuple<QString, Accessor*>                   Field;
     _T QList<Field>                                     FieldList;
     _T QHash<Value, int>                                Log;
+    _T std::function<Entry*()>                          Allocator;
 
   private:
     _M Log                m_log;
     _M FieldList          m_fields;
     _M List*              m_list;
+    _M Allocator          m_allocator;
     _M bool               m_allowInsert: 1;
 
   public:
-    _M Vacuum             REntity1DI(const QString& entity, List* list, RDatabase* database):
-      REntity1D(entity, database), m_list(list), m_allowInsert(true)
+    _M Vacuum             REntity1DI(const QString& entity, List* list, Allocator&& allocator):
+      REntity1D(entity, 0), m_list(list),
+      m_allocator(std::forward<Allocator>(allocator)),
+      m_allowInsert(true)
     {
       m_list->addObserver(this);
     }
@@ -140,7 +144,7 @@ class REntity1DI: public REntity1D,
 
       for (query.first(); query.isValid(); query.next())
       {
-        Value record = new Entry(m_database->data());
+        Value record = m_allocator();
         for (int i = 0; i < m_fields.size(); i++)
           std::get<1>(m_fields[i])->set(*record, query.value(i));
         m_list->append(record);
@@ -183,9 +187,9 @@ class REntity1DI: public REntity1D,
 
 /**********************************************************************************************/
 
-template <class Value>
-REntity1DI<Value>* newEntity1D(const QString& entity, ROList<Value>* list, RDatabase* database)
-{ return new REntity1DI<Value>(entity, list, database); }
+template <class Value, class... Args>
+REntity1DI<Value>* newEntity1D(const QString& entity, ROList<Value>* list, Args&&... args)
+{ return new REntity1DI<Value>(entity, list, std::forward<Args>(args)...); }
 
 /**********************************************************************************************/
 

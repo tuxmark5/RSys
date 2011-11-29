@@ -1,14 +1,29 @@
 #include <QtSql/QSqlQuery>
 #include <RSys/Core/RData.hh>
+#include <RSys/Core/RUser.hh>
 #include <RSys/Store/RDatabase.hh>
 #include <RSys/Store/REntity1D.hh>
 #include <RSys/Store/REntity2D.hh>
+#include <RSys/Store/RSqlEntity.hh>
 
 /**********************************************************************************************/
 using namespace std::placeholders;
 /**********************************************************************************************/
-typedef REntity2DI<RDivision, RMeasure, double> DivisionMeasureE;
-typedef REntity2DI<RDivision, RSystem, double>  DivisionSystemE;
+typedef REntity2DI<RDivisionPtr, RMeasurePtr, double>   DivisionMeasureE;
+typedef REntity2DI<RDivisionPtr, RSystemPtr, double>    DivisionSystemE;
+typedef REntity2DI<RUserPtr,     QString, int>          UserPropertyE;
+/**********************************************************************************************/
+
+template <class Value>
+struct alloc
+{
+  template <typename Arg>
+  static std::function<Value* ()> make(Arg arg)
+  {
+    return [=]() -> Value* { return new Value(arg); };
+  }
+};
+
 /********************************************* RS *********************************************/
 /*                                         RDatabase                                          */
 /**********************************************************************************************/
@@ -17,52 +32,9 @@ Vacuum RDatabase :: RDatabase(RData* data, QObject* parent):
   QObject(parent),
   m_data(data)
 {
-  auto de = newEntity1D("divisions", data->divisions(), this);
-  de->addField<RID>     ("id")    >> &RDivision::id           << &RDivision::setId;
-  de->addField<QString> ("ident") >> &RDivision::identifier   << &RDivision::setIdentifier;
-  de->addField<QString> ("name")  >> &RDivision::name         << &RDivision::setName;
-
-  auto me = newEntity1D("measures", data->measures(), this);
-  me->addField<RID>     ("id")    >> &RMeasure::id            << &RMeasure::setId;
-  me->addField<QString> ("ident") >> &RMeasure::identifier    << &RMeasure::setIdentifier;
-  me->addField<QString> ("name")  >> &RMeasure::name          << &RMeasure::setName;
-
-  auto se = newEntity1D("systems", data->systems(), this);
-  se->addField<RID>     ("id")    >> &RSystem::id             << &RSystem::setId;
-  se->addField<QString> ("ident") >> &RSystem::identifier     << &RSystem::setIdentifier;
-  se->addField<QString> ("name")  >> &RSystem::name           << &RSystem::setName;
-
-  auto ue = newEntity1D("submissions", data->submissions(), this);
-  ue->addField<RID>     ("id")      >> &RSubmission::id         << &RSubmission::setId;
-  ue->addField<RID>     ("measure") >> &RSubmission::measureId  << &RSubmission::setMeasureId;
-  ue->addField<int>     ("count")   >> &RSubmission::count      << &RSubmission::setCount;
-  ue->addField<QDate>   ("date0")   >> &RSubmission::date0      << &RSubmission::setDate0;
-  ue->addField<QDate>   ("date0")   >> &RSubmission::date1      << &RSubmission::setDate1;
-
-  auto toDivision   = [=](const QVariant& var) -> RDivision* { return data->division(var.toLongLong()); };
-  auto toMeasure    = [=](const QVariant& var) -> RMeasure*  { return data->measure(var.toLongLong()); };
-  auto toSystem     = [=](const QVariant& var) -> RSystem*   { return data->system(var.toLongLong()); };
-  auto fromDivision = [ ](RDivision* unit)     -> QVariant   { return unit->id(); };
-  auto fromMeasure  = [ ](RMeasure* unit)      -> QVariant   { return unit->id(); };
-  auto fromSystem   = [ ](RSystem* unit)       -> QVariant   { return unit->id(); };
-  auto setMeasure   = [ ](RDivision* d, RMeasure* m, double v) { d->setMeasure(m, v); };
-  auto setSystem    = [ ](RDivision* d, RSystem* s, double v) { d->setSystem(s, v); };
-
-  auto mae = new DivisionMeasureE("measureAdm", "division", "measure", "weight");
-  (*data)[RDivision::onMeasureSet] << std::bind(&DivisionMeasureE::onSet, mae, _1, _2, _3);
-  (*data)[RDivision::onMeasureUnset] << std::bind(&DivisionMeasureE::onUnset, mae, _1, _2);
-  mae->setKey0(fromDivision, toDivision);
-  mae->setKey1(fromMeasure, toMeasure);
-  mae->setSetter(setMeasure);
-
-  auto sae = new DivisionSystemE("systemAdm", "division", "system", "weight");
-  (*data)[RDivision::onSystemSet] << std::bind(&DivisionSystemE::onSet, sae, _1, _2, _3);
-  (*data)[RDivision::onSystemUnset] << std::bind(&DivisionSystemE::onUnset, sae, _1, _2);
-  sae->setKey0(fromDivision, toDivision);
-  sae->setKey1(fromSystem, toSystem);
-  sae->setSetter(setSystem);
-
-  m_entities << de << me << se << ue << mae << sae;
+  createAdminDataEntities();
+  createDataEntities();
+  m_sqlEntity = new RSqlEntity();
 }
 
 /**********************************************************************************************/
@@ -70,6 +42,7 @@ Vacuum RDatabase :: RDatabase(RData* data, QObject* parent):
 Vacuum RDatabase :: ~RDatabase()
 {
   // id, entity
+  delete m_sqlEntity;
 }
 
 /**********************************************************************************************/
@@ -90,7 +63,84 @@ bool RDatabase :: commit()
   }
   m_database.commit();
 
-  return result ;
+  return result;
+}
+
+/**********************************************************************************************/
+
+void RDatabase :: createAdminDataEntities()
+{
+  auto toUser       = [=](const QVariant& var)  -> RUser*     { return m_data->user(var.toLongLong()); };
+  auto toKey        = [=](const QVariant& var)  -> QString    { return var.toString(); };
+  auto fromUser     = [ ](RUser* user)          -> QVariant   { return user->id(); };
+  auto fromKey      = [ ](const QString& key)   -> QVariant   { return key; };
+  auto setValue     = [ ](RUser* u, const QString& k, int v) { u->setProperty(k, v); };
+
+  auto de = newEntity1D("users", m_data->users(), alloc<RUser>::make(m_data));
+  de->addField<RID>     ("id")    >> &RUser::id           << &RUser::setId;
+  de->addField<QString> ("user")  >> &RUser::userName     << &RUser::setUserName;
+  de->addField<QString> ("descr") >> &RUser::description  << &RUser::setDescription;
+
+  auto uae = new UserPropertyE("userAdm", "user", "key", "value");
+  (*m_data)[RUser::propertySet]   << std::bind(&UserPropertyE::onSet, uae, _1, _2, _3);
+  (*m_data)[RUser::propertyUnset] << std::bind(&UserPropertyE::onUnset, uae, _1, _2);
+  uae->setKey0(fromUser,  toUser);
+  uae->setKey1(fromKey,   toKey);
+  uae->setSetter(setValue);
+
+  m_entities << de << uae;
+}
+
+/**********************************************************************************************/
+
+void RDatabase :: createDataEntities()
+{
+  auto de = newEntity1D("divisions", m_data->divisions(), alloc<RDivision>::make(m_data));
+  de->addField<RID>     ("id")    >> &RDivision::id           << &RDivision::setId;
+  de->addField<QString> ("ident") >> &RDivision::identifier   << &RDivision::setIdentifier;
+  de->addField<QString> ("name")  >> &RDivision::name         << &RDivision::setName;
+
+  auto me = newEntity1D("measures", m_data->measures(), alloc<RMeasure>::make(m_data));
+  me->addField<RID>     ("id")    >> &RMeasure::id            << &RMeasure::setId;
+  me->addField<QString> ("ident") >> &RMeasure::identifier    << &RMeasure::setIdentifier;
+  me->addField<QString> ("name")  >> &RMeasure::name          << &RMeasure::setName;
+
+  auto se = newEntity1D("systems", m_data->systems(), alloc<RSystem>::make(m_data));
+  se->addField<RID>     ("id")    >> &RSystem::id             << &RSystem::setId;
+  se->addField<QString> ("ident") >> &RSystem::identifier     << &RSystem::setIdentifier;
+  se->addField<QString> ("name")  >> &RSystem::name           << &RSystem::setName;
+
+  auto ue = newEntity1D("submissions", m_data->submissions(), alloc<RSubmission>::make(m_data));
+  ue->addField<RID>     ("id")      >> &RSubmission::id         << &RSubmission::setId;
+  ue->addField<RID>     ("measure") >> &RSubmission::measureId  << &RSubmission::setMeasureId;
+  ue->addField<int>     ("count")   >> &RSubmission::count      << &RSubmission::setCount;
+  ue->addField<QDate>   ("date0")   >> &RSubmission::date0      << &RSubmission::setDate0;
+  ue->addField<QDate>   ("date0")   >> &RSubmission::date1      << &RSubmission::setDate1;
+
+  auto toDivision   = [=](const QVariant& var) -> RDivision* { return m_data->division(var.toLongLong()); };
+  auto toMeasure    = [=](const QVariant& var) -> RMeasure*  { return m_data->measure(var.toLongLong()); };
+  auto toSystem     = [=](const QVariant& var) -> RSystem*   { return m_data->system(var.toLongLong()); };
+  auto fromDivision = [ ](RDivision* unit)     -> QVariant   { return unit->id(); };
+  auto fromMeasure  = [ ](RMeasure* unit)      -> QVariant   { return unit->id(); };
+  auto fromSystem   = [ ](RSystem* unit)       -> QVariant   { return unit->id(); };
+  auto setMeasure   = [ ](RDivision* d, RMeasure* m, double v) { d->setMeasure(m, v); };
+  auto setSystem    = [ ](RDivision* d, RSystem* s, double v) { d->setSystem(s, v); };
+
+  auto mae = new DivisionMeasureE("measureAdm", "division", "measure", "weight");
+  (*m_data)[RDivision::onMeasureSet] << std::bind(&DivisionMeasureE::onSet, mae, _1, _2, _3);
+  (*m_data)[RDivision::onMeasureUnset] << std::bind(&DivisionMeasureE::onUnset, mae, _1, _2);
+  mae->setKey0(fromDivision, toDivision);
+  mae->setKey1(fromMeasure, toMeasure);
+  mae->setSetter(setMeasure);
+
+  auto sae = new DivisionSystemE("systemAdm", "division", "system", "weight");
+  (*m_data)[RDivision::onSystemSet] << std::bind(&DivisionSystemE::onSet, sae, _1, _2, _3);
+  (*m_data)[RDivision::onSystemUnset] << std::bind(&DivisionSystemE::onUnset, sae, _1, _2);
+  sae->setKey0(fromDivision, toDivision);
+  sae->setKey1(fromSystem, toSystem);
+  sae->setSetter(setSystem);
+
+  m_entities << de << me << se << ue << mae << sae;
 }
 
 /**********************************************************************************************/

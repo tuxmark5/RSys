@@ -27,6 +27,13 @@ CREATE TABLE submissions
   date1     DATE
 );
 
+CREATE TABLE users
+(
+  id        INTEGER PRIMARY KEY,
+  user      TEXT,
+  descr     TEXT
+);
+
 CREATE TABLE measureAdm
 (
   division  INTEGER,
@@ -43,3 +50,10 @@ CREATE TABLE systemAdm
   PRIMARY KEY(division, system)
 );
 
+CREATE TABLE userAdm
+(
+  user      INTEGER,
+  key       TEXT,
+  value     INTEGER,
+  PRIMARY KEY(user, key)
+);

@@ -8,20 +8,31 @@
 /*                                           RUser                                            */
 /**********************************************************************************************/
 
-class RUser
+class RUser: public RElement
 {
   public:
     _T QHash<QString, int> Properties;
 
   protected:
-    _M RAdminData*      m_adminData;
     _M QString          m_userName;
+    _M QString          m_password;
+    _M QString          m_description;
     _M Properties       m_properties;
+    _M bool             m_created: 1;
 
   public:
-    _M Vacuum           RUser(RAdminData* data);
-    //_M Vacuum           RUser(RSubmission& other, RData* data);
+    _M Vacuum           RUser(RData* data);
+    _M Vacuum           RUser(RUser& other, RData* data);
     _V Vacuum           ~RUser();
+
+    _S RUser*           createUser(RData* data);
+    _M QString          description() const { return m_description; }
+    _M QString          userName() const { return m_userName; }
+
+    _M void             setDescription(const QString& description);
+    _M void             setPassword(const QString& password);
+    _M void             setUserName(const QString& userName);
+
     _M int              divisionAcc()     const { return m_properties.value("div", 0); }
     _M int              measureAcc()      const { return m_properties.value("mea", 0); }
     _M int              measureAdmAcc()   const { return m_properties.value("meaA", 0); }
@@ -38,7 +49,9 @@ class RUser
     _M void             setProperty(const QString& name, int value);
 
   public:
-    _G(void,            propertyChange, RUser* user, const QString& prop, int newValue);
+    _G(void,            onSql,          const QString& sql);
+    _G(void,            propertySet,    RUser* user, const QString& prop, int newValue);
+    _G(void,            propertyUnset,  RUser* user, const QString& prop);
 };
 
 /**********************************************************************************************/

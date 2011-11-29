@@ -36,7 +36,7 @@ unix:QMAKE_LFLAGS   += -Wl,-rpath $$PWD/lib/External
 SOURCES             +=                              \
   src/External/ExcelFormat/BasicExcel.cpp           \
   src/External/ExcelFormat/ExcelFormat.cpp          \
-  src/RSys/Core/RAdminData.cc                       \
+  src/RSys/Core/RAbstractData.cc                    \
   src/RSys/Core/RData.cc                            \
   src/RSys/Core/RDivision.cc                        \
   src/RSys/Core/RElement.cc                         \
@@ -79,12 +79,14 @@ SOURCES             +=                              \
   src/RSys/Interface/RSystemTab.cc                  \
   src/RSys/Interface/RUsageTab.cc                   \
   src/RSys/Interface/RUserTab.cc                    \
+  src/RSys/Interface/RUserAdmTab.cc                 \
   src/RSys/Interface/RUsageWidget.cc                \
   src/RSys/Logic/RCalculator.cc                     \
   src/RSys/Logic/RResults.cc                        \
   src/RSys/Store/RDatabase.cc                       \
   src/RSys/Store/REntity1D.cc                       \
   src/RSys/Store/REntity2D.cc                       \
+  src/RSys/Store/RSqlEntity.cc                      \
   src/RSys/Tests/RTests.cc                          \
   src/RSys/Tests/TestRXLSDocument.cc                \
   src/RSys/Parse/RValidator.cc                      \
@@ -95,7 +97,7 @@ HEADERS             +=                              \
   include/External/ExcelFormat/ExcelFormat.h        \
   include/External/ExcelFormat/BasicExcel.hpp       \
   include/RSys/RSys.hh                              \
-  include/RSys/Core/RAdminData.hh                   \
+  include/RSys/Core/RAbstractData.hh                \
   include/RSys/Core/RData.hh                        \
   include/RSys/Core/RDivision.hh                    \
   include/RSys/Core/RElement.hh                     \
@@ -140,6 +142,7 @@ HEADERS             +=                              \
   include/RSys/Interface/RTableView.hh              \
   include/RSys/Interface/RUsageTab.hh               \
   include/RSys/Interface/RUserTab.hh                \
+  include/RSys/Interface/RUserAdmTab.hh             \
   include/RSys/Interface/RUsageWidget.hh            \
   include/RSys/Logic/RCalculator.hh                 \
   include/RSys/Logic/RResults.hh                    \
@@ -147,6 +150,7 @@ HEADERS             +=                              \
   include/RSys/Store/REntity.hh                     \
   include/RSys/Store/REntity1D.hh                   \
   include/RSys/Store/REntity2D.hh                   \
+  include/RSys/Store/RSqlEntity.hh                  \
   include/RSys/Util/RAccessorAdapter.hh             \
   include/RSys/Util/RAlgorithm.hh                   \
   include/RSys/Util/RCompose.hh                     \
@@ -159,6 +163,7 @@ HEADERS             +=                              \
   include/RSys/Util/RJoin.hh                        \
   include/RSys/Util/RMemAccessor.hh                 \
   include/RSys/Util/ROList.hh                       \
+  include/RSys/Util/RSharedData.hh                  \
   include/RSys/Util/RSharedPtr.hh                   \
   include/RSys/Util/RSignal.hh                      \
   include/RSys/Tests/RTests.hh                      \

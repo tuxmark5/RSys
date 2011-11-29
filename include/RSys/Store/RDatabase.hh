@@ -19,6 +19,7 @@ class RDatabase: public QObject
   private:
     _M RData*         m_data;
     _M QSqlDatabase   m_database;
+    _M RSqlEntity*    m_sqlEntity;
     _M EntityList     m_entities;
 
   public:
@@ -26,6 +27,7 @@ class RDatabase: public QObject
     _V Vacuum         ~RDatabase();
     _M RData*         data() const { return m_data; }
     _M bool           login(const QString& addr, const QString& db, const QString& user, const QString& pass);
+    _M RSqlEntity*    sqlEntity() const { return m_sqlEntity; }
 
   public slots:
     _M bool           commit();
@@ -34,6 +36,8 @@ class RDatabase: public QObject
     _M bool           select();
 
   private:
+    _M void           createAdminDataEntities();
+    _M void           createDataEntities();
     _M void           initDb();
 
   signals:
