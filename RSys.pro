@@ -90,7 +90,9 @@ SOURCES             +=                              \
   src/RSys/Tests/RTests.cc                          \
   src/RSys/Tests/TestRXLSDocument.cc                \
   src/RSys/Parse/RValidator.cc                      \
+  src/RSys/Parse/RParser.cc                         \
   src/RSys/Tests/TestRValidator.cc                  \
+  src/RSys/Tests/TestRParser.cc                     \
   src/RSys/main.cc
 
 HEADERS             +=                              \
@@ -169,7 +171,9 @@ HEADERS             +=                              \
   include/RSys/Tests/RTests.hh                      \
   include/RSys/Tests/TestRXLSDocument.hh            \
   include/RSys/Parse/RValidator.hh                  \
-  include/RSys/Tests/TestRValidator.hh
+  include/RSys/Parse/RParser.hh                     \
+  include/RSys/Tests/TestRValidator.hh              \
+  include/RSys/Tests/TestRParser.hh
 
 ################################################################################################
 

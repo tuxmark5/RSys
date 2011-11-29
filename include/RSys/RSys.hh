@@ -100,6 +100,16 @@ enum RMessageLevel
   RERROR,
   RCRITICAL
 };
+enum RDataType
+{
+  RMEASURE,
+  RDIVISION,
+  RSYSTEM,
+  RDIVISIONSYSTEMS,
+  RDIVISIONMEASURES,
+  RSUBMISSION,
+  RUNKNOWN
+};
 /**********************************************************************************************/
 #include <RSys/Util/ROList.hh>
 #include <RSys/Util/RSharedPtr.hh>

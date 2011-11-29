@@ -1,0 +1,4 @@
+#!/bin/bash
+
+export R_TEST=1
+ ../RSys-build-desktop/bin/RSys 

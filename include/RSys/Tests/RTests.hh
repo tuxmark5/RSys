@@ -4,6 +4,7 @@
 
 #include <RSys/Tests/TestRXLSDocument.hh>
 #include <RSys/Tests/TestRValidator.hh>
+#include <RSys/Tests/TestRParser.hh>
 
 
 void run_all_tests(int argc, char *argv[]);
