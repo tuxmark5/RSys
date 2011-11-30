@@ -196,6 +196,7 @@ void RMainWindow :: connectActions()
   QAction::connect(m_searchAction, SIGNAL(toggled(bool)), this, SLOT(setShowSearchForm(bool)));
   QAction::connect(m_systemsStateAction, SIGNAL(toggled(bool)), this, SLOT(updateUnits()));
 
+  (*m_data1)[RData::errorMessage]         << std::bind(&RMainWindow::showMessage, this, _1, -1);
   (*m_data1)[RSubmission::measureChange]  << std::bind(&RResults::updateDelayed, m_results);
   (*m_data1)[RSubmission::countChange]    << std::bind(&RResults::updateDelayed, m_results);
   (*m_data1)[RSubmission::date0Change]    << std::bind(&RResults::updateDelayed, m_results);
@@ -215,18 +216,13 @@ void RMainWindow :: createActions()
 {
   QActionGroup* stateGroup = new QActionGroup(this);
 
-  m_openAction            = R_ACTION(":/icons/open.png",        "Atverti");
-  m_openAction->setShortcut(QKeySequence("Ctrl+O"));
-
-  m_saveAction            = R_ACTION(":/icons/save.png",        "Išsaugoti");
-  m_saveAction->setShortcut(QKeySequence("Ctrl+S"));
-
   m_importAction          = R_ACTION(":/icons/import.png",      "Importuoti");
   m_importAction->setShortcut(QKeySequence("Ctrl+I"));
 
-  m_commitAction          = R_ACTION(":/icons/commit.png",      "COMMIT");
+  m_commitAction          = R_ACTION(":/icons/commit.png",      "Išsaugoti");
+  m_commitAction->setShortcut(QKeySequence("Ctrl+S"));
 
-  m_rollbackAction        = R_ACTION(":/icons/rollback.png",    "ROLLBACK");
+  m_rollbackAction        = R_ACTION(":/icons/rollback.png",    "Atstatyti");
 
   m_disconnectAction      = R_ACTION(":/icons/disconnect.png",  "Atsijungti");
   m_disconnectAction->setShortcut(QKeySequence("Alt+D"));
@@ -318,6 +314,8 @@ void RMainWindow :: createContainers()
 
 void RMainWindow :: createTabs()
 {
+  RUserTab* userTab;
+
   addLeftTab(new RMeasureTab(this),     "Priemonės", "Paramos priemonės");
   addLeftTab(new RDivisionTab(this),    "Padaliniai", "Padaliniai");
   addLeftTab(new RSystemTab(this),      "IS", "Informacinės sistemos");
@@ -329,8 +327,8 @@ void RMainWindow :: createTabs()
   addRightTab(new RUsageTab(this),      "Apkrovos ir prognozės", "Individualios padalinių/sistemų apkrovos ir prognozės");
   addRightTab(new RSummaryTab(this),    "Apžvalga", "Apžvalga");
 
-  addLeftTab(new RUserTab(this),        "Naudotojai", "Sistemos naudotojai");
-  addRightTab(new RUserAdmTab(this),    "Naud. adm.", "Sistemos naudototojų administravimas");
+  addLeftTab(userTab = new RUserTab(this),    "Naudotojai", "Sistemos naudotojai");
+  addRightTab(new RUserAdmTab(userTab, this), "Naud. adm.", "Sistemos naudototojų administravimas");
 }
 
 /**********************************************************************************************/

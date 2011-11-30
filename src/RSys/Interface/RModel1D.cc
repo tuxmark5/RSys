@@ -62,17 +62,10 @@ QVariant RModel1D :: data(const QModelIndex& index, int role) const
 
   R_GUARD(index.row()    <  height, QVariant());
 
-  switch (role)
-  {
-    case Qt::EditRole:
-    case Qt::DisplayRole:
-      return m_container->get(index.column(), index.row(), Qt::DisplayRole);
+  if (role == Qt::EditRole)
+    role = Qt::DisplayRole;
 
-    default:
-      return m_container->get(index.column(), index.row(), role);
-  }
-
-  return QVariant();
+  return m_container->get(index.column(), index.row(), role);
 }
 
 /**********************************************************************************************/
@@ -197,8 +190,12 @@ bool RModel1D :: setData(const QModelIndex& index, const QVariant& value, int ro
 
   if (index.row() < m_container->height())
   {
-    m_container->set(index.column(), index.row(), role, value);
-    notifyRowChanged(index.row()); // hmm
+    QVariant old = m_container->get(index.column(), index.row(), role);
+    if (old != value)
+    {
+      m_container->set(index.column(), index.row(), role, value);
+      notifyRowChanged(index.row());
+    }
   }
 
   return true;

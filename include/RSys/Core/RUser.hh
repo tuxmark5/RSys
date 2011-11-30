@@ -32,6 +32,7 @@ class RUser: public RElement
     _M void             setDescription(const QString& description);
     _M void             setPassword(const QString& password);
     _M void             setUserName(const QString& userName);
+    _M void             setUserNameE(const QString& userName);
 
     _M int              divisionAcc()     const { return m_properties.value("div", 0); }
     _M int              measureAcc()      const { return m_properties.value("mea", 0); }

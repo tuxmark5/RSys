@@ -40,6 +40,7 @@ class RIntervalToolBar;
 class RMainToolBar;
 class RMainMenuBar;
 class RMainWindow;
+class RMessage;
 class RModel1D;
 class RModel2D;
 class RResultsModel;
@@ -51,6 +52,7 @@ class RSummaryWidget;
 class RTab;
 class RTableView;
 class RUsageWidget;
+class RUserTab;
 /**********************************************************************************************/
 // Logic
 class RCalculator;
@@ -76,9 +78,11 @@ class QLabel;
 class QLayoutItem;
 class QLineEdit;
 class QMenu;
+class QModelIndex;
 class QPushButton;
 class QRadioButton;
 class QScrollArea;
+class QSettings;
 class QSpinBox;
 class QSplitter;
 class QStackedLayout;
@@ -138,7 +142,8 @@ typedef std::function<RInterval (int)>  RIntervalFun;
 /**********************************************************************************************/
 using namespace std::placeholders;
 /**********************************************************************************************/
-extern bool g_postgres;
+extern bool       g_postgres;
+extern QSettings* g_settings;
 /**********************************************************************************************/
 
 #endif /* RSYS_RSYS_HH */

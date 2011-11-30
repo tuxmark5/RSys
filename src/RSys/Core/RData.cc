@@ -54,6 +54,7 @@ void RData :: clear()
   m_measures.clear();           // deps: -
   m_measures1.deleteAll();      // deps: -
   m_systems.clear();            // deps: -
+  m_users.clear();
 }
 
 /**********************************************************************************************/
@@ -87,7 +88,6 @@ void RData :: enableIntervalTracking()
 
 RMeasure* RData :: measure(RID id) const
 {
-  qDebug() << "MEA QUE" << id;
   for (auto it = m_measures.begin(); it != m_measures.end(); ++it)
     if ((*it)->id() == id)
       return it->get();
@@ -98,7 +98,6 @@ RMeasure* RData :: measure(RID id) const
 
 RMeasure* RData :: measure(const QString& identifier) const
 {
-  qDebug() << "MEA QUX" << identifier;
   if (RUnit* unit = m_unitHash[RUnit::Measure].value(identifier))
     return static_cast<RMeasure*>(unit);
   return 0;
@@ -139,6 +138,7 @@ void RData :: operator = (RData& data)
   m_measures.clone(data.m_measures, this);
   m_measures1.clone(data.m_measures1, this);
   m_systems.clone(data.m_systems, this);
+  m_users.clone(data.m_users, this);
 
   m_submissions.clone(data.m_submissions, this);
   m_submissions1.clone(data.m_submissions1, this);
@@ -167,6 +167,11 @@ void RData :: purgeMeasure(RMeasure* measure)
 
   for (auto it = m_divisions.begin(); it != m_divisions.end(); ++it)
     (*it)->m_measureMap.remove(measure);
+
+  m_submissions.removeIf([=](RSubmission* s) -> bool
+  {
+    return s->measure() == measure;
+  });
 }
 
 /**********************************************************************************************/
@@ -206,6 +211,16 @@ RUser* RData :: user(RID id) const
 {
   for (auto it = m_users.begin(); it != m_users.end(); ++it)
     if ((*it)->id() == id)
+      return it->get();
+  return 0;
+}
+
+/**********************************************************************************************/
+
+RUser* RData :: user(const QString& userName) const
+{
+  for (auto it = m_users.begin(); it != m_users.end(); ++it)
+    if ((*it)->userName() == userName)
       return it->get();
   return 0;
 }

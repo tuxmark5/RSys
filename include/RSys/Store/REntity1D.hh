@@ -42,6 +42,7 @@ class REntity1DI: public REntity1D,
     _T RAccessorAdapter<Entry>                          Accessor;
     _T std::tuple<QString, Accessor*>                   Field;
     _T QList<Field>                                     FieldList;
+    _T typename FieldList::ConstIterator                FieldIterator;
     _T QHash<Value, int>                                Log;
     _T std::function<Entry*()>                          Allocator;
 
@@ -157,10 +158,15 @@ class REntity1DI: public REntity1D,
     }
 
   private:
+    _M void               bindValues(QSqlQuery& query, Entry& entry, FieldIterator it0, FieldIterator it1)
+    {
+      for (; it0 != it1; ++it0)
+        query.bindValue(":" + std::get<0>(*it0), std::get<1>(*it0)->get(entry));
+    }
+
     _M bool               syncInsert(QSqlQuery& query, Entry& entry)
     {
-      for (auto itf = m_fields.begin() + 1; itf != m_fields.end(); ++itf)
-        query.addBindValue(std::get<1>(*itf)->get(entry));
+      bindValues(query, entry, m_fields.begin() + 1, m_fields.end());
 
       if (query.exec())
       {
@@ -174,15 +180,13 @@ class REntity1DI: public REntity1D,
 
     _M bool               syncRemove(QSqlQuery& query, Entry& entry)
     {
-      query.addBindValue(std::get<1>(m_fields.first())->get(entry));
+      bindValues(query, entry, m_fields.begin(), m_fields.begin() + 1);
       return query.exec();
     }
 
     _M bool               syncUpdate(QSqlQuery& query, Entry& entry)
     {
-      //query.addBindValue(std::get<1>(m_fields.first())->get(entry));
-      for (auto itf = m_fields.begin(); itf != m_fields.end(); ++itf)
-        query.addBindValue(std::get<1>(*itf)->get(entry));
+      bindValues(query, entry, m_fields.begin(), m_fields.end());
       return query.exec();
     }
 };

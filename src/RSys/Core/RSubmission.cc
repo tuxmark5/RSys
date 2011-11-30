@@ -60,6 +60,10 @@ void RSubmission :: setCount(int count)
 
 void RSubmission :: setDate0(const QDate& date0)
 {
+  R_DATA_GUARD(date0.isValid(), Vacuum, "Neteisinga data.");
+  R_DATA_GUARD(m_date1.isValid() ? (date0 < m_date1) : true, Vacuum,
+               "Klaidingas kairysis intervalo galas.");
+
   (*m_data)[date0Change](this, date0);
   m_date0 = date0;
 }
@@ -68,6 +72,10 @@ void RSubmission :: setDate0(const QDate& date0)
 
 void RSubmission :: setDate1(const QDate& date1)
 {
+  R_DATA_GUARD(date1.isValid(), Vacuum, "Neteisinga data.");
+  R_DATA_GUARD(m_date0.isValid() ? (m_date0 < date1) : true, Vacuum,
+               "Klaidingas dešinysis intervalo galas.");
+
   (*m_data)[date1Change](this, date1);
   m_date1 = date1;
 }
@@ -93,10 +101,11 @@ void RSubmission :: setMeasureId(RID id)
 
 void RSubmission :: setMeasureName(const QString& measureName)
 {
-  RMeasurePtr measure1;
+  QString       measureName1  = measureName.trimmed().toUpper();
+  RMeasurePtr   measure1      = m_data->measure(measureName1);
+  R_DATA_GUARD(measure1, Vacuum, "Nežinoma paramos priemonė <b>%1</b>", .arg(measureName1));
 
-  m_measureName   = measureName.toUpper();
-  measure1        = m_data->measure(m_measureName);
+  m_measureName   = measureName1;
   (*m_data)[measureChange](this, measure1.get());
   m_measure       = measure1;
 }

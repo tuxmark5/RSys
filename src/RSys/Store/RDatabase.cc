@@ -147,7 +147,27 @@ void RDatabase :: createDataEntities()
 
 void RDatabase :: emitError(const QSqlError& error)
 {
+  QString   text = error.databaseText();
+  QString   msg;
 
+  switch (error.type())
+  {
+    case QSqlError::ConnectionError:
+      /**/ if (text.startsWith("fe_send"))
+        msg = R_S("Nenurodytas slaptažodis");
+      else if (text.startsWith("timeout expired"))
+        msg = R_S("Nepavyko prisijungti prie duomenų bazės<br>"
+                  "(pasibaigė prisijungimui skirtas laikas)<br>"
+                  "Gal nurodytas blogas serverio adresas?");
+      else if (text.contains("authentication failed"))
+        msg = R_S("Neteisingas vartotojo vardas arba slaptažodis");
+      break;
+  }
+
+  if (msg.isNull())
+    msg = R_S("Klaida: %s").arg(text);
+
+  emit message(msg);
 }
 
 /**********************************************************************************************/
@@ -173,26 +193,18 @@ bool RDatabase :: login(const QString& addr, const QString& db, const QString& u
     return false;
   }
 
-
-  qDebug() << "S0";
-
   m_database.setHostName(addr);
   m_database.setDatabaseName(db);
   m_database.setUserName(user);
   m_database.setPassword(pass);
 
-  qDebug() << "S1";
-
   if (m_database.open())
   {
-    qDebug() << "ALL IS OK\n";
     emit loggedIn();
     return true;
   }
 
-  qDebug() << "S2" << m_database.lastError().text() << m_database.lastError().type();
-
-  emit message(R_S("Neteisingas vartotojo vardas arba slaptažodis"));
+  emitError(m_database.lastError());
   return false;
 }
 

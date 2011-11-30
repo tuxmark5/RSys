@@ -171,6 +171,24 @@ class ROList
       { return this->m_list.removeAt(i), true; }, i, i + 1);
     }
 
+    template <class Lambda>
+    _M void removeIf(const Lambda& lambda)
+    {
+      for (auto it = m_list.begin(); it != m_list.end(); )
+      {
+        if (lambda(*it))
+        {
+          int i = it - m_list.begin();
+          surrounded(&RIObserver::remove0, &RIObserver::remove1, [&]() -> bool
+          { it = m_list.erase(it); return true; }, i, i + 1);
+        }
+        else
+        {
+          ++it;
+        }
+      }
+    }
+
     _M void removeObserver(RIObserver* observer)
     {
       for (RODispatcher** self = &m_dispatcher; *self; self = &(*self)->m_nextDispatcher)

@@ -36,8 +36,6 @@ class RMainWindow: public QMainWindow
     _M QTabWidget*          m_tabWidgetR;
 
     _M QMenu*               m_viewMenu;
-    _M QAction*             m_openAction;
-    _M QAction*             m_saveAction;
     _M QAction*             m_importAction;
     _M QAction*             m_commitAction;
     _M QAction*             m_rollbackAction;

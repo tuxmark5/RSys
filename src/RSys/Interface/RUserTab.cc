@@ -14,7 +14,7 @@ Vacuum RUserTab :: RUserTab(RMainWindow* parent):
   auto uc = newContainer(parent->data()->users());
   uc->addColumn("Naudotojas");
   uc->addColumn("Pilnas vardas");
-  uc->addAccessor2<QString>(0, Qt::DisplayRole) >> &RUser::userName     << &RUser::setUserName;
+  uc->addAccessor2<QString>(0, Qt::DisplayRole) >> &RUser::userName     << &RUser::setUserNameE;
   uc->addAccessor2<QString>(0, Qt::ToolTipRole) >> &RUser::description;
   uc->addAccessor2<QString>(1, Qt::DisplayRole) >> &RUser::description  << &RUser::setDescription;
   uc->setAlloc([=]() { return RUser::createUser(parent->data()); });

@@ -10,8 +10,6 @@ Vacuum RMainToolBar :: RMainToolBar(RMainWindow* parent):
 {
   setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-  addAction(parent->m_openAction);
-  addAction(parent->m_saveAction);
   addAction(parent->m_importAction);
   addSeparator();
   addAction(parent->m_commitAction);

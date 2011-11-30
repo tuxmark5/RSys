@@ -3,7 +3,7 @@
 #include <RSys/Core/RUser.hh>
 
 /**********************************************************************************************/
-QRegExp g_userRegExp("\\w+");
+QRegExp g_userRegExp("[A-Za-z0-9]+");
 /********************************************* RS *********************************************/
 /*                                           RUser                                            */
 /**********************************************************************************************/
@@ -55,7 +55,6 @@ void RUser :: remove()
 {
   R_GUARD(m_created, Vacuum);
 
-  (*m_data)[onSql](R_S("DROP ROLE %1;").arg(m_userName));
   m_created = false;
 }
 
@@ -71,8 +70,7 @@ void RUser :: setDescription(const QString& description)
 void RUser :: setPassword(const QString& password)
 {
   m_password = password;
-  if (m_created)
-    (*m_data)[onSql](R_S("ALTER ROLE %1 WITH PASSWORD '%2';").arg(m_userName, m_password));
+  (*m_data)[onSql](R_S("ALTER ROLE %1 WITH PASSWORD '%2';").arg(m_userName, m_password));
 }
 
 /**********************************************************************************************/
@@ -90,20 +88,24 @@ void RUser :: setProperty(const QString& name, int value)
 
 void RUser :: setUserName(const QString& userName)
 {
-  R_GUARD(userName.size() > 2, Vacuum);
-  R_GUARD(g_userRegExp.exactMatch(userName), Vacuum);
-
-  if (!m_created)
-  {
-    (*m_data)[onSql](R_S("CREATE ROLE %1 WITH PASSWORD %2;").arg(userName, m_password));
-    m_created = true;
-  }
-  else
-  {
-    (*m_data)[onSql](R_S("ALTER ROLE %1 RENAME TO %2;").arg(m_userName, userName));
-  }
-
   m_userName = userName;
+}
+
+/**********************************************************************************************/
+
+void RUser :: setUserNameE(const QString& userName)
+{
+  QString userName1 = userName.toLower();
+
+  R_DATA_GUARD(userName1.size() >= 4, Vacuum,
+    "Per trumpas naudotojo vardas. Minimalus leistinas ilgis yra 4 simboliai.");
+  R_DATA_GUARD(g_userRegExp.exactMatch(userName1), Vacuum,
+    "Naudotojo varde gali būti tik mažosios ir didžiosios lotyniškos raidės bei skaitmenys");
+  R_DATA_GUARD(!m_data->user(userName1), Vacuum,
+    "Toks naudotojas jau egzistuoja");
+
+  m_created   = true;
+  m_userName  = userName1;
 }
 
 /**********************************************************************************************/

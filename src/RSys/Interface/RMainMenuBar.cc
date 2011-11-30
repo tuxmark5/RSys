@@ -13,9 +13,6 @@ Vacuum RMainMenuBar :: RMainMenuBar(RMainWindow* parent):
   m_viewMenu          = new QMenu("&Rodyti",   this);
   QMenu* helpMenu     = new QMenu("&Apie",     this);
 
-  systemMenu->addAction(parent->m_openAction);
-  systemMenu->addAction(parent->m_saveAction);
-  systemMenu->addSeparator();
   systemMenu->addAction(parent->m_importAction);
   systemMenu->addSeparator();
   systemMenu->addAction(parent->m_commitAction);

@@ -8,6 +8,9 @@
 #include <RSys/Core/RSystem.hh>
 #include <RSys/Util/RSignal.hh>
 /**********************************************************************************************/
+#define R_DATA_GUARD(exp, r, msg, ...) if (!(exp))                  \
+  { (*m_data)[RData::errorMessage](R_S(msg) __VA_ARGS__); return r; }
+/**********************************************************************************************/
 typedef QMultiHash<QString, RUnit*> RUnitMultiHash;
 /********************************************* RS *********************************************/
 /*                                           RData                                            */
@@ -67,6 +70,7 @@ class RData: public QObject, public RSignal
     _M RSystem*               system(const QString& identifier) const;
     _M RSystemPtrList*        systems()       { return &m_systems; }
     _M RUser*                 user(RID id) const;
+    _M RUser*                 user(const QString& userName) const;
     _M RUserPtrList*          users() { return &m_users; }
 
   private:
@@ -76,6 +80,9 @@ class RData: public QObject, public RSignal
 
   signals:
     _M void                   elementChanged(RElement* element, int changeType);
+
+  public:
+    _G(void,                  errorMessage, const QString& message);
 };
 
 /**********************************************************************************************/

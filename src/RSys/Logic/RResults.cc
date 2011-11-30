@@ -103,7 +103,7 @@ double RResults :: fieldDeltaUsage(RUnit* unit, int x)
 {
   if (RUnit* buddy = unit->buddy())
     return unit->usageAt(x) - buddy->usageAt(x);
-  return unit->usageAt(x);
+  return round(unit->usageAt(x) * 100.0) / 100.0;
 }
 
 /**********************************************************************************************/

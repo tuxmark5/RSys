@@ -2,8 +2,9 @@
 #define RSYS_INTERFACE_RLOGIN_WIDGET_HH
 
 /**********************************************************************************************/
-#include <RSys/RSys.hh>
+#include <QtCore/QPointer>
 #include <QtGui/QGroupBox>
+#include <RSys/RSys.hh>
 /********************************************* RS *********************************************/
 /*                                        RLoginWidget                                        */
 /**********************************************************************************************/
@@ -11,6 +12,9 @@
 class RLoginWidget: public QWidget
 {
   Q_OBJECT
+
+  public:
+    _T QPointer<RMessage> RMessagePtr;
 
   private:
     _M RDatabase*       m_database;
@@ -20,6 +24,7 @@ class RLoginWidget: public QWidget
     _M QLineEdit*       m_usernameField;
     _M QLineEdit*       m_passwordField;
     _M QPushButton*     m_loginButton;
+    _M RMessagePtr      m_message;
 
   public:
     _M Vacuum           RLoginWidget(RDatabase* database, QWidget* parent = 0);

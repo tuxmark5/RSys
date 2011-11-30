@@ -1,3 +1,4 @@
+#include <QtCore/QSettings>
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
@@ -21,20 +22,25 @@ Vacuum RLoginWidget :: RLoginWidget(RDatabase* database, QWidget* parent):
   group->setMinimumSize(400, 200);
   group->setMaximumSize(600, 200);
 
+  m_usernameField     = new QLineEdit(this);
+  m_passwordField     = new QLineEdit(this);
+  m_loginButton       = new QPushButton("Prisijungti", this);
+  m_dbAddressField    = new QLineEdit(this);
+  m_dbNameField       = new QLineEdit(this);
+
   m_innerLayout->addWidget(new QLabel(QString::fromUtf8("Duomenų bazės adresas")),     0, 0);
-  m_innerLayout->addWidget(m_dbAddressField = new QLineEdit(this), 0, 1);
+  m_innerLayout->addWidget(m_dbAddressField, 0, 1);
 
   m_innerLayout->addWidget(new QLabel(QString::fromUtf8("Duomenų bazės pavadinimas")), 1, 0);
-  m_innerLayout->addWidget(m_dbNameField = new QLineEdit(this), 1, 1);
+  m_innerLayout->addWidget(m_dbNameField, 1, 1);
 
   m_innerLayout->addWidget(new QLabel(QString::fromUtf8("Vartotojo vardas")),          2, 0);
-  m_innerLayout->addWidget(m_usernameField = new QLineEdit(this), 2, 1);
+  m_innerLayout->addWidget(m_usernameField, 2, 1);
 
   m_innerLayout->addWidget(new QLabel(QString::fromUtf8("Slaptažodis")),               3, 0);
-  m_innerLayout->addWidget(m_passwordField = new QLineEdit(this), 3, 1);
+  m_innerLayout->addWidget(m_passwordField, 3, 1);
   m_passwordField->setEchoMode(QLineEdit::Password);
 
-  m_loginButton = new QPushButton("Prisijungti", this);
   m_loginButton->setDefault(true);
 
   RDatabase::connect(m_database, SIGNAL(message(QString)), this, SLOT(showMessage(QString)));
@@ -47,9 +53,9 @@ Vacuum RLoginWidget :: RLoginWidget(RDatabase* database, QWidget* parent):
   m_innerLayout->addWidget(m_loginButton, 4, 1);
   layout0->addWidget(group, 0, 0);
 
-  m_dbAddressField->setText("127.0.0.1");
-  m_dbNameField->setText("test.db");
-  m_usernameField->setText("user");
+  m_dbAddressField->setText(g_settings->value("dbAddress", "127.0.0.1").toString());
+  m_dbNameField->setText(g_settings->value("dbName", "test.db").toString());
+  m_usernameField->setText(g_settings->value("dbUser", "user").toString());
 }
 
 /**********************************************************************************************/
@@ -62,7 +68,10 @@ Vacuum RLoginWidget :: ~RLoginWidget()
 
 void RLoginWidget :: showMessage(const QString& message)
 {
-  m_innerLayout->addWidget(new RMessage(message), m_innerLayout->rowCount(), 0, 1, 2);
+  if (m_message)
+    m_message->deleteLater();
+  m_message = new RMessage(message, 10000);
+  m_innerLayout->addWidget(m_message, m_innerLayout->rowCount(), 0, 1, 2);
 }
 
 /**********************************************************************************************/
@@ -73,6 +82,10 @@ void RLoginWidget :: onLoginPressed()
   QString   dbName      = m_dbNameField->text();
   QString   userName    = m_usernameField->text();
   QString   password    = m_passwordField->text();
+
+  g_settings->setValue("dbAddress",   dbAddress);
+  g_settings->setValue("dbName",      dbName);
+  g_settings->setValue("dbUser",      userName);
 
   if (m_database->login(dbAddress, dbName, userName, password))
   {
