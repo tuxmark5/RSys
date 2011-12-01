@@ -110,6 +110,9 @@ void TestRParser::testNormalFile()
   QCOMPARE(list[6], std::make_tuple(R_S("Istoriniai duomenys"), (int) RUNKNOWN, 6));
   QCOMPARE(list[7], std::make_tuple(R_S("Istorinė lentelė"), (int) RUNKNOWN, 7));
 
+  list[6] = std::make_tuple(R_S("Istoriniai duomenys"), 0x106, 6);
+  list[7] = std::make_tuple(R_S("Istoriniai duomenys"), 0x106, 6);
+
   checkReadData(&parser, list);
 
 }
@@ -139,6 +142,9 @@ void TestRParser::testDetectionByColumns()
   QCOMPARE(list[6], std::make_tuple(R_S("Istoriniai duomenys"), (int) RUNKNOWN, 6));
   QCOMPARE(list[7], std::make_tuple(R_S("Istorinė lentelė"), (int) RUNKNOWN, 7));
 
+  list[6] = std::make_tuple(R_S("Istoriniai duomenys"), 0x106, 6);
+  list[7] = std::make_tuple(R_S("Istoriniai duomenys"), 0x106, 6);
+
   checkReadData(&parser, list);
 }
 
@@ -166,6 +172,9 @@ void TestRParser::testWithMissingData()
   QCOMPARE(list[5], std::make_tuple(R_S("FFFF"), (int) RSUBMISSION, 5));
   QCOMPARE(list[6], std::make_tuple(R_S("Istoriniai duomenys"), (int) RUNKNOWN, 6));
   QCOMPARE(list[7], std::make_tuple(R_S("Istorinė lentelė"), (int) RUNKNOWN, 7));
+
+  list[6] = std::make_tuple(R_S("Istoriniai duomenys"), 0x106, 6);
+  list[7] = std::make_tuple(R_S("Istoriniai duomenys"), 0x106, 6);
 
   RData data;
   QCOMPARE(parser.read(&data, list), false);

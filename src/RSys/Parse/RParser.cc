@@ -334,10 +334,9 @@ bool RParser::readTable(RData *data, RDataType type, RITable *table, int tableIn
   case RDIVISIONSYSTEMS: return readDivisionsSystems(table, tableIndex);
   case RDIVISIONMEASURES: return readDivisionsMeasures(table, tableIndex);
   case RSUBMISSION: return readSubmissions(data, table, tableIndex);
-  //case RUNKNOWN: return false;        TODO: Pritaikyti testus.
+  case RUNKNOWN: return false;
   }
-  return true;                          // FIXME: Pakeisti, kai bus
-                                        // realizuoti visi pasirinkimai.
+  return false;
 }
 
 bool RParser::read(RData *data, QList<std::tuple<QString, int, int> > guesses)
