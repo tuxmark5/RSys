@@ -30,7 +30,7 @@ void TestRParser::checkReadData(RParser *parser, RParser::GuessList list)
   QCOMPARE(systems->at(9)->identifier(), R_S("IS10"));
   QCOMPARE(systems->at(9)->name(), R_S("Vidaus audito sistema"));
 
-  RParser::AssociationMap *divisionsSystems = parser->divisionsSystems();
+  RParser::DivisionSystems *divisionsSystems = parser->divisionsSystems();
   QCOMPARE(raport[3], 44);
   QCOMPARE(divisionsSystems->size(), 12);
   QCOMPARE(divisionsSystems->operator [](R_S("PA1")).size(), 5);
@@ -201,7 +201,7 @@ void TestRParser::testWithMissingData()
   QCOMPARE(systems->at(5)->name(), R_S("Dokumentų valdymo"));
   QCOMPARE(systems->at(5)->isValid(), false);
 
-  RParser::AssociationMap *divisionsSystems = parser.divisionsSystems();
+  RParser::DivisionSystems *divisionsSystems = parser.divisionsSystems();
   QCOMPARE(raport[3], 44);
   QCOMPARE(divisionsSystems->size(), 12);
   QCOMPARE(divisionsSystems->operator [](R_S("PA1")).size(), 5);

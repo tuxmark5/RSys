@@ -542,7 +542,7 @@ QString RParser::nameAt(int index)
   return m_document->nameAt(index);
 }
 
-auto RParser::divisionsSystems() -> AssociationMap*
+auto RParser::divisionsSystems() -> DivisionSystems*
 {
   return &m_divisionsSystems;
 }

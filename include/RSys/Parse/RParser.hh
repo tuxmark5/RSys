@@ -64,7 +64,7 @@ class RParser: public QObject
     _T  QList<std::tuple<QString, int, int> >   GuessList;
     _T  QMap<RDataType, RTableTypeGuessInfo>    GuessInfoMap;
     _T  QMap<int, int>                          ReadRaport;
-    _T  QMap<QString, QStringList>              AssociationMap;
+    _T  QMap<QString, QStringList>              DivisionSystems;
 
 
   private:
@@ -73,7 +73,7 @@ class RParser: public QObject
     _M  GuessMap              m_guesses;
     _M  GuessInfoMap          m_guessInfo;
     _M  ReadRaport            m_readRaport;
-    _M  AssociationMap        m_divisionsSystems;
+    _M  DivisionSystems       m_divisionsSystems;
 
     // Finds upper left corner of caption row in table. If fails, returns
     // (-1, -1).
@@ -109,7 +109,7 @@ class RParser: public QObject
     _M  RIDocument*           document();
     _M  GuessInfoMap*         guessInfo();
     _M  QString               nameAt(int index);
-    _M  AssociationMap*       divisionsSystems();
+    _M  DivisionSystems*      divisionsSystems();
 
   signals:
     _M  void          log(RMessageLevel level, RID id, QString message);
