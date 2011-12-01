@@ -151,32 +151,42 @@ void TestRParser::testWithMissingData()
   QCOMPARE(measures->at(26)->name(),
            R_S("3. Parama VVG veiklai, įgūdžiams "
                "įgyti ir aktyviai pritaikyti"));
+  QCOMPARE(measures->at(26)->isValid(), true);
   QCOMPARE(measures->at(1)->identifier(), R_S("P1-2"));
   QCOMPARE(measures->at(1)->name(),
            R_S("2. Naudojimasis konsultavimo paslaugomis"));
+  QCOMPARE(measures->at(1)->isValid(), true);
   QCOMPARE(measures->at(2)->identifier(), R_S("P1-3"));
   QCOMPARE(measures->at(2)->name().isNull(), true);
+  QCOMPARE(measures->at(2)->isValid(), false);
   QCOMPARE(measures->at(7)->identifier(), R_S("P1-8"));
   QCOMPARE(measures->at(7)->name().isNull(), true);
+  QCOMPARE(measures->at(7)->isValid(), false);
 
   RDivisionPtrList *divisions = data.divisions();
   QCOMPARE(raport[1], 12);
   QCOMPARE(raport[1], divisions->size());
   QCOMPARE(divisions->at(11)->identifier(), R_S("PA12"));
   QCOMPARE(divisions->at(11)->name(), R_S("Padalinys 12"));
+  QCOMPARE(divisions->at(11)->isValid(), true);
   QCOMPARE(divisions->at(4)->identifier().isNull(), true);
   QCOMPARE(divisions->at(4)->name(), R_S("Padalinys 5"));
+  QCOMPARE(divisions->at(4)->isValid(), false);
   QCOMPARE(divisions->at(5)->identifier(), R_S("PA6"));
   QCOMPARE(divisions->at(5)->name().isNull(), true);
+  QCOMPARE(divisions->at(5)->isValid(), false);
 
   RSystemPtrList *systems = data.systems();
   QCOMPARE(systems->size(), 10);
   QCOMPARE(systems->at(9)->identifier(), R_S("IS10"));
   QCOMPARE(systems->at(9)->name(), R_S("Vidaus audito sistema"));
+  QCOMPARE(systems->at(9)->isValid(), true);
   QCOMPARE(systems->at(3)->identifier(), R_S("IS4"));
   QCOMPARE(systems->at(3)->name().isNull(), true);
+  QCOMPARE(systems->at(3)->isValid(), false);
   QCOMPARE(systems->at(5)->identifier().isNull(), true);
   QCOMPARE(systems->at(5)->name(), R_S("Dokumentų valdymo"));
+  QCOMPARE(systems->at(5)->isValid(), false);
 
   RSubmissionPtrList *submissions = data.submissions();
   QCOMPARE(raport[5], 1242);

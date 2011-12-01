@@ -45,13 +45,14 @@ bool RParser::readMeasures(RData *data, RITable *table, int tableIndex)
       }
       else
       {
+        RMeasurePtr measure = new RMeasure(data);
         if (table->cell(nameColumn, rowIndex).isNull())
         {
           errors = true;
+          measure->setValid(false);
         }
         // Priemonė.
         // FIXME: Kryptys yra ignoruojamos.
-        RMeasurePtr measure = new RMeasure(data);
         measure->setIdentifier(table->cell(codeColumn, rowIndex).toString().toUpper());
         measure->setName(table->cell(nameColumn, rowIndex).toString());
         list->append(measure);
@@ -90,13 +91,14 @@ bool RParser::readDivisions(RData *data, RITable *table, int tableIndex)
       }
       else
       {
+        RDivisionPtr division = new RDivision(data);
         if (table->cell(codeColumn, rowIndex).isNull() ||
             table->cell(nameColumn, rowIndex).isNull())
         {
           errors = true;
+          division->setValid(false);
         }
         // Padalinys.
-        RDivisionPtr division = new RDivision(data);
         division->setIdentifier(table->cell(codeColumn, rowIndex).toString().toUpper());
         division->setName(table->cell(nameColumn, rowIndex).toString());
         list->append(division);
@@ -135,13 +137,14 @@ bool RParser::readSystems(RData *data, RITable *table, int tableIndex)
       }
       else
       {
+        RSystemPtr system = new RSystem(data);
         if (table->cell(codeColumn, rowIndex).isNull() ||
             table->cell(nameColumn, rowIndex).isNull())
         {
           errors = true;
+          system->setValid(false);
         }
         // Sistema.
-        RSystemPtr system = new RSystem(data);
         system->setIdentifier(table->cell(codeColumn, rowIndex).toString().toUpper());
         system->setName(table->cell(nameColumn, rowIndex).toString());
         list->append(system);
