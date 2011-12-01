@@ -23,6 +23,11 @@ void TestRParser::checkReadData(RParser *parser, RParser::GuessList list)
   QCOMPARE(raport[1], divisions->size());
   QCOMPARE(divisions->at(11)->identifier(), R_S("PA12"));
   QCOMPARE(divisions->at(11)->name(), R_S("Padalinys 12"));
+
+  RSystemPtrList *systems = data.systems();
+  QCOMPARE(systems->size(), 10);
+  QCOMPARE(systems->at(9)->identifier(), R_S("IS10"));
+  QCOMPARE(systems->at(9)->name(), R_S("Vidaus audito sistema"));
 }
 
 void TestRParser::testNotExistingFile()
@@ -142,4 +147,13 @@ void TestRParser::testWithMissingData()
   QCOMPARE(divisions->at(4)->name(), R_S("Padalinys 5"));
   QCOMPARE(divisions->at(5)->identifier(), R_S("PA6"));
   QCOMPARE(divisions->at(5)->name().isNull(), true);
+
+  RSystemPtrList *systems = data.systems();
+  QCOMPARE(systems->size(), 10);
+  QCOMPARE(systems->at(9)->identifier(), R_S("IS10"));
+  QCOMPARE(systems->at(9)->name(), R_S("Vidaus audito sistema"));
+  QCOMPARE(systems->at(3)->identifier(), R_S("IS4"));
+  QCOMPARE(systems->at(3)->name().isNull(), true);
+  QCOMPARE(systems->at(5)->identifier().isNull(), true);
+  QCOMPARE(systems->at(5)->name(), R_S("Dokumentų valdymo"));
 }

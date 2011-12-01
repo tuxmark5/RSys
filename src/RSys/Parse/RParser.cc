@@ -108,14 +108,62 @@ bool RParser::readDivisions(RData *data, RITable *table, int tableIndex)
   return !errors;
 }
 
+bool RParser::readSystems(RData *data, RITable *table, int tableIndex)
+{
+  RSystemPtrList *list = data->systems();
+  bool errors = false;
+  int added = 0;
+  QPoint start = findCaptionRow(table, m_guessInfo[RSYSTEM]);
+  if (start.x() == -1)
+  {
+    this->log(
+          RERROR, 21,
+          R_S("Lakšte „%1“ nepavyko rasti eilutės su stulpelių antraštėmis.")
+          .arg(table->title()));
+    errors = true;
+  }
+  else
+  {
+    int codeColumn = start.x();
+    int nameColumn = start.x() + 1;
+    for (int rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
+    {
+      if (table->cell(codeColumn, rowIndex).isNull() &&
+          table->cell(nameColumn, rowIndex).isNull())
+      {
+        // Tuščios eilutės yra ignoruojamos.
+      }
+      else
+      {
+        if (table->cell(codeColumn, rowIndex).isNull() ||
+            table->cell(nameColumn, rowIndex).isNull())
+        {
+          errors = true;
+        }
+        // Sistema.
+        RSystemPtr system = new RSystem(data);
+        system->setIdentifier(table->cell(codeColumn, rowIndex).toString().toUpper());
+        system->setName(table->cell(nameColumn, rowIndex).toString());
+        list->append(system);
+        added++;
+      }
+    }
+  }
+  m_readRaport[tableIndex] = added;
+  return !errors;
+}
+
 bool RParser::readTable(RData *data, RDataType type, RITable *table, int tableIndex)
 {
   switch (type)
   {
   case RMEASURE: return readMeasures(data, table, tableIndex);
   case RDIVISION: return readDivisions(data, table, tableIndex);
+  case RSYSTEM: return readSystems(data, table, tableIndex);
+  //case RUNKNOWN: return false;        TODO: Pritaikyti testus.
   }
-  return true;
+  return true;                          // FIXME: Pakeisti, kai bus
+                                        // realizuoti visi pasirinkimai.
 }
 
 bool RParser::read(RData *data, QList<std::tuple<QString, int, int> > guesses)
