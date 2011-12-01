@@ -355,6 +355,7 @@ bool RParser::read(RData *data, QList<std::tuple<QString, int, int> > guesses)
       allOk &= readTable(data, (RDataType) type, m_document->tableAt(index), index);
     }
   }
+  log(RINFO, 23, R_S("Buvo importuota:<ol><li>TODO</li><li>TODO</li></ol>"));
   return allOk;
 }
 
