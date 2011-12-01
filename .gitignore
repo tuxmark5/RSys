@@ -5,4 +5,5 @@ dist/*
 lib/External/*
 *.user
 *.user*
+.~lock.*
 

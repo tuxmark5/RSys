@@ -1,6 +1,25 @@
 #include <RSys/Tests/TestRParser.hh>
 
 
+void TestRParser::checkReadData(RParser *parser, RParser::GuessList list)
+{
+  RData data;
+  QCOMPARE(parser->read(&data, list), true);
+  RParser::ReadRaport raport = parser->readRaport();
+
+  RMeasurePtrList *measures = data.measures();
+  QCOMPARE(raport[0], 27);
+  QCOMPARE(raport[0], measures->size());
+  QCOMPARE(measures->at(26)->identifier(), R_S("P4-3"));
+  QCOMPARE(measures->at(26)->name(),
+           R_S("3. Parama VVG veiklai, įgūdžiams "
+               "įgyti ir aktyviai pritaikyti"));
+  QCOMPARE(measures->at(1)->identifier(), R_S("P1-2"));
+  QCOMPARE(measures->at(1)->name(),
+           R_S("2. Naudojimasis konsultavimo paslaugomis"));
+
+}
+
 void TestRParser::testNotExistingFile()
 {
   RParser parser;
@@ -33,21 +52,7 @@ void TestRParser::testNormalFile()
   QCOMPARE(list[6], std::make_tuple(R_S("Istoriniai duomenys"), (int) RUNKNOWN, 6));
   QCOMPARE(list[7], std::make_tuple(R_S("Istorinė lentelė"), (int) RUNKNOWN, 7));
 
-  RData data;
-  QCOMPARE(parser.read(&data, list), true);
-  //RIDocument *document = parser.document();
-  RParser::ReadRaport raport = parser.readRaport();
-
-  RMeasurePtrList *measures = data.measures();
-  QCOMPARE(raport[0], 27);
-  QCOMPARE(raport[0], measures->size());
-  QCOMPARE(measures->at(26)->identifier(), R_S("P4-3"));
-  QCOMPARE(measures->at(26)->name(),
-           R_S("3. Parama VVG veiklai, įgūdžiams "
-               "įgyti ir aktyviai pritaikyti"));
-  QCOMPARE(measures->at(1)->identifier(), R_S("P1-2"));
-  QCOMPARE(measures->at(1)->name(),
-           R_S("2. Naudojimasis konsultavimo paslaugomis"));
+  checkReadData(&parser, list);
 
 }
 
@@ -75,4 +80,6 @@ void TestRParser::testDetectionByColumns()
   QCOMPARE(list[5], std::make_tuple(R_S("FFFF"), (int) RSUBMISSION, 5));
   QCOMPARE(list[6], std::make_tuple(R_S("Istoriniai duomenys"), (int) RUNKNOWN, 6));
   QCOMPARE(list[7], std::make_tuple(R_S("Istorinė lentelė"), (int) RUNKNOWN, 7));
+
+  checkReadData(&parser, list);
 }
