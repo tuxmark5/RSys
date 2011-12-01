@@ -25,9 +25,30 @@ void TestRParser::checkReadData(RParser *parser, RParser::GuessList list)
   QCOMPARE(divisions->at(11)->name(), R_S("Padalinys 12"));
 
   RSystemPtrList *systems = data.systems();
-  QCOMPARE(systems->size(), 10);
+  QCOMPARE(raport[2], 10);
+  QCOMPARE(raport[2], systems->size());
   QCOMPARE(systems->at(9)->identifier(), R_S("IS10"));
   QCOMPARE(systems->at(9)->name(), R_S("Vidaus audito sistema"));
+
+  RSubmissionPtrList *submissions = data.submissions();
+  QCOMPARE(raport[5], 1242);
+  QCOMPARE(raport[5], submissions->size());
+
+  RSubmission *submission = submissions->at(0).get();
+  QCOMPARE(submission->measureName(), R_S("P1-1"));
+  QCOMPARE(submission->date0().toString("yyyy-MM-dd"),
+           R_S("2008-01-01"));
+  QCOMPARE(submission->date1().toString("yyyy-MM-dd"),
+           R_S("2008-01-31"));
+  QCOMPARE(submission->count(), 15);
+
+  submission = submissions->at(1241).get();
+  QCOMPARE(submission->measureName(), R_S("P4-3"));
+  QCOMPARE(submission->date0().toString("yyyy-MM-dd"),
+           R_S("2011-10-01"));
+  QCOMPARE(submission->date1().toString("yyyy-MM-dd"),
+           R_S("2011-10-31"));
+  QCOMPARE(submission->count(), 35);
 }
 
 void TestRParser::testNotExistingFile()
@@ -156,4 +177,86 @@ void TestRParser::testWithMissingData()
   QCOMPARE(systems->at(3)->name().isNull(), true);
   QCOMPARE(systems->at(5)->identifier().isNull(), true);
   QCOMPARE(systems->at(5)->name(), R_S("Dokumentų valdymo"));
+
+  RSubmissionPtrList *submissions = data.submissions();
+  QCOMPARE(raport[5], 1242);
+  QCOMPARE(raport[5], submissions->size());
+
+  RSubmission *submission = submissions->at(0).get();
+  QCOMPARE(submission->measureName(), R_S("P1-1"));
+  QCOMPARE(submission->date0().toString("yyyy-MM-dd"),
+           R_S("2008-01-01"));
+  QCOMPARE(submission->date1().toString("yyyy-MM-dd"),
+           R_S("2008-01-31"));
+  QCOMPARE(submission->count(), 15);
+  QCOMPARE(submission->isValid(), true);
+
+  submission = submissions->at(1241).get();
+  QCOMPARE(submission->measureName(), R_S("P4-3"));
+  QCOMPARE(submission->date0().toString("yyyy-MM-dd"),
+           R_S("2011-10-01"));
+  QCOMPARE(submission->date1().toString("yyyy-MM-dd"),
+           R_S("2011-10-31"));
+  QCOMPARE(submission->count(), 35);
+  QCOMPARE(submission->isValid(), true);
+
+  submission = submissions->at(1230).get();
+  QCOMPARE(submission->measureName().isNull(), true);
+  QCOMPARE(submission->date0().toString("yyyy-MM-dd"),
+           R_S("2010-11-01"));
+  QCOMPARE(submission->date1().toString("yyyy-MM-dd"),
+           R_S("2010-11-30"));
+  QCOMPARE(submission->count(), 15);
+  QCOMPARE(submission->isValid(), false);
+
+  submission = submissions->at(1231).get();
+  QCOMPARE(submission->measureName(), R_S("P4-3"));
+  QCOMPARE(submission->date0().isNull(), true);
+  QCOMPARE(submission->date1().toString("yyyy-MM-dd"),
+           R_S("2010-12-31"));
+  QCOMPARE(submission->count(), 13);
+  QCOMPARE(submission->isValid(), false);
+
+  submission = submissions->at(1232).get();
+  QCOMPARE(submission->measureName(), R_S("P4-3"));
+  QCOMPARE(submission->date0().toString("yyyy-MM-dd"),
+           R_S("2011-01-01"));
+  QCOMPARE(submission->date1().isNull(), true);
+  QCOMPARE(submission->count(), 24);
+  QCOMPARE(submission->isValid(), false);
+
+  submission = submissions->at(1233).get();
+  QCOMPARE(submission->measureName(), R_S("P4-3"));
+  QCOMPARE(submission->date0().toString("yyyy-MM-dd"),
+           R_S("2011-02-01"));
+  QCOMPARE(submission->date1().toString("yyyy-MM-dd"),
+           R_S("2011-02-28"));
+  QCOMPARE(submission->count(), 0);
+  QCOMPARE(submission->isValid(), false);
+
+  submission = submissions->at(1234).get();
+  QCOMPARE(submission->measureName(), R_S("P4-3"));
+  QCOMPARE(submission->date0().toString("yyyy-MM-dd"),
+           R_S("2011-03-01"));
+  QCOMPARE(submission->date1().toString("yyyy-MM-dd"),
+           R_S("2011-03-31"));
+  QCOMPARE(submission->count(), 43);
+  QCOMPARE(submission->isValid(), true);
+
+  submission = submissions->at(1235).get();
+  QCOMPARE(submission->measureName(), R_S("P4-3"));
+  QCOMPARE(submission->date0().toString("yyyy-MM-dd"),
+           R_S("2011-04-01"));
+  QCOMPARE(submission->date1().toString("yyyy-MM-dd"),
+           R_S("2011-04-30"));
+  QCOMPARE(submission->count(), 54);
+  QCOMPARE(submission->isValid(), true);
+
+  submission = submissions->at(1236).get();
+  QCOMPARE(submission->measureName(), R_S("P4-3"));
+  QCOMPARE(submission->date0().isNull(), true);
+  QCOMPARE(submission->date1().toString("yyyy-MM-dd"),
+           R_S("2011-05-31"));
+  QCOMPARE(submission->count(), 58);
+  QCOMPARE(submission->isValid(), false);
 }

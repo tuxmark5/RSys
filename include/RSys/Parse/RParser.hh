@@ -77,6 +77,7 @@ class RParser: public QObject
     // (-1, -1).
     _M  QPoint                findCaptionRow(
                                 RITable *table, RTableTypeGuessInfo info);
+    _M  QDate                 parseDate(QVariant cell);
 
     _M  RDataType             guessTableTypeByName(RITable *table);
     _M  RDataType             guessTableTypeByColumns(RITable *table);
@@ -97,6 +98,7 @@ class RParser: public QObject
     _M  bool                  readMeasures(RData *data, RITable *table, int tableIndex);
     _M  bool                  readDivisions(RData *data, RITable *table, int tableIndex);
     _M  bool                  readSystems(RData *data, RITable *table, int tableIndex);
+    _M  bool                  readSubmissions(RData *data, RITable *table, int tableIndex);
 
     _M  GuessMap*             guesses();
     _M  GuessList             guessesList();
