@@ -19,7 +19,7 @@ Vacuum RUsageTab :: RUsageTab(RMainWindow* parent):
   m_scrollArea(new QScrollArea(this)),
   m_results(parent->results()),
   m_units(0),
-  m_defaultMode(RUsageWidget::UsageTable)
+  m_defaultMode(RUsageWidget::Usage1Bar)
 {
   QMenu* menu = RUsageWidget::createModeMenu(this, SLOT(setMode()));
 
