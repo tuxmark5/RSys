@@ -37,19 +37,19 @@ Vacuum RIntervalToolBar :: RIntervalToolBar(RMainWindow* parent):
   m_interval1->installEventFilter(this);
 
   setContentsMargins(0, 0, 0, 0);
-  addWidget(new QLabel(" Rodyti: nuo"));
+  addLabel(u"Rodyti: nuo");
   addWidget(m_interval0);
-  addWidget(new QLabel("iki"));
+  addLabel(u"iki");
   addWidget(m_interval1);
-  addWidget(new QLabel("po"));
+  addLabel(u"po");
   addWidget(m_intervalLen);
   addSeparator();
   addWidget(decYear);
-  addWidget(new QLabel("Metai"));
+  addLabel(u"Metai");
   addWidget(incYear);
   addSeparator();
   addWidget(decMonth);
-  addWidget(new QLabel(R_S("Mėnuo")));
+  addLabel(u"Mėnuo");
   addWidget(incMonth);
   addSeparator();
   addWidget(m_applyButton);
@@ -80,6 +80,15 @@ Vacuum RIntervalToolBar :: RIntervalToolBar(RMainWindow* parent):
 Vacuum RIntervalToolBar :: ~RIntervalToolBar()
 {
 
+}
+
+/**********************************************************************************************/
+
+void RIntervalToolBar :: addLabel(const char16_t* label)
+{
+  QLabel* widget = new QLabel(QString::fromUtf16((ushort*) label));
+  widget->setContentsMargins(10, 0, 10, 0);
+  addWidget(widget);
 }
 
 /**********************************************************************************************/
