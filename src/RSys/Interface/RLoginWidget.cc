@@ -16,6 +16,7 @@ Vacuum RLoginWidget :: RLoginWidget(RDatabase* database, QWidget* parent):
   m_database(database)
 {
   QGridLayout*  layout0 = new QGridLayout(this);
+  QLabel*       logo    = new QLabel();
   QGroupBox*    group   = new QGroupBox("Prisijungimo duomenys", this);
   m_innerLayout         = new QGridLayout(group);
 
@@ -51,7 +52,10 @@ Vacuum RLoginWidget :: RLoginWidget(RDatabase* database, QWidget* parent):
   QPushButton::connect(m_loginButton, SIGNAL(clicked()), this, SLOT(onLoginPressed()));
 
   m_innerLayout->addWidget(m_loginButton, 4, 1);
-  layout0->addWidget(group, 0, 0);
+
+  logo->setPixmap(QPixmap(":/logo.png"));
+  layout0->addWidget(logo, 0, 0, 1, 1, Qt::AlignHCenter);
+  layout0->addWidget(group, 1, 0, 1, 1, Qt::AlignTop);
 
   m_dbAddressField->setText(g_settings->value("dbAddress", "127.0.0.1").toString());
   m_dbNameField->setText(g_settings->value("dbName", "test.db").toString());

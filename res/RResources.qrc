@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>logo.png</file>
         <file>icons/commit.png</file>
         <file>icons/disconnect.png</file>
         <file>icons/divisions.png</file>
