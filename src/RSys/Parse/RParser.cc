@@ -208,6 +208,60 @@ bool RParser::readDivisionsSystems(RITable *table, int tableIndex)
   return !errors;
 }
 
+bool RParser::readDivisionsMeasures(RITable *table, int tableIndex)
+{
+  bool errors = false;
+  int updatedRelations = 0;
+  QPoint start = findCaptionRow(table, m_guessInfo[RDIVISIONMEASURES]);
+  if (start.x() == -1)
+  {
+    this->log(
+          RERROR, 21,
+          R_S("Lakšte „%1“ nepavyko rasti eilutės su stulpelių antraštėmis.")
+          .arg(table->title()));
+    errors = true;
+  }
+  else
+  {
+    for (int colIndex = start.x() + 1; colIndex < table->width(); colIndex++)
+    {
+      if (table->cell(colIndex, start.y()).isNull())
+      {
+        // Praleidžiame stulpelį nepriskirtą jokiam padaliniui.
+      }
+      else
+      {
+        QString divisionName = table->cell(colIndex, start.y()).toString();
+        MeasureList measures;
+        for (int rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
+        {
+          if (table->cell(start.x(), rowIndex).isNull())
+          {
+            // Praleidžiame eilutę nepriskirtą jokiai paramos priemonei.
+          }
+          else
+          {
+            QString measureName = table->cell(start.x(), rowIndex).toString();
+            bool valid = false;
+            double load = table->cell(colIndex, rowIndex).toDouble(&valid);
+            if (valid)
+            {
+              updatedRelations++;
+              measures.append(std::make_tuple(measureName, load));
+            }
+          }
+        }
+        if (measures.size() > 0)
+        {
+          m_divisionsMeasures[divisionName] = measures;
+        }
+      }
+    }
+  }
+  m_readRaport[tableIndex] = updatedRelations;
+  return !errors;
+}
+
 bool RParser::readSubmissions(RData *data, RITable *table, int tableIndex)
 {
   RSubmissionPtrList *list = data->submissions();
@@ -278,6 +332,7 @@ bool RParser::readTable(RData *data, RDataType type, RITable *table, int tableIn
   case RDIVISION: return readDivisions(data, table, tableIndex);
   case RSYSTEM: return readSystems(data, table, tableIndex);
   case RDIVISIONSYSTEMS: return readDivisionsSystems(table, tableIndex);
+  case RDIVISIONMEASURES: return readDivisionsMeasures(table, tableIndex);
   case RSUBMISSION: return readSubmissions(data, table, tableIndex);
   //case RUNKNOWN: return false;        TODO: Pritaikyti testus.
   }
@@ -545,6 +600,11 @@ QString RParser::nameAt(int index)
 auto RParser::divisionsSystems() -> DivisionSystems*
 {
   return &m_divisionsSystems;
+}
+
+auto RParser::divisionsMeasures() -> DivisionMeasures*
+{
+  return &m_divisionsMeasures;
 }
 
 auto RParser::guessInfo() -> GuessInfoMap*

@@ -36,10 +36,24 @@ void TestRParser::checkReadData(RParser *parser, RParser::GuessList list)
   QCOMPARE(divisionsSystems->operator [](R_S("PA1")).size(), 5);
   QCOMPARE(divisionsSystems->operator [](R_S("PA3")).size(), 4);
   QCOMPARE(divisionsSystems->operator [](R_S("PA9")).size(), 4);
-
 //for (auto it = divisionsSystems->begin(); it != divisionsSystems->end(); it++)
 //{
 //  qDebug() << it.key() << it.value();
+//}
+
+  RParser::DivisionMeasures *divisionsMeasures = parser->divisionsMeasures();
+  QCOMPARE(raport[4], 87);
+  QCOMPARE(divisionsMeasures->size(), 12);
+  QCOMPARE(divisionsMeasures->operator [](R_S("PA1")).size(), 8);
+  QCOMPARE(divisionsMeasures->operator [](R_S("PA3")).size(), 7);
+  QCOMPARE(divisionsMeasures->operator [](R_S("PA9")).size(), 5);
+//for (auto it = divisionsMeasures->begin(); it != divisionsMeasures->end(); it++)
+//{
+//  qDebug() << it.key();
+//  for (auto i : it.value())
+//  {
+//    qDebug() << std::get<0>(i) << std::get<1>(i);
+//  }
 //}
 
   RSubmissionPtrList *submissions = data.submissions();
@@ -207,6 +221,13 @@ void TestRParser::testWithMissingData()
   QCOMPARE(divisionsSystems->operator [](R_S("PA1")).size(), 5);
   QCOMPARE(divisionsSystems->operator [](R_S("PA3")).size(), 4);
   QCOMPARE(divisionsSystems->operator [](R_S("PA9")).size(), 4);
+
+  RParser::DivisionMeasures *divisionsMeasures = parser.divisionsMeasures();
+  QCOMPARE(raport[4], 87);
+  QCOMPARE(divisionsMeasures->size(), 12);
+  QCOMPARE(divisionsMeasures->operator [](R_S("PA1")).size(), 8);
+  QCOMPARE(divisionsMeasures->operator [](R_S("PA3")).size(), 7);
+  QCOMPARE(divisionsMeasures->operator [](R_S("PA9")).size(), 5);
 
   RSubmissionPtrList *submissions = data.submissions();
   QCOMPARE(raport[5], 1242);
