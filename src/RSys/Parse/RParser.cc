@@ -45,12 +45,171 @@ bool RParser::readMeasures(RData *data, RITable *table, int tableIndex)
       }
       else
       {
+        RMeasurePtr measure = new RMeasure(data);
+        if (table->cell(nameColumn, rowIndex).isNull())
+        {
+          errors = true;
+          measure->setValid(false);
+        }
         // Priemonė.
         // FIXME: Kryptys yra ignoruojamos.
-        RMeasurePtr measure = new RMeasure(data);
         measure->setIdentifier(table->cell(codeColumn, rowIndex).toString().toUpper());
         measure->setName(table->cell(nameColumn, rowIndex).toString());
         list->append(measure);
+        added++;
+      }
+    }
+  }
+  m_readRaport[tableIndex] = added;
+  return !errors;
+}
+
+bool RParser::readDivisions(RData *data, RITable *table, int tableIndex)
+{
+  RDivisionPtrList *list = data->divisions();
+  int added = 0;
+  bool errors = false;
+  QPoint start = findCaptionRow(table, m_guessInfo[RDIVISION]);
+  if (start.x() == -1)
+  {
+    this->log(
+          RERROR, 21,
+          R_S("Lakšte „%1“ nepavyko rasti eilutės su stulpelių antraštėmis.")
+          .arg(table->title()));
+    errors = true;
+  }
+  else
+  {
+    int codeColumn = start.x();
+    int nameColumn = start.x() + 1;
+    for (int rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
+    {
+      if (table->cell(codeColumn, rowIndex).isNull() &&
+          table->cell(nameColumn, rowIndex).isNull())
+      {
+        // Tuščios eilutės yra ignoruojamos.
+      }
+      else
+      {
+        RDivisionPtr division = new RDivision(data);
+        if (table->cell(codeColumn, rowIndex).isNull() ||
+            table->cell(nameColumn, rowIndex).isNull())
+        {
+          errors = true;
+          division->setValid(false);
+        }
+        // Padalinys.
+        division->setIdentifier(table->cell(codeColumn, rowIndex).toString().toUpper());
+        division->setName(table->cell(nameColumn, rowIndex).toString());
+        list->append(division);
+        added++;
+      }
+    }
+  }
+  m_readRaport[tableIndex] = added;
+  return !errors;
+}
+
+bool RParser::readSystems(RData *data, RITable *table, int tableIndex)
+{
+  RSystemPtrList *list = data->systems();
+  bool errors = false;
+  int added = 0;
+  QPoint start = findCaptionRow(table, m_guessInfo[RSYSTEM]);
+  if (start.x() == -1)
+  {
+    this->log(
+          RERROR, 21,
+          R_S("Lakšte „%1“ nepavyko rasti eilutės su stulpelių antraštėmis.")
+          .arg(table->title()));
+    errors = true;
+  }
+  else
+  {
+    int codeColumn = start.x();
+    int nameColumn = start.x() + 1;
+    for (int rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
+    {
+      if (table->cell(codeColumn, rowIndex).isNull() &&
+          table->cell(nameColumn, rowIndex).isNull())
+      {
+        // Tuščios eilutės yra ignoruojamos.
+      }
+      else
+      {
+        RSystemPtr system = new RSystem(data);
+        if (table->cell(codeColumn, rowIndex).isNull() ||
+            table->cell(nameColumn, rowIndex).isNull())
+        {
+          errors = true;
+          system->setValid(false);
+        }
+        // Sistema.
+        system->setIdentifier(table->cell(codeColumn, rowIndex).toString().toUpper());
+        system->setName(table->cell(nameColumn, rowIndex).toString());
+        list->append(system);
+        added++;
+      }
+    }
+  }
+  m_readRaport[tableIndex] = added;
+  return !errors;
+}
+
+bool RParser::readSubmissions(RData *data, RITable *table, int tableIndex)
+{
+  RSubmissionPtrList *list = data->submissions();
+  int added = 0;
+  bool errors = false;
+  QPoint start = findCaptionRow(table, m_guessInfo[RSUBMISSION]);
+  if (start.x() == -1)
+  {
+    this->log(
+          RERROR, 21,
+          R_S("Lakšte „%1“ nepavyko rasti eilutės su stulpelių antraštėmis.")
+          .arg(table->title()));
+    errors = true;
+  }
+  else
+  {
+    int measureColumn = start.x();
+    int dateFromColumn = start.x() + 1;
+    int dateToColumn = start.x() + 2;
+    int amountColumn = start.x() + 3;
+    for (int rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
+    {
+      if (table->cell(measureColumn, rowIndex).isNull() &&
+          table->cell(dateFromColumn, rowIndex).isNull() &&
+          table->cell(dateToColumn, rowIndex).isNull() &&
+          table->cell(amountColumn, rowIndex).isNull())
+      {
+        // Tuščios eilutės yra ignoruojamos.
+      }
+      else
+      {
+        RSubmissionPtr submission = new RSubmission(data);
+        if (table->cell(measureColumn, rowIndex).isNull() ||
+            table->cell(dateFromColumn, rowIndex).isNull() ||
+            table->cell(dateToColumn, rowIndex).isNull() ||
+            table->cell(amountColumn, rowIndex).isNull())
+        {
+          errors = true;
+          submission->setValid(false);
+        }
+        // Apkrova.
+        submission->setMeasureName(
+              table->cell(measureColumn,rowIndex).toString().toUpper());
+        submission->setDate0(this->parseDate(table->cell(dateFromColumn,rowIndex)));
+        submission->setDate1(this->parseDate(table->cell(dateToColumn,rowIndex)));
+        submission->setCount(table->cell(amountColumn,rowIndex).toInt());
+        if (submission->date0().isNull() ||
+            submission->date1().isNull() ||
+            submission->count() < 0)
+        {
+          errors = true;
+          submission->setValid(false);
+        }
+        list->append(submission);
         added++;
       }
     }
@@ -64,8 +223,13 @@ bool RParser::readTable(RData *data, RDataType type, RITable *table, int tableIn
   switch (type)
   {
   case RMEASURE: return readMeasures(data, table, tableIndex);
+  case RDIVISION: return readDivisions(data, table, tableIndex);
+  case RSYSTEM: return readSystems(data, table, tableIndex);
+  case RSUBMISSION: return readSubmissions(data, table, tableIndex);
+  //case RUNKNOWN: return false;        TODO: Pritaikyti testus.
   }
-  return true;
+  return true;                          // FIXME: Pakeisti, kai bus
+                                        // realizuoti visi pasirinkimai.
 }
 
 bool RParser::read(RData *data, QList<std::tuple<QString, int, int> > guesses)
@@ -126,6 +290,30 @@ QPoint RParser::findCaptionRow(
     }
   }
   return QPoint(-1, -1);
+}
+
+QDate RParser::parseDate(QVariant cell)
+{
+  if (cell.isNull())
+  {
+    return QDate();
+  }
+  else if (cell.toDate().isValid())
+  {
+    return cell.toDate();
+  }
+  else
+  {
+    auto seconds = (cell.toLongLong() - 25569) * 86400000;
+    if (seconds < 0)
+    {
+      return QDate();
+    }
+    else
+    {
+      return QDateTime::fromMSecsSinceEpoch(seconds).date();
+    }
+  }
 }
 
 RDataType RParser::guessTableTypeByName(RITable *table)
@@ -271,12 +459,12 @@ RParser::~RParser()
   delete m_document;
 }
 
-QMap<int, RDataType>* RParser::guesses()
+auto RParser::guesses() -> GuessMap*
 {
   return &m_guesses;
 }
 
-QList<std::tuple<QString, int, int> > RParser::guessesList()
+auto RParser::guessesList() -> GuessList
 {
   QList<std::tuple<QString, int, int> > list;
   for (auto it = m_guesses.begin(); it != m_guesses.end(); it++)
@@ -286,7 +474,7 @@ QList<std::tuple<QString, int, int> > RParser::guessesList()
   return list;
 }
 
-QMap<int, int> RParser::readRaport()
+auto RParser::readRaport() -> ReadRaport
 {
   return m_readRaport;
 }
@@ -301,7 +489,7 @@ QString RParser::nameAt(int index)
   return m_document->nameAt(index);
 }
 
-QMap<RDataType, RTableTypeGuessInfo>* RParser::guessInfo()
+auto RParser::guessInfo() -> GuessInfoMap*
 {
   return &m_guessInfo;
 }
