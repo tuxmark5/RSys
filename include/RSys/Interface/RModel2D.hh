@@ -17,13 +17,15 @@ class RModel2D: public RAbstractItemModel
     _T std::function<void (int, int, const QVariant&)>  Setter;
 
   public:
-    _M RContainer*    m_containerX;
-    _M RContainer*    m_containerY;
+    _M RContainerPtr  m_containerX;
+    _M RContainerPtr  m_containerY;
+    _M RIObserver*    m_adapterX;
+    _M RIObserver*    m_adapterY;
     _M Getter         m_getter;
     _M Setter         m_setter;
 
   public:
-    _M Vacuum         RModel2D(RContainer* containerX, RContainer* containerY, QObject* parent = 0);
+    _M Vacuum         RModel2D(RContainerPtr containerX, RContainerPtr containerY, QObject* parent = 0);
     _V Vacuum         ~RModel2D();
     _V int            columnCount(const QModelIndex& parent = QModelIndex()) const;
     _V QVariant       data(const QModelIndex& index, int role = Qt::DisplayRole) const;

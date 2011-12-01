@@ -33,7 +33,7 @@ class RIntervalToolBar: public QToolBar
     };
 
   private:
-    _M RResults*      m_results;
+    _M RMainWindow*   m_mainWindow;
     _M QDateEdit*     m_interval0;
     _M QDateEdit*     m_interval1;
     _M QComboBox*     m_intervalLen;
@@ -49,6 +49,7 @@ class RIntervalToolBar: public QToolBar
     _M void           getInterval(QDate& date0, QDate& date1, RIntervalFun& fun, int& num);
     _M bool           isIntervalValid() const { return m_validInterval; }
     _M void           modifyDate(int deltaYear, int deltaMonth);
+    _M RResults*      results() const;
     _M void           setValid(bool valid);
 
   public slots:

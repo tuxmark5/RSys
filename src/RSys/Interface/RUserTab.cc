@@ -26,7 +26,6 @@ Vacuum RUserTab :: RUserTab(RMainWindow* parent):
 
 Vacuum RUserTab :: ~RUserTab()
 {
-
 }
 
 /**********************************************************************************************/

@@ -53,17 +53,18 @@
 Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   QMainWindow(parent),
   m_loginWidget(0),
-  m_searchForm(0)
+  m_searchForm(0),
+  m_splitter(0),
+  m_results(0)
 {
   m_data0             = new RData();
   m_data1             = new RData();
   m_data1->enableIntervalTracking();
-  m_results           = new RResults(m_data0, m_data1);
   m_database          = new RDatabase(m_data1, this);
   createContainers();
 
   createActions();
-  connectActions();
+  createConnections();
 
   m_menuBar           = new RMainMenuBar(this);
   m_toolBar           = new RMainToolBar(this);
@@ -76,31 +77,6 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   addToolBar(m_intervalToolBar);
   addDockWidget(Qt::RightDockWidgetArea, m_paletteDock);
 
-  m_widgetL           = new QWidget(this);
-  m_widgetR           = new QWidget(this);
-  m_layoutL           = new QVBoxLayout(m_widgetL);
-  m_layoutR           = new QVBoxLayout(m_widgetR);
-  m_tabWidgetL        = new QTabWidget(this);
-  m_tabWidgetR        = new QTabWidget(this);
-
-  m_layoutL->setMargin(0);
-  m_layoutR->setMargin(0);
-
-  m_layoutL->setSpacing(5);
-  m_layoutR->setSpacing(5);
-
-  m_tabWidgetL->setTabPosition(QTabWidget::South);
-  m_tabWidgetR->setTabPosition(QTabWidget::South);
-
-  m_splitter          = new QSplitter(this);
-  m_layoutL->addWidget(m_tabWidgetL);
-  m_layoutR->addWidget(m_tabWidgetR);
-  m_splitter->addWidget(m_widgetL);
-  m_splitter->addWidget(m_widgetR);
-
-  createTabs();
-  updateUnits();
-
   connect(m_intervalToolBar, SIGNAL(intervalChanged()), this, SLOT(setInterval()));
   connect(m_intervalToolBar, SIGNAL(message(QString,int)), this, SLOT(showMessage(QString,int)));
 
@@ -111,7 +87,9 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
 
 Vacuum RMainWindow :: ~RMainWindow()
 {
-  //delete m_results;
+  logout();
+  delete m_data0;
+  delete m_data1;
 }
 
 /**********************************************************************************************/
@@ -186,30 +164,6 @@ void RMainWindow :: commit()
 
 /**********************************************************************************************/
 
-void RMainWindow :: connectActions()
-{
-  QAction::connect(m_disconnectAction, SIGNAL(triggered()), this, SLOT(logout()));
-  QAction::connect(m_commitAction, SIGNAL(triggered()), this, SLOT(commit()));
-  QAction::connect(m_exitAction, SIGNAL(triggered()), this, SLOT(close()));
-  QAction::connect(m_importAction, SIGNAL(triggered()), this, SLOT(importData()));
-  QAction::connect(m_rollbackAction, SIGNAL(triggered()), this, SLOT(rollback()));
-  QAction::connect(m_searchAction, SIGNAL(toggled(bool)), this, SLOT(setShowSearchForm(bool)));
-  QAction::connect(m_systemsStateAction, SIGNAL(toggled(bool)), this, SLOT(updateUnits()));
-
-  (*m_data1)[RData::errorMessage]         << std::bind(&RMainWindow::showMessage, this, _1, -1);
-  (*m_data1)[RSubmission::measureChange]  << std::bind(&RResults::updateDelayed, m_results);
-  (*m_data1)[RSubmission::countChange]    << std::bind(&RResults::updateDelayed, m_results);
-  (*m_data1)[RSubmission::date0Change]    << std::bind(&RResults::updateDelayed, m_results);
-  (*m_data1)[RSubmission::date1Change]    << std::bind(&RResults::updateDelayed, m_results);
-  (*m_data1)[RDivision::onMeasureSet]     << std::bind(&RResults::updateDelayed, m_results);
-  (*m_data1)[RDivision::onMeasureUnset]   << std::bind(&RResults::updateDelayed, m_results);
-  (*m_data1)[RDivision::onSystemSet]      << std::bind(&RResults::updateDelayed, m_results);
-  (*m_data1)[RDivision::onSystemUnset]    << std::bind(&RResults::updateDelayed, m_results);
-  (*m_data1)[RUser::onSql]                << std::bind(&RSqlEntity::exec, m_database->sqlEntity(), _1);
-}
-
-/**********************************************************************************************/
-
 #define R_ACTION(icon, name) new QAction(QIcon(icon), QString::fromUtf8(name), this)
 
 void RMainWindow :: createActions()
@@ -251,6 +205,35 @@ void RMainWindow :: createActions()
   /*m_showMainToolbarAction = R_ACTION("Pagrindinė įrankių juosta");
   m_showIntervalToolbarAction = R_ACTION("Intervalo juosta");
   m_showPaletteAction*/
+}
+
+/**********************************************************************************************/
+
+void RMainWindow :: createConnections()
+{
+  QAction::connect(m_disconnectAction, SIGNAL(triggered()), this, SLOT(logout()));
+  QAction::connect(m_commitAction, SIGNAL(triggered()), this, SLOT(commit()));
+  QAction::connect(m_exitAction, SIGNAL(triggered()), this, SLOT(close()));
+  QAction::connect(m_importAction, SIGNAL(triggered()), this, SLOT(importData()));
+  QAction::connect(m_rollbackAction, SIGNAL(triggered()), this, SLOT(rollback()));
+  QAction::connect(m_searchAction, SIGNAL(toggled(bool)), this, SLOT(setShowSearchForm(bool)));
+  QAction::connect(m_systemsStateAction, SIGNAL(toggled(bool)), this, SLOT(updateUnits()));
+}
+
+/**********************************************************************************************/
+
+void RMainWindow :: createConnections1()
+{
+  (*m_data1)[RData::errorMessage]         << std::bind(&RMainWindow::showMessage, this, _1, -1);
+  (*m_data1)[RSubmission::measureChange]  << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RSubmission::countChange]    << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RSubmission::date0Change]    << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RSubmission::date1Change]    << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RDivision::onMeasureSet]     << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RDivision::onMeasureUnset]   << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RDivision::onSystemSet]      << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RDivision::onSystemUnset]    << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RUser::onSql]                << std::bind(&RSqlEntity::exec, m_database->sqlEntity(), _1);
 }
 
 /**********************************************************************************************/
@@ -312,23 +295,68 @@ void RMainWindow :: createContainers()
 
 /**********************************************************************************************/
 
+void RMainWindow :: createInterface()
+{
+  m_splitter          = new QSplitter();
+  m_widgetL           = new QWidget(m_splitter);
+  m_widgetR           = new QWidget(m_splitter);
+  m_layoutL           = new QVBoxLayout(m_widgetL);
+  m_layoutR           = new QVBoxLayout(m_widgetR);
+  m_tabWidgetL        = new QTabWidget();
+  m_tabWidgetR        = new QTabWidget();
+
+  m_layoutL->setMargin(0);
+  m_layoutR->setMargin(0);
+
+  m_layoutL->setSpacing(5);
+  m_layoutR->setSpacing(5);
+
+  m_tabWidgetL->setTabPosition(QTabWidget::South);
+  m_tabWidgetR->setTabPosition(QTabWidget::South);
+
+  m_layoutL->addWidget(m_tabWidgetL);
+  m_layoutR->addWidget(m_tabWidgetR);
+
+  m_splitter->addWidget(m_widgetL);
+  m_splitter->addWidget(m_widgetR);
+
+  createTabs();
+  updateUnits();
+}
+
+/**********************************************************************************************/
+
 void RMainWindow :: createTabs()
 {
-  RUserTab* userTab;
+  RUser* user = m_database->user();
 
-  addLeftTab(new RMeasureTab(this),     "Priemonės", "Paramos priemonės");
-  addLeftTab(new RDivisionTab(this),    "Padaliniai", "Padaliniai");
-  addLeftTab(new RSystemTab(this),      "IS", "Informacinės sistemos");
-  addLeftTab(new RMeasureAdmTab(this),  "Priemonių adm.", "Paramos priemonių administravimas");
-  addLeftTab(new RSystemAdmTab(this),   "IS adm.", "Informacinių sistemų pasiskirstymas");
-  addLeftTab(new RSubmissionTab(this),  "Istoriniai duom.", "Istoriniai duomenys");
-  addLeftTab(new RPlannedTab(this),     "Planuojami kiekiai", "Planuojami paramos priemonių kiekiai");  
+  if (user->measureAcc())
+    addLeftTab(new RMeasureTab(this), "Priemonės", "Paramos priemonės");
 
-  addRightTab(new RUsageTab(this),      "Apkrovos ir prognozės", "Individualios padalinių/sistemų apkrovos ir prognozės");
-  addRightTab(new RSummaryTab(this),    "Apžvalga", "Apžvalga");
+  if (user->divisionAcc())
+    addLeftTab(new RDivisionTab(this), "Padaliniai", "Padaliniai");
+  if (user->systemAcc())
+    addLeftTab(new RSystemTab(this), "IS", "Informacinės sistemos");
+  if (user->measureAdmAcc())
+    addLeftTab(new RMeasureAdmTab(this), "Priemonių adm.", "Paramos priemonių administravimas");
+  if (user->systemAdmAcc())
+    addLeftTab(new RSystemAdmTab(this), "IS adm.", "Informacinių sistemų pasiskirstymas");
+  if (user->submissionAcc())
+    addLeftTab(new RSubmissionTab(this), "Istoriniai duom.", "Istoriniai duomenys");
+  if (true)
+    addLeftTab(new RPlannedTab(this), "Planuojami kiekiai", "Planuojami paramos priemonių kiekiai");
 
-  addLeftTab(userTab = new RUserTab(this),    "Naudotojai", "Sistemos naudotojai");
-  addRightTab(new RUserAdmTab(userTab, this), "Naud. adm.", "Sistemos naudototojų administravimas");
+  if (user->resultsAcc())
+    addRightTab(new RUsageTab(this), "Apkrovos ir prognozės", "Individualios padalinių/sistemų apkrovos ir prognozės");
+  if (user->summaryAcc())
+    addRightTab(new RSummaryTab(this), "Apžvalga", "Apžvalga");
+
+  if (user->adminAcc())
+  {
+    RUserTab* userTab;
+    addLeftTab(userTab = new RUserTab(this), "Naudotojai", "Sistemos naudotojai");
+    addRightTab(new RUserAdmTab(userTab, this), "Naud. adm.", "Sistemos naudototojų administravimas");
+  }
 }
 
 /**********************************************************************************************/
@@ -394,6 +422,8 @@ void RMainWindow :: login()
 {
   R_GUARD(m_loginWidget, Vacuum);
 
+  m_results       = new RResults(m_data0, m_data1);
+
   m_data1->withBlock([this]
   {
     m_database->select();
@@ -412,12 +442,18 @@ void RMainWindow :: logout()
 {
   R_GUARD(!m_loginWidget, Vacuum);
 
-  m_data0->clear();
-  m_data1->clear();
+  m_database->logout();
+  m_data1->disconnectAll();
+
   m_loginWidget = new RLoginWidget(m_database);
   connect(m_loginWidget, SIGNAL(loggedIn()), this, SLOT(login()));
   setInterfaceEnabled(false);
   setCentralWidget(m_loginWidget);
+
+  m_data0->clear();
+  m_data1->clear();
+  delete m_results;
+  m_results = 0;
 }
 
 /**********************************************************************************************/
@@ -445,17 +481,22 @@ void RMainWindow :: rollback()
 void RMainWindow :: setInterfaceEnabled(bool enabled)
 {
   if (enabled)
+  {
+    createInterface();
+    createConnections1();
     setCentralWidget(m_splitter);
+  }
+  else if (m_splitter)
+  {
+    delete m_splitter;
+    m_splitter = 0;
+  }
 
   m_menuBar->setEnabled(enabled);
   m_toolBar->setEnabled(enabled);
   m_intervalToolBar->setEnabled(enabled);
   m_paletteDock->setEnabled(enabled);
   m_paletteDock->setVisible(enabled);
-  m_splitter->setVisible(enabled);
-
-  if (!enabled)
-    m_splitter->setParent(0);
 }
 
 /**********************************************************************************************/

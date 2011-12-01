@@ -41,6 +41,7 @@ class RUser: public RElement
     _M int              systemAdmAcc()    const { return m_properties.value("sysA", 0); }
     _M int              submissionAcc()   const { return m_properties.value("sub", 0); }
 
+    _M bool             adminAcc()        const { return m_properties.value("usr", 0); }
     _M bool             divisionModeAcc() const { return m_properties.value("dM", 0); }
     _M bool             systemModeAcc()   const { return m_properties.value("sM", 0); }
     _M bool             resultsAcc()      const { return m_properties.value("res", 0); }

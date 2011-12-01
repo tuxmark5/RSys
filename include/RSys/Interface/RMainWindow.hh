@@ -55,22 +55,18 @@ class RMainWindow: public QMainWindow
     _M RData*               m_data1;
     _M RResults*            m_results;
 
-    _M RContainer*          m_divisionContainer;
-    _M RContainer*          m_measureContainer;
-    _M RContainer*          m_measure1Container;
-    _M RContainer*          m_submissionContainer;
-    _M RContainer*          m_submission1Container;
-    _M RContainer*          m_systemContainer;
+    _M RContainerPtr        m_divisionContainer;
+    _M RContainerPtr        m_measureContainer;
+    _M RContainerPtr        m_measure1Container;
+    _M RContainerPtr        m_submissionContainer;
+    _M RContainerPtr        m_submission1Container;
+    _M RContainerPtr        m_systemContainer;
 
   public:
     _M Vacuum               RMainWindow(QWidget* parent = 0);
     _V Vacuum               ~RMainWindow();
     _M void                 addStatusWidget(QWidget* widget, QObject* owner = 0);
-    _M void                 connectActions();
     _M RUnitPtrList*        currentUnits() const;
-    _M void                 createActions();
-    _M void                 createContainers();
-    _M void                 createTabs();
     _M RData*               data() const { return m_data1; }
     _M RContainer*          divisionContainer() const { return m_divisionContainer; }
     _M RContainer*          measureContainer() const { return m_measureContainer; }
@@ -102,6 +98,12 @@ class RMainWindow: public QMainWindow
   private:
     _M void                 addLeftTab(RTab* tab, const char* title, const char* toolTip);
     _M void                 addRightTab(RTab* tab, const char* title, const char* toolTip);
+    _M void                 createActions();
+    _M void                 createConnections();
+    _M void                 createConnections1();
+    _M void                 createContainers();
+    _M void                 createInterface();
+    _M void                 createTabs();
 
   private slots:
     _M void                 findIntervalNow();

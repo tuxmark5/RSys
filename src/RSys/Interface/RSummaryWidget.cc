@@ -39,6 +39,8 @@ Vacuum RSummaryWidget :: RSummaryWidget(RResults* results, QWidget* parent):
 
 Vacuum RSummaryWidget :: ~RSummaryWidget()
 {
+  if (m_units)
+    m_units->removeObserver(this);
 }
 
 /**********************************************************************************************/

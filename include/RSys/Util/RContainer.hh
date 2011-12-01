@@ -5,11 +5,12 @@
 #include <RSys/Util/RAccessorAdapter.hh>
 #include <RSys/Util/RFunAccessor.hh>
 #include <RSys/Util/RMemAccessor.hh>
+#include <RSys/Util/RSharedData.hh>
 /********************************************* RS *********************************************/
 /*                                         RContainer                                         */
 /**********************************************************************************************/
 
-class RContainer
+class RContainer: public RSharedData
 {
   public:
     _V Vacuum         ~RContainer() { }
@@ -58,7 +59,7 @@ class RContainerI: public RContainer
       m_headers(other.m_headers) { }
 
     _M Vacuum         ~RContainerI()
-      { } // TODO: delete accessors
+    { }
 
     _V bool           add()
     {

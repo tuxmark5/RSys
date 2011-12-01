@@ -125,6 +125,8 @@ typedef RSharedPtr<RSystem>             RSystemPtr;
 typedef RSharedPtr<RUnit>               RUnitPtr;
 typedef RSharedPtr<RUser>               RUserPtr;
 
+typedef RSharedPtr<RContainer>          RContainerPtr;
+
 typedef ROList<RDivision*>              RDivisionList;
 typedef ROList<RMeasure*>               RMeasureList;
 typedef ROList<RSystem*>                RSubmissionList;

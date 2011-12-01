@@ -77,6 +77,9 @@ struct RSignal
     _M Vacuum         RSignal():
       m_block(false) { }
 
+    _M void           disconnectAll()
+    { m_connections.clear(); }
+
     template <class Signal>
     _M auto           operator[](Signal) -> Invocation<typename Signal::Signature>
     { return Invocation<typename Signal::Signature>(m_connections, &typeid(Signal), m_block); }

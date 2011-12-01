@@ -30,19 +30,17 @@ struct alloc
 
 Vacuum RDatabase :: RDatabase(RData* data, QObject* parent):
   QObject(parent),
-  m_data(data)
+  m_data(data),
+  m_user(0),
+  m_sqlEntity(0)
 {
-  createAdminDataEntities();
-  createDataEntities();
-  m_sqlEntity = new RSqlEntity();
 }
 
 /**********************************************************************************************/
 
 Vacuum RDatabase :: ~RDatabase()
 {
-  // id, entity
-  delete m_sqlEntity;
+  logout();
 }
 
 /**********************************************************************************************/
@@ -172,6 +170,16 @@ void RDatabase :: emitError(const QSqlError& error)
 
 /**********************************************************************************************/
 
+void RDatabase :: load()
+{
+  createAdminDataEntities();
+  createDataEntities();
+  m_sqlEntity = new RSqlEntity();
+  m_entities << m_sqlEntity;
+}
+
+/**********************************************************************************************/
+
 bool RDatabase :: login(const QString& addr, const QString& db, const QString& user, const QString& pass)
 {
   if (!m_database.isValid())
@@ -200,6 +208,7 @@ bool RDatabase :: login(const QString& addr, const QString& db, const QString& u
 
   if (m_database.open())
   {
+    load();
     emit loggedIn();
     return true;
   }
@@ -212,6 +221,9 @@ bool RDatabase :: login(const QString& addr, const QString& db, const QString& u
 
 void RDatabase :: logout()
 {
+  m_database.close();
+  qDeleteAll(m_entities);
+  m_entities.clear();
 }
 
 /**********************************************************************************************/
@@ -239,6 +251,7 @@ bool RDatabase :: select()
     }
   }
 
+  m_user = m_data->user(m_database.userName());
   return true;
 }
 

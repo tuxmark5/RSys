@@ -122,7 +122,6 @@ void RSubmission :: setMeasure1Name(const QString& measureName)
   if (!measure1 && !m_measureName.isEmpty())
   {
     measure1 = new RMeasure(m_data);
-    measure1->release();
     measure1->setIdentifier(m_measureName);
     m_data->measures1()->append(measure1);
   }

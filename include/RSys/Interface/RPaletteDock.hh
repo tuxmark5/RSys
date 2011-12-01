@@ -21,8 +21,8 @@ class RPaletteDock: public QDockWidget
     _M bool           m_mode;
 
     _M RModel1D*      m_model;
-    _M RContainer*    m_divisionContainer;
-    _M RContainer*    m_systemContainer;
+    _M RContainerPtr  m_divisionContainer;
+    _M RContainerPtr  m_systemContainer;
 
   public:
     _M Vacuum         RPaletteDock(RMainWindow* parent = 0);

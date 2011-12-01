@@ -8,14 +8,14 @@ QFont g_lastRowFont;
 /*                                          RModel1D                                          */
 /**********************************************************************************************/
 
-Vacuum RModel1D :: RModel1D(RContainer* container, QObject* parent):
+Vacuum RModel1D :: RModel1D(RContainerPtr container, QObject* parent):
   RAbstractItemModel(parent),
   m_container(container),
   m_writable(container->writable())
 {
   m_rowAdapter = new RRowObserverAdapter(this);
   m_rowAdapter->setModifier(m_writable);
-  container->addObserver(m_rowAdapter);
+  m_container->addObserver(m_rowAdapter);
 
   if (!g_lastRowFont.italic())
     g_lastRowFont.setItalic(true);
@@ -25,7 +25,8 @@ Vacuum RModel1D :: RModel1D(RContainer* container, QObject* parent):
 
 Vacuum RModel1D :: ~RModel1D()
 {
-  delete m_container;
+  m_container->removeObserver(m_rowAdapter);
+  delete m_rowAdapter;
 }
 
 /**********************************************************************************************/

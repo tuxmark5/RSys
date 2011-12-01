@@ -28,6 +28,8 @@ Vacuum RResults :: RResults(RData* data0, RData* data1, QObject* parent):
 
 Vacuum RResults :: ~RResults()
 {
+  for (auto it = m_models.begin(); it != m_models.end(); ++it)
+    (*it)->m_results = 0;
   delete m_calculator0;
   delete m_calculator1;
 }

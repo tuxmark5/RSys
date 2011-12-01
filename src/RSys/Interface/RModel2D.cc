@@ -6,19 +6,23 @@
 /*                                          RModel2D                                          */
 /**********************************************************************************************/
 
-Vacuum RModel2D :: RModel2D(RContainer* containerX, RContainer* containerY, QObject* parent):
+Vacuum RModel2D :: RModel2D(RContainerPtr containerX, RContainerPtr containerY, QObject* parent):
   RAbstractItemModel(parent),
   m_containerX(containerX),
   m_containerY(containerY)
 {
-  m_containerX->addObserver(new RColumnObserverAdapter(this));
-  m_containerY->addObserver(new RRowObserverAdapter(this));
+  m_containerX->addObserver(m_adapterX = new RColumnObserverAdapter(this));
+  m_containerY->addObserver(m_adapterY = new RRowObserverAdapter(this));
 }
 
 /**********************************************************************************************/
 
 Vacuum RModel2D :: ~RModel2D()
 {
+  m_containerX->removeObserver(m_adapterX);
+  m_containerY->removeObserver(m_adapterY);
+  delete m_adapterX;
+  delete m_adapterY;
 }
 
 /**********************************************************************************************/

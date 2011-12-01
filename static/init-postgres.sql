@@ -1,4 +1,3 @@
-DROP FUNCTION check_perm(text);
 DROP FUNCTION create_rule_e2d(text, text, text, text, text);
 
 DROP FUNCTION r_create_user() CASCADE;
@@ -6,7 +5,7 @@ DROP FUNCTION r_update_user() CASCADE;
 DROP FUNCTION r_delete_user() CASCADE;
 DROP FUNCTION r_modify_user() CASCADE;
 
-DROP TABLE  divisions;
+DROP TABLE  divisions CASCADE;
 DROP TABLE  measures;
 DROP TABLE  systems;
 DROP TABLE  submissions;
@@ -15,10 +14,6 @@ DROP TABLE  users;
 DROP TABLE  measureAdm;
 DROP TABLE  systemAdm;
 DROP TABLE  userAdm;
-
-DROP ROLE   userGroup;
-
-DROP RULE   replace_divisions ON divisions;
 
 -- ########################################### RS ########################################### --
 -- #                                         macros                                         # --

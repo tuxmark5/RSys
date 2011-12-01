@@ -16,7 +16,8 @@
 
 Vacuum RPaletteDock :: RPaletteDock(RMainWindow* parent):
   QDockWidget(QString::fromUtf8("Rėžimas"), parent),
-  m_mainWindow(parent)
+  m_mainWindow(parent),
+  m_mode(false)
 {
   QWidget*      widget        = new QWidget(this);
   QGridLayout*  layout        = new QGridLayout(widget);
@@ -168,8 +169,6 @@ void RPaletteDock :: setChecked(bool checked)
 
 void RPaletteDock :: setMode(bool mode)
 {
-  R_GUARD(mode != m_mode, Vacuum);
-
   m_mode = mode;
   m_model->setContainer(!mode ? m_divisionContainer : m_systemContainer);
 }

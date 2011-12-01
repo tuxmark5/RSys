@@ -55,6 +55,10 @@ void RData :: clear()
   m_measures1.deleteAll();      // deps: -
   m_systems.clear();            // deps: -
   m_users.clear();
+
+  m_unitHash[RUnit::Division].clear();
+  m_unitHash[RUnit::Measure].clear();
+  m_unitHash[RUnit::System].clear();
 }
 
 /**********************************************************************************************/

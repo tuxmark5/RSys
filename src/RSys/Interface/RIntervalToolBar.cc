@@ -14,7 +14,7 @@
 
 Vacuum RIntervalToolBar :: RIntervalToolBar(RMainWindow* parent):
   QToolBar("Intervalo nustatymai", parent),
-  m_results(parent->results()),
+  m_mainWindow(parent),
   m_validInterval(true)
 {
   QDate         currDate  = QDate::currentDate();
@@ -86,7 +86,7 @@ Vacuum RIntervalToolBar :: ~RIntervalToolBar()
 
 bool RIntervalToolBar :: adjustInterval(QDate& date0, QDate& date1)
 {
-  RData*        data              = m_results->data1();
+  RData*        data              = results()->data1();
   bool          modified0         = false;
   bool          modified1         = false;
   QDate         globalInterval0   = data->interval0();
@@ -136,8 +136,8 @@ bool RIntervalToolBar :: applyInterval()
 
   emit message(msgText, -1);
 
-  m_results->setInterval(m_interval0->date(), m_interval1->date());
-  m_results->setInterval(std::move(fun), num);
+  results()->setInterval(m_interval0->date(), m_interval1->date());
+  results()->setInterval(std::move(fun), num);
   emit intervalChanged();
   return true;
 }
@@ -286,6 +286,13 @@ void RIntervalToolBar :: modifyDate(int deltaYear, int deltaMonth)
 
   if (isIntervalValid())
     applyInterval();
+}
+
+/**********************************************************************************************/
+
+RResults* RIntervalToolBar :: results() const
+{
+  return m_mainWindow->results();
 }
 
 /**********************************************************************************************/

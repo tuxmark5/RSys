@@ -13,7 +13,7 @@ class RUserTab: public RTab
 
   private:
     _M RMainWindow*   m_mainWindow;
-    _M RContainer*    m_userContainer;
+    _M RContainerPtr  m_userContainer;
 
   public:
     _M Vacuum         RUserTab(RMainWindow* parent = 0);

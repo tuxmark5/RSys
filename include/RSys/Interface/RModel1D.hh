@@ -17,12 +17,12 @@ class RModel1D: public RAbstractItemModel
     _T RRowObserverAdapter  RowAdapter;
 
   public:
-    _M RContainer*    m_container;
+    _M RContainerPtr  m_container;
     _M RowAdapter*    m_rowAdapter;
     _M bool           m_writable: 1;
 
   public:
-    _M Vacuum         RModel1D(RContainer* container, QObject* parent = 0);
+    _M Vacuum         RModel1D(RContainerPtr container, QObject* parent = 0);
     _V Vacuum         ~RModel1D();
     _M void           addRow();
     _V int            columnCount(const QModelIndex& parent = QModelIndex()) const;

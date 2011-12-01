@@ -19,8 +19,11 @@ Vacuum RResultsModel :: RResultsModel(RResults* results, QObject* parent):
 
 Vacuum RResultsModel :: ~RResultsModel()
 {
-  m_results->unregisterModel(this);
-  removeFields();
+  if (m_results)
+  {
+    m_results->unregisterModel(this);
+    removeFields();
+  }
 }
 
 /**********************************************************************************************/
