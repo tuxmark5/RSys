@@ -18,6 +18,15 @@ void TestRParser::checkReadData(RParser *parser, RParser::GuessList list)
   QCOMPARE(measures->at(1)->name(),
            R_S("2. Naudojimasis konsultavimo paslaugomis"));
 
+  RDivisionPtrList *divisions = data.divisions();
+  QCOMPARE(raport[1], 12);
+  QCOMPARE(raport[1], divisions->size());
+  QCOMPARE(
+        divisions->at(11)->identifier(),
+        QString::fromUtf8("PA12"));
+  QCOMPARE(
+        divisions->at(11)->name(),
+        QString::fromUtf8("Padalinys 12"));
 }
 
 void TestRParser::testNotExistingFile()

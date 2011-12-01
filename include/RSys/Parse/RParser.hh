@@ -95,6 +95,7 @@ class RParser: public QObject
                                    QList<std::tuple<QString, int, int> > guesses);
     _M  bool                  readTable(RData *data, RDataType type, RITable *table, int tableIndex);
     _M  bool                  readMeasures(RData *data, RITable *table, int tableIndex);
+    _M  bool                  readDivisions(RData *data, RITable *table, int tableIndex);
 
     _M  GuessMap*             guesses();
     _M  GuessList             guessesList();

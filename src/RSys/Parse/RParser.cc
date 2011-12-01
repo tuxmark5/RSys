@@ -59,11 +59,52 @@ bool RParser::readMeasures(RData *data, RITable *table, int tableIndex)
   return !errors;
 }
 
+bool RParser::readDivisions(RData *data, RITable *table, int tableIndex)
+{
+  RDivisionPtrList *list = data->divisions();
+  int added = 0;
+  bool errors = false;
+  QPoint start = findCaptionRow(table, m_guessInfo[RDIVISION]);
+  if (start.x() == -1)
+  {
+    this->log(
+          RERROR, 21,
+          R_S("Lakšte „%1“ nepavyko rasti eilutės su stulpelių antraštėmis.")
+          .arg(table->title()));
+    errors = true;
+  }
+  else
+  {
+    int codeColumn = start.x();
+    int nameColumn = start.x() + 1;
+    for (int rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
+    {
+      if (table->cell(codeColumn, rowIndex).isNull() &&
+          table->cell(nameColumn, rowIndex).isNull())
+      {
+        // Tuščios eilutės yra ignoruojamos.
+      }
+      else
+      {
+        // Padalinys.
+        RDivisionPtr division = new RDivision(data);
+        division->setIdentifier(table->cell(codeColumn, rowIndex).toString().toUpper());
+        division->setName(table->cell(nameColumn, rowIndex).toString());
+        list->append(division);
+        added++;
+      }
+    }
+  }
+  m_readRaport[tableIndex] = added;
+  return !errors;
+}
+
 bool RParser::readTable(RData *data, RDataType type, RITable *table, int tableIndex)
 {
   switch (type)
   {
   case RMEASURE: return readMeasures(data, table, tableIndex);
+  case RDIVISION: return readDivisions(data, table, tableIndex);
   }
   return true;
 }
