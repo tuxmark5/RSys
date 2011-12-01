@@ -271,12 +271,12 @@ RParser::~RParser()
   delete m_document;
 }
 
-QMap<int, RDataType>* RParser::guesses()
+auto RParser::guesses() -> GuessMap*
 {
   return &m_guesses;
 }
 
-QList<std::tuple<QString, int, int> > RParser::guessesList()
+auto RParser::guessesList() -> GuessList
 {
   QList<std::tuple<QString, int, int> > list;
   for (auto it = m_guesses.begin(); it != m_guesses.end(); it++)
@@ -286,7 +286,7 @@ QList<std::tuple<QString, int, int> > RParser::guessesList()
   return list;
 }
 
-QMap<int, int> RParser::readRaport()
+auto RParser::readRaport() -> ReadRaport
 {
   return m_readRaport;
 }
@@ -301,7 +301,7 @@ QString RParser::nameAt(int index)
   return m_document->nameAt(index);
 }
 
-QMap<RDataType, RTableTypeGuessInfo>* RParser::guessInfo()
+auto RParser::guessInfo() -> GuessInfoMap*
 {
   return &m_guessInfo;
 }

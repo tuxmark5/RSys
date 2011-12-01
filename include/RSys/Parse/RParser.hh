@@ -59,13 +59,19 @@ class RParser: public QObject
 {
   Q_OBJECT
 
+  public:
+    _T  QMap<int, RDataType>                    GuessMap;
+    _T  QList<std::tuple<QString, int, int> >   GuessList;
+    _T  QMap<RDataType, RTableTypeGuessInfo>    GuessInfoMap;
+    _T  QMap<int, int>                          ReadRaport;
+
+
   private:
 
     _M  RIDocument *          m_document;
-    _M  QMap<int, RDataType>  m_guesses;
-    _M  QMap<RDataType, RTableTypeGuessInfo>
-                              m_guessInfo;
-    _M  QMap<int, int>        m_readRaport;
+    _M  GuessMap              m_guesses;
+    _M  GuessInfoMap          m_guessInfo;
+    _M  ReadRaport            m_readRaport;
 
     // Finds upper left corner of caption row in table. If fails, returns
     // (-1, -1).
@@ -90,13 +96,11 @@ class RParser: public QObject
     _M  bool                  readTable(RData *data, RDataType type, RITable *table, int tableIndex);
     _M  bool                  readMeasures(RData *data, RITable *table, int tableIndex);
 
-    _M  QMap<int, RDataType>* guesses();
-    _M  QList<std::tuple<QString, int, int> >
-                              guessesList();
-    _M  QMap<int, int>        readRaport();
+    _M  GuessMap*             guesses();
+    _M  GuessList             guessesList();
+    _M  ReadRaport            readRaport();
     _M  RIDocument*           document();
-    _M  QMap<RDataType, RTableTypeGuessInfo>*
-                              guessInfo();
+    _M  GuessInfoMap*         guessInfo();
     _M  QString               nameAt(int index);
 
   signals:
