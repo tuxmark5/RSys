@@ -163,7 +163,7 @@ void RDatabase :: emitError(const QSqlError& error)
   }
 
   if (msg.isNull())
-    msg = R_S("Klaida: %s").arg(text);
+    msg = R_S("Klaida: %1").arg(text);
 
   emit message(msg);
 }

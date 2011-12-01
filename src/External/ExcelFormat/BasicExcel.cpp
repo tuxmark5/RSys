@@ -5,7 +5,7 @@
 #endif
 
 #ifdef _WIN32
-extern "C" void* _alloca(size_t size);
+//extern "C" void* _alloca(size_t size);
 #define alloca _alloca
 #endif
 
