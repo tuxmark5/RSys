@@ -30,6 +30,18 @@ void TestRParser::checkReadData(RParser *parser, RParser::GuessList list)
   QCOMPARE(systems->at(9)->identifier(), R_S("IS10"));
   QCOMPARE(systems->at(9)->name(), R_S("Vidaus audito sistema"));
 
+  RParser::AssociationMap *divisionsSystems = parser->divisionsSystems();
+  QCOMPARE(raport[3], 44);
+  QCOMPARE(divisionsSystems->size(), 12);
+  QCOMPARE(divisionsSystems->operator [](R_S("PA1")).size(), 5);
+  QCOMPARE(divisionsSystems->operator [](R_S("PA3")).size(), 4);
+  QCOMPARE(divisionsSystems->operator [](R_S("PA9")).size(), 4);
+
+//for (auto it = divisionsSystems->begin(); it != divisionsSystems->end(); it++)
+//{
+//  qDebug() << it.key() << it.value();
+//}
+
   RSubmissionPtrList *submissions = data.submissions();
   QCOMPARE(raport[5], 1242);
   QCOMPARE(raport[5], submissions->size());
@@ -49,6 +61,7 @@ void TestRParser::checkReadData(RParser *parser, RParser::GuessList list)
   QCOMPARE(submission->date1().toString("yyyy-MM-dd"),
            R_S("2011-10-31"));
   QCOMPARE(submission->count(), 35);
+
 }
 
 void TestRParser::testNotExistingFile()
@@ -187,6 +200,13 @@ void TestRParser::testWithMissingData()
   QCOMPARE(systems->at(5)->identifier().isNull(), true);
   QCOMPARE(systems->at(5)->name(), R_S("Dokumentų valdymo"));
   QCOMPARE(systems->at(5)->isValid(), false);
+
+  RParser::AssociationMap *divisionsSystems = parser.divisionsSystems();
+  QCOMPARE(raport[3], 44);
+  QCOMPARE(divisionsSystems->size(), 12);
+  QCOMPARE(divisionsSystems->operator [](R_S("PA1")).size(), 5);
+  QCOMPARE(divisionsSystems->operator [](R_S("PA3")).size(), 4);
+  QCOMPARE(divisionsSystems->operator [](R_S("PA9")).size(), 4);
 
   RSubmissionPtrList *submissions = data.submissions();
   QCOMPARE(raport[5], 1242);
