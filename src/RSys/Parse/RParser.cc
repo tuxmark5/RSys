@@ -45,6 +45,10 @@ bool RParser::readMeasures(RData *data, RITable *table, int tableIndex)
       }
       else
       {
+        if (table->cell(nameColumn, rowIndex).isNull())
+        {
+          errors = true;
+        }
         // Priemonė.
         // FIXME: Kryptys yra ignoruojamos.
         RMeasurePtr measure = new RMeasure(data);
@@ -86,6 +90,11 @@ bool RParser::readDivisions(RData *data, RITable *table, int tableIndex)
       }
       else
       {
+        if (table->cell(codeColumn, rowIndex).isNull() ||
+            table->cell(nameColumn, rowIndex).isNull())
+        {
+          errors = true;
+        }
         // Padalinys.
         RDivisionPtr division = new RDivision(data);
         division->setIdentifier(table->cell(codeColumn, rowIndex).toString().toUpper());

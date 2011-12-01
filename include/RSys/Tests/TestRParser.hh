@@ -16,6 +16,7 @@ class TestRParser: public QObject
     _M void     testNormalFile();
     _M void     testNotExistingFile();
     _M void     testDetectionByColumns();
+    _M void     testWithMissingData();
 };
 
 #endif // TESTRPARSER_HH
