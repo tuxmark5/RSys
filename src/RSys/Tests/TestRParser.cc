@@ -219,16 +219,20 @@ void TestRParser::testWithMissingData()
   QCOMPARE(divisions->at(4)->isValid(), true);
 
   RSystemPtrList *systems = data.systems();
-  QCOMPARE(systems->size(), 10);
-  QCOMPARE(systems->at(9)->identifier(), R_S("IS10"));
-  QCOMPARE(systems->at(9)->name(), R_S("Vidaus audito sistema"));
-  QCOMPARE(systems->at(9)->isValid(), true);
-  QCOMPARE(systems->at(3)->identifier(), R_S("IS4"));
-  QCOMPARE(systems->at(3)->name().isNull(), true);
-  QCOMPARE(systems->at(3)->isValid(), false);
-  QCOMPARE(systems->at(5)->identifier().isNull(), true);
-  QCOMPARE(systems->at(5)->name(), R_S("Dokumentų valdymo"));
-  QCOMPARE(systems->at(5)->isValid(), false);
+  QCOMPARE(raport[2], 8);
+  QCOMPARE(raport[2], systems->size());
+  QCOMPARE(systems->at(7)->identifier(), R_S("IS10"));
+  QCOMPARE(systems->at(7)->name(), R_S("Vidaus audito sistema"));
+  QCOMPARE(systems->at(7)->isValid(), true);
+  QCOMPARE(systems->at(2)->identifier(), R_S("IS3"));
+  QCOMPARE(systems->at(2)->name(), R_S("Kontrolės su registrais"));
+  QCOMPARE(systems->at(2)->isValid(), true);
+  QCOMPARE(systems->at(3)->identifier(), R_S("IS5"));
+  QCOMPARE(systems->at(3)->name(), R_S("Duomenų analizės"));
+  QCOMPARE(systems->at(3)->isValid(), true);
+  QCOMPARE(systems->at(4)->identifier(), R_S("IS7"));
+  QCOMPARE(systems->at(4)->name(), R_S("Vaizdų kaupimo ir analizės"));
+  QCOMPARE(systems->at(4)->isValid(), true);
 
   RParser::DivisionSystems *divisionsSystems = parser.divisionsSystems();
   QCOMPARE(raport[3], 44);

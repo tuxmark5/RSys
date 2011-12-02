@@ -142,9 +142,22 @@ bool RParser::readDivisions(RData *data, RITable *table, int tableIndex)
 
 bool RParser::readSystems(RData *data, RITable *table, int tableIndex)
 {
+  int rowIndex;
+  int codeColumn;
+  int nameColumn;
   RSystemPtrList *list = data->systems();
   bool errors = false;
   int added = 0;
+  RConnection conn = (*data)[RData::errorMessage] << [&](const QString& text)
+  {
+    this->log(
+      RWARNING, 24,
+      R_S(
+        "Sistema, aprašyta lakšte „%1“, %2 eilutėje %3 stulpelyje, "
+        "nebuvo pridėta. Priežastis: %4"
+        ).arg(table->title())
+        .arg(rowIndex + 1).arg(codeColumn + 1).arg(text));
+  };
   QPoint start = findCaptionRow(table, m_guessInfo[RSYSTEM]);
   if (start.x() == -1)
   {
@@ -156,9 +169,9 @@ bool RParser::readSystems(RData *data, RITable *table, int tableIndex)
   }
   else
   {
-    int codeColumn = start.x();
-    int nameColumn = start.x() + 1;
-    for (int rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
+    codeColumn = start.x();
+    nameColumn = start.x() + 1;
+    for (rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
     {
       if (table->cell(codeColumn, rowIndex).isNull() &&
           table->cell(nameColumn, rowIndex).isNull())
@@ -168,20 +181,22 @@ bool RParser::readSystems(RData *data, RITable *table, int tableIndex)
       else
       {
         RSystemPtr system = new RSystem(data);
-        if (table->cell(codeColumn, rowIndex).isNull() ||
-            table->cell(nameColumn, rowIndex).isNull())
+        bool correct = system->setIdentifier(
+              table->cell(codeColumn, rowIndex).toString().toUpper());
+        correct &= system->setName(table->cell(nameColumn, rowIndex).toString());
+        if (correct)
+        {
+          list->append(system);
+          added++;
+        }
+        else
         {
           errors = true;
-          system->setValid(false);
         }
-        // Sistema.
-        system->setIdentifier(table->cell(codeColumn, rowIndex).toString().toUpper());
-        system->setName(table->cell(nameColumn, rowIndex).toString());
-        list->append(system);
-        added++;
       }
     }
   }
+  conn.disconnect();
   m_readRaport[tableIndex] = added;
   return !errors;
 }

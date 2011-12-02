@@ -58,9 +58,10 @@ bool RUnit :: setIdentifier(const QString& identifier)
 
 bool RUnit :: setName(const QString& name)
 {
-  R_DATA_GUARD(!name.trimmed().isEmpty(), false,
+  QString name1 = name.trimmed();
+  R_DATA_GUARD(!name1.isEmpty(), false,
     "Elemento pavadinimas negali būti tuščia eilutė.");
-  m_name = name;
+  m_name = name1;
   emit m_data->elementChanged(this, RData::TitleOrName);
   return true;
 }
