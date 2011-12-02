@@ -17,7 +17,7 @@ class REntity2D: public REntity
     _M QString            m_exprs[4];
 
   public:
-    _M Vacuum             REntity2D(const QString& name, const QString& key0Field,
+    _M Vacuum             REntity2D(const QString& name, RDatabase* database, const QString& key0Field,
                                     const QString& key1Field, const QString& valueField);
     _V Vacuum             ~REntity2D();
 };
@@ -53,9 +53,10 @@ class REntity2DI: public REntity2D
     _M bool               m_allowInsert: 1;
 
   public:
-    _M Vacuum             REntity2DI(const QString& name, const QString& key0Field,
-                                     const QString& key1Field, const QString& valueField):
-      REntity2D(name, key0Field, key1Field, valueField), m_allowInsert(true) { }
+    _M Vacuum             REntity2DI(const QString& name, RDatabase* database,
+                                     const QString& key0Field, const QString& key1Field,
+                                     const QString& valueField):
+      REntity2D(name, database, key0Field, key1Field, valueField), m_allowInsert(true) { }
 
     _V bool               commit(QSqlQuery& query)
     {

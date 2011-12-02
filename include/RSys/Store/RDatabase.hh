@@ -28,6 +28,7 @@ class RDatabase: public QObject
     _M Vacuum           RDatabase(RData* data, QObject* parent = 0);
     _V Vacuum           ~RDatabase();
     _M RData*           data() const { return m_data; }
+    _M bool             isPostgres() const { return m_postgres; }
     _M bool             login(const QString& dbFile);
     _M bool             login(const QString& addr, const QString& db, const QString& user, const QString& pass);
     _M RSqlEntity*      sqlEntity() const { return m_sqlEntity; }

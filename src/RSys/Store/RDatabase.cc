@@ -73,12 +73,12 @@ void RDatabase :: createAdminDataEntities()
   auto fromKey      = [ ](const QString& key)   -> QVariant   { return key; };
   auto setValue     = [ ](RUser* u, const QString& k, int v) { u->setProperty(k, v); };
 
-  auto de = newEntity1D("users", m_data->users(), alloc<RUser>::make(m_data));
+  auto de = newEntity1D("users", this, m_data->users(), alloc<RUser>::make(m_data));
   de->addField<RID>     ("uid")       >> &RUser::id           << &RUser::setId;
   de->addField<QString> ("username")  >> &RUser::userName     << &RUser::setUserName;
   de->addField<QString> ("descr")     >> &RUser::description  << &RUser::setDescription;
 
-  auto uae = new UserPropertyE("userAdm", "uid", "key", "value");
+  auto uae = new UserPropertyE("userAdm", this, "uid", "key", "value");
   (*m_data)[RUser::propertySet]   << std::bind(&UserPropertyE::onSet, uae, _1, _2, _3);
   (*m_data)[RUser::propertyUnset] << std::bind(&UserPropertyE::onUnset, uae, _1, _2);
   uae->setKey0(fromUser,  toUser);
@@ -92,22 +92,22 @@ void RDatabase :: createAdminDataEntities()
 
 void RDatabase :: createDataEntities()
 {
-  auto de = newEntity1D("divisions", m_data->divisions(), alloc<RDivision>::make(m_data));
+  auto de = newEntity1D("divisions", this, m_data->divisions(), alloc<RDivision>::make(m_data));
   de->addField<RID>     ("id")    >> &RDivision::id           << &RDivision::setId;
   de->addField<QString> ("ident") >> &RDivision::identifier   << &RDivision::setIdentifier;
   de->addField<QString> ("name")  >> &RDivision::name         << &RDivision::setName;
 
-  auto me = newEntity1D("measures", m_data->measures(), alloc<RMeasure>::make(m_data));
+  auto me = newEntity1D("measures", this, m_data->measures(), alloc<RMeasure>::make(m_data));
   me->addField<RID>     ("id")    >> &RMeasure::id            << &RMeasure::setId;
   me->addField<QString> ("ident") >> &RMeasure::identifier    << &RMeasure::setIdentifier;
   me->addField<QString> ("name")  >> &RMeasure::name          << &RMeasure::setName;
 
-  auto se = newEntity1D("systems", m_data->systems(), alloc<RSystem>::make(m_data));
+  auto se = newEntity1D("systems", this, m_data->systems(), alloc<RSystem>::make(m_data));
   se->addField<RID>     ("id")    >> &RSystem::id             << &RSystem::setId;
   se->addField<QString> ("ident") >> &RSystem::identifier     << &RSystem::setIdentifier;
   se->addField<QString> ("name")  >> &RSystem::name           << &RSystem::setName;
 
-  auto ue = newEntity1D("submissions", m_data->submissions(), alloc<RSubmission>::make(m_data));
+  auto ue = newEntity1D("submissions", this, m_data->submissions(), alloc<RSubmission>::make(m_data));
   ue->addField<RID>     ("id")      >> &RSubmission::id         << &RSubmission::setId;
   ue->addField<RID>     ("measure") >> &RSubmission::measureId  << &RSubmission::setMeasureId;
   ue->addField<int>     ("count")   >> &RSubmission::count      << &RSubmission::setCount;
@@ -123,14 +123,14 @@ void RDatabase :: createDataEntities()
   auto setMeasure   = [ ](RDivision* d, RMeasure* m, double v) { d->setMeasure(m, v); };
   auto setSystem    = [ ](RDivision* d, RSystem* s, double v) { d->setSystem(s, v); };
 
-  auto mae = new DivisionMeasureE("measureAdm", "division", "measure", "weight");
+  auto mae = new DivisionMeasureE("measureAdm", this, "division", "measure", "weight");
   (*m_data)[RDivision::onMeasureSet] << std::bind(&DivisionMeasureE::onSet, mae, _1, _2, _3);
   (*m_data)[RDivision::onMeasureUnset] << std::bind(&DivisionMeasureE::onUnset, mae, _1, _2);
   mae->setKey0(fromDivision, toDivision);
   mae->setKey1(fromMeasure, toMeasure);
   mae->setSetter(setMeasure);
 
-  auto sae = new DivisionSystemE("systemAdm", "division", "system", "weight");
+  auto sae = new DivisionSystemE("systemAdm", this, "division", "system", "weight");
   (*m_data)[RDivision::onSystemSet] << std::bind(&DivisionSystemE::onSet, sae, _1, _2, _3);
   (*m_data)[RDivision::onSystemUnset] << std::bind(&DivisionSystemE::onUnset, sae, _1, _2);
   sae->setKey0(fromDivision, toDivision);

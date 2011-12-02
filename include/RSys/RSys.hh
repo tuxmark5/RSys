@@ -58,6 +58,9 @@ class RUserTab;
 class RCalculator;
 class RResults;
 /**********************************************************************************************/
+// Parse
+class RParser;
+/**********************************************************************************************/
 // Store
 class RDatabase;
 class REntity;
@@ -90,12 +93,25 @@ class QTabWidget;
 class QTableView;
 class QVBoxLayout;
 /**********************************************************************************************/
-typedef long long                 RID;
-typedef std::tuple<QDate, QDate>  RInterval;
-typedef QMap<RMeasure*, double>   RMeasureMap;
-typedef QMap<RSystem*, double>    RSystemMap;
-typedef QMap<RDivision*, double>  RDivisionMap;
+typedef long long                       RID;
+typedef std::tuple<QString, int, int>   RImportMode;
+typedef QList<RImportMode>              RImportModes;
+typedef std::tuple<QDate, QDate>        RInterval;
+typedef QMap<RMeasure*, double>         RMeasureMap;
+typedef QMap<RSystem*, double>          RSystemMap;
+typedef QMap<RDivision*, double>        RDivisionMap;
 /**********************************************************************************************/
+enum RDataType
+{
+  RDIVISION           = 3,
+  RDIVISIONMEASURES   = 4,
+  RDIVISIONSYSTEMS    = 1,
+  RMEASURE            = 5,
+  RSYSTEM             = 0,
+  RSUBMISSION         = 2,
+  RUNKNOWN            = 10
+};
+
 enum RMessageLevel
 {
   RDEBUG,
@@ -103,16 +119,6 @@ enum RMessageLevel
   RWARNING,
   RERROR,
   RCRITICAL
-};
-enum RDataType
-{
-  RMEASURE,
-  RDIVISION,
-  RSYSTEM,
-  RDIVISIONSYSTEMS,
-  RDIVISIONMEASURES,
-  RSUBMISSION,
-  RUNKNOWN
 };
 /**********************************************************************************************/
 #include <RSys/Util/ROList.hh>
@@ -144,7 +150,6 @@ typedef std::function<RInterval (int)>  RIntervalFun;
 /**********************************************************************************************/
 using namespace std::placeholders;
 /**********************************************************************************************/
-extern bool       g_postgres;
 extern QSettings* g_settings;
 /**********************************************************************************************/
 
