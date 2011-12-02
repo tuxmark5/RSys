@@ -38,24 +38,28 @@ QString RUnit :: fullName() const
 
 /**********************************************************************************************/
 
-void RUnit :: setIdentifier(const QString& identifier)
+bool RUnit :: setIdentifier(const QString& identifier)
 {
   QString identifier1 = identifier.trimmed().toUpper();
-  R_DATA_GUARD(!m_data->m_unitHash[m_type].contains(identifier1), Vacuum,
-    "Elementas pavadinimu <b>%1</b> jau egzistuoja.", .arg(identifier1));
+  R_DATA_GUARD(!identifier1.isEmpty(), false,
+    "Elemento identifikatorius negali būti tuščia eilutė.");
+  R_DATA_GUARD(!m_data->m_unitHash[m_type].contains(identifier1), false,
+    "Elementas su identifikatoriumi <b>%1</b> jau egzistuoja.", .arg(identifier1));
 
   m_data->m_unitHash[m_type].remove(m_identifier, this);
   m_identifier = identifier1;
   m_data->m_unitHash[m_type].insert(m_identifier, this);
   emit m_data->elementChanged(this, RData::TitleOrName);
+  return true;
 }
 
 /**********************************************************************************************/
 
-void RUnit :: setName(const QString& name)
+bool RUnit :: setName(const QString& name)
 {
   m_name = name;
   emit m_data->elementChanged(this, RData::TitleOrName);
+  return true;
 }
 
 /**********************************************************************************************/
