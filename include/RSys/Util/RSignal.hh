@@ -25,49 +25,37 @@ struct Sig<Result (Args...)>
 template <class Signature>
 struct Invocation;
 
-template <class Result, class... Args>
-struct Invocation<Result (Args...)>
+/********************************************* RS *********************************************/
+/*                                        RConnection                                         */
+/**********************************************************************************************/
+
+class RConnection
 {
-  _T Invocation<Result (Args...)>     Self;
-  _T const std::type_info*            Key;
-  _T std::function<void ()>           Slot0;
-  _T std::function<Result (Args...)>  Slot;
-  _T QMultiHash<Key, Slot0>           Connections0;
-  _T QMultiHash<Key, Slot>            Connections;
+  public:
+    _F class          RSignal;
 
-  _M Connections&     m_connections;
-  _M Key              m_signature;
-  _M bool             m_block;
+  private:
+    _M RSignal*       m_signal;
+    _M int            m_identifier;
 
-  _M Vacuum           Invocation(Connections0& connections, Key signature, bool block):
-    m_connections(reinterpret_cast<Connections&>(connections)),
-    m_signature(signature), m_block(block) { }
-
-  _M void             operator ()(Args... args)
-  {
-    if (!m_block)
-    {
-      auto it = m_connections.find(m_signature);
-      for (; it.key() == m_signature && it != m_connections.end(); ++it)
-        (*it)(args...);
-    }
-  }
-
-  _M Self&            operator <<(Slot&& slot)
-  {
-    m_connections.insert(m_signature, std::forward<Slot>(slot));
-    return* this;
-  }
+  public:
+    _M Vacuum         RConnection(RSignal* signal, int identifier);
+    _M void           disconnect();
 };
 
+/********************************************* RS *********************************************/
+/*                                          RSignal                                           */
 /**********************************************************************************************/
 
 struct RSignal
 {
   public:
-    _T const std::type_info*      Key;
-    _T std::function<void ()>     Slot0;
-    _T QMultiHash<Key, Slot0>     Connections;
+    _F class          RInvocation;
+
+  public:
+    _T const std::type_info*                      Key;
+    _T std::tuple<int, std::function<void ()> >   Slot0;
+    _T QMultiHash<Key, Slot0>                     Connections;
 
   private:
     _M Connections    m_connections;
@@ -77,16 +65,66 @@ struct RSignal
     _M Vacuum         RSignal():
       m_block(false) { }
 
-    _M void           disconnectAll()
-    { m_connections.clear(); }
+    _M void           disconnect(int connId);
+    _M void           disconnectAll();
 
     template <class Signal>
     _M auto           operator[](Signal) -> Invocation<typename Signal::Signature>
-    { return Invocation<typename Signal::Signature>(m_connections, &typeid(Signal), m_block); }
+    { return Invocation<typename Signal::Signature>(this, &typeid(Signal), m_block); }
 
     template <class Lambda>
     _M void           withBlock(const Lambda& lambda)
     { m_block = true; lambda(); m_block = false; }
+};
+
+/**********************************************************************************************/
+
+struct RInvocation
+{
+  protected: static auto connections(RSignal* signal) -> RSignal::Connections&
+  { return signal->m_connections; }
+};
+
+/**********************************************************************************************/
+
+template <class Result, class... Args>
+struct Invocation<Result (Args...)>: public RInvocation
+{
+  _T Invocation<Result (Args...)>                   Self;
+  _T const std::type_info*                          Key;
+  _T std::function<Result (Args...)>                Handler;
+  _T std::tuple<int, std::function<void ()> >       Slot0;
+  _T std::tuple<int, Handler>                       Slot;
+  _T QMultiHash<Key, Slot0>                         Connections0;
+  _T QMultiHash<Key, Slot>                          Connections;
+
+  _M RSignal*         m_signal;
+  _M Key              m_signature;
+  _M bool             m_block;
+
+  _M Vacuum           Invocation(RSignal* signal, Key signature, bool block):
+    m_signal(signal), m_signature(signature), m_block(block) { }
+
+  _M Connections&     connections()
+  { return reinterpret_cast<Connections&>(RInvocation::connections(m_signal)); }
+
+  _M void             operator ()(Args... args)
+  {
+    if (!m_block)
+    {
+      auto it   = connections().find(m_signature);
+      auto end  = connections().end();
+      for (; it.key() == m_signature && it != end; ++it)
+        std::get<1>(*it)(args...);
+    }
+  }
+
+  _M RConnection      operator <<(Handler&& handler)
+  {
+    int index = rand();
+    connections().insert(m_signature, Slot(index, std::forward<Handler>(handler)));
+    return RConnection(m_signal, index);
+  }
 };
 
 /**********************************************************************************************/
