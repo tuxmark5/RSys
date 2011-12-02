@@ -42,7 +42,7 @@ void REntity1D :: init()
   m_exprs[Select]  = QString("SELECT %1,%2 FROM %3 ORDER BY 2;")
     .arg(field0, fields, m_entityName);
 
-  if (g_postgres)
+  if (m_database->isPostgres())
   {
     m_exprs[Insert]  = QString("INSERT INTO %1(%2,%3) VALUES(DEFAULT,%4) returning %2;")
       .arg(m_entityName, field0, fields, wildcards);

@@ -41,7 +41,7 @@
 #include <RSys/Interface/RUserTab.hh>
 
 #include <RSys/Logic/RResults.hh>
-#include <RSys/Parse/RValidator.hh>
+#include <RSys/Parse/RParser.hh>
 #include <RSys/Store/RDatabase.hh>
 #include <RSys/Store/RSqlEntity.hh>
 #include <RSys/Util/RContainer.hh>
@@ -413,28 +413,40 @@ void RMainWindow :: findIntervalNow()
 
 void RMainWindow :: importData()
 {
-  QString fileName = QFileDialog::getOpenFileName
+  QString       fileName    = QFileDialog::getOpenFileName
       (this, QString::fromUtf8("Importuoti"), QString(),
        QString("Microsoft Excel bylos (*.xls)"));
+  R_GUARD(!fileName.isNull(), Vacuum);
 
-  if (!fileName.isNull())
+  RParser*      parser      = new RParser();
+  RImportForm*  importForm;
+
+  if (parser->open(fileName))
   {
-    RValidator      parser;
-    RImportForm*    importForm;
+    importForm = new RImportForm(parser, m_data1);
+    importForm->setImportModes(parser->guessesList());
 
-    m_results->setUpdatesEnabled(false);
-    parser.validate(fileName, m_data1);
-    m_results->setUpdatesEnabled(true);
-    m_data1->calculateIntervals();
+    (*importForm)[RImportForm::importBegin] << [=]()
+    {
+      m_results->setUpdatesEnabled(false);
+    };
 
-    importForm = new RImportForm();
+    (*importForm)[RImportForm::importEnd] << [=]()
+    {
+      m_results->setUpdatesEnabled(true);
+      m_data1->calculateIntervals();
+      m_intervalToolBar->applyInterval();
+      showMessage(R_S("Duomenys sėkmingai (o gal ir ne) importuoti\n"
+                      "Vytautai, man čia reikia, kad tavo kodas išspjautų tik vieną žinutę\n"
+                      "Tam padaryk kokį naują signalą, o visas perteklines žinutes į logą galim\n"
+                      "kraut"), 15000);
+    };
+
     addStatusWidget(new RStatusWidget(importForm));
-
-    showMessage(QString::fromUtf8("Duomenys sėkmingai (o gal ir ne) importuoti\n"
-                                  "Vytautai, man čia reikia, kad tavo kodas išspjautų tik vieną žinutę\n"
-                                  "Tam padaryk kokį naują signalą, o visas perteklines žinutes į logą galim\n"
-                                  "kraut"), 15000);
-    m_intervalToolBar->applyInterval();
+  }
+  else
+  {
+    showMessage(R_S("PHAIL"), 15000);
   }
 }
 

@@ -4,8 +4,9 @@
 /*                                         REntity2D                                          */
 /**********************************************************************************************/
 
-Vacuum REntity2D :: REntity2D(const QString& name, const QString& key0Field,
-                              const QString& key1Field, const QString& valueField)
+Vacuum REntity2D :: REntity2D(const QString& name, RDatabase* database, const QString& key0Field,
+                              const QString& key1Field, const QString& valueField):
+  m_database(database)
 {
   if (true)
   {
@@ -17,7 +18,7 @@ Vacuum REntity2D :: REntity2D(const QString& name, const QString& key0Field,
       .arg(key0Field, key1Field, valueField, name);
   }
 
-  if (g_postgres)
+  if (m_database->isPostgres())
   {
     m_exprs[Update] = QString("INSERT INTO %1(%2,%3,%4) VALUES(?,?,?);")
       .arg(name, key0Field, key1Field, valueField);

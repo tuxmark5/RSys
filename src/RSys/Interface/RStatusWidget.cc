@@ -24,10 +24,14 @@ Vacuum RStatusWidget :: RStatusWidget(QWidget* inner, QWidget* parent):
   layout->setMargin(0);
 
   if (inner)
+  {
     setWidget(inner);
+    connect(inner, SIGNAL(closed()), this, SLOT(onCloseClicked()));
+  }
+
   layout->addWidget(closeButton);
 
-  QPushButton::connect(closeButton, SIGNAL(clicked()), this, SLOT(onCloseClicked()));
+  connect(closeButton, SIGNAL(clicked()), this, SLOT(onCloseClicked()));
 }
 
 /**********************************************************************************************/

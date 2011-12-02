@@ -54,8 +54,8 @@ class REntity1DI: public REntity1D,
     _M bool               m_allowInsert: 1;
 
   public:
-    _M Vacuum             REntity1DI(const QString& entity, List* list, Allocator&& allocator):
-      REntity1D(entity, 0), m_list(list),
+    _M Vacuum             REntity1DI(const QString& entity, RDatabase* database, List* list, Allocator&& allocator):
+      REntity1D(entity, database), m_list(list),
       m_allocator(std::forward<Allocator>(allocator)),
       m_allowInsert(true)
     {
@@ -170,7 +170,7 @@ class REntity1DI: public REntity1D,
 
       if (query.exec())
       {
-        QVariant lastId = g_postgres ? query.first(), query.value(0) : query.lastInsertId();
+        QVariant lastId = m_database->isPostgres() ? query.first(), query.value(0) : query.lastInsertId();
         std::get<1>(m_fields.first())->set(entry, lastId);
         return true;
       }
@@ -194,8 +194,8 @@ class REntity1DI: public REntity1D,
 /**********************************************************************************************/
 
 template <class Value, class... Args>
-REntity1DI<Value>* newEntity1D(const QString& entity, ROList<Value>* list, Args&&... args)
-{ return new REntity1DI<Value>(entity, list, std::forward<Args>(args)...); }
+REntity1DI<Value>* newEntity1D(const QString& entity, RDatabase* database, ROList<Value>* list, Args&&... args)
+{ return new REntity1DI<Value>(entity, database, list, std::forward<Args>(args)...); }
 
 /**********************************************************************************************/
 

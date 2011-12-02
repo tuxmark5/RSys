@@ -3,42 +3,44 @@
 
 /**********************************************************************************************/
 #include <QtGui/QWidget>
-#include <RSys/RSys.hh>
+#include <RSys/Util/RSignal.hh>
 /********************************************* RS *********************************************/
 /*                                        RImportForm                                         */
 /**********************************************************************************************/
 
-class RImportForm: public QWidget
+class RImportForm: public QWidget, public RSignal
 {
   Q_OBJECT
 
   public:
-    _E DataType
-    {
-      Systems       = 0,
-      SystemAdm     = 1,
-      Submissions   = 2,
-      Divisions     = 3,
-      MeasureAdm    = 4,
-      Measures      = 5,
-      LastDataType  = 5,
-      Unknown       = 10
-    };
-
-  public:
-    _T QMap<QString, int>   ModeMap;
+    _T QHash<QObject*, int> WidgetHash;
 
   private:
     _S QStringList    s_modeNames;
+    _M RParser*       m_parser;
+    _M RData*         m_data;
     _M QPushButton*   m_importButton;
+    _M RImportModes   m_importModes;
+    _M WidgetHash     m_widgetHash;
 
   public:
-    _M Vacuum         RImportForm(QWidget* parent = 0);
+    _M Vacuum         RImportForm(RParser* parser, RData* data, QWidget* parent = 0);
     _V Vacuum         ~RImportForm();
-    _M void           setModeMap(const ModeMap& modeMap);
+    _M void           setImportModes(const RImportModes& importModes);
 
   public slots:
     _M void           import();
+
+  private slots:
+    _M void           onImportModeChanged(bool enabled);
+    _M void           onImportModeChanged(int newMode);
+
+  public:
+    _G(void,          importBegin);
+    _G(void,          importEnd);
+
+  signals:
+    _M void           closed();
 };
 
 /**********************************************************************************************/
