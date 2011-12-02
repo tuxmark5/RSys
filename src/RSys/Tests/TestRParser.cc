@@ -206,17 +206,17 @@ void TestRParser::testWithMissingData()
   QCOMPARE(measures->at(6)->isValid(), true);
 
   RDivisionPtrList *divisions = data.divisions();
-  QCOMPARE(raport[1], 12);
+  QCOMPARE(raport[1], 10);
   QCOMPARE(raport[1], divisions->size());
-  QCOMPARE(divisions->at(11)->identifier(), R_S("PA12"));
-  QCOMPARE(divisions->at(11)->name(), R_S("Padalinys 12"));
-  QCOMPARE(divisions->at(11)->isValid(), true);
-  QCOMPARE(divisions->at(4)->identifier().isNull(), true);
-  QCOMPARE(divisions->at(4)->name(), R_S("Padalinys 5"));
-  QCOMPARE(divisions->at(4)->isValid(), false);
-  QCOMPARE(divisions->at(5)->identifier(), R_S("PA6"));
-  QCOMPARE(divisions->at(5)->name().isNull(), true);
-  QCOMPARE(divisions->at(5)->isValid(), false);
+  QCOMPARE(divisions->at(9)->identifier(), R_S("PA12"));
+  QCOMPARE(divisions->at(9)->name(), R_S("Padalinys 12"));
+  QCOMPARE(divisions->at(9)->isValid(), true);
+  QCOMPARE(divisions->at(3)->identifier(), R_S("PA4"));
+  QCOMPARE(divisions->at(3)->name(), R_S("Padalinys 4"));
+  QCOMPARE(divisions->at(3)->isValid(), true);
+  QCOMPARE(divisions->at(4)->identifier(), R_S("PA7"));
+  QCOMPARE(divisions->at(4)->name(), R_S("Padalinys 7"));
+  QCOMPARE(divisions->at(4)->isValid(), true);
 
   RSystemPtrList *systems = data.systems();
   QCOMPARE(systems->size(), 10);

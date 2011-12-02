@@ -30,7 +30,7 @@ bool RParser::readMeasures(RData *data, RITable *table, int tableIndex)
     this->log(
       RWARNING, 23,
       R_S(
-        "Priemonė aprašyta lakšte „%1“, %2 eilutėje %3 stulpelyje "
+        "Priemonė, aprašyta lakšte „%1“, %2 eilutėje %3 stulpelyje, "
         "nebuvo pridėta. Priežastis: %4"
         ).arg(table->title())
         .arg(rowIndex + 1).arg(codeColumn + 1).arg(text));
@@ -81,9 +81,22 @@ bool RParser::readMeasures(RData *data, RITable *table, int tableIndex)
 
 bool RParser::readDivisions(RData *data, RITable *table, int tableIndex)
 {
+  int rowIndex;
+  int codeColumn;
+  int nameColumn;
   RDivisionPtrList *list = data->divisions();
   int added = 0;
   bool errors = false;
+  RConnection conn = (*data)[RData::errorMessage] << [&](const QString& text)
+  {
+    this->log(
+      RWARNING, 24,
+      R_S(
+        "Padalinys, aprašytas lakšte „%1“, %2 eilutėje %3 stulpelyje, "
+        "nebuvo pridėtas. Priežastis: %4"
+        ).arg(table->title())
+        .arg(rowIndex + 1).arg(codeColumn + 1).arg(text));
+  };
   QPoint start = findCaptionRow(table, m_guessInfo[RDIVISION]);
   if (start.x() == -1)
   {
@@ -95,9 +108,9 @@ bool RParser::readDivisions(RData *data, RITable *table, int tableIndex)
   }
   else
   {
-    int codeColumn = start.x();
-    int nameColumn = start.x() + 1;
-    for (int rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
+    codeColumn = start.x();
+    nameColumn = start.x() + 1;
+    for (rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
     {
       if (table->cell(codeColumn, rowIndex).isNull() &&
           table->cell(nameColumn, rowIndex).isNull())
@@ -107,20 +120,22 @@ bool RParser::readDivisions(RData *data, RITable *table, int tableIndex)
       else
       {
         RDivisionPtr division = new RDivision(data);
-        if (table->cell(codeColumn, rowIndex).isNull() ||
-            table->cell(nameColumn, rowIndex).isNull())
+        bool correct = division->setIdentifier(
+              table->cell(codeColumn, rowIndex).toString().toUpper());
+        correct &= division->setName(table->cell(nameColumn, rowIndex).toString());
+        if (correct)
+        {
+          list->append(division);
+          added++;
+        }
+        else
         {
           errors = true;
-          division->setValid(false);
         }
-        // Padalinys.
-        division->setIdentifier(table->cell(codeColumn, rowIndex).toString().toUpper());
-        division->setName(table->cell(nameColumn, rowIndex).toString());
-        list->append(division);
-        added++;
       }
     }
   }
+  conn.disconnect();
   m_readRaport[tableIndex] = added;
   return !errors;
 }
