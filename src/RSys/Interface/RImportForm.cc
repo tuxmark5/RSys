@@ -90,10 +90,11 @@ void RImportForm :: setImportModes(const RImportModes& importModes)
     QCheckBox*    checkBox  = new QCheckBox(sheetName, this);
     QComboBox*    comboBox  = new QComboBox(this);
 
+    checkBox->setChecked(guess != RUNKNOWN);
+    comboBox->setEnabled(guess != RUNKNOWN);
     connect(checkBox, SIGNAL(toggled(bool)), comboBox, SLOT(setEnabled(bool)));
     connect(checkBox, SIGNAL(clicked(bool)), this, SLOT(onImportModeChanged(bool)));
     connect(comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onImportModeChanged(int)));
-    checkBox->setChecked(guess != RUNKNOWN);
     comboBox->addItems(s_modeNames);
     comboBox->setCurrentIndex(guess);
 
