@@ -30,16 +30,20 @@ void TestRParser::checkReadData(RParser *parser, RParser::GuessList list)
   QCOMPARE(systems->at(9)->identifier(), R_S("IS10"));
   QCOMPARE(systems->at(9)->name(), R_S("Vidaus audito sistema"));
 
-  RParser::DivisionSystems *divisionsSystems = parser->divisionsSystems();
   QCOMPARE(raport[3], 44);
-  QCOMPARE(divisionsSystems->size(), 12);
-  QCOMPARE(divisionsSystems->operator [](R_S("PA1")).size(), 5);
-  QCOMPARE(divisionsSystems->operator [](R_S("PA3")).size(), 4);
-  QCOMPARE(divisionsSystems->operator [](R_S("PA9")).size(), 4);
-//for (auto it = divisionsSystems->begin(); it != divisionsSystems->end(); it++)
-//{
-//  qDebug() << it.key() << it.value();
-//}
+  QCOMPARE(divisions->size(), 12);
+  RSystemPtr system = systems->at(0);
+  QCOMPARE(system->identifier(), R_S("IS1"));
+  for (int i = 0; i < divisions->size(); i++)
+    QCOMPARE(divisions->at(i)->system(system), 1.0);
+  QCOMPARE(systems->at(4)->identifier(), R_S("IS5"));
+  QCOMPARE(divisions->at(3)->system(systems->at(4)), 0.0);
+  QCOMPARE(divisions->at(3)->system(systems->at(7)), 0.0);
+  QCOMPARE(divisions->at(3)->system(systems->at(8)), 0.0);
+  QCOMPARE(systems->at(8)->identifier(), R_S("IS9"));
+  QCOMPARE(divisions->at(8)->system(systems->at(2)), 0.0);
+  QCOMPARE(divisions->at(8)->system(systems->at(7)), 0.0);
+  QCOMPARE(divisions->at(8)->system(systems->at(8)), 1.0);
 
   RParser::DivisionMeasures *divisionsMeasures = parser->divisionsMeasures();
   QCOMPARE(raport[4], 87);
@@ -234,12 +238,20 @@ void TestRParser::testWithMissingData()
   QCOMPARE(systems->at(4)->name(), R_S("Vaizdų kaupimo ir analizės"));
   QCOMPARE(systems->at(4)->isValid(), true);
 
-  RParser::DivisionSystems *divisionsSystems = parser.divisionsSystems();
-  QCOMPARE(raport[3], 44);
-  QCOMPARE(divisionsSystems->size(), 12);
-  QCOMPARE(divisionsSystems->operator [](R_S("PA1")).size(), 5);
-  QCOMPARE(divisionsSystems->operator [](R_S("PA3")).size(), 4);
-  QCOMPARE(divisionsSystems->operator [](R_S("PA9")).size(), 4);
+  QCOMPARE(raport[3], 32);
+  QCOMPARE(divisions->size(), 10);
+  RSystemPtr system = systems->at(0);
+  QCOMPARE(system->identifier(), R_S("IS1"));
+  for (int i = 0; i < divisions->size(); i++)
+    QCOMPARE(divisions->at(i)->system(system), 1.0);
+  QCOMPARE(systems->at(4)->identifier(), R_S("IS7"));
+  QCOMPARE(divisions->at(3)->system(systems->at(4)), 1.0);
+  QCOMPARE(divisions->at(3)->system(systems->at(6)), 0.0);
+  QCOMPARE(divisions->at(3)->system(systems->at(7)), 0.0);
+  QCOMPARE(systems->at(7)->identifier(), R_S("IS10"));
+  QCOMPARE(divisions->at(8)->system(systems->at(2)), 0.0);
+  QCOMPARE(divisions->at(8)->system(systems->at(6)), 0.0);
+  QCOMPARE(divisions->at(8)->system(systems->at(7)), 0.0);
 
   RParser::DivisionMeasures *divisionsMeasures = parser.divisionsMeasures();
   QCOMPARE(raport[4], 87);

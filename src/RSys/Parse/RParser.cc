@@ -201,10 +201,16 @@ bool RParser::readSystems(RData *data, RITable *table, int tableIndex)
   return !errors;
 }
 
-bool RParser::readDivisionsSystems(RITable *table, int tableIndex)
+bool RParser::readDivisionsSystems(RData *data, RITable *table, int tableIndex)
 {
   bool errors = false;
   int updatedRelations = 0;
+  RConnection conn = (*data)[RData::errorMessage] << [&](const QString& text)
+  {
+    this->log(
+      RCRITICAL, 28,
+      R_S("Įvyko vidinė sistemos klaida: %1").arg(text));
+  };
   QPoint start = findCaptionRow(table, m_guessInfo[RDIVISIONSYSTEMS]);
   if (start.x() == -1)
   {
@@ -224,31 +230,58 @@ bool RParser::readDivisionsSystems(RITable *table, int tableIndex)
       }
       else
       {
-        QString divisionName = table->cell(colIndex, start.y()).toString();
-        QStringList systems;
-        for (int rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
+        QString divisionID = table->cell(
+              colIndex, start.y()).toString().trimmed().toUpper();
+        RDivisionPtr division = data->division(divisionID);
+        if (division)
         {
-          if (table->cell(start.x(), rowIndex).isNull())
+          for (int rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
           {
-            // Praleidžiame eilutę nepriskirtą jokiai sistemai.
-          }
-          else
-          {
-            QString systemName = table->cell(start.x(), rowIndex).toString();
-            if (table->cell(colIndex, rowIndex).toBool())
+            if (table->cell(start.x(), rowIndex).isNull())
             {
-              updatedRelations++;
-              systems.append(systemName);
+              // Praleidžiame eilutę nepriskirtą jokiai sistemai.
+            }
+            else
+            {
+              QString systemID = table->cell(
+                    start.x(), rowIndex).toString().trimmed().toUpper();
+              RSystemPtr system = data->system(systemID);
+              if (system)
+              {
+                if (table->cell(colIndex, rowIndex).toBool())
+                {
+                  updatedRelations++;
+                  division->setSystem(system, 1.0);
+                }
+              }
+              else if (colIndex == start.x() + 1)
+              {
+                this->log(
+                  RWARNING, 31,
+                  R_S(
+                        "Nepavyko rasti sistemos, kurios "
+                        "identifikatorius yra „%1“ "
+                        "(„%2“ lakšto %3 eilutės %4 stulpelis)."
+                        ).arg(systemID).arg(table->title())
+                        .arg(rowIndex + 1).arg(start.x()));
+              }
             }
           }
         }
-        if (systems.size() > 0)
+        else
         {
-          m_divisionsSystems[divisionName] = systems;
+          this->log(
+            RWARNING, 30,
+            R_S(
+                  "Nepavyko rasti padalinio, kurio identifikatorius yra „%1“ "
+                  "(„%2“ lakšto %3 eilutės %4 stulpelis)."
+                  ).arg(divisionID).arg(table->title())
+                  .arg(start.y() + 1).arg(colIndex + 1));
         }
       }
     }
   }
+  conn.disconnect();
   m_readRaport[tableIndex] = updatedRelations;
   return !errors;
 }
@@ -396,7 +429,7 @@ bool RParser::readTable(RData *data, RDataType type, RITable *table, int tableIn
   case RMEASURE: return readMeasures(data, table, tableIndex);
   case RDIVISION: return readDivisions(data, table, tableIndex);
   case RSYSTEM: return readSystems(data, table, tableIndex);
-  case RDIVISIONSYSTEMS: return readDivisionsSystems(table, tableIndex);
+  case RDIVISIONSYSTEMS: return readDivisionsSystems(data, table, tableIndex);
   case RDIVISIONMEASURES: return readDivisionsMeasures(table, tableIndex);
   case RSUBMISSION: return readSubmissions(data, table, tableIndex);
   case RUNKNOWN: return false;
@@ -660,11 +693,6 @@ RIDocument* RParser::document()
 QString RParser::nameAt(int index)
 {
   return m_document->nameAt(index);
-}
-
-auto RParser::divisionsSystems() -> DivisionSystems*
-{
-  return &m_divisionsSystems;
 }
 
 auto RParser::divisionsMeasures() -> DivisionMeasures*
