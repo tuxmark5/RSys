@@ -162,6 +162,22 @@ void RResults :: reset()
 
 /**********************************************************************************************/
 
+void RResults :: resetBegin()
+{
+  for (auto it = m_models.begin(); it != m_models.end(); ++it)
+    emit (*it)->beginResetModel();
+}
+
+/**********************************************************************************************/
+
+void RResults :: resetEnd()
+{
+  for (auto it = m_models.begin(); it != m_models.end(); ++it)
+    emit (*it)->endResetModel();
+}
+
+/**********************************************************************************************/
+
 void RResults :: setInterval(QDate date0, QDate date1)
 {
   m_interval0     = date0;

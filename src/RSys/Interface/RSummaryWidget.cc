@@ -104,9 +104,35 @@ bool RSummaryWidget :: remove0(int i0, int i1)
 
 /**********************************************************************************************/
 
+void RSummaryWidget :: resetBegin()
+{
+  R_GUARD(m_units, Vacuum);
+
+  m_units->removeObserver(this);
+  m_resultsModel->removeFields();
+}
+
+/**********************************************************************************************/
+
+void RSummaryWidget :: resetEnd()
+{
+  R_GUARD(m_units, Vacuum);
+
+  m_units->addObserver(this);
+
+  for (auto it = m_units->begin(); it != m_units->end(); ++it)
+  {
+    if ((*it)->visible())
+      m_resultsModel->addField(m_fieldType, *it);
+  }
+}
+
+/**********************************************************************************************/
+
 void RSummaryWidget :: resetObservable()
 {
-  setUnits(m_units);
+  resetBegin();
+  resetEnd();
 }
 
 /**********************************************************************************************/
@@ -156,22 +182,9 @@ void RSummaryWidget :: setMode(int mode)
 
 void RSummaryWidget :: setUnits(RUnitPtrList* units)
 {
-  if (m_units)
-  {
-    m_units->removeObserver(this);
-    m_resultsModel->removeFields();
-  }
-
-  if ((m_units = units))
-  {
-    m_units->addObserver(this);
-
-    for (auto it = m_units->begin(); it != m_units->end(); ++it)
-    {
-      if ((*it)->visible())
-        m_resultsModel->addField(m_fieldType, *it);
-    }
-  }
+  resetBegin();
+  m_units = units;
+  resetEnd();
 }
 
 /**********************************************************************************************/

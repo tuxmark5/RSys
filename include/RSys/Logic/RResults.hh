@@ -67,6 +67,8 @@ class RResults: public QObject
     _M int              numRecords() const { return m_numRecords; }
     _M void             registerField(RUnit* unit, RResultsModel* model, int key);
     _M void             registerModel(RResultsModel* model) { m_models.insert(model); }
+    _M void             resetBegin();
+    _M void             resetEnd();
     _M int*             seasonalLengths() { return m_seasonalLengths; }
     _M void             unregisterField(RUnit* unit, RResultsModel* model, int key);
     _M void             unregisterModel(RResultsModel* model) { m_models.remove(model); }

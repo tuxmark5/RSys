@@ -501,7 +501,9 @@ void RMainWindow :: rollback()
 {
   if (m_database->rollback())
   {
+    emit unitsChanged(0);
     *m_data1 = *m_data0;
+    emit unitsChanged(currentUnits());
     m_intervalToolBar->applyInterval();
     showMessage(R_S("Duomenys atstatyti."));
   }

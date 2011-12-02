@@ -54,6 +54,8 @@ Vacuum RUsageTab :: ~RUsageTab()
 
 void RUsageTab :: clearUnits()
 {
+  R_GUARD(m_units, Vacuum);
+
   int count = m_innerLayout->count();
 
   m_innerWidget->setVisible(false);
@@ -89,6 +91,8 @@ void RUsageTab :: insert1(int i0, int i1)
 
 void RUsageTab :: populateUnits()
 {
+  R_GUARD(m_units, Vacuum);
+
   m_innerWidget->setVisible(false);
 
   for (auto it = m_units->begin(); it != m_units->end(); ++it)
@@ -113,7 +117,7 @@ bool RUsageTab :: remove0(int i0, int i1)
     QWidget*      widget  = item->widget();
 
     m_innerLayout->removeItem(item);
-    widget->deleteLater();
+    delete widget;
   }
 
   return true;
@@ -123,16 +127,14 @@ bool RUsageTab :: remove0(int i0, int i1)
 
 void RUsageTab :: resetObservable0()
 {
-  if (m_units)
-    clearUnits();
+  clearUnits();
 }
 
 /**********************************************************************************************/
 
 void RUsageTab :: resetObservable()
 {
-  if (m_units)
-    populateUnits();
+  populateUnits();
 }
 
 /**********************************************************************************************/
