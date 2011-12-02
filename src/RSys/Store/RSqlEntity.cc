@@ -21,10 +21,11 @@ bool RSqlEntity :: commit(QSqlQuery& query)
 {
   for (auto it = m_log.begin(); it != m_log.end(); ++it)
   {
-    if (!query.exec(*it))
-    {
-      qDebug() << "FAILED TO EXEC" << *it;
-    }
+    const QString& stmt = std::get<2>(*it);
+
+    qDebug() << "EXECUTING" << stmt;
+    if (!query.exec(stmt))
+      qDebug() << "FAILED TO EXEC" << stmt;
   }
 
   m_log.clear();
@@ -33,9 +34,20 @@ bool RSqlEntity :: commit(QSqlQuery& query)
 
 /**********************************************************************************************/
 
-void RSqlEntity :: exec(const QString& sql)
+void RSqlEntity :: exec(void* source, int type, const QString& sql)
 {
-  m_log.append(sql);
+  if (source != 0)
+  {
+    for (auto it = m_log.begin(); it != m_log.end(); )
+    {
+      if ((std::get<0>(*it) == source) && (std::get<1>(*it) == type))
+        it = m_log.erase(it);
+      else
+        ++it;
+    }
+  }
+
+  m_log.append(Transaction(source, type, sql));
 }
 
 /**********************************************************************************************/

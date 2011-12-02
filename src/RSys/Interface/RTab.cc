@@ -50,3 +50,13 @@ RModel2D* RTab :: makeTable2DTab(RContainer* containerX, RContainer* containerY)
 }
 
 /**********************************************************************************************/
+
+void RTab :: setEditable(bool editable)
+{
+  if (RTableView* tableView = findChild<RTableView*>())
+  {
+    static_cast<RAbstractItemModel*>(tableView->model())->setEditable(editable);
+  }
+}
+
+/**********************************************************************************************/

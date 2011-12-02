@@ -34,6 +34,29 @@ Vacuum RUser :: ~RUser()
 
 /**********************************************************************************************/
 
+RUser* RUser :: createSuperUser(RData* data)
+{
+  RUser* user = new RUser(data);
+
+  user->m_userName      = "user";
+  user->m_description   = "user";
+  user->m_properties.insert("div",    2);
+  user->m_properties.insert("mea",    2);
+  user->m_properties.insert("meaA",   2);
+  user->m_properties.insert("sys",    2);
+  user->m_properties.insert("sysA",   2);
+  user->m_properties.insert("sub",    2);
+
+  user->m_properties.insert("dM",     2);
+  user->m_properties.insert("sM",     2);
+  user->m_properties.insert("res",    1);
+  user->m_properties.insert("sum",    1);
+  user->m_properties.insert("imp",    1);
+  return user;
+}
+
+/**********************************************************************************************/
+
 RUser* RUser :: createUser(RData* data)
 {
   RUser* user = new RUser(data);
@@ -70,7 +93,8 @@ void RUser :: setDescription(const QString& description)
 void RUser :: setPassword(const QString& password)
 {
   m_password = password;
-  (*m_data)[onSql](R_S("ALTER ROLE %1 WITH PASSWORD '%2';").arg(m_userName, m_password));
+  (*m_data)[onSql]((void*) this, 0, R_S("ALTER ROLE %1 WITH PASSWORD '%2';")
+    .arg(m_userName, m_password.replace("'", "''")));
 }
 
 /**********************************************************************************************/
@@ -97,6 +121,8 @@ void RUser :: setUserNameE(const QString& userName)
 {
   QString userName1 = userName.toLower();
 
+  R_DATA_GUARD(m_userName.isNull(), Vacuum,
+    "Dėl DB apribojimų vartotojo vardų keisti neleidžiama.");
   R_DATA_GUARD(userName1.size() >= 4, Vacuum,
     "Per trumpas naudotojo vardas. Minimalus leistinas ilgis yra 4 simboliai.");
   R_DATA_GUARD(g_userRegExp.exactMatch(userName1), Vacuum,

@@ -18,15 +18,17 @@ class RDatabase: public QObject
 
   private:
     _M RData*           m_data;
-    _M RUser*           m_user;
+    _M RUserPtr         m_user;
     _M QSqlDatabase     m_database;
     _M EntityList       m_entities;
     _M RSqlEntity*      m_sqlEntity;
+    _M bool             m_postgres: 1;
 
   public:
     _M Vacuum           RDatabase(RData* data, QObject* parent = 0);
     _V Vacuum           ~RDatabase();
     _M RData*           data() const { return m_data; }
+    _M bool             login(const QString& dbFile);
     _M bool             login(const QString& addr, const QString& db, const QString& user, const QString& pass);
     _M RSqlEntity*      sqlEntity() const { return m_sqlEntity; }
     _M RUser*           user() const { return m_user; }
@@ -40,9 +42,10 @@ class RDatabase: public QObject
   private:
     _M void             createAdminDataEntities();
     _M void             createDataEntities();
-    _M void             emitError(const QSqlError& error);
+    _M void             emitPSQLError(const QSqlError& error);
+    _M void             emitSQLiteError(const QSqlError& error);
     _M void             initDb();
-    _M void             load();
+    _M bool             load();
 
   signals:
     _M void             loggedIn();

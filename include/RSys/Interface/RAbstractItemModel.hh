@@ -16,9 +16,14 @@ class RAbstractItemModel: public QAbstractItemModel
     _F class          RColumnObserverAdapter;
     _F class          RRowObserverAdapter;
 
+  protected:
+    _M bool           m_editable: 1;
+
   public:
     _M Vacuum         RAbstractItemModel(QObject* parent = 0);
     _V Vacuum         ~RAbstractItemModel();
+    _M bool           editable() const { return m_editable; }
+    _M void           setEditable(bool editable);
 };
 
 /**********************************************************************************************/

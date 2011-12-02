@@ -18,6 +18,17 @@ class RMainWindow: public QMainWindow
     _F class                RMainToolBar;
     _F class                RPaletteDock;
 
+  public:
+    _T std::function<RTab* ()> TabAlloc;
+
+  public:
+    _E TabFlags
+    {
+      Left      = 1,
+      Right     = 2,
+      Editable  = 4
+    };
+
   private:
     _M RLoginWidget*        m_loginWidget;
 
@@ -96,6 +107,7 @@ class RMainWindow: public QMainWindow
     _V void                 closeEvent(QCloseEvent* event);
 
   private:
+    _M void                 addTab(int flag, const char* prop, const char* title, const char* toolTip, TabAlloc alloc);
     _M void                 addLeftTab(RTab* tab, const char* title, const char* toolTip);
     _M void                 addRightTab(RTab* tab, const char* title, const char* toolTip);
     _M void                 createActions();

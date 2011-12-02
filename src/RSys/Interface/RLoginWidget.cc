@@ -1,8 +1,10 @@
 #include <QtCore/QSettings>
+#include <QtGui/QFileDialog>
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
 #include <QtGui/QPushButton>
+#include <QtGui/QTabWidget>
 #include <RSys/Interface/RLoginWidget.hh>
 #include <RSys/Interface/RMessage.hh>
 #include <RSys/Store/RDatabase.hh>
@@ -15,51 +17,30 @@ Vacuum RLoginWidget :: RLoginWidget(RDatabase* database, QWidget* parent):
   QWidget(parent),
   m_database(database)
 {
-  QGridLayout*  layout0 = new QGridLayout(this);
-  QLabel*       logo    = new QLabel();
-  QGroupBox*    group   = new QGroupBox("Prisijungimo duomenys", this);
-  m_innerLayout         = new QGridLayout(group);
+  QGridLayout*  layout0   = new QGridLayout(this);
+  QLabel*       logo      = new QLabel();
+  QTabWidget*   tabWidget = new QTabWidget();
+  QSpacerItem*  spacer    = new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
 
-  group->setMinimumSize(400, 200);
-  group->setMaximumSize(600, 200);
+  tabWidget->setMinimumSize(400, 200);
+  tabWidget->setMaximumSize(600, 300);
 
-  m_usernameField     = new QLineEdit(this);
-  m_passwordField     = new QLineEdit(this);
-  m_loginButton       = new QPushButton("Prisijungti", this);
-  m_dbAddressField    = new QLineEdit(this);
-  m_dbNameField       = new QLineEdit(this);
-
-  m_innerLayout->addWidget(new QLabel(QString::fromUtf8("Duomenų bazės adresas")),     0, 0);
-  m_innerLayout->addWidget(m_dbAddressField, 0, 1);
-
-  m_innerLayout->addWidget(new QLabel(QString::fromUtf8("Duomenų bazės pavadinimas")), 1, 0);
-  m_innerLayout->addWidget(m_dbNameField, 1, 1);
-
-  m_innerLayout->addWidget(new QLabel(QString::fromUtf8("Vartotojo vardas")),          2, 0);
-  m_innerLayout->addWidget(m_usernameField, 2, 1);
-
-  m_innerLayout->addWidget(new QLabel(QString::fromUtf8("Slaptažodis")),               3, 0);
-  m_innerLayout->addWidget(m_passwordField, 3, 1);
-  m_passwordField->setEchoMode(QLineEdit::Password);
-
-  m_loginButton->setDefault(true);
-
-  RDatabase::connect(m_database, SIGNAL(message(QString)), this, SLOT(showMessage(QString)));
-  QLineEdit::connect(m_dbAddressField, SIGNAL(returnPressed()), this, SLOT(onLoginPressed()));
-  QLineEdit::connect(m_dbNameField, SIGNAL(returnPressed()), this, SLOT(onLoginPressed()));
-  QLineEdit::connect(m_usernameField, SIGNAL(returnPressed()), this, SLOT(onLoginPressed()));
-  QLineEdit::connect(m_passwordField, SIGNAL(returnPressed()), this, SLOT(onLoginPressed()));
-  QPushButton::connect(m_loginButton, SIGNAL(clicked()), this, SLOT(onLoginPressed()));
-
-  m_innerLayout->addWidget(m_loginButton, 4, 1);
+  tabWidget->addTab(createRemoteTab(),  R_S("Nuotolinis prisijungimas"));
+  tabWidget->addTab(createLocalTab(),   R_S("Vietinė DB"));
 
   logo->setPixmap(QPixmap(":/logo.png"));
   layout0->addWidget(logo, 0, 0, 1, 1, Qt::AlignHCenter);
-  layout0->addWidget(group, 1, 0, 1, 1, Qt::AlignTop);
+  layout0->addWidget(tabWidget, 1, 0, 1, 1, Qt::AlignTop);
+  layout0->addItem(spacer, 2, 0, 1, 1);
+  layout0->setRowStretch(0, 1);
+  layout0->setRowStretch(2, 1);
 
   m_dbAddressField->setText(g_settings->value("dbAddress", "127.0.0.1").toString());
   m_dbNameField->setText(g_settings->value("dbName", "test.db").toString());
   m_usernameField->setText(g_settings->value("dbUser", "user").toString());
+  m_dbFileField->setText(g_settings->value("dbFile", "").toString());
+
+  connect(m_database, SIGNAL(message(QString)), this, SLOT(showMessage(QString)));
 }
 
 /**********************************************************************************************/
@@ -70,17 +51,110 @@ Vacuum RLoginWidget :: ~RLoginWidget()
 
 /**********************************************************************************************/
 
+QWidget* RLoginWidget :: createLocalTab()
+{
+  QWidget*      widget        = new QWidget();
+  QGridLayout*  layout        = new QGridLayout(widget);
+  QPushButton*  loginButton   = new QPushButton("Atverti");
+  QPushButton*  openButton    = new QPushButton("...");
+
+  openButton->setFixedSize(25, 20);
+
+  m_dbFileField = new QLineEdit();
+
+  layout->addWidget(new QLabel(R_S("Duomenų bazė")), 0, 0);
+  layout->addWidget(m_dbFileField, 0, 1);
+  layout->addWidget(openButton, 0, 2);
+
+  layout->addWidget(loginButton, 1, 1, 1, 2);
+
+  connect(openButton, SIGNAL(clicked()), this, SLOT(onOpenDatabasePressed()));
+  connect(loginButton, SIGNAL(clicked()), this, SLOT(onLocalLoginPressed()));
+
+  return widget;
+}
+
+/**********************************************************************************************/
+
+QWidget* RLoginWidget :: createRemoteTab()
+{
+  QWidget*      widget  = new QWidget();
+  QGridLayout*  layout  = new QGridLayout(widget);
+  QPushButton*  loginButton;
+
+  m_usernameField     = new QLineEdit(this);
+  m_passwordField     = new QLineEdit(this);
+  loginButton         = new QPushButton("Prisijungti", this);
+  m_dbAddressField    = new QLineEdit(this);
+  m_dbNameField       = new QLineEdit(this);
+
+  layout->addWidget(new QLabel(R_S("Duomenų bazės adresas")),     0, 0);
+  layout->addWidget(m_dbAddressField, 0, 1);
+
+  layout->addWidget(new QLabel(R_S("Duomenų bazės pavadinimas")), 1, 0);
+  layout->addWidget(m_dbNameField, 1, 1);
+
+  layout->addWidget(new QLabel(R_S("Vartotojo vardas")),          2, 0);
+  layout->addWidget(m_usernameField, 2, 1);
+
+  layout->addWidget(new QLabel(R_S("Slaptažodis")),               3, 0);
+  layout->addWidget(m_passwordField, 3, 1);
+  m_passwordField->setEchoMode(QLineEdit::Password);
+
+  layout->addWidget(loginButton, 4, 1);
+  loginButton->setDefault(true);
+
+  QLineEdit::connect(m_dbAddressField, SIGNAL(returnPressed()), this, SLOT(onRemoteLoginPressed()));
+  QLineEdit::connect(m_dbNameField, SIGNAL(returnPressed()), this, SLOT(onRemoteLoginPressed()));
+  QLineEdit::connect(m_usernameField, SIGNAL(returnPressed()), this, SLOT(onRemoteLoginPressed()));
+  QLineEdit::connect(m_passwordField, SIGNAL(returnPressed()), this, SLOT(onRemoteLoginPressed()));
+  QPushButton::connect(loginButton, SIGNAL(clicked()), this, SLOT(onRemoteLoginPressed()));
+
+  return widget;
+}
+
+/**********************************************************************************************/
+
 void RLoginWidget :: showMessage(const QString& message)
 {
   if (m_message)
     m_message->deleteLater();
   m_message = new RMessage(message, 10000);
-  m_innerLayout->addWidget(m_message, m_innerLayout->rowCount(), 0, 1, 2);
+  m_message->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Minimum);
+
+  if (QGridLayout* l = static_cast<QGridLayout*>(layout()))
+    l->addWidget(m_message, l->rowCount() - 1, 0, 1, 1, Qt::AlignTop);
 }
 
 /**********************************************************************************************/
 
-void RLoginWidget :: onLoginPressed()
+void RLoginWidget :: onLocalLoginPressed()
+{
+  QString dbFile = m_dbFileField->text();
+
+  g_settings->setValue("dbFile", dbFile);
+
+  if (m_database->login(dbFile))
+  {
+    emit loggedIn();
+  }
+}
+
+/**********************************************************************************************/
+
+void RLoginWidget :: onOpenDatabasePressed()
+{
+  QString dbFile = QFileDialog::getOpenFileName(this, R_S("Duomenų bazė"));
+
+  if (!dbFile.isNull())
+  {
+    m_dbFileField->setText(dbFile);
+  }
+}
+
+/**********************************************************************************************/
+
+void RLoginWidget :: onRemoteLoginPressed()
 {
   QString   dbAddress   = m_dbAddressField->text();
   QString   dbName      = m_dbNameField->text();

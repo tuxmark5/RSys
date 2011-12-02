@@ -31,7 +31,6 @@ struct alloc
 Vacuum RDatabase :: RDatabase(RData* data, QObject* parent):
   QObject(parent),
   m_data(data),
-  m_user(0),
   m_sqlEntity(0)
 {
 }
@@ -143,7 +142,7 @@ void RDatabase :: createDataEntities()
 
 /**********************************************************************************************/
 
-void RDatabase :: emitError(const QSqlError& error)
+void RDatabase :: emitPSQLError(const QSqlError& error)
 {
   QString   text = error.databaseText();
   QString   msg;
@@ -170,30 +169,54 @@ void RDatabase :: emitError(const QSqlError& error)
 
 /**********************************************************************************************/
 
-void RDatabase :: load()
+void RDatabase :: emitSQLiteError(const QSqlError& error)
 {
-  createAdminDataEntities();
+  emit message(R_S("Nepavyko atidaryti DB."));
+}
+
+/**********************************************************************************************/
+
+bool RDatabase :: load()
+{
+  if (m_postgres)
+    createAdminDataEntities();
   createDataEntities();
   m_sqlEntity = new RSqlEntity();
   m_entities << m_sqlEntity;
+
+  emit loggedIn();
+  return true;
+}
+
+/**********************************************************************************************/
+
+bool RDatabase :: login(const QString& dbFile)
+{
+  m_database  = QSqlDatabase::addDatabase("QSQLITE");
+  m_postgres  = 0;
+
+  if (!m_database.isValid())
+  {
+    emit message(R_S("Nerastas <b>SQLite</b> QT draiveris <b>QSQLITE</b>"));
+    return false;
+  }
+
+  m_database.setDatabaseName(dbFile);
+
+  if (m_database.open())
+    return load();
+
+  emitSQLiteError(m_database.lastError());
+  return false;
 }
 
 /**********************************************************************************************/
 
 bool RDatabase :: login(const QString& addr, const QString& db, const QString& user, const QString& pass)
 {
-  if (!m_database.isValid())
-  {
-    if (g_postgres)
-    {
-      m_database = QSqlDatabase::addDatabase("QPSQL");
-      m_database.setConnectOptions("connect_timeout=1");
-    }
-    else
-    {
-      m_database = QSqlDatabase::addDatabase("QSQLITE");
-    }
-  }
+  m_database = QSqlDatabase::addDatabase("QPSQL");
+  m_postgres = 1;
+  m_database.setConnectOptions("connect_timeout=1");
 
   if (!m_database.isValid())
   {
@@ -207,13 +230,9 @@ bool RDatabase :: login(const QString& addr, const QString& db, const QString& u
   m_database.setPassword(pass);
 
   if (m_database.open())
-  {
-    load();
-    emit loggedIn();
-    return true;
-  }
+    return load();
 
-  emitError(m_database.lastError());
+  emitPSQLError(m_database.lastError());
   return false;
 }
 
@@ -251,7 +270,10 @@ bool RDatabase :: select()
     }
   }
 
-  m_user = m_data->user(m_database.userName());
+  if (m_postgres)
+    m_user = m_data->user(m_database.userName());
+  else
+    m_user = RUser::createSuperUser(m_data);
   return true;
 }
 

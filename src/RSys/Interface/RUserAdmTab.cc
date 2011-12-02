@@ -2,6 +2,7 @@
 #include <QtGui/QComboBox>
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
 #include <RSys/Core/RData.hh>
 #include <RSys/Core/RUser.hh>
 #include <RSys/Interface/RMainWindow.hh>
@@ -37,10 +38,12 @@ Vacuum RUserAdmTab :: RUserAdmTab(RUserTab* userTab, RMainWindow* parent):
   addField3("sysA", R_S("IS adm."));
   addField3("sub",  R_S("Istoriniai duomenys"));
 
-  addField2("dM",   R_S("Rėžimas: padaliniai"));
-  addField2("dS",   R_S("Rėžimas: IS"));
-  addField2("res",  R_S("Rezultatų kortelė"));
-  addField2("sum",  R_S("Apžvalgos kortelė"));
+  addField2("dM",   R_S("Rodyti rėžimą: padaliniai"));
+  addField2("dS",   R_S("Rodyti rėžimą: IS"));
+  addField2("res",  R_S("Rodyti rezultatų kortelę"));
+  addField2("sum",  R_S("Rodyti apžvalgos kortelę"));
+  addField2("imp",  R_S("Leisti importuoti duomenis"));
+  addPasswordField();
   layout1->addItem(spacer, layout1->rowCount(), 0, 1, 2);
 
   m_widget->setEnabled(false);
@@ -57,16 +60,23 @@ Vacuum RUserAdmTab :: ~RUserAdmTab()
 
 /**********************************************************************************************/
 
-void RUserAdmTab :: addField2(const QString& key, const QString& title)
+void RUserAdmTab :: addField(const QString& title, QWidget* widget)
 {
   QGridLayout*  layout    = static_cast<QGridLayout*>(m_widget->layout());
   QLabel*       label     = new QLabel(title);
-  QCheckBox*    checkBox  = new QCheckBox();
   int           row       = layout->rowCount();
 
   layout->addWidget(label, row, 0, 1, 1);
-  layout->addWidget(checkBox, row, 1, 1, 1);
+  layout->addWidget(widget, row, 1, 1, 1);
+}
 
+/**********************************************************************************************/
+
+void RUserAdmTab :: addField2(const QString& key, const QString& title)
+{
+  QCheckBox*    checkBox  = new QCheckBox();
+
+  addField(title, checkBox);
   connect(checkBox, SIGNAL(toggled(bool)), this, SLOT(onField2Changed(bool)));
   m_fields.insert(checkBox, key);
 }
@@ -75,17 +85,22 @@ void RUserAdmTab :: addField2(const QString& key, const QString& title)
 
 void RUserAdmTab :: addField3(const QString& key, const QString& title)
 {
-  QGridLayout*  layout    = static_cast<QGridLayout*>(m_widget->layout());
-  QLabel*       label     = new QLabel(title);
   QComboBox*    comboBox  = new QComboBox();
-  int           row       = layout->rowCount();
 
+  addField(title, comboBox);
   comboBox->addItems(g_mode3);
-  layout->addWidget(label, row, 0, 1, 1);
-  layout->addWidget(comboBox, row, 1, 1, 1);
-
   connect(comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onField3Changed(int)));
   m_fields.insert(comboBox, key);
+}
+
+/**********************************************************************************************/
+
+void RUserAdmTab :: addPasswordField()
+{
+  m_passField = new QLineEdit();
+  m_passField->setEchoMode(QLineEdit::PasswordEchoOnEdit);
+  addField(R_S("Naujas slaptažodis"), m_passField);
+  connect(m_passField, SIGNAL(textEdited(QString)), this, SLOT(onPasswordChanged(QString)));
 }
 
 /**********************************************************************************************/
@@ -116,23 +131,31 @@ void RUserAdmTab :: onField3Changed(int newIndex)
 
 /**********************************************************************************************/
 
+void RUserAdmTab :: onPasswordChanged(const QString& newPass)
+{
+  m_user->setPassword(newPass);
+}
+
+/**********************************************************************************************/
+
 void RUserAdmTab :: setUser(RUser* user)
 {
   m_user = user;
   m_widget->setEnabled(bool(user));
 
-  if (user)
-  {
-    for (auto it = m_fields.begin(); it != m_fields.end(); ++it)
-    {
-      int value = m_user->property(*it);
+  R_GUARD(user, Vacuum);
 
-      /**/ if (QCheckBox* checkBox = qobject_cast<QCheckBox*>(it.key()))
-        checkBox->setChecked(value);
-      else if (QComboBox* comboBox = qobject_cast<QComboBox*>(it.key()))
-        comboBox->setCurrentIndex(value);
-    }
+  for (auto it = m_fields.begin(); it != m_fields.end(); ++it)
+  {
+    int value = m_user->property(*it);
+
+    /**/ if (QCheckBox* checkBox = qobject_cast<QCheckBox*>(it.key()))
+      checkBox->setChecked(value);
+    else if (QComboBox* comboBox = qobject_cast<QComboBox*>(it.key()))
+      comboBox->setCurrentIndex(value);
   }
+
+  m_passField->setText(QString());
 }
 
 /**********************************************************************************************/

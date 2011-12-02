@@ -62,9 +62,14 @@ Qt::ItemFlags RModel2D :: flags(const QModelIndex& index) const
 {
   R_GUARD(index.isValid(), 0);
 
-  return Qt::ItemIsSelectable
-       | Qt::ItemIsEditable
-       | Qt::ItemIsEnabled;
+  Qt::ItemFlags flags
+    = Qt::ItemIsSelectable
+    | Qt::ItemIsEnabled;
+
+  if (m_editable)
+    flags |= Qt::ItemIsEditable;
+
+  return flags;
 }
 
 /**********************************************************************************************/
@@ -114,6 +119,7 @@ int RModel2D :: rowCount(const QModelIndex& parent) const
 
 bool RModel2D :: setData(const QModelIndex& index, const QVariant& value, int role)
 {
+  R_GUARD(m_editable,           false);
   R_GUARD(index.isValid(),      false);
   R_GUARD(role == Qt::EditRole, false);
 

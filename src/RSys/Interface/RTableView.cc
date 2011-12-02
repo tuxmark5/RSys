@@ -19,7 +19,7 @@ Vacuum RTableView :: RTableView(QAbstractItemModel* model, QWidget* parent):
 
   if (RModel1D* model = qobject_cast<RModel1D*>(this->model()))
   {
-    if (model->writable())
+    if (model->editable())
     {
       QAction* deleteAction = new QAction(R_S("Pašalinti"), this);
 
@@ -45,13 +45,12 @@ bool RTableView :: edit(const QModelIndex& index, EditTrigger trigger, QEvent* e
   if (trigger != CurrentChanged)
   {
     if (RModel1D* model = qobject_cast<RModel1D*>(this->model()))
-      if (model->rowCount(QModelIndex()) - 1 == index.row())
-        model->addRow();
+      if (model->editable())
+        if (model->rowCount(QModelIndex()) - 1 == index.row())
+          model->addRow();
   }
 
-  if (QTableView::edit(index, trigger, event))
-    return true;
-  return false;
+  return QTableView::edit(index, trigger, event);
 }
 
 /**********************************************************************************************/

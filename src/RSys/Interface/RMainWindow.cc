@@ -94,6 +94,22 @@ Vacuum RMainWindow :: ~RMainWindow()
 
 /**********************************************************************************************/
 
+void RMainWindow :: addTab(int flag, const char* prop, const char* title, const char* toolTip, TabAlloc alloc)
+{
+  int         value   = m_database->user()->property(QString::fromUtf8(prop));
+  R_GUARD(value > 0, Vacuum);
+
+  RTab*       tab     = alloc();
+  QTabWidget* target  = flag & Left ? m_tabWidgetL : m_tabWidgetR;
+  int         id      = target->addTab(tab, QString::fromUtf8(title));
+
+  target->setTabToolTip(id, QString::fromUtf8(toolTip));
+  if (flag & Editable)
+    tab->setEditable(value == 2);
+}
+
+/**********************************************************************************************/
+
 void RMainWindow :: addLeftTab(RTab* tab, const char* title, const char* toolTip)
 {
   int id = m_tabWidgetL->addTab(tab, QString::fromUtf8(title));
@@ -233,7 +249,7 @@ void RMainWindow :: createConnections1()
   (*m_data1)[RDivision::onMeasureUnset]   << std::bind(&RResults::updateDelayed, m_results);
   (*m_data1)[RDivision::onSystemSet]      << std::bind(&RResults::updateDelayed, m_results);
   (*m_data1)[RDivision::onSystemUnset]    << std::bind(&RResults::updateDelayed, m_results);
-  (*m_data1)[RUser::onSql]                << std::bind(&RSqlEntity::exec, m_database->sqlEntity(), _1);
+  (*m_data1)[RUser::onSql]                << std::bind(&RSqlEntity::exec, m_database->sqlEntity(), _1, _2, _3);
 }
 
 /**********************************************************************************************/
@@ -330,26 +346,32 @@ void RMainWindow :: createTabs()
 {
   RUser* user = m_database->user();
 
-  if (user->measureAcc())
-    addLeftTab(new RMeasureTab(this), "Priemonės", "Paramos priemonės");
+  addTab(Left | Editable, "mea", "Priemonės", "Paramos priemonės", [=]()
+  { return new RMeasureTab(this); });
 
-  if (user->divisionAcc())
-    addLeftTab(new RDivisionTab(this), "Padaliniai", "Padaliniai");
-  if (user->systemAcc())
-    addLeftTab(new RSystemTab(this), "IS", "Informacinės sistemos");
-  if (user->measureAdmAcc())
-    addLeftTab(new RMeasureAdmTab(this), "Priemonių adm.", "Paramos priemonių administravimas");
-  if (user->systemAdmAcc())
-    addLeftTab(new RSystemAdmTab(this), "IS adm.", "Informacinių sistemų pasiskirstymas");
-  if (user->submissionAcc())
-    addLeftTab(new RSubmissionTab(this), "Istoriniai duom.", "Istoriniai duomenys");
+  addTab(Left | Editable, "div", "Padaliniai", "Padaliniai", [=]()
+  { return new RDivisionTab(this); });
+
+  addTab(Left | Editable, "sys", "IS", "Informacinės sistemos", [=]()
+  { return new RSystemTab(this); });
+
+  addTab(Left | Editable, "meaA", "Priemonių adm.", "Paramos priemonių administravimas", [=]()
+  { return new RMeasureAdmTab(this); });
+
+  addTab(Left | Editable, "sysA", "IS adm.", "Informacinių sistemų pasiskirstymas", [=]()
+  { return new RSystemAdmTab(this); });
+
+  addTab(Left | Editable, "sub", "Istoriniai duom.", "Istoriniai duomenys", [=]()
+  { return new RSubmissionTab(this); });
+
   if (true)
     addLeftTab(new RPlannedTab(this), "Planuojami kiekiai", "Planuojami paramos priemonių kiekiai");
 
-  if (user->resultsAcc())
-    addRightTab(new RUsageTab(this), "Apkrovos ir prognozės", "Individualios padalinių/sistemų apkrovos ir prognozės");
-  if (user->summaryAcc())
-    addRightTab(new RSummaryTab(this), "Apžvalga", "Apžvalga");
+  addTab(Right, "res", "Apkrovos ir prognozės", "Individualios padalinių/sistemų apkrovos ir prognozės", [=]()
+  { return new RUsageTab(this); });
+
+  addTab(Right, "res", "Apžvalga", "Apžvalga", [=]()
+  { return new RSummaryTab(this); });
 
   if (user->adminAcc())
   {
@@ -430,7 +452,16 @@ void RMainWindow :: login()
   });
   m_data1->calculateIntervals();
 
+  RUser* user = m_database->user();
+
   setInterfaceEnabled(true);
+  m_importAction->setEnabled(user->property("imp"));
+  m_divisionsStateAction->setEnabled(user->divisionModeAcc());
+  m_systemsStateAction->setEnabled(user->systemModeAcc());
+
+  if (!m_divisionsStateAction->isEnabled())
+    m_divisionsStateAction->setChecked(true);
+
   m_loginWidget   = 0; // deleted by QMainWindow::setCentralWidget
   *m_data0        = *m_data1;
   m_intervalToolBar->applyInterval();

@@ -134,10 +134,17 @@ SELECT create_rule_e2d('replace_userAdm', 'userAdm', 'uid', 'key', 'value');
 -- ########################################################################################## --
 
 INSERT INTO users(uid, username, descr)
-  VALUES(1, current_user, 'Administratorius');
+  VALUES(0, current_user, 'Administratorius');
 INSERT INTO userAdm(uid, key, value) VALUES
-  (1, 'usr',  2),
-  (1, 'usrA', 2);
+  (0, 'div',    2),
+  (0, 'mea',    2),
+  (0, 'meaA',   2),
+  (0, 'sys',    2),
+  (0, 'sysA',   2),
+  (0, 'sub',    2),
+  (0, 'usr',    2),
+  (0, 'usrA',   2),
+  (0, 'imp',    1);
 
 -- ########################################################################################## --
 
@@ -158,14 +165,15 @@ CREATE FUNCTION r_create_user()
 
 CREATE FUNCTION r_update_user()
   RETURNS TRIGGER AS $$ BEGIN
-    EXECUTE 'ALTER ROLE '||username||' RENAME TO '||NEW.username;
-    RETURN NULL;
+    EXECUTE 'ALTER ROLE '||OLD.username||' RENAME TO '||NEW.username;
+    RETURN NEW;
   END; $$ LANGUAGE plpgsql;
 
 CREATE FUNCTION r_delete_user()
   RETURNS TRIGGER AS $$ BEGIN
-    EXECUTE 'DROP ROLE '||NEW.username;
-    DELETE FROM userAdm WHERE uid = NEW.uid;
+    EXECUTE 'REVOKE ALL ON ALL TABLES IN SCHEMA public FROM '||OLD.username||';';
+    EXECUTE 'DROP ROLE '||OLD.username||';';
+    DELETE FROM userAdm WHERE uid = OLD.uid;
     RETURN NULL;
   END; $$ LANGUAGE plpgsql;
 
@@ -203,13 +211,13 @@ CREATE FUNCTION r_modify_user()
 
 -- ########################################################################################## --
 
-CREATE TRIGGER user_insert AFTER INSERT ON users
+CREATE TRIGGER user_insert AFTER  INSERT ON users
   FOR EACH ROW EXECUTE PROCEDURE r_create_user();
-CREATE TRIGGER user_update AFTER DELETE ON users
+CREATE TRIGGER user_update BEFORE UPDATE ON users
   FOR EACH ROW EXECUTE PROCEDURE r_update_user();
-CREATE TRIGGER user_delete AFTER UPDATE ON users
+CREATE TRIGGER user_delete AFTER  DELETE ON users
   FOR EACH ROW EXECUTE PROCEDURE r_delete_user();
-CREATE TRIGGER user_modify AFTER INSERT OR UPDATE ON userAdm
+CREATE TRIGGER user_modify AFTER  INSERT OR UPDATE ON userAdm
   FOR EACH ROW EXECUTE PROCEDURE r_modify_user();
 
 -- ########################################################################################## --

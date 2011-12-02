@@ -25,6 +25,7 @@ class RUser: public RElement
     _M Vacuum           RUser(RUser& other, RData* data);
     _V Vacuum           ~RUser();
 
+    _S RUser*           createSuperUser(RData* data);
     _S RUser*           createUser(RData* data);
     _M QString          description() const { return m_description; }
     _M QString          userName() const { return m_userName; }
@@ -52,7 +53,7 @@ class RUser: public RElement
     _M void             setProperty(const QString& name, int value);
 
   public:
-    _G(void,            onSql,          const QString& sql);
+    _G(void,            onSql,          void* source, int type, const QString& sql);
     _G(void,            propertySet,    RUser* user, const QString& prop, int newValue);
     _G(void,            propertyUnset,  RUser* user, const QString& prop);
 };

@@ -8,7 +8,7 @@
 /**********************************************************************************************/
 
 Vacuum RRowObserverAdapter :: RRowObserverAdapter(RAbstractItemModel* model):
-  m_model(model), m_modifier(0)
+  m_model(model)
 {
 }
 
@@ -22,8 +22,8 @@ Vacuum RRowObserverAdapter :: ~RRowObserverAdapter()
 
 bool RRowObserverAdapter :: insert0(int i0, int i1)
 {
-  i0 += m_modifier;
-  i1 += m_modifier;
+  i0 += m_model->editable();
+  i1 += m_model->editable();
   m_model->beginInsertRows(QModelIndex(), i0, i1 - 1);
   return true;
 }
@@ -72,13 +72,6 @@ void RRowObserverAdapter :: remove1(int i0, int i1)
   Q_UNUSED(i0);
   Q_UNUSED(i1);
   m_model->endRemoveRows();
-}
-
-/**********************************************************************************************/
-
-void RRowObserverAdapter :: setModifier(int modifier)
-{
-  m_modifier = modifier;
 }
 
 /**********************************************************************************************/
