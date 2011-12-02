@@ -93,6 +93,7 @@ SOURCES             +=                              \
   src/RSys/Parse/RParser.cc                         \
   src/RSys/Tests/TestRValidator.cc                  \
   src/RSys/Tests/TestRParser.cc                     \
+  src/RSys/Util/RSignal.cc                          \
   src/RSys/main.cc
 
 HEADERS             +=                              \

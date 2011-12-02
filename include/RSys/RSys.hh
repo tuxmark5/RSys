@@ -66,6 +66,7 @@ class RDatabase;
 class REntity;
 class REntity1D;
 class REntity2D;
+class RSignal;
 class RSqlEntity;
 /**********************************************************************************************/
 // Util
