@@ -19,9 +19,22 @@ bool RParser::open(const QString &filename)
 
 bool RParser::readMeasures(RData *data, RITable *table, int tableIndex)
 {
+  int rowIndex;
+  int codeColumn;
+  int nameColumn;
   RMeasurePtrList *list = data->measures();
   int added = 0;
   bool errors = false;
+  RConnection conn = (*data)[RData::errorMessage] << [&](const QString& text)
+  {
+    this->log(
+      RWARNING, 23,
+      R_S(
+        "Priemonė aprašyta lakšte „%1“, %2 eilutėje %3 stulpelyje "
+        "nebuvo pridėta. Priežastis: %4"
+        ).arg(table->title())
+        .arg(rowIndex + 1).arg(codeColumn + 1).arg(text));
+  };
   QPoint start = findCaptionRow(table, m_guessInfo[RMEASURE]);
   if (start.x() == -1)
   {
@@ -33,9 +46,9 @@ bool RParser::readMeasures(RData *data, RITable *table, int tableIndex)
   }
   else
   {
-    int codeColumn = start.x();
-    int nameColumn = start.x() + 1;
-    for (int rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
+    codeColumn = start.x();
+    nameColumn = start.x() + 1;
+    for (rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
     {
       if (table->cell(codeColumn, rowIndex).isNull())
       {
@@ -46,20 +59,22 @@ bool RParser::readMeasures(RData *data, RITable *table, int tableIndex)
       else
       {
         RMeasurePtr measure = new RMeasure(data);
-        if (table->cell(nameColumn, rowIndex).isNull())
+        bool correct = measure->setIdentifier(
+              table->cell(codeColumn, rowIndex).toString());
+        correct &= measure->setName(table->cell(nameColumn, rowIndex).toString());
+        if (correct)
+        {
+          list->append(measure);
+          added++;
+        }
+        else
         {
           errors = true;
-          measure->setValid(false);
         }
-        // Priemonė.
-        // FIXME: Kryptys yra ignoruojamos.
-        measure->setIdentifier(table->cell(codeColumn, rowIndex).toString().toUpper());
-        measure->setName(table->cell(nameColumn, rowIndex).toString());
-        list->append(measure);
-        added++;
       }
     }
   }
+  conn.disconnect();
   m_readRaport[tableIndex] = added;
   return !errors;
 }

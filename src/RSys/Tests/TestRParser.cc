@@ -88,7 +88,6 @@ void TestRParser::testNormalFile()
 {
   RParser parser;
   QCOMPARE(parser.open("static/test2.xls"), true);
-  //QMap<int, RDataType> *guesses = parser.guesses();
   RParser::GuessMap *guesses = parser.guesses();
 
   QCOMPARE((*guesses)[0], RMEASURE);
@@ -181,23 +180,30 @@ void TestRParser::testWithMissingData()
   RParser::ReadRaport raport = parser.readRaport();
 
   RMeasurePtrList *measures = data.measures();
-  QCOMPARE(raport[0], 27);
+  QCOMPARE(raport[0], 25);
   QCOMPARE(raport[0], measures->size());
-  QCOMPARE(measures->at(26)->identifier(), R_S("P4-3"));
-  QCOMPARE(measures->at(26)->name(),
+  QCOMPARE(measures->at(24)->identifier(), R_S("P4-3"));
+  QCOMPARE(measures->at(24)->name(),
            R_S("3. Parama VVG veiklai, įgūdžiams "
                "įgyti ir aktyviai pritaikyti"));
-  QCOMPARE(measures->at(26)->isValid(), true);
+  QCOMPARE(measures->at(24)->isValid(), true);
   QCOMPARE(measures->at(1)->identifier(), R_S("P1-2"));
   QCOMPARE(measures->at(1)->name(),
            R_S("2. Naudojimasis konsultavimo paslaugomis"));
   QCOMPARE(measures->at(1)->isValid(), true);
-  QCOMPARE(measures->at(2)->identifier(), R_S("P1-3"));
-  QCOMPARE(measures->at(2)->name().isNull(), true);
-  QCOMPARE(measures->at(2)->isValid(), false);
-  QCOMPARE(measures->at(7)->identifier(), R_S("P1-8"));
-  QCOMPARE(measures->at(7)->name().isNull(), true);
-  QCOMPARE(measures->at(7)->isValid(), false);
+  QCOMPARE(measures->at(2)->identifier(), R_S("P1-4"));
+  QCOMPARE(measures->at(2)->name(),
+           R_S("4. Ankstyvas pasitraukimas iš prekinės žemės ūkio gamybos"));
+  QCOMPARE(measures->at(2)->isValid(), true);
+  QCOMPARE(measures->at(5)->identifier(), R_S("P1-7"));
+  QCOMPARE(measures->at(5)->name(),
+           R_S("7. Miškų ekonominės vertės didinimas"));
+  QCOMPARE(measures->at(5)->isValid(), true);
+  QCOMPARE(measures->at(6)->identifier(), R_S("P1-9"));
+  QCOMPARE(measures->at(6)->name(),
+           R_S("9. Žemės ūkio produktų perdirbimas ir "
+               "pridėtinės vertės didinimas"));
+  QCOMPARE(measures->at(6)->isValid(), true);
 
   RDivisionPtrList *divisions = data.divisions();
   QCOMPARE(raport[1], 12);
