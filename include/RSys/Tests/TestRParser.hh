@@ -12,7 +12,7 @@ class TestRParser: public QObject
   private:
     _M void     checkReadData(RParser *parser, RParser::GuessList list);
 
-  private slots:
+  public slots:
     _M void     testNormalFile();
     _M void     testNotExistingFile();
     _M void     testDetectionByColumns();

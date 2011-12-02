@@ -13,6 +13,10 @@ QSettings*  g_settings = 0;
 
 int main(int argc, char** argv)
 {
+  TestRParser test3;
+  test3.testNormalFile();
+  test3.testWithMissingData();
+  return 0;
   if (!qgetenv("R_TEST").isEmpty())
   {
     run_all_tests(argc, argv);

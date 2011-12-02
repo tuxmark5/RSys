@@ -53,10 +53,28 @@ bool RParser::readMeasures(RData *data, RITable *table, int tableIndex)
         }
         // Priemonė.
         // FIXME: Kryptys yra ignoruojamos.
-        measure->setIdentifier(table->cell(codeColumn, rowIndex).toString().toUpper());
-        measure->setName(table->cell(nameColumn, rowIndex).toString());
-        list->append(measure);
-        added++;
+        bool correct = measure->setIdentifier(
+              table->cell(codeColumn, rowIndex).toString().toUpper());
+        correct &= measure->setName(table->cell(nameColumn, rowIndex).toString());
+        (*data)[RData::errorMessage] << [&](const QString& text)
+        {
+        //qDebug() << tableIndex << rowIndex << nameColumn;
+        //qDebug() << table;
+        //qDebug() << this->m_document;
+        //qDebug() << tableIndex << this->m_document->nameAt(tableIndex);
+        //qDebug() << this->m_document->tableAt(tableIndex)->title();
+          qDebug() << table->title();
+        };
+    //    qDebug() << R_S(
+    //        "Priemonė aprašyta lakšte „%1“, %2 eilutėje %3 stulpelyje "
+    //        "nebuvo pridėta. Priežastis: %4"
+    //        ).arg(table->title())
+    //        .arg(rowIndex + 1).arg(codeColumn + 1).arg(text);
+        if (correct)
+        {
+          list->append(measure);
+          added++;
+        }
       }
     }
   }
