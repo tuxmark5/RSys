@@ -38,12 +38,12 @@ class RSubmission: public RElement
     _M QString          measureFullName() const;
     _M RID              measureId() const;
     _M QString          measureName() const { return m_measureName; }
-    _M void             setCount(int count);
-    _M void             setDate0(const QDate& date0);
-    _M void             setDate1(const QDate& date1);
+    _M bool             setCount(int count);
+    _M bool             setDate0(const QDate& date0);
+    _M bool             setDate1(const QDate& date1);
     _M void             setMeasure(RMeasure* measure);
     _M void             setMeasureId(RID id);
-    _M void             setMeasureName(const QString& measureName);
+    _M bool             setMeasureName(const QString& measureName);
     _M void             setMeasure1Name(const QString& measureName);
 
   public:

@@ -309,9 +309,24 @@ bool RParser::readDivisionsMeasures(RITable *table, int tableIndex)
 
 bool RParser::readSubmissions(RData *data, RITable *table, int tableIndex)
 {
+  int rowIndex;
+  int measureColumn;
+  int dateFromColumn;
+  int dateToColumn;
+  int amountColumn;
   RSubmissionPtrList *list = data->submissions();
   int added = 0;
   bool errors = false;
+  RConnection conn = (*data)[RData::errorMessage] << [&](const QString& text)
+  {
+    this->log(
+      RWARNING, 26,
+      R_S(
+        "Duomuo, aprašytas lakšte „%1“, %2 eilutėje %3 stulpelyje, "
+        "nebuvo pridėtas. Priežastis: %4"
+        ).arg(table->title())
+        .arg(rowIndex + 1).arg(measureColumn + 1).arg(text));
+  };
   QPoint start = findCaptionRow(table, m_guessInfo[RSUBMISSION]);
   if (start.x() == -1)
   {
@@ -323,11 +338,11 @@ bool RParser::readSubmissions(RData *data, RITable *table, int tableIndex)
   }
   else
   {
-    int measureColumn = start.x();
-    int dateFromColumn = start.x() + 1;
-    int dateToColumn = start.x() + 2;
-    int amountColumn = start.x() + 3;
-    for (int rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
+    measureColumn = start.x();
+    dateFromColumn = start.x() + 1;
+    dateToColumn = start.x() + 2;
+    amountColumn = start.x() + 3;
+    for (rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
     {
       if (table->cell(measureColumn, rowIndex).isNull() &&
           table->cell(dateFromColumn, rowIndex).isNull() &&
@@ -339,32 +354,37 @@ bool RParser::readSubmissions(RData *data, RITable *table, int tableIndex)
       else
       {
         RSubmissionPtr submission = new RSubmission(data);
-        if (table->cell(measureColumn, rowIndex).isNull() ||
-            table->cell(dateFromColumn, rowIndex).isNull() ||
-            table->cell(dateToColumn, rowIndex).isNull() ||
-            table->cell(amountColumn, rowIndex).isNull())
-        {
-          errors = true;
-          submission->setValid(false);
-        }
-        // Apkrova.
-        submission->setMeasureName(
+        bool correct = submission->setMeasureName(
               table->cell(measureColumn,rowIndex).toString().toUpper());
-        submission->setDate0(this->parseDate(table->cell(dateFromColumn,rowIndex)));
-        submission->setDate1(this->parseDate(table->cell(dateToColumn,rowIndex)));
-        submission->setCount(table->cell(amountColumn,rowIndex).toInt());
-        if (submission->date0().isNull() ||
-            submission->date1().isNull() ||
-            submission->count() < 0)
+        correct &= submission->setDate0(
+              this->parseDate(table->cell(dateFromColumn,rowIndex)));
+        correct &= submission->setDate1(
+              this->parseDate(table->cell(dateToColumn,rowIndex)));
+        bool countOk;
+        correct &= submission->setCount(
+              table->cell(amountColumn,rowIndex).toInt(&countOk));
+        if (!countOk)
+        {
+          this->log(
+            RWARNING, 27,
+            R_S(
+              "Duomuo, aprašytas lakšte „%1“, %2 eilutėje %3 stulpelyje, "
+              "nebuvo pridėtas. Priežastis: kiekis nėra skaičius."
+              ).arg(table->title()).arg(rowIndex + 1).arg(measureColumn + 1));
+        }
+        if (correct && countOk)
+        {
+          list->append(submission);
+          added++;
+        }
+        else
         {
           errors = true;
-          submission->setValid(false);
         }
-        list->append(submission);
-        added++;
       }
     }
   }
+  conn.disconnect();
   m_readRaport[tableIndex] = added;
   return !errors;
 }
