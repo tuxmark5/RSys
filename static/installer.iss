@@ -9,13 +9,15 @@ SolidCompression=yes
 OutputDir=.
 
 [Files]
+Source: "qt.conf";      DestDir: "{app}"
+Source: "RSys.exe";     DestDir: "{app}"
+
 Source: "kdchart.dll";  DestDir: "{app}"
 Source: "QtCore4.dll";  DestDir: "{app}"
 Source: "QtGui4.dll";   DestDir: "{app}"
 Source: "QtSql4.dll";   DestDir: "{app}"
 Source: "QtSvg4.dll";   DestDir: "{app}"
 Source: "QtTest4.dll";  DestDir: "{app}"
-Source: "RSys.exe";     DestDir: "{app}"
 
 Source: "libpq.dll";    DestDir: "{app}"
 Source: "ssleay32.dll"; DestDir: "{app}"
