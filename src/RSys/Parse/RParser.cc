@@ -311,7 +311,7 @@ bool RParser::readDivisionsSystems(RData *data, RITable *table, QStringList &mes
               "padalinių naudojamas informacines sistemas. "
               "(Buvo sukurti %2 naudojimo ir %3 nenaudojimo ryšiai.)")
           .arg(table->title()).arg(existRelations).arg(nonExistRelations));
-  message << R_S("<li>„%1“ → %2 naudojimo ir %3 nenaudojimo ryšiai.</li>")
+  message << R_S("<li>„%1“ → %2 sistemų naudojimo ir %3 nenaudojimo ryšiai.</li>")
              .arg(table->title()).arg(existRelations).arg(nonExistRelations);
   conn.disconnect();
   return !errors;
@@ -427,7 +427,7 @@ bool RParser::readDivisionsMeasures(RData *data, RITable *table, QStringList &me
               "paramos administravimo sąnaudas. (Buvo atnaujinti "
               "%2 ryšiai.)")
              .arg(table->title()).arg(updatedRelations));
-  message << R_S("<li>„%1“ → atnaujinti %2 ryšiai.</li>")
+  message << R_S("<li>„%1“ → atnaujinti %2 administravimo ryšiai.</li>")
              .arg(table->title()).arg(updatedRelations);
   conn.disconnect();
   return !errors;
