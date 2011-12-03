@@ -25,9 +25,13 @@ Vacuum RPaletteDock :: RPaletteDock(RMainWindow* parent):
   QToolButton*  divisionsMode = new QToolButton(widget);
   QToolButton*  systemsMode   = new QToolButton(widget);
 
-  QPushButton*  checkAll      = new QPushButton(R_S("\u2611"), widget);
-  QPushButton*  uncheckAll    = new QPushButton(R_S("\u2610"), widget);
-  QPushButton*  inverseChecks = new QPushButton(R_S("\u25EA"), widget);
+  QPushButton*  checkAll      = new QPushButton(QIcon(":/icons/check_all.png"), QString(), widget);
+  QPushButton*  uncheckAll    = new QPushButton(QIcon(":/icons/check_none.png"), QString(), widget);
+  QPushButton*  inverseChecks = new QPushButton(QIcon(":/icons/check_inv.png"), QString(), widget);
+
+  checkAll->setFixedHeight(20);
+  uncheckAll->setFixedHeight(20);
+  inverseChecks->setFixedHeight(20);
 
   setMaximumWidth(300);
 

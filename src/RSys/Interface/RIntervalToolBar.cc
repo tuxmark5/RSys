@@ -20,10 +20,17 @@ Vacuum RIntervalToolBar :: RIntervalToolBar(RMainWindow* parent):
   QDate         currDate  = QDate::currentDate();
   QDate         date1     = QDate(currDate.year(), currDate.month(), 1);
   QDate         date0     = date1.addYears(-1);
-  QPushButton*  decMonth  = new QPushButton(R_S("\u25C0"));
-  QPushButton*  decYear   = new QPushButton(R_S("\u25C0"));
-  QPushButton*  incMonth  = new QPushButton(R_S("\u25B6"));
-  QPushButton*  incYear   = new QPushButton(R_S("\u25B6"));
+  QIcon         arrowL    = QIcon(":/icons/arrow_left.png");
+  QIcon         arrowR    = QIcon(":/icons/arrow_right.png");
+  QPushButton*  decMonth  = new QPushButton(arrowL, QString());
+  QPushButton*  decYear   = new QPushButton(arrowL, QString());
+  QPushButton*  incMonth  = new QPushButton(arrowR, QString());
+  QPushButton*  incYear   = new QPushButton(arrowR, QString());
+
+  decMonth->setFixedSize(16, 21);
+  decYear->setFixedSize(16, 21);
+  incMonth->setFixedSize(16, 21);
+  incYear->setFixedSize(16, 21);
 
   m_interval0     = new QDateEdit(date0, this);
   m_interval1     = new QDateEdit(date1, this);
