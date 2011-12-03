@@ -85,7 +85,7 @@ void RLogDock :: addMessage(RMessageLevel level, RID id, const QString& message)
   items << (item = new QStandardItem(levelName(level)));
   item->setData(level, Qt::UserRole);
   items << (item = new QStandardItem(QString::number(id)));
-  items << (item = new QStandardItem(message));
+  items << (item = new QStandardItem(message1));
 
   m_model->appendRow(items);
   m_model->setHeaderData(m_model->rowCount(), Qt::Vertical, m_messageIndex++, Qt::DisplayRole);

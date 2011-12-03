@@ -89,12 +89,12 @@ SOURCES             +=                              \
   src/RSys/Store/REntity1D.cc                       \
   src/RSys/Store/REntity2D.cc                       \
   src/RSys/Store/RSqlEntity.cc                      \
-  src/RSys/Tests/RTests.cc                          \
-  src/RSys/Tests/TestRXLSDocument.cc                \
-  src/RSys/Parse/RValidator.cc                      \
   src/RSys/Parse/RParser.cc                         \
-  src/RSys/Tests/TestRValidator.cc                  \
+  src/RSys/Parse/RValidator.cc                      \
+  src/RSys/Tests/RTests.cc                          \
   src/RSys/Tests/TestRParser.cc                     \
+  src/RSys/Tests/TestRValidator.cc                  \
+  src/RSys/Tests/TestRXLSDocument.cc                \
   src/RSys/Util/RSignal.cc                          \
   src/RSys/main.cc
 
@@ -173,12 +173,12 @@ HEADERS             +=                              \
   include/RSys/Util/RSharedData.hh                  \
   include/RSys/Util/RSharedPtr.hh                   \
   include/RSys/Util/RSignal.hh                      \
-  include/RSys/Tests/RTests.hh                      \
-  include/RSys/Tests/TestRXLSDocument.hh            \
-  include/RSys/Parse/RValidator.hh                  \
   include/RSys/Parse/RParser.hh                     \
+  include/RSys/Parse/RValidator.hh                  \
+  include/RSys/Tests/RTests.hh                      \
+  include/RSys/Tests/TestRParser.hh                 \
   include/RSys/Tests/TestRValidator.hh              \
-  include/RSys/Tests/TestRParser.hh
+  include/RSys/Tests/TestRXLSDocument.hh
 
 ################################################################################################
 
