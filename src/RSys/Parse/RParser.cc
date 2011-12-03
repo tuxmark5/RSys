@@ -583,7 +583,7 @@ QPoint RParser::findCaptionRow(
           bool match = false;
           for (auto variant : variants)
           {
-            if (variant == table->cell(colIndex + i, rowIndex).toString())
+            if (compare(variant, table->cell(colIndex + i, rowIndex).toString()))
             {
               match = true;
               break;
@@ -636,8 +636,9 @@ RDataType RParser::guessTableTypeByName(RITable *table)
   {
     for (auto name : info.value().tableName)
     {
-      if (table->title().toLower() == name.toLower())
+      if (compare(table->title(), name))
       {
+        qDebug() << table->title() << name;
         return info.key();
       }
     }
@@ -771,6 +772,65 @@ RParser::RParser(QMap<RDataType, RTableTypeGuessInfo> guessInfo)
 RParser::~RParser()
 {
   delete m_document;
+}
+
+bool RParser::compare(const QString &string1, const QString &string2)
+{
+  QChar slash('/');
+  if ((string1.contains(slash) && !string2.contains(slash)) ||
+      (!string1.contains(slash) && string2.contains(slash)))
+  {
+    return false;
+  }
+  QChar dash('-');
+  if ((string1.contains(dash) && !string2.contains(dash)) ||
+      (!string1.contains(dash) && string2.contains(dash)))
+  {
+    return false;
+  }
+  QString lString1 = string1.toLower();
+  QString lString2 = string2.toLower();
+  if (lString1.length() <= 3 || lString2.length() <= 3)
+  {
+    return lString1 == lString2;
+  }
+  else
+  {
+    int distance = calculateDistance(lString1, lString2);
+    return distance <= 0.2 * (lString1.length() + lString2.length());
+  }
+}
+
+// http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#C.2B.2B
+int RParser::calculateDistance(const QString &string1, const QString &string2)
+{
+  int length1 = string1.length();
+  int length2 = string2.length();
+
+//QVector<unsigned int> column(length2 + 1);  Neturi swap, dėl to veikia žymiai lėčiau.
+//QVector<unsigned int> prevColumn(length2 + 1);
+  std::vector<unsigned int> column(length2 + 1);
+  std::vector<unsigned int> prevColumn(length2 + 1);
+
+  for (unsigned int i = 0; i < prevColumn.size(); i++)
+  {
+    prevColumn[i] = i;
+  }
+
+  for (int i = 0; i < length1; i++)
+  {
+    column[0] = i + 1;
+    for (int j = 0; j < length2; j++)
+    {
+      column[j+1] = min(
+            min(column[j] + 1, prevColumn[j + 1] + 1),
+            prevColumn[j] + (string1[i] == string2[j] ? 0 : 1)
+            );
+    }
+    prevColumn.swap(column);
+  }
+  return prevColumn[length2];
+
 }
 
 auto RParser::guesses() -> GuessMap*

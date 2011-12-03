@@ -70,6 +70,9 @@ class RParser: public QObject
     _M  bool                  readDivisionsMeasures(RData *data, RITable *table, QStringList &message);
     _M  bool                  readSubmissions(RData *data, RITable *table, QStringList &message);
 
+    _M  bool                  compare(const QString &string1, const QString &string2);
+    _M  int                   calculateDistance(const QString &string1, const QString &string2);
+
     _M  GuessMap*             guesses();
     _M  GuessList             guessesList();
     _M  RIDocument*           document();
