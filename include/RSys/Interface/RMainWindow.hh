@@ -74,6 +74,8 @@ class RMainWindow: public QMainWindow
     _M RContainerPtr        m_submission1Container;
     _M RContainerPtr        m_systemContainer;
 
+    _M bool                 m_importing: 1;
+
   public:
     _M Vacuum               RMainWindow(QWidget* parent = 0);
     _V Vacuum               ~RMainWindow();

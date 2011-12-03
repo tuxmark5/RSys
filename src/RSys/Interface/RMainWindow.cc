@@ -56,7 +56,8 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   m_loginWidget(0),
   m_searchForm(0),
   m_splitter(0),
-  m_results(0)
+  m_results(0),
+  m_importing(false)
 {
   m_data0             = new RData();
   m_data1             = new RData();
@@ -243,7 +244,8 @@ void RMainWindow :: createConnections()
 
 void RMainWindow :: createConnections1()
 {
-  (*m_data1)[RData::errorMessage]         << std::bind(&RMainWindow::showMessage, this, _1, -1);
+  (*m_data1)[RData::errorMessage]         << [=](const QString& message)
+  { if (!m_importing) showMessage(message); };
   (*m_data1)[RSubmission::measureChange]  << std::bind(&RResults::updateDelayed, m_results);
   (*m_data1)[RSubmission::countChange]    << std::bind(&RResults::updateDelayed, m_results);
   (*m_data1)[RSubmission::date0Change]    << std::bind(&RResults::updateDelayed, m_results);
@@ -432,13 +434,15 @@ void RMainWindow :: importData()
     importForm = new RImportForm(parser, m_data1);
     importForm->setImportModes(parser->guessesList());
 
-    (*importForm)[RImportForm::importBegin] << [=]()
+    (*importForm)[RImportForm::importBegin] << [&]()
     {
       m_results->setUpdatesEnabled(false);
+      m_importing = true;
     };
 
-    (*importForm)[RImportForm::importEnd] << [=]()
+    (*importForm)[RImportForm::importEnd] << [&]()
     {
+      m_importing = false;
       m_results->setUpdatesEnabled(true);
       m_data1->calculateIntervals();
       m_intervalToolBar->applyInterval();
