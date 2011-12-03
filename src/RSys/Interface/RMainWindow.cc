@@ -545,7 +545,7 @@ void RMainWindow :: setInterfaceEnabled(bool enabled)
   m_intervalToolBar->setEnabled(enabled);
   m_paletteDock->setEnabled(enabled);
   m_paletteDock->setVisible(enabled);
-  m_logDock->setVisible(enabled);
+  m_logDock->setVisible(false);
 }
 
 /**********************************************************************************************/

@@ -26,6 +26,8 @@ class RLogDock: public QDockWidget
 
   public slots:
     _M void           addMessage(RMessageLevel level, RID id, const QString& message);
+    _M void           clearLog();
+    _M void           filterLog(int level);
 };
 
 /**********************************************************************************************/
