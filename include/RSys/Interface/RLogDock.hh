@@ -23,11 +23,11 @@ class RLogDock: public QDockWidget
   public:
     _M Vacuum         RLogDock(RMainWindow* parent = 0);
     _V Vacuum         ~RLogDock();
+    _S QString        levelName(int level);
 
   public slots:
     _M void           addMessage(RMessageLevel level, RID id, const QString& message);
     _M void           clearLog();
-    _M void           filterLog(int level);
 };
 
 /**********************************************************************************************/

@@ -56,6 +56,7 @@ SOURCES             +=                              \
   src/RSys/Interface/RIntervalToolBar.cc            \
   src/RSys/Interface/RLayerWidget.cc                \
   src/RSys/Interface/RLogDock.cc                    \
+  src/RSys/Interface/RLogFilterModel.cc             \
   src/RSys/Interface/RLoginWidget.cc                \
   src/RSys/Interface/RMainMenuBar.cc                \
   src/RSys/Interface/RMainToolBar.cc                \
@@ -123,6 +124,7 @@ HEADERS             +=                              \
   include/RSys/Interface/RIntervalToolBar.hh        \
   include/RSys/Interface/RLayerWidget.hh            \
   include/RSys/Interface/RLogDock.hh                \
+  include/RSys/Interface/RLogFilterModel.hh         \
   include/RSys/Interface/RLoginWidget.hh            \
   include/RSys/Interface/RMainMenuBar.hh            \
   include/RSys/Interface/RMainToolBar.hh            \
