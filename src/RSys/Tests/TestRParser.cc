@@ -5,11 +5,9 @@ void TestRParser::checkReadData(RParser *parser, RParser::GuessList list)
 {
   RData data;
   QCOMPARE(parser->read(&data, list), true);
-  RParser::ReadRaport raport = parser->readRaport();
 
   RMeasurePtrList *measures = data.measures();
-  QCOMPARE(raport[0], 27);
-  QCOMPARE(raport[0], measures->size());
+  QCOMPARE(27, measures->size());
   QCOMPARE(measures->at(26)->identifier(), R_S("P4-3"));
   QCOMPARE(measures->at(26)->name(),
            R_S("3. Parama VVG veiklai, įgūdžiams "
@@ -19,18 +17,16 @@ void TestRParser::checkReadData(RParser *parser, RParser::GuessList list)
            R_S("2. Naudojimasis konsultavimo paslaugomis"));
 
   RDivisionPtrList *divisions = data.divisions();
-  QCOMPARE(raport[1], 12);
-  QCOMPARE(raport[1], divisions->size());
+  QCOMPARE(12, divisions->size());
   QCOMPARE(divisions->at(11)->identifier(), R_S("PA12"));
   QCOMPARE(divisions->at(11)->name(), R_S("Padalinys 12"));
 
   RSystemPtrList *systems = data.systems();
-  QCOMPARE(raport[2], 10);
-  QCOMPARE(raport[2], systems->size());
+  QCOMPARE(10, systems->size());
   QCOMPARE(systems->at(9)->identifier(), R_S("IS10"));
   QCOMPARE(systems->at(9)->name(), R_S("Vidaus audito sistema"));
 
-  QCOMPARE(raport[3], 44);
+  //QCOMPARE(raport[3], 44);
   QCOMPARE(divisions->size(), 12);
   RSystemPtr system = systems->at(0);
   QCOMPARE(system->identifier(), R_S("IS1"));
@@ -45,7 +41,7 @@ void TestRParser::checkReadData(RParser *parser, RParser::GuessList list)
   QCOMPARE(divisions->at(8)->system(systems->at(7)), 0.0);
   QCOMPARE(divisions->at(8)->system(systems->at(8)), 1.0);
 
-  QCOMPARE(raport[4], 324);
+  //QCOMPARE(raport[4], 324);
   QCOMPARE(divisions->size(), 12);
   QCOMPARE(measures->at(1)->identifier(), R_S("P1-2"));
   QCOMPARE(divisions->at(1)->measure(measures->at(1)), 0.5);
@@ -60,8 +56,7 @@ void TestRParser::checkReadData(RParser *parser, RParser::GuessList list)
   QCOMPARE(divisions->at(8)->measure(measures->at(11)), 0.0);
 
   RSubmissionPtrList *submissions = data.submissions();
-  QCOMPARE(raport[5], 1242);
-  QCOMPARE(raport[5], submissions->size());
+  QCOMPARE(1242, submissions->size());
 
   RSubmission *submission = submissions->at(0).get();
   QCOMPARE(submission->measureName(), R_S("P1-1"));
@@ -180,11 +175,9 @@ void TestRParser::testWithMissingData()
 
   RData data;
   QCOMPARE(parser.read(&data, list), false);
-  RParser::ReadRaport raport = parser.readRaport();
 
   RMeasurePtrList *measures = data.measures();
-  QCOMPARE(raport[0], 25);
-  QCOMPARE(raport[0], measures->size());
+  QCOMPARE(25, measures->size());
   QCOMPARE(measures->at(24)->identifier(), R_S("P4-3"));
   QCOMPARE(measures->at(24)->name(),
            R_S("3. Parama VVG veiklai, įgūdžiams "
@@ -209,8 +202,7 @@ void TestRParser::testWithMissingData()
   QCOMPARE(measures->at(6)->isValid(), true);
 
   RDivisionPtrList *divisions = data.divisions();
-  QCOMPARE(raport[1], 10);
-  QCOMPARE(raport[1], divisions->size());
+  QCOMPARE(10, divisions->size());
   QCOMPARE(divisions->at(9)->identifier(), R_S("PA12"));
   QCOMPARE(divisions->at(9)->name(), R_S("Padalinys 12"));
   QCOMPARE(divisions->at(9)->isValid(), true);
@@ -222,8 +214,7 @@ void TestRParser::testWithMissingData()
   QCOMPARE(divisions->at(4)->isValid(), true);
 
   RSystemPtrList *systems = data.systems();
-  QCOMPARE(raport[2], 8);
-  QCOMPARE(raport[2], systems->size());
+  QCOMPARE(8, systems->size());
   QCOMPARE(systems->at(7)->identifier(), R_S("IS10"));
   QCOMPARE(systems->at(7)->name(), R_S("Vidaus audito sistema"));
   QCOMPARE(systems->at(7)->isValid(), true);
@@ -237,7 +228,7 @@ void TestRParser::testWithMissingData()
   QCOMPARE(systems->at(4)->name(), R_S("Vaizdų kaupimo ir analizės"));
   QCOMPARE(systems->at(4)->isValid(), true);
 
-  QCOMPARE(raport[3], 32);
+  //QCOMPARE(raport[3], 32);
   QCOMPARE(divisions->size(), 10);
   RSystemPtr system = systems->at(0);
   QCOMPARE(system->identifier(), R_S("IS1"));
@@ -252,7 +243,7 @@ void TestRParser::testWithMissingData()
   QCOMPARE(divisions->at(8)->system(systems->at(6)), 0.0);
   QCOMPARE(divisions->at(8)->system(systems->at(7)), 0.0);
 
-  QCOMPARE(raport[4], 250);
+  //QCOMPARE(raport[4], 250);
   QCOMPARE(divisions->size(), 10);
   QCOMPARE(measures->at(1)->identifier(), R_S("P1-2"));
   QCOMPARE(divisions->at(1)->measure(measures->at(1)), 0.5);
@@ -268,8 +259,7 @@ void TestRParser::testWithMissingData()
   QCOMPARE(divisions->at(6)->measure(measures->at(9)), 0.0);
 
   RSubmissionPtrList *submissions = data.submissions();
-  QCOMPARE(raport[5], 1145);
-  QCOMPARE(raport[5], submissions->size());
+  QCOMPARE(1145, submissions->size());
 
   RSubmission *submission = submissions->at(0).get();
   QCOMPARE(submission->measureName(), R_S("P1-1"));

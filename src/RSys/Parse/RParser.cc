@@ -17,7 +17,7 @@ bool RParser::open(const QString &filename)
   }
 }
 
-bool RParser::readMeasures(RData *data, RITable *table, int tableIndex)
+bool RParser::readMeasures(RData *data, RITable *table, QStringList &message)
 {
   int rowIndex;
   int codeColumn;
@@ -74,12 +74,14 @@ bool RParser::readMeasures(RData *data, RITable *table, int tableIndex)
       }
     }
   }
+  message << R_S("<li>Iš lakšto „%1“ buvo sėkmingai pridėta informacija "
+                 "apie %2 naujas paramos priemones.</li>")
+             .arg(table->title()).arg(added);
   conn.disconnect();
-  m_readRaport[tableIndex] = added;
   return !errors;
 }
 
-bool RParser::readDivisions(RData *data, RITable *table, int tableIndex)
+bool RParser::readDivisions(RData *data, RITable *table, QStringList &message)
 {
   int rowIndex;
   int codeColumn;
@@ -135,12 +137,14 @@ bool RParser::readDivisions(RData *data, RITable *table, int tableIndex)
       }
     }
   }
+  message << R_S("<li>Iš lakšto „%1“ buvo sėkmingai pridėta informacija "
+                 "apie %2 naujus padalinius.</li>")
+             .arg(table->title()).arg(added);
   conn.disconnect();
-  m_readRaport[tableIndex] = added;
   return !errors;
 }
 
-bool RParser::readSystems(RData *data, RITable *table, int tableIndex)
+bool RParser::readSystems(RData *data, RITable *table, QStringList &message)
 {
   int rowIndex;
   int codeColumn;
@@ -196,15 +200,18 @@ bool RParser::readSystems(RData *data, RITable *table, int tableIndex)
       }
     }
   }
+  message << R_S("<li>Iš lakšto „%1“ buvo sėkmingai pridėta informacija "
+                 "apie %2 naujas sistemas.</li>")
+             .arg(table->title()).arg(added);
   conn.disconnect();
-  m_readRaport[tableIndex] = added;
   return !errors;
 }
 
-bool RParser::readDivisionsSystems(RData *data, RITable *table, int tableIndex)
+bool RParser::readDivisionsSystems(RData *data, RITable *table, QStringList &message)
 {
   bool errors = false;
-  int updatedRelations = 0;
+  int existRelations = 0;
+  int nonExistRelations = 0;
   RConnection conn = (*data)[RData::errorMessage] << [&](const QString& text)
   {
     this->log(
@@ -250,8 +257,13 @@ bool RParser::readDivisionsSystems(RData *data, RITable *table, int tableIndex)
               {
                 if (table->cell(colIndex, rowIndex).toBool())
                 {
-                  updatedRelations++;
                   division->setSystem(system, 1.0);
+                  existRelations++;
+                }
+                else
+                {
+                  division->setSystem(system, 0.0);
+                  nonExistRelations++;
                 }
               }
               else if (colIndex == start.x() + 1)
@@ -281,12 +293,15 @@ bool RParser::readDivisionsSystems(RData *data, RITable *table, int tableIndex)
       }
     }
   }
+  message << R_S("<li>Iš lakšto „%1“ buvo atnaujinta informacija apie "
+                 "padalinių naudojamas informacines sistemas. "
+                 "(Buvo sukurti %2 naudojimo ir %3 nenaudojimo ryšiai.)</li>")
+             .arg(table->title()).arg(existRelations).arg(nonExistRelations);
   conn.disconnect();
-  m_readRaport[tableIndex] = updatedRelations;
   return !errors;
 }
 
-bool RParser::readDivisionsMeasures(RData *data, RITable *table, int tableIndex)
+bool RParser::readDivisionsMeasures(RData *data, RITable *table, QStringList &message)
 {
   int rowIndex;
   int colIndex;
@@ -390,12 +405,15 @@ bool RParser::readDivisionsMeasures(RData *data, RITable *table, int tableIndex)
       }
     }
   }
+  message << R_S("<li>Iš lakšto „%1“ buvo atnaujinta informacija apie "
+                 "paramos administravimo sąnaudas. (Buvo atnaujinti "
+                 "%2 ryšiai.)</li>")
+             .arg(table->title()).arg(updatedRelations);
   conn.disconnect();
-  m_readRaport[tableIndex] = updatedRelations;
   return !errors;
 }
 
-bool RParser::readSubmissions(RData *data, RITable *table, int tableIndex)
+bool RParser::readSubmissions(RData *data, RITable *table, QStringList &message)
 {
   int rowIndex;
   int measureColumn;
@@ -472,21 +490,23 @@ bool RParser::readSubmissions(RData *data, RITable *table, int tableIndex)
       }
     }
   }
+  message << R_S("<li>Iš lakšto „%1“ buvo sėkmingai pridėta %2 įrašai "
+                 "apie paramos priemonių administravimą.</li>")
+             .arg(table->title()).arg(added);
   conn.disconnect();
-  m_readRaport[tableIndex] = added;
   return !errors;
 }
 
-bool RParser::readTable(RData *data, RDataType type, RITable *table, int tableIndex)
+bool RParser::readTable(RData *data, RDataType type, RITable *table, QStringList &message)
 {
   switch (type)
   {
-  case RMEASURE: return readMeasures(data, table, tableIndex);
-  case RDIVISION: return readDivisions(data, table, tableIndex);
-  case RSYSTEM: return readSystems(data, table, tableIndex);
-  case RDIVISIONSYSTEMS: return readDivisionsSystems(data, table, tableIndex);
-  case RDIVISIONMEASURES: return readDivisionsMeasures(data, table, tableIndex);
-  case RSUBMISSION: return readSubmissions(data, table, tableIndex);
+  case RMEASURE: return readMeasures(data, table, message);
+  case RDIVISION: return readDivisions(data, table, message);
+  case RSYSTEM: return readSystems(data, table, message);
+  case RDIVISIONSYSTEMS: return readDivisionsSystems(data, table, message);
+  case RDIVISIONMEASURES: return readDivisionsMeasures(data, table, message);
+  case RSUBMISSION: return readSubmissions(data, table, message);
   case RUNKNOWN: return false;
   }
   return false;
@@ -495,6 +515,8 @@ bool RParser::readTable(RData *data, RDataType type, RITable *table, int tableIn
 bool RParser::read(RData *data, QList<std::tuple<QString, int, int> > guesses)
 {
   bool allOk = true;
+  QStringList message;
+  message << R_S("<ol>");
   for (auto it : guesses)
   {
     int type = std::get<1>(it);
@@ -505,10 +527,15 @@ bool RParser::read(RData *data, QList<std::tuple<QString, int, int> > guesses)
     }
     else
     {
-      allOk &= readTable(data, (RDataType) type, m_document->tableAt(index), index);
+      allOk &= readTable(
+            data, (RDataType) type, m_document->tableAt(index), message);
     }
   }
-  log(RINFO, 23, R_S("Buvo importuota:<ol><li>TODO</li><li>TODO</li></ol>"));
+  message << R_S("</ol>");
+  if (!allOk)
+    message.insert(0, R_S("Importuojant buvo klaidų. "
+                          "Jas galite peržiūrėti žurnale."));
+  report(message.join(R_S("\n")));
   return allOk;
 }
 
@@ -733,11 +760,6 @@ auto RParser::guessesList() -> GuessList
     list << std::make_tuple(m_document->nameAt(it.key()), (int) it.value(), it.key());
   }
   return list;
-}
-
-auto RParser::readRaport() -> ReadRaport
-{
-  return m_readRaport;
 }
 
 RIDocument* RParser::document()

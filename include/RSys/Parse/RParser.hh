@@ -14,34 +14,6 @@
 #include <RSys/Import/RXLSDocument.hh>
 
 
-/*
- * RParser is responsible for extracting RData from RIDocument.
-
- Workflow:
-
-  // Call to constructor.
-  1.  Create parser object.
-  // Call to open.
-  1.  Read in Document.
-  2.  For each table in document:
-
-    1.  guessTableType:
-
-      1.  try to guess by table name if success return;
-      2.  find captions row if sucess return;
-      3.  return error;
-
-  // Call to guesses.
-  3.  Return tables std::tuple<
-        QString tableName,
-        int tableType, // 0x100 -- marker that disabled
-        int tableIndex>
-
-  // Call to read.
-  4.  Read data into given RData.
-
- */
-
 struct RTableTypeGuessInfo
 {
   QStringList tableName;
@@ -63,14 +35,12 @@ class RParser: public QObject
     _T  QMap<int, RDataType>                    GuessMap;
     _T  QList<std::tuple<QString, int, int> >   GuessList;
     _T  QMap<RDataType, RTableTypeGuessInfo>    GuessInfoMap;
-    _T  QMap<int, int>                          ReadRaport;
 
   private:
 
     _M  RIDocument *          m_document;
     _M  GuessMap              m_guesses;
     _M  GuessInfoMap          m_guessInfo;
-    _M  ReadRaport            m_readRaport;
 
     // Finds upper left corner of caption row in table. If fails, returns
     // (-1, -1).
@@ -85,7 +55,6 @@ class RParser: public QObject
 
   public:
 
-    // TODO: Atskirti failo atidarymą ir Parser kūrimą, kad open galėtų gražinti false.
     _M  Vacuum                RParser();
     _M  Vacuum                RParser(QMap<RDataType, RTableTypeGuessInfo> guessInfo);
     _M  Vacuum                ~RParser();
@@ -93,23 +62,23 @@ class RParser: public QObject
     _M  bool                  open(const QString &filename);
     _M  bool                  read(RData *data,
                                    QList<std::tuple<QString, int, int> > guesses);
-    _M  bool                  readTable(RData *data, RDataType type, RITable *table, int tableIndex);
-    _M  bool                  readMeasures(RData *data, RITable *table, int tableIndex);
-    _M  bool                  readDivisions(RData *data, RITable *table, int tableIndex);
-    _M  bool                  readSystems(RData *data, RITable *table, int tableIndex);
-    _M  bool                  readDivisionsSystems(RData *data, RITable *table, int tableIndex);
-    _M  bool                  readDivisionsMeasures(RData *data, RITable *table, int tableIndex);
-    _M  bool                  readSubmissions(RData *data, RITable *table, int tableIndex);
+    _M  bool                  readTable(RData *data, RDataType type, RITable *table, QStringList &message);
+    _M  bool                  readMeasures(RData *data, RITable *table, QStringList &message);
+    _M  bool                  readDivisions(RData *data, RITable *table, QStringList &message);
+    _M  bool                  readSystems(RData *data, RITable *table, QStringList &message);
+    _M  bool                  readDivisionsSystems(RData *data, RITable *table, QStringList &message);
+    _M  bool                  readDivisionsMeasures(RData *data, RITable *table, QStringList &message);
+    _M  bool                  readSubmissions(RData *data, RITable *table, QStringList &message);
 
     _M  GuessMap*             guesses();
     _M  GuessList             guessesList();
-    _M  ReadRaport            readRaport();
     _M  RIDocument*           document();
     _M  GuessInfoMap*         guessInfo();
     _M  QString               nameAt(int index);
 
   signals:
     _M  void          log(RMessageLevel level, RID id, QString message);
+    _M  void          report(QString message);
     _M  void          parsed(double part);
 
 };
