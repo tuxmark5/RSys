@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# sudo apt-get install postgresql-9.1
+# sudo su postgres
+# psql < init-postgres-admin.sql
+# exit
+ 
+psql -d db -U admin -h 127.0.0.1 -f static/init-postgres.sql
