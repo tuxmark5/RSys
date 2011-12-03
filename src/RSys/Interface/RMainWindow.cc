@@ -69,10 +69,10 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   createConnections();
 
   m_logDock           = new RLogDock(this);
+  m_paletteDock       = new RPaletteDock(this);
   m_menuBar           = new RMainMenuBar(this);
   m_toolBar           = new RMainToolBar(this);
   m_intervalToolBar   = new RIntervalToolBar(this);
-  m_paletteDock       = new RPaletteDock(this);
 
   setMenuBar(m_menuBar);
   addToolBar(m_toolBar);
