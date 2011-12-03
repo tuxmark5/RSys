@@ -1,3 +1,4 @@
+#include <RSys/Interface/RLogDock.hh>
 #include <RSys/Interface/RMainMenuBar.hh>
 #include <RSys/Interface/RMainWindow.hh>
 
@@ -25,6 +26,8 @@ Vacuum RMainMenuBar :: RMainMenuBar(RMainWindow* parent):
 
   m_viewMenu->addAction(parent->m_divisionsStateAction);
   m_viewMenu->addAction(parent->m_systemsStateAction);
+  m_viewMenu->addSeparator();
+  m_viewMenu->addAction(parent->logDock()->toggleViewAction());
 
   helpMenu->addAction(parent->m_helpAction);
 

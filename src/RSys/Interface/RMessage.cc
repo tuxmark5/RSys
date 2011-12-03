@@ -28,9 +28,11 @@ QColor RMessage :: backgroundColorFor(RMessageLevel level)
 {
   switch (level)
   {
+    case RDEBUG:    return Qt::gray;
     case RINFO:     return Qt::white;
     case RWARNING:  return Qt::yellow;
     case RERROR:    return Qt::red;
+    default:        break;
   }
   return QColor();
 }

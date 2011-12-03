@@ -37,6 +37,7 @@ class RUser;
 // Interface
 class RAbstractItemModel;
 class RIntervalToolBar;
+class RLogDock;
 class RMainToolBar;
 class RMainMenuBar;
 class RMainWindow;
@@ -90,6 +91,8 @@ class QSettings;
 class QSpinBox;
 class QSplitter;
 class QStackedLayout;
+class QStandardItem;
+class QStandardItemModel;
 class QTabWidget;
 class QTableView;
 class QVBoxLayout;

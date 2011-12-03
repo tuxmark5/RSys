@@ -37,6 +37,7 @@ class RMainWindow: public QMainWindow
     _M RIntervalToolBar*    m_intervalToolBar;
     _M RPaletteDock*        m_paletteDock;
     _M RSearchForm*         m_searchForm;
+    _M RLogDock*            m_logDock;
 
     _M QSplitter*           m_splitter;
     _M QWidget*             m_widgetL;
@@ -80,6 +81,7 @@ class RMainWindow: public QMainWindow
     _M RUnitPtrList*        currentUnits() const;
     _M RData*               data() const { return m_data1; }
     _M RContainer*          divisionContainer() const { return m_divisionContainer; }
+    _M RLogDock*            logDock() const { return m_logDock; }
     _M RContainer*          measureContainer() const { return m_measureContainer; }
     _M RContainer*          measure1Container() const { return m_measure1Container; }
     _M RMainMenuBar*        menuBar() const { return m_menuBar; }

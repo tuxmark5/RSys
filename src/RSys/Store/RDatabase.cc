@@ -159,6 +159,9 @@ void RDatabase :: emitPSQLError(const QSqlError& error)
       else if (text.contains("authentication failed"))
         msg = R_S("Neteisingas vartotojo vardas arba slaptažodis");
       break;
+
+    default:
+      break;
   }
 
   if (msg.isNull())
@@ -171,6 +174,8 @@ void RDatabase :: emitPSQLError(const QSqlError& error)
 
 void RDatabase :: emitSQLiteError(const QSqlError& error)
 {
+  Q_UNUSED(error);
+
   emit message(R_S("Nepavyko atidaryti DB."));
 }
 

@@ -19,6 +19,7 @@
 
 #include <RSys/Interface/RImportForm.hh>
 #include <RSys/Interface/RIntervalToolBar.hh>
+#include <RSys/Interface/RLogDock.hh>
 #include <RSys/Interface/RLoginWidget.hh>
 #include <RSys/Interface/RMainMenuBar.hh>
 #include <RSys/Interface/RMainToolBar.hh>
@@ -66,6 +67,7 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   createActions();
   createConnections();
 
+  m_logDock           = new RLogDock(this);
   m_menuBar           = new RMainMenuBar(this);
   m_toolBar           = new RMainToolBar(this);
   m_intervalToolBar   = new RIntervalToolBar(this);
@@ -76,6 +78,7 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   addToolBarBreak();
   addToolBar(m_intervalToolBar);
   addDockWidget(Qt::RightDockWidgetArea, m_paletteDock);
+  addDockWidget(Qt::BottomDockWidgetArea, m_logDock);
 
   connect(m_intervalToolBar, SIGNAL(intervalChanged()), this, SLOT(setInterval()));
   connect(m_intervalToolBar, SIGNAL(message(QString,int)), this, SLOT(showMessage(QString,int)));
@@ -421,6 +424,9 @@ void RMainWindow :: importData()
   RParser*      parser      = new RParser();
   RImportForm*  importForm;
 
+  connect(parser, SIGNAL(report(QString)), this, SLOT(showMessage(QString)));
+  connect(parser, SIGNAL(log(RMessageLevel,RID,QString)), m_logDock, SLOT(addMessage(RMessageLevel,RID,QString)));
+
   if (parser->open(fileName))
   {
     importForm = new RImportForm(parser, m_data1);
@@ -436,17 +442,14 @@ void RMainWindow :: importData()
       m_results->setUpdatesEnabled(true);
       m_data1->calculateIntervals();
       m_intervalToolBar->applyInterval();
-      showMessage(R_S("Duomenys sėkmingai (o gal ir ne) importuoti\n"
-                      "Vytautai, man čia reikia, kad tavo kodas išspjautų tik vieną žinutę\n"
-                      "Tam padaryk kokį naują signalą, o visas perteklines žinutes į logą galim\n"
-                      "kraut"), 15000);
     };
 
     addStatusWidget(new RStatusWidget(importForm));
   }
   else
   {
-    showMessage(R_S("PHAIL"), 15000);
+    showMessage(R_S("Importo startuoti nepavyko"), 8000);
+    delete parser;
   }
 }
 
@@ -542,6 +545,7 @@ void RMainWindow :: setInterfaceEnabled(bool enabled)
   m_intervalToolBar->setEnabled(enabled);
   m_paletteDock->setEnabled(enabled);
   m_paletteDock->setVisible(enabled);
+  m_logDock->setVisible(enabled);
 }
 
 /**********************************************************************************************/
