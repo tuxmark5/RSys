@@ -74,8 +74,12 @@ bool RParser::readMeasures(RData *data, RITable *table, QStringList &message)
       }
     }
   }
-  message << R_S("<li>Iš lakšto „%1“ buvo sėkmingai pridėta informacija "
-                 "apie %2 naujas paramos priemones.</li>")
+  this->log(
+          RINFO, 21,
+          R_S("Iš lakšto „%1“ buvo sėkmingai pridėta informacija "
+              "apie %2 naujas paramos priemones.")
+          .arg(table->title()).arg(added));
+  message << R_S("<li>„%1“ → +%2 paramos priemonės.</li>")
              .arg(table->title()).arg(added);
   conn.disconnect();
   return !errors;
@@ -137,8 +141,12 @@ bool RParser::readDivisions(RData *data, RITable *table, QStringList &message)
       }
     }
   }
-  message << R_S("<li>Iš lakšto „%1“ buvo sėkmingai pridėta informacija "
-                 "apie %2 naujus padalinius.</li>")
+  this->log(
+          RINFO, 21,
+          R_S("Iš lakšto „%1“ buvo sėkmingai pridėta informacija "
+              "apie %2 naujus padalinius.")
+          .arg(table->title()).arg(added));
+  message << R_S("<li>„%1“ → +%2 padaliniai.</li>")
              .arg(table->title()).arg(added);
   conn.disconnect();
   return !errors;
@@ -200,8 +208,12 @@ bool RParser::readSystems(RData *data, RITable *table, QStringList &message)
       }
     }
   }
-  message << R_S("<li>Iš lakšto „%1“ buvo sėkmingai pridėta informacija "
-                 "apie %2 naujas sistemas.</li>")
+  this->log(
+          RINFO, 21,
+          R_S("Iš lakšto „%1“ buvo sėkmingai pridėta informacija "
+              "apie %2 naujas sistemas.")
+          .arg(table->title()).arg(added));
+  message << R_S("<li>„%1“ → +%2 sistemos.</li>")
              .arg(table->title()).arg(added);
   conn.disconnect();
   return !errors;
@@ -293,9 +305,13 @@ bool RParser::readDivisionsSystems(RData *data, RITable *table, QStringList &mes
       }
     }
   }
-  message << R_S("<li>Iš lakšto „%1“ buvo atnaujinta informacija apie "
-                 "padalinių naudojamas informacines sistemas. "
-                 "(Buvo sukurti %2 naudojimo ir %3 nenaudojimo ryšiai.)</li>")
+  this->log(
+          RINFO, 21,
+          R_S("Iš lakšto „%1“ buvo atnaujinta informacija apie "
+              "padalinių naudojamas informacines sistemas. "
+              "(Buvo sukurti %2 naudojimo ir %3 nenaudojimo ryšiai.)")
+          .arg(table->title()).arg(existRelations).arg(nonExistRelations));
+  message << R_S("<li>„%1“ → %2 naudojimo ir %3 nenaudojimo ryšiai.</li>")
              .arg(table->title()).arg(existRelations).arg(nonExistRelations);
   conn.disconnect();
   return !errors;
@@ -405,9 +421,13 @@ bool RParser::readDivisionsMeasures(RData *data, RITable *table, QStringList &me
       }
     }
   }
-  message << R_S("<li>Iš lakšto „%1“ buvo atnaujinta informacija apie "
-                 "paramos administravimo sąnaudas. (Buvo atnaujinti "
-                 "%2 ryšiai.)</li>")
+  this->log(
+          RINFO, 21,
+          R_S("Iš lakšto „%1“ buvo atnaujinta informacija apie "
+              "paramos administravimo sąnaudas. (Buvo atnaujinti "
+              "%2 ryšiai.)")
+             .arg(table->title()).arg(updatedRelations));
+  message << R_S("<li>„%1“ → atnaujinti %2 ryšiai.</li>")
              .arg(table->title()).arg(updatedRelations);
   conn.disconnect();
   return !errors;
@@ -490,8 +510,12 @@ bool RParser::readSubmissions(RData *data, RITable *table, QStringList &message)
       }
     }
   }
-  message << R_S("<li>Iš lakšto „%1“ buvo sėkmingai pridėta %2 įrašai "
-                 "apie paramos priemonių administravimą.</li>")
+  this->log(
+          RINFO, 21,
+          R_S("Iš lakšto „%1“ buvo sėkmingai pridėta %2 įrašai "
+              "apie paramos priemonių administravimą.")
+          .arg(table->title()).arg(added));
+  message << R_S("<li>„%1“ → +%2 įrašai apie priemonių administravimą.</li>")
              .arg(table->title()).arg(added);
   conn.disconnect();
   return !errors;
@@ -516,7 +540,8 @@ bool RParser::read(RData *data, QList<std::tuple<QString, int, int> > guesses)
 {
   bool allOk = true;
   QStringList message;
-  message << R_S("<ol>");
+  message << R_S("<html>");
+  message << R_S("<ul>");
   for (auto it : guesses)
   {
     int type = std::get<1>(it);
@@ -531,10 +556,11 @@ bool RParser::read(RData *data, QList<std::tuple<QString, int, int> > guesses)
             data, (RDataType) type, m_document->tableAt(index), message);
     }
   }
-  message << R_S("</ol>");
+  message << R_S("</ul>");
+  message << R_S("</html>");
   if (!allOk)
-    message.insert(0, R_S("Importuojant buvo klaidų. "
-                          "Jas galite peržiūrėti žurnale."));
+    message.insert(1, R_S("<p>Importuojant buvo klaidų. "
+                          "Jas galite peržiūrėti žurnale.</p>"));
   report(message.join(R_S("\n")));
   return allOk;
 }
