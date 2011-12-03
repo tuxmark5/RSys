@@ -45,20 +45,19 @@ void TestRParser::checkReadData(RParser *parser, RParser::GuessList list)
   QCOMPARE(divisions->at(8)->system(systems->at(7)), 0.0);
   QCOMPARE(divisions->at(8)->system(systems->at(8)), 1.0);
 
-  RParser::DivisionMeasures *divisionsMeasures = parser->divisionsMeasures();
-  QCOMPARE(raport[4], 87);
-  QCOMPARE(divisionsMeasures->size(), 12);
-  QCOMPARE(divisionsMeasures->operator [](R_S("PA1")).size(), 8);
-  QCOMPARE(divisionsMeasures->operator [](R_S("PA3")).size(), 7);
-  QCOMPARE(divisionsMeasures->operator [](R_S("PA9")).size(), 5);
-//for (auto it = divisionsMeasures->begin(); it != divisionsMeasures->end(); it++)
-//{
-//  qDebug() << it.key();
-//  for (auto i : it.value())
-//  {
-//    qDebug() << std::get<0>(i) << std::get<1>(i);
-//  }
-//}
+  QCOMPARE(raport[4], 324);
+  QCOMPARE(divisions->size(), 12);
+  QCOMPARE(measures->at(1)->identifier(), R_S("P1-2"));
+  QCOMPARE(divisions->at(1)->measure(measures->at(1)), 0.5);
+  QCOMPARE(divisions->at(1)->measure(measures->at(4)), 0.0);
+  QCOMPARE(divisions->at(1)->measure(measures->at(8)), 0.0);
+  QCOMPARE(divisions->at(1)->measure(measures->at(18)), 1.0);
+  QCOMPARE(divisions->at(1)->measure(measures->at(26)), 1.0);
+  QCOMPARE(divisions->at(8)->identifier(), R_S("PA9"));
+  QCOMPARE(measures->at(9)->identifier(), R_S("P1-10"));
+  QCOMPARE(divisions->at(8)->measure(measures->at(9)), 0.0);
+  QCOMPARE(divisions->at(8)->measure(measures->at(10)), 0.5);
+  QCOMPARE(divisions->at(8)->measure(measures->at(11)), 0.0);
 
   RSubmissionPtrList *submissions = data.submissions();
   QCOMPARE(raport[5], 1242);
@@ -253,12 +252,20 @@ void TestRParser::testWithMissingData()
   QCOMPARE(divisions->at(8)->system(systems->at(6)), 0.0);
   QCOMPARE(divisions->at(8)->system(systems->at(7)), 0.0);
 
-  RParser::DivisionMeasures *divisionsMeasures = parser.divisionsMeasures();
-  QCOMPARE(raport[4], 87);
-  QCOMPARE(divisionsMeasures->size(), 12);
-  QCOMPARE(divisionsMeasures->operator [](R_S("PA1")).size(), 8);
-  QCOMPARE(divisionsMeasures->operator [](R_S("PA3")).size(), 7);
-  QCOMPARE(divisionsMeasures->operator [](R_S("PA9")).size(), 5);
+  QCOMPARE(raport[4], 250);
+  QCOMPARE(divisions->size(), 10);
+  QCOMPARE(measures->at(1)->identifier(), R_S("P1-2"));
+  QCOMPARE(divisions->at(1)->measure(measures->at(1)), 0.5);
+  QCOMPARE(divisions->at(1)->measure(measures->at(4)), 0.0);
+  QCOMPARE(divisions->at(1)->measure(measures->at(8)), 0.0);
+  QCOMPARE(measures->at(18)->identifier(), R_S("P3-2"));
+  QCOMPARE(divisions->at(1)->measure(measures->at(18)), 0.0);
+  QCOMPARE(divisions->at(1)->measure(measures->at(24)), 1.0);
+  QCOMPARE(divisions->at(6)->identifier(), R_S("PA9"));
+  QCOMPARE(measures->at(7)->identifier(), R_S("P1-10"));
+  QCOMPARE(divisions->at(6)->measure(measures->at(7)), 0.0);
+  QCOMPARE(divisions->at(6)->measure(measures->at(8)), 0.5);
+  QCOMPARE(divisions->at(6)->measure(measures->at(9)), 0.0);
 
   RSubmissionPtrList *submissions = data.submissions();
   QCOMPARE(raport[5], 1145);
@@ -274,7 +281,6 @@ void TestRParser::testWithMissingData()
   QCOMPARE(submission->isValid(), true);
 
   submission = submissions->at(1144).get();
-  //submission = submissions->at(1241).get();
   QCOMPARE(submission->measureName(), R_S("P4-3"));
   QCOMPARE(submission->date0().toString("yyyy-MM-dd"),
            R_S("2011-10-01"));

@@ -26,7 +26,7 @@ class RDivision: public RUnit
     _V Vacuum         ~RDivision();
     _M double         measure(RMeasure* measure) const { return m_measureMap.value(measure, 0); }
     _M double         measure1(RMeasure* measure) const { return m_measureMap1.value(measure, 0); }
-    _M void           setMeasure(RMeasure* measure, double value);
+    _M bool           setMeasure(RMeasure* measure, double value);
     _M void           setMeasure1(RMeasure* measure, double value);
     _M void           setSystem(RSystem* system, double value);
     _M double         system(RSystem* system) const { return m_systemMap.value(system, 0); }

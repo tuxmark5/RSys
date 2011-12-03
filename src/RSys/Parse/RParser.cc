@@ -286,10 +286,22 @@ bool RParser::readDivisionsSystems(RData *data, RITable *table, int tableIndex)
   return !errors;
 }
 
-bool RParser::readDivisionsMeasures(RITable *table, int tableIndex)
+bool RParser::readDivisionsMeasures(RData *data, RITable *table, int tableIndex)
 {
+  int rowIndex;
+  int colIndex;
   bool errors = false;
   int updatedRelations = 0;
+  RConnection conn = (*data)[RData::errorMessage] << [&](const QString& text)
+  {
+    this->log(
+      RWARNING, 24,
+      R_S(
+        "Duomuo, aprašytas lakšte „%1“, %2 eilutėje %3 stulpelyje, "
+        "nebuvo pridėtas. Priežastis: %4"
+        ).arg(table->title())
+        .arg(rowIndex + 1).arg(colIndex + 1).arg(text));
+  };
   QPoint start = findCaptionRow(table, m_guessInfo[RDIVISIONMEASURES]);
   if (start.x() == -1)
   {
@@ -301,7 +313,7 @@ bool RParser::readDivisionsMeasures(RITable *table, int tableIndex)
   }
   else
   {
-    for (int colIndex = start.x() + 1; colIndex < table->width(); colIndex++)
+    for (colIndex = start.x() + 1; colIndex < table->width(); colIndex++)
     {
       if (table->cell(colIndex, start.y()).isNull())
       {
@@ -309,33 +321,76 @@ bool RParser::readDivisionsMeasures(RITable *table, int tableIndex)
       }
       else
       {
-        QString divisionName = table->cell(colIndex, start.y()).toString();
-        MeasureList measures;
-        for (int rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
+        QString divisionID = table->cell(
+              colIndex, start.y()).toString().trimmed().toUpper();
+        RDivisionPtr division = data->division(divisionID);
+        if (division)
         {
-          if (table->cell(start.x(), rowIndex).isNull())
+          for (rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
           {
-            // Praleidžiame eilutę nepriskirtą jokiai paramos priemonei.
-          }
-          else
-          {
-            QString measureName = table->cell(start.x(), rowIndex).toString();
-            bool valid = false;
-            double load = table->cell(colIndex, rowIndex).toDouble(&valid);
-            if (valid)
+            if (table->cell(start.x(), rowIndex).isNull())
             {
-              updatedRelations++;
-              measures.append(std::make_tuple(measureName, load));
+              // Praleidžiame eilutę nepriskirtą jokiai paramos priemonei.
+            }
+            else
+            {
+              QString measureID = table->cell(
+                    start.x(), rowIndex).toString().trimmed().toUpper();
+              RMeasurePtr measure = data->measure(measureID);
+              if (measure)
+              {
+                bool loadOk;
+                double load = table->cell(colIndex, rowIndex).toDouble(&loadOk);
+                if (table->cell(colIndex, rowIndex).isNull())
+                {
+                  loadOk = true;
+                  load = 0.0;
+                }
+                if (loadOk)
+                {
+                  updatedRelations++;
+                  division->setMeasure(measure, load);
+                }
+                else
+                {
+                  this->log(
+                    RWARNING, 31,
+                    R_S(
+                          "Nepavyko konvertuoti langelio reikšmės „%1“ "
+                          "į slankaus kablelio skaičių."
+                          "(„%2“ lakšto %3 eilutės %4 stulpelis)."
+                          ).arg(table->cell(colIndex, rowIndex).toString())
+                          .arg(table->title()).arg(rowIndex + 1).arg(colIndex + 1));
+                }
+              }
+              else if (colIndex == start.x() + 1)
+              {
+                this->log(
+                  RWARNING, 31,
+                  R_S(
+                        "Nepavyko rasti priemonės, kurios "
+                        "identifikatorius yra „%1“ "
+                        "(„%2“ lakšto %3 eilutės %4 stulpelis)."
+                        ).arg(measureID).arg(table->title())
+                        .arg(rowIndex + 1).arg(start.x()));
+              }
             }
           }
         }
-        if (measures.size() > 0)
+        else
         {
-          m_divisionsMeasures[divisionName] = measures;
+          this->log(
+            RWARNING, 30,
+            R_S(
+                  "Nepavyko rasti padalinio, kurio identifikatorius yra „%1“ "
+                  "(„%2“ lakšto %3 eilutės %4 stulpelis)."
+                  ).arg(divisionID).arg(table->title())
+                  .arg(start.y() + 1).arg(colIndex + 1));
         }
       }
     }
   }
+  conn.disconnect();
   m_readRaport[tableIndex] = updatedRelations;
   return !errors;
 }
@@ -430,7 +485,7 @@ bool RParser::readTable(RData *data, RDataType type, RITable *table, int tableIn
   case RDIVISION: return readDivisions(data, table, tableIndex);
   case RSYSTEM: return readSystems(data, table, tableIndex);
   case RDIVISIONSYSTEMS: return readDivisionsSystems(data, table, tableIndex);
-  case RDIVISIONMEASURES: return readDivisionsMeasures(table, tableIndex);
+  case RDIVISIONMEASURES: return readDivisionsMeasures(data, table, tableIndex);
   case RSUBMISSION: return readSubmissions(data, table, tableIndex);
   case RUNKNOWN: return false;
   }
@@ -693,11 +748,6 @@ RIDocument* RParser::document()
 QString RParser::nameAt(int index)
 {
   return m_document->nameAt(index);
-}
-
-auto RParser::divisionsMeasures() -> DivisionMeasures*
-{
-  return &m_divisionsMeasures;
 }
 
 auto RParser::guessInfo() -> GuessInfoMap*

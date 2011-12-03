@@ -31,11 +31,12 @@ Vacuum RDivision :: ~RDivision()
 
 /**********************************************************************************************/
 
-void RDivision :: setMeasure(RMeasure* measure, double value)
+bool RDivision :: setMeasure(RMeasure* measure, double value)
 {
-  R_GUARD(measure, Vacuum);
+  R_DATA_GUARD(measure, false, "Nerasta priemonė.");
+  R_DATA_GUARD(value >= 0.0, false, "Apkrova negali būti neigiama.");
 
-  if (value <= 0.0)
+  if (value == 0.0)
   {
     (*m_data)[onMeasureUnset](this, measure);
     m_measureMap.remove(measure);
@@ -45,6 +46,7 @@ void RDivision :: setMeasure(RMeasure* measure, double value)
     (*m_data)[onMeasureSet](this, measure, value);
     m_measureMap.insert(measure, value);
   }
+  return true;
 }
 
 /**********************************************************************************************/
