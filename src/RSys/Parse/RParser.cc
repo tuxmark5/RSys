@@ -354,6 +354,10 @@ bool RParser::readDivisionsMeasures(RData *data, RITable *table, QStringList &me
       {
         QString divisionID = table->cell(
               colIndex, start.y()).toString().trimmed().toUpper();
+        if (compare(divisionID, R_S("iš viso laiko")))
+        {
+          continue;
+        }
         RDivisionPtr division = data->division(divisionID);
         if (division)
         {
@@ -638,7 +642,6 @@ RDataType RParser::guessTableTypeByName(RITable *table)
     {
       if (compare(table->title(), name))
       {
-        qDebug() << table->title() << name;
         return info.key();
       }
     }
