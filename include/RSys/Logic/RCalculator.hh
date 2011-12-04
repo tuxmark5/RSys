@@ -28,6 +28,7 @@ class RCalculator
     _M void             updateUsages(RSubmissionPtrList* submissions);
     _M void             updateUsageChanges(RUnitHash* units, RSubmission* submission);
     _M void             updateUsages(RUnitPtrList* units);
+    _M void             updateUsages(RUsageMap& usageMap, RUsageMap& usageChangeMap);
     _M void             calculateIntervals();
     _M void             calculateIntervals(RUnitPtrList* units);
     _M double           calculateUsage(RInterval interval, RUsageMap& usageMap);

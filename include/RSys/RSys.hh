@@ -107,6 +107,7 @@ typedef std::tuple<QDate, QDate>        RInterval;
 typedef QHash<RMeasure*, double>        RMeasureHash;
 typedef QHash<RSystem*, double>         RSystemHash;
 typedef QHash<RDivision*, double>       RDivisionHash;
+typedef QPair<double, double>           RUsage;
 /**********************************************************************************************/
 enum RDataType
 {

@@ -15,7 +15,7 @@ class RUnit: public RElement
     _F class RCalculator;
 
   public:
-    _T QVector<double>     UsageVector;
+    _T QVector<RUsage>     UsageVector;
     _T QMap<QDate, double> RUsageMap;
 
   public:
@@ -32,8 +32,10 @@ class RUnit: public RElement
     _M QString            m_name;
     _M UsageVector        m_usage; // MARTYNO FIELD
 
-    _M RUsageMap          m_usageChangeMap; // paraiškų per dieną skaičiaus pokytis
-    _M RUsageMap          m_usageMap;       // paraiškų per dieną pradedant nuo datos
+    _M RUsageMap          m_usageCntChangeMap; // paraiškų per dieną skaičiaus pokytis
+    _M RUsageMap          m_usageCntMap;       // paraiškų per dieną pradedant nuo datos
+    _M RUsageMap          m_usageHrsChangeMap; // paraiškų apdorojimo valandų per dieną skaičiaus pokytis
+    _M RUsageMap          m_usageHrsMap;       // paraiškų apdorojimo valandų per dieną pradedant nuo datos
 
   public:
     _M int                m_viewMode;
@@ -50,7 +52,7 @@ class RUnit: public RElement
     _M bool               setIdentifier(const QString& identifier);
     _M bool               setName(const QString& name);
     _M const UsageVector& usage() const { return m_usage; }
-    _M double             usageAt(int x) const { return x < m_usage.size() ? m_usage.at(x) : 0.0; }
+    _M double             usageAt(int x) const { return x < m_usage.size() ? m_usage.at(x).first : 0.0; }
 };
 
 /**********************************************************************************************/

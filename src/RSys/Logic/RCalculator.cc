@@ -34,8 +34,10 @@ void RCalculator :: update()
 {
   for (auto it = m_data->systems()->begin(); it != m_data->systems()->end(); it++)
   {
-    (*it)->m_usageMap.clear();
-    (*it)->m_usageChangeMap.clear();
+    (*it)->m_usageHrsMap.clear();
+    (*it)->m_usageHrsChangeMap.clear();
+    (*it)->m_usageCntMap.clear();
+    (*it)->m_usageCntChangeMap.clear();
   }
   for (auto it = m_data->measures()->begin(); it != m_data->measures()->end(); it++)
   {
@@ -44,8 +46,10 @@ void RCalculator :: update()
   }
   for (auto it = m_data->divisions()->begin(); it != m_data->divisions()->end(); it++)
   {
-    (*it)->m_usageMap.clear();
-    (*it)->m_usageChangeMap.clear();
+    (*it)->m_usageHrsMap.clear();
+    (*it)->m_usageHrsChangeMap.clear();
+    (*it)->m_usageCntMap.clear();
+    (*it)->m_usageCntChangeMap.clear();
     updateMeasures(it->get(), (*it)->m_measureHash);
     updateMeasures(it->get(), (*it)->m_measureHash1);
   }
@@ -91,10 +95,13 @@ void RCalculator :: updateUsageChanges(RUnitHash* units, RSubmission* submission
 {
   for (auto it = units->begin(); it != units->end(); it++)
   {
-    double usage = submission->count() * it.value()
+    double usage = submission->count()
                    / (submission->date0().daysTo(submission->date1()) + 1);
-    it.key()->m_usageChangeMap[submission->date0()] += usage;
-    it.key()->m_usageChangeMap[submission->date1().addDays(1)] -= usage;
+    it.key()->m_usageCntChangeMap[submission->date0()] += usage;
+    it.key()->m_usageCntChangeMap[submission->date1().addDays(1)] -= usage;
+    usage *= it.value();
+    it.key()->m_usageHrsChangeMap[submission->date0()] += usage;
+    it.key()->m_usageHrsChangeMap[submission->date1().addDays(1)] -= usage;
   }
 }
 
@@ -104,13 +111,20 @@ void RCalculator :: updateUsages(RUnitPtrList* units)
 {
   for (auto unitIt = units->begin(); unitIt != units->end(); unitIt++)
   {
-    double usage = 0;
-    for (auto usageIt = (*unitIt)->m_usageChangeMap.begin();
-              usageIt != (*unitIt)->m_usageChangeMap.end(); usageIt++)
-    {
-      usage += usageIt.value();
-      (*unitIt)->m_usageMap.insert(usageIt.key(), usage);
-    }
+    updateUsages((*unitIt)->m_usageHrsMap, (*unitIt)->m_usageHrsChangeMap);
+    updateUsages((*unitIt)->m_usageCntMap, (*unitIt)->m_usageCntChangeMap);
+  }
+}
+
+/**********************************************************************************************/
+
+void RCalculator :: updateUsages(RUsageMap& usageMap, RUsageMap& usageChangeMap)
+{
+  double usage = 0;
+  for (auto it = usageChangeMap.begin(); it != usageChangeMap.end(); it++)
+  {
+    usage += it.value();
+    usageMap.insert(it.key(), usage);
   }
 }
 
@@ -148,9 +162,9 @@ void RCalculator :: calculateIntervals(RUnitPtrList* units)
     (*unitIt)->m_usage.resize(m_numIntervals);
     for (int i = 0; i < m_numIntervals; i++)
     {
-      (*unitIt)->m_usage[i] = calculateUsage(intervals[i], (*unitIt)->m_usageMap);
-      if ((*unitIt)->m_usage[i] < MIN_USAGE)
-        (*unitIt)->m_usage[i] = 0;
+      double usageHrs = calculateUsage(intervals[i], (*unitIt)->m_usageHrsMap);
+      double usageCnt = calculateUsage(intervals[i], (*unitIt)->m_usageCntMap);
+      (*unitIt)->m_usage[i] = qMakePair(usageHrs, usageCnt);
     }
   }
 }
@@ -190,6 +204,7 @@ double RCalculator :: calculateUsage(RInterval interval, RUsageMap& usageMap)
   } else {
     return 0;
   }
+  if (usage < MIN_USAGE) return 0; // galbūt netinkama vieta
   return usage;
 }
 
