@@ -18,8 +18,8 @@ Vacuum RDivision :: RDivision(RData* data):
 Vacuum RDivision :: RDivision(RDivision& division, RData* data):
   RUnit(division, data)
 {
-  r_cloneMap(m_measureMap, division.m_measureMap);
-  r_cloneMap(m_systemMap, division.m_systemMap);
+  r_cloneMap(m_measureHash, division.m_measureHash);
+  r_cloneMap(m_systemHash, division.m_systemHash);
 }
 
 /**********************************************************************************************/
@@ -39,12 +39,12 @@ bool RDivision :: setMeasure(RMeasure* measure, double value)
   if (value == 0.0)
   {
     (*m_data)[onMeasureUnset](this, measure);
-    m_measureMap.remove(measure);
+    m_measureHash.remove(measure);
   }
   else
   {
     (*m_data)[onMeasureSet](this, measure, value);
-    m_measureMap.insert(measure, value);
+    m_measureHash.insert(measure, value);
   }
   return true;
 }
@@ -58,12 +58,12 @@ void RDivision :: setMeasure1(RMeasure* measure, double value)
   if (value <= 0.0)
   {
     (*m_data)[onMeasureUnset](this, measure);
-    m_measureMap1.remove(measure);
+    m_measureHash1.remove(measure);
   }
   else
   {
     (*m_data)[onMeasureSet](this, measure, value);
-    m_measureMap1.insert(measure, value);
+    m_measureHash1.insert(measure, value);
   }
 }
 
@@ -76,12 +76,12 @@ void RDivision :: setSystem(RSystem* system, double value)
   if (!value)
   {
     (*m_data)[onSystemUnset](this, system);
-    m_systemMap.remove(system);
+    m_systemHash.remove(system);
   }
   else
   {
     (*m_data)[onSystemSet](this, system, value);
-    m_systemMap.insert(system, value);
+    m_systemHash.insert(system, value);
   }
 }
 

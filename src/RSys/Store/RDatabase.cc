@@ -202,7 +202,7 @@ bool RDatabase :: login(const QString& dbFile)
 
   if (!m_database.isValid())
   {
-    emit message(R_S("Nerastas <b>SQLite</b> QT draiveris <b>QSQLITE</b>"));
+    emit message(R_S("Nerasta <b>SQLite</b> QT tvarkyklė <b>QSQLITE</b>"));
     return false;
   }
 
@@ -225,7 +225,7 @@ bool RDatabase :: login(const QString& addr, const QString& db, const QString& u
 
   if (!m_database.isValid())
   {
-    emit message(R_S("Nerastas <b>PostgreSQL</b> QT draiveris <b>QPSQL</b>"));
+    emit message(R_S("Nerasta <b>PostgreSQL</b> QT tvarkyklė <b>QPSQL</b>"));
     return false;
   }
 
