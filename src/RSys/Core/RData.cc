@@ -41,6 +41,8 @@ void RData :: calculateIntervals(RSubmissionPtrList* submissions)
     if (((*it)->date0() < m_interval0) || m_interval0.isNull()) m_interval0 = (*it)->date0();
     if (((*it)->date1() > m_interval1) || m_interval1.isNull()) m_interval1 = (*it)->date1();
   }
+
+  emit globalIntervalChanged();
 }
 
 /**********************************************************************************************/
@@ -84,8 +86,8 @@ RDivision* RData :: division(const QString& identifier) const
 
 void RData :: enableIntervalTracking()
 {
-  (*this)[RSubmission::date0Change] << std::bind(&RData::onDate0Change, this, _1, _2);
-  (*this)[RSubmission::date1Change] << std::bind(&RData::onDate1Change, this, _1, _2);
+  (*this)[RSubmission::date0Changed] << std::bind(&RData::onDate0Change, this, _1, _2);
+  (*this)[RSubmission::date1Changed] << std::bind(&RData::onDate1Change, this, _1, _2);
 }
 
 /**********************************************************************************************/
@@ -109,25 +111,31 @@ RMeasure* RData :: measure(const QString& identifier) const
 
 /**********************************************************************************************/
 
-void RData :: onDate0Change(RSubmission* submission, QDate date0)
+void RData :: onDate0Change(RSubmission* submission, QDate oldDate0)
 {
-  R_GUARD(!date0.isNull(), Vacuum);
+  R_GUARD(submission->date0().isValid(), Vacuum);
 
-  if (date0 < m_interval0)
-    m_interval0 = date0;
-  else if (submission->date0() == m_interval0)
+  /**/ if (submission->date0() < m_interval0)
+  {
+    m_interval0 = submission->date0();
+    emit globalIntervalChanged();
+  }
+  else if (oldDate0 == m_interval0)
     calculateIntervals();
 }
 
 /**********************************************************************************************/
 
-void RData :: onDate1Change(RSubmission* submission, QDate date1)
+void RData :: onDate1Change(RSubmission* submission, QDate oldDate1)
 {
-  R_GUARD(!date1.isNull(), Vacuum);
+  R_GUARD(submission->date1().isValid(), Vacuum);
 
-  if (date1 > m_interval1)
-    m_interval1 = date1;
-  else if (submission->date1() == m_interval1)
+  /**/ if (submission->date1() > m_interval1)
+  {
+    m_interval1 = submission->date1();
+    emit globalIntervalChanged();
+  }
+  else if (oldDate1 == m_interval1)
     calculateIntervals();
 }
 

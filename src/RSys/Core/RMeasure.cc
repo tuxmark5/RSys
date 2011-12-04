@@ -28,6 +28,8 @@ Vacuum RMeasure :: ~RMeasure()
 
 void RMeasure :: remove()
 {
+  (*m_data)[measureRemoval](this);
+
   RUnit::purge();
 
   R_NZ(m_data)->purgeMeasure(this);

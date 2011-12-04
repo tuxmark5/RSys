@@ -18,10 +18,11 @@
 #define _T typedef
 #define _V virtual
 /**********************************************************************************************/
-#define FN(x)         decltype(x), x
-#define R_GUARD(x, r) if (!(x)) return r
-#define R_NZ(x)       if (x) (x)
-#define R_S(x)        QString::fromUtf16((const ushort*) u##x)
+#define FN(x)           decltype(x), x
+#define R_GUARD(x, r)   if (!(x)) return r
+#define R_NZ(x)         if (x) (x)
+#define R_S(x)          QString::fromUtf16((const ushort*) u##x)
+#define R_DATE_TO_S(d)  d.toString(Qt::DefaultLocaleShortDate)
 /**********************************************************************************************/
 #define Vacuum
 /**********************************************************************************************/
@@ -80,6 +81,7 @@ class QDate;
 class QDateEdit;
 class QGridLayout;
 class QHBoxLayout;
+class QItemSelection;
 class QLabel;
 class QLayoutItem;
 class QLineEdit;

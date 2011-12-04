@@ -56,6 +56,13 @@ int RSummaryWidget :: countVisible(int till)
 
 /**********************************************************************************************/
 
+int RSummaryWidget :: fieldType() const
+{
+  return (m_mode & 0x0FF) | RResultsModel::Identifier;
+}
+
+/**********************************************************************************************/
+
 #define MODE(menu, name, mode) menu->addAction(R_S(name), this, SLOT(setMode()))->setData(int(mode));
 
 void RSummaryWidget :: createButtons(const ButtonCallback& callback)
@@ -89,7 +96,23 @@ void RSummaryWidget :: insert1(int i0, int i1)
 {
   Q_UNUSED(i1);
 
-  m_resultsModel->insertField(countVisible(i0), m_fieldType, m_units->at(i0));
+  m_resultsModel->insertField(countVisible(i0), fieldType(), m_units->at(i0));
+}
+
+/**********************************************************************************************/
+
+QString RSummaryWidget :: modeName() const
+{
+  QString modeName = RResultsModel::longTitleForField(m_mode);
+
+  switch (m_mode & 0xF00)
+  {
+    case Bar:   modeName += R_S(" (stulpelinė diagrama)");  break;
+    case Line:  modeName += R_S(" (linijinė diagrama)");    break;
+    case Table: modeName += R_S(" (sumarinė lentelė)");     break;
+  }
+
+  return modeName;
 }
 
 /**********************************************************************************************/
@@ -123,7 +146,7 @@ void RSummaryWidget :: resetEnd()
   for (auto it = m_units->begin(); it != m_units->end(); ++it)
   {
     if ((*it)->visible())
-      m_resultsModel->addField(m_fieldType, *it);
+      m_resultsModel->addField(fieldType(), *it);
   }
 }
 
@@ -149,9 +172,8 @@ void RSummaryWidget :: setMode()
 
 void RSummaryWidget :: setMode(int mode)
 {
-  m_fieldType = (mode & 0x0FF) | RResultsModel::Identifier;
+  m_mode = mode;
   setUnits(m_units);
-  //setTitle(RResultsModel::longTitleForField(mode));
 
   switch (mode & 0xF00)
   {
@@ -176,6 +198,8 @@ void RSummaryWidget :: setMode(int mode)
       ensure<RTableView>(this)->setFrameStyle(QFrame::NoFrame);
       break;
   }
+
+  emit modeChanged();
 }
 
 /**********************************************************************************************/

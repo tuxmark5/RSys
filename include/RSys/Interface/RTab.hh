@@ -16,6 +16,9 @@ class RTab: public QWidget
     _T std::function<QVariant (int, int)>               Getter2;
     _T std::function<void (int, int, const QVariant&)>  Setter2;
 
+  protected:
+    _M QLabel*      m_label;
+
   public:
     _M Vacuum       RTab(const QString& title, QWidget* parent = 0);
     _V Vacuum       ~RTab();

@@ -25,6 +25,9 @@ class RMeasure: public RUnit
     _V Vacuum           ~RMeasure();
     _M RMeasure*        buddy() const { return static_cast<RMeasure*>(m_buddy); }
     _M void             remove();
+
+  public:
+    _G(void,            measureRemoval, RMeasure* measure);
 };
 
 /**********************************************************************************************/

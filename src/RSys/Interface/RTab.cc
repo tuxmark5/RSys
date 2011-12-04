@@ -13,13 +13,13 @@ Vacuum RTab :: RTab(const QString& title, QWidget* parent):
   QWidget(parent)
 {
   QVBoxLayout*  layout  = new QVBoxLayout(this);
-  QLabel*       label   = new QLabel(title);
+  m_label               = new QLabel(title);
 
-  label->setFrameStyle(QLabel::Box | QLabel::Plain);
-  label->setLineWidth(1);
-  label->setMinimumHeight(20);
+  m_label->setFrameStyle(QLabel::Box | QLabel::Plain);
+  m_label->setLineWidth(1);
+  m_label->setMinimumHeight(20);
 
-  layout->addWidget(label);
+  layout->addWidget(m_label);
 }
 
 /**********************************************************************************************/

@@ -19,12 +19,16 @@ Vacuum RChart :: RChart(RResultsModel* model, QWidget* parent):
   replaceCoordinatePlane(new RCoordinatePlane());
   setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
-  m_axisX     = new KDChart::CartesianAxis();
-  m_axisY     = new KDChart::CartesianAxis();
+  m_higlight[0] = RInterval();
+  m_higlight[1] = RInterval();
+  m_axisX       = new KDChart::CartesianAxis();
+  m_axisY       = new KDChart::CartesianAxis();
 
   m_axisX->setPosition(Axis::Top);
   m_axisY->setPosition(Axis::Left);
   model->setOrientation(Qt::Vertical);
+
+  connect(model, SIGNAL(modelReset()), this, SLOT(updateHighlight()));
 }
 
 /**********************************************************************************************/
@@ -79,26 +83,10 @@ void RChart :: setDiagram(Diagram* diagram)
 
 /**********************************************************************************************/
 
-void RChart :: setFillRange(QDate fill0, QDate fill1)
+void RChart :: setFillRange(int id, QDate fill0, QDate fill1)
 {
-  RCoordinatePlane* plane = static_cast<RCoordinatePlane*>(coordinatePlane());
-
-  if (fill0.isValid() && fill1.isValid())
-  {
-    int     height      = m_diagram->numberOfAbscissaSegments();
-    QDate   interval0   = m_model->headerData(0, Qt::Vertical).toDate();
-    QDate   interval1   = m_model->headerData(height - 1, Qt::Vertical).toDate();
-    auto    hrange      = plane->horizontalRange();
-    double  scale       = (hrange.second - hrange.first) / interval0.daysTo(interval1);
-    double  fillX0      = interval0.daysTo(fill0) * scale;
-    double  fillX1      = interval0.daysTo(fill1) * scale;
-
-    plane->setFillRange(fillX0, fillX1);
-  }
-  else
-  {
-    plane->setFillEnabled(false);
-  }
+  m_higlight[id] = RInterval(fill0, fill1);
+  updateHighlight();
 }
 
 /**********************************************************************************************/
@@ -124,11 +112,13 @@ void RChart :: setType(ChartType type)
   switch (type)
   {
     case Bar:
-      diagram = new KDChart::BarDiagram();
+      diagram     = new KDChart::BarDiagram();
+      m_recordMod = 0;
       break;
 
     case Line:
-      diagram = new KDChart::LineDiagram();
+      diagram     = new KDChart::LineDiagram();
+      m_recordMod = 1;
       break;
 
     default:
@@ -138,6 +128,44 @@ void RChart :: setType(ChartType type)
   if (m_legend)
     m_legend->addDiagram(diagram);
   setDiagram(diagram);
+}
+
+/**********************************************************************************************/
+
+auto RChart :: translate() -> Transform
+{
+  int     numRecords  = m_model->rowCount();
+  R_GUARD(numRecords > 0, Transform());
+  QDate   interval0   = m_model->headerData(0, Qt::Vertical).toDate();
+  QDate   interval1   = m_model->headerData(numRecords, Qt::Vertical).toDate();
+  double  scale       = double(numRecords) / interval0.daysTo(interval1);
+
+  return Transform(interval0, scale);
+}
+
+/**********************************************************************************************/
+
+void RChart :: updateHighlight()
+{
+  RCoordinatePlane* plane       = static_cast<RCoordinatePlane*>(coordinatePlane());
+  Transform         transform   = translate();
+  R_GUARD(transform.first.isValid(), Vacuum);
+
+  auto trans = [&](RInterval& interval) -> DoublePair
+  {
+    return DoublePair(transform.first.daysTo(std::get<0>(interval)) * transform.second,
+                      transform.first.daysTo(std::get<1>(interval)) * transform.second);
+  };
+
+  for (int i = 0; i < 2; i++)
+  {
+    RInterval&  interval = m_higlight[i];
+
+    if (std::get<0>(interval).isValid() && std::get<1>(interval).isValid())
+      plane->setFillInterval(i, trans(m_higlight[i]));
+    else
+      plane->setFillInterval(i, DoublePair(0, 0));
+  }
 }
 
 /**********************************************************************************************/

@@ -26,15 +26,17 @@ class RSummaryWidget: public RLayerWidget, public RIObserver
   private:
     _M RResults*        m_results;
     _M RResultsModel*   m_resultsModel;
-    _M int              m_fieldType;
+    _M int              m_mode;
     _M RUnitPtrList*    m_units;
 
   public:
     _M Vacuum           RSummaryWidget(RResults* results, QWidget* parent = 0);
     _V Vacuum           ~RSummaryWidget();
     _M int              countVisible(int till);
+    _M int              fieldType() const;
     _V void             insert1(int i0, int i1);
     _M RResultsModel*   model() const { return m_resultsModel; }
+    _M QString          modeName() const;
     _V bool             remove0(int i0, int i1);
     _V void             resetObservable();
     _M void             setFieldType(FieldType type);
@@ -49,6 +51,9 @@ class RSummaryWidget: public RLayerWidget, public RIObserver
 
   protected:
     _V void             createButtons(const ButtonCallback& callback);
+
+  signals:
+    _M void             modeChanged();
 };
 
 /**********************************************************************************************/
