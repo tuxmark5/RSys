@@ -20,6 +20,7 @@ Source: "QtSvg4.dll";     DestDir: "{app}"
 Source: "QtTest4.dll";    DestDir: "{app}"
 
 Source: "libeay32.dll";   DestDir: "{app}"
+Source: "libiconv-2.dll"; DestDir: "{app}"
 Source: "libintl-8.dll";  DestDir: "{app}"
 Source: "libpq.dll";      DestDir: "{app}"
 Source: "ssleay32.dll";   DestDir: "{app}"
