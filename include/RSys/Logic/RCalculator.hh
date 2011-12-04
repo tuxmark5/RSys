@@ -10,8 +10,10 @@
 /*                                        RCalculator                                         */
 /**********************************************************************************************/
 
-class RCalculator
+class RCalculator: public QObject
 {
+  Q_OBJECT
+
   private:
     _T QHash<RUnit*, double>              RUnitHash;
     _T RResults::IntervalFun              IntervalFun;
@@ -99,7 +101,7 @@ class RCalculator
     _M void             setIntervalFun(IntervalFun intervalFun, int numIntervals);
 
   public slots:
-    _M void setExtrapolationEnabled(bool enabled);
+    _M void             setExtrapolationEnabled(bool enabled);
 };
 
 /**********************************************************************************************/

@@ -248,8 +248,9 @@ void RMainWindow :: createConnections()
 
 void RMainWindow :: createConnections1()
 {
-  //connect(m_exterpolationAction, SIGNAL(toggled(bool)), m_results->calculator0(), SLOT(set));
-  //connect(m_results->calculator0(), SIGNAL())
+  connect(m_exterpolationAction, SIGNAL(toggled(bool)), m_results->calculator0(), SLOT(setExtrapolationEnabled(bool)));
+  connect(m_exterpolationAction, SIGNAL(toggled(bool)), m_results->calculator1(), SLOT(setExtrapolationEnabled(bool)));
+  connect(m_exterpolationAction, SIGNAL(triggered()), m_intervalToolBar, SLOT(applyInterval()), Qt::QueuedConnection);
 
   (*m_data1)[RData::errorMessage]             << [=](const QString& message)
   { if (!m_importing) showMessage(message); };
