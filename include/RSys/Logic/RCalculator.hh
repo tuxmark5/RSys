@@ -12,7 +12,7 @@
 class RCalculator
 {
   private:
-    _T QMap<RUnit*, double>               RUnitMap;
+    _T QHash<RUnit*, double>              RUnitHash;
     _T RResults::IntervalFun              IntervalFun;
     _T RUnit::RUsageMap                   RUsageMap;
 
@@ -22,9 +22,9 @@ class RCalculator
     _M int              m_numIntervals;
 
   private:
-    _M void             updateMeasures(RDivision* division, RMeasureMap& measures);
+    _M void             updateMeasures(RDivision* division, RMeasureHash& measures);
     _M void             updateUsages(RSubmissionPtrList* submissions);
-    _M void             updateUsageChanges(RUnitMap* units, RSubmission* submission);
+    _M void             updateUsageChanges(RUnitHash* units, RSubmission* submission);
     _M void             updateUsages(RUnitPtrList* units);
     _M void             calculateIntervals();
     _M void             calculateIntervals(RUnitPtrList* units);

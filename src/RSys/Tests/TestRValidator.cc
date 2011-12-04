@@ -110,10 +110,10 @@ void TestRValidator::testReadingDivisionsSystems()
   QCOMPARE(
         systems->at(2)->identifier(),
         QString::fromUtf8("IS3"));
-  QCOMPARE(division->m_systemMap[systems->at(0).get()], 1.0);
-  QCOMPARE(division->m_systemMap[systems->at(1).get()], 1.0);
-  QCOMPARE(division->m_systemMap.contains(systems->at(2).get()), 0);
-  QCOMPARE(division->m_systemMap.size(), 2);
+  QCOMPARE(division->m_systemHash[systems->at(0).get()], 1.0);
+  QCOMPARE(division->m_systemHash[systems->at(1).get()], 1.0);
+  QCOMPARE(division->m_systemHash.contains(systems->at(2).get()), 0);
+  QCOMPARE(division->m_systemHash.size(), 2);
 }
 
 
@@ -149,11 +149,11 @@ void TestRValidator::testReadingDivisionsMeasures()
   QCOMPARE(
         measures->at(3)->identifier(),
         QString::fromUtf8("P1-4"));
-  QCOMPARE(division->m_measureMap[measures->at(0).get()], 1.0);
-  QCOMPARE(division->m_measureMap[measures->at(1).get()], 0.5);
-  QCOMPARE(division->m_measureMap[measures->at(2).get()], 1.0);
-  QCOMPARE(division->m_measureMap.contains(measures->at(3).get()), false);
-  QCOMPARE(division->m_measureMap.size(), 6);
+  QCOMPARE(division->m_measureHash[measures->at(0).get()], 1.0);
+  QCOMPARE(division->m_measureHash[measures->at(1).get()], 0.5);
+  QCOMPARE(division->m_measureHash[measures->at(2).get()], 1.0);
+  QCOMPARE(division->m_measureHash.contains(measures->at(3).get()), false);
+  QCOMPARE(division->m_measureHash.size(), 6);
 }
 
 

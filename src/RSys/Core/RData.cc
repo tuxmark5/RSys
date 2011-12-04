@@ -170,7 +170,7 @@ void RData :: purgeMeasure(RMeasure* measure)
   R_GUARD(m_purgeEnabled, Vacuum);
 
   for (auto it = m_divisions.begin(); it != m_divisions.end(); ++it)
-    (*it)->m_measureMap.remove(measure);
+    (*it)->m_measureHash.remove(measure);
 
   m_submissions.removeIf([=](RSubmission* s) -> bool
   {
@@ -185,7 +185,7 @@ void RData :: purgeSystem(RSystem* system)
   R_GUARD(m_purgeEnabled, Vacuum);
 
   for (auto it = m_divisions.begin(); it != m_divisions.end(); ++it)
-    (*it)->m_systemMap.remove(system);
+    (*it)->m_systemHash.remove(system);
   for (auto it = m_measures.begin(); it != m_measures.end(); ++it)
     (*it)->m_systemUsage.remove(system);
 }

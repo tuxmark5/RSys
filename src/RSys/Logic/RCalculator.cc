@@ -46,8 +46,8 @@ void RCalculator :: update()
   {
     (*it)->m_usageMap.clear();
     (*it)->m_usageChangeMap.clear();
-    updateMeasures(it->get(), (*it)->m_measureMap);
-    updateMeasures(it->get(), (*it)->m_measureMap1);
+    updateMeasures(it->get(), (*it)->m_measureHash);
+    updateMeasures(it->get(), (*it)->m_measureHash1);
   }
   updateUsages(m_data->submissions());
   updateUsages(m_data->submissions1());
@@ -59,14 +59,14 @@ void RCalculator :: update()
 
 /**********************************************************************************************/
 
-void RCalculator :: updateMeasures(RDivision* division, RMeasureMap& measures)
+void RCalculator :: updateMeasures(RDivision* division, RMeasureHash& measures)
 {
-  for (auto divIt = measures.begin(); divIt != measures.end(); divIt++)
+  for (auto measIt = measures.begin(); measIt != measures.end(); measIt++)
   {
-    divIt.key()->m_divisionUsage.insert(division, divIt.value());
-    for (auto sysIt = division->m_systemMap.begin(); sysIt != division->m_systemMap.end(); sysIt++)
+    measIt.key()->m_divisionUsage.insert(division, measIt.value());
+    for (auto sysIt = division->m_systemHash.begin(); sysIt != division->m_systemHash.end(); sysIt++)
     {
-      divIt.key()->m_systemUsage[sysIt.key()] += sysIt.value() * divIt.value();
+      measIt.key()->m_systemUsage[sysIt.key()] += sysIt.value() * measIt.value();
     }
   }
 }
@@ -79,15 +79,15 @@ void RCalculator :: updateUsages(RSubmissionPtrList* submissions)
   {
     if ((*it)->measure() != NULL)
     {
-      updateUsageChanges((RUnitMap*) &(*it)->measure()->m_divisionUsage, it->get());
-      updateUsageChanges((RUnitMap*) &(*it)->measure()->m_systemUsage, it->get());
+      updateUsageChanges((RUnitHash*) &(*it)->measure()->m_divisionUsage, it->get());
+      updateUsageChanges((RUnitHash*) &(*it)->measure()->m_systemUsage, it->get());
     }
   }
 }
 
 /**********************************************************************************************/
 
-void RCalculator :: updateUsageChanges(RUnitMap* units, RSubmission* submission)
+void RCalculator :: updateUsageChanges(RUnitHash* units, RSubmission* submission)
 {
   for (auto it = units->begin(); it != units->end(); it++)
   {
@@ -225,7 +225,8 @@ double RCalculator :: polynomialExterpolation(QDate prevDate, double prevUsage,
                                             - pow(prevDate.daysTo(startDate), 3 - i));
     }
     return answer;
-  } else { // jei neišsprendžiame, laikome tolygiu
+  } else { // jei neišsprendžiame (gali nutikti, pavyzdžiui, jei neturime
+           // ankstesnių duomenų), laikome tolygiu
     return startDate.daysTo(date) * mainUsage;
   }
 }

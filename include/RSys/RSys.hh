@@ -101,9 +101,9 @@ typedef long long                       RID;
 typedef std::tuple<QString, int, int>   RImportMode;
 typedef QList<RImportMode>              RImportModes;
 typedef std::tuple<QDate, QDate>        RInterval;
-typedef QMap<RMeasure*, double>         RMeasureMap;
-typedef QMap<RSystem*, double>          RSystemMap;
-typedef QMap<RDivision*, double>        RDivisionMap;
+typedef QHash<RMeasure*, double>        RMeasureHash;
+typedef QHash<RSystem*, double>         RSystemHash;
+typedef QHash<RDivision*, double>       RDivisionHash;
 /**********************************************************************************************/
 enum RDataType
 {
