@@ -61,6 +61,7 @@ void RTableView :: deleteRows()
   QModelIndexList       rows    = selectionModel()->selectedRows();
   int                   delta   = 0;
 
+  qSort(rows.begin(), rows.end());
   for (auto it = rows.begin(); it != rows.end(); ++delta, ++it)
     model->removeRow(it->row() - delta);
 }

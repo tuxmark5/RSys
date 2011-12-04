@@ -26,7 +26,10 @@ Vacuum RUnit :: RUnit(RUnit& unit, RData* data):
 Vacuum RUnit :: ~RUnit()
 {
   if (m_data)
+  {
     m_data->m_unitHash[m_type].remove(m_identifier, this);
+    qDebug() << "UNIT DIES WITH" << m_type << m_identifier;
+  }
 }
 
 /**********************************************************************************************/

@@ -1,0 +1,5 @@
+* aptarti su duomenų validavimu susiję klausimai
+* aptarta duomenų saugumo architektūra
+* aptartas vartotojų interfeisas
+* nuspręsta Windows OS naudoti Inno Setup;
+* nuspręsta per savaitę paruošti galutinį vartotojų valdymo interfeisą, instaliacijos programą ir duomenų validatorių

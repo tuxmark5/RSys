@@ -101,6 +101,8 @@ void RUser :: setPassword(const QString& password)
 
 void RUser :: setProperty(const QString& name, int value)
 {
+  R_GUARD(m_properties.value(name, 0) != value, Vacuum);
+
   (*m_data)[propertySet](this, name, value);
   if (value == 0)
     m_properties.remove(name);

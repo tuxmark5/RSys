@@ -39,7 +39,7 @@ Vacuum RUserAdmTab :: RUserAdmTab(RUserTab* userTab, RMainWindow* parent):
   addField3("sub",  R_S("Istoriniai duomenys"));
 
   addField2("dM",   R_S("Rodyti rėžimą: padaliniai"));
-  addField2("dS",   R_S("Rodyti rėžimą: IS"));
+  addField2("sM",   R_S("Rodyti rėžimą: IS"));
   addField2("res",  R_S("Rodyti rezultatų kortelę"));
   addField2("sum",  R_S("Rodyti apžvalgos kortelę"));
   addField2("imp",  R_S("Leisti importuoti duomenis"));
