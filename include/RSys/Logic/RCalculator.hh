@@ -2,7 +2,6 @@
 #define RSYS_LOGIC_RCALCULATOR_HH
 
 /**********************************************************************************************/
-#include <RSys/RSys.hh>
 #include <RSys/Logic/RResults.hh>
 #include <RSys/Core/RUnit.hh>
 /**********************************************************************************************/
@@ -22,6 +21,7 @@ class RCalculator
     _M RData*           m_data;
     _M IntervalFun      m_intervalFun;
     _M int              m_numIntervals;
+    _M bool             m_extrapolationEnabled: 1;
 
   private:
     _M void             updateMeasures(RDivision* division, RMeasureHash& measures);
@@ -53,7 +53,7 @@ class RCalculator
      *                  reikia numatyti suminę apkrovą
      * @return numanoma apkrova [startDate; date) intervale
      */
-    _M double           polynomialExterpolation(QDate prevDate, double prevUsage,
+    _M double           polynomialExtrapolation(QDate prevDate, double prevUsage,
                                                 QDate startDate, double mainUsage,
                                                 QDate endDate, double nextUsage,
                                                 QDate nextDate, QDate date);
@@ -67,7 +67,7 @@ class RCalculator
      * @param date  data, iki kurios (ne imtinai) reikia numatyti apkrovas
      * @return numanoma apkrova [it.key(); date) intervale
      */
-    _M double           polynomialExterpolation(RUsageMap :: iterator it,
+    _M double           polynomialExtrapolation(RUsageMap :: iterator it,
                                                 RUsageMap :: iterator begin,
                                                 RUsageMap :: iterator end,
                                                 QDate date);
@@ -97,6 +97,9 @@ class RCalculator
     _M Vacuum           ~RCalculator();
     _M void             update();
     _M void             setIntervalFun(IntervalFun intervalFun, int numIntervals);
+
+  public slots:
+    _M void setExtrapolationEnabled(bool enabled);
 };
 
 /**********************************************************************************************/

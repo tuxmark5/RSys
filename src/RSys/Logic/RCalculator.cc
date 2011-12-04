@@ -18,7 +18,8 @@
 
 Vacuum RCalculator :: RCalculator(RData* data):
   m_data(data),
-  m_numIntervals(0)
+  m_numIntervals(0),
+  m_extrapolationEnabled(true)
 {
 }
 
@@ -185,9 +186,11 @@ double RCalculator :: calculateUsage(RInterval interval, RUsageMap& usageMap)
   } else {
     it--;
     curUsage = it.value();
-    // tolygus variantas: be tolesnių 2 eilučių
-    usage = -polynomialExterpolation(it, usageMap.begin(), usageMap.end(), curDate);
-    curDate = it.key();
+    if (m_extrapolationEnabled)
+    {
+      usage = -polynomialExtrapolation(it, usageMap.begin(), usageMap.end(), curDate);
+      curDate = it.key();
+    }
     it++;
   }
   while (it != usageMap.end() && it.key() < TO(interval))
@@ -197,10 +200,14 @@ double RCalculator :: calculateUsage(RInterval interval, RUsageMap& usageMap)
     curDate = it.key();
     it++;
   }
-  // tolygus variantas: usage += curDate.daysTo(TO(interval)) * curUsage;
   if (it != usageMap.begin())
   {
-    usage += polynomialExterpolation(--it, usageMap.begin(), usageMap.end(), TO(interval));
+    if (m_extrapolationEnabled)
+    {
+      usage += polynomialExtrapolation(--it, usageMap.begin(), usageMap.end(), TO(interval));
+    } else {
+      usage += curDate.daysTo(TO(interval)) * curUsage;
+    }
   } else {
     return 0;
   }
@@ -210,7 +217,7 @@ double RCalculator :: calculateUsage(RInterval interval, RUsageMap& usageMap)
 
 /**********************************************************************************************/
 
-double RCalculator :: polynomialExterpolation(QDate prevDate, double prevUsage,
+double RCalculator :: polynomialExtrapolation(QDate prevDate, double prevUsage,
                                               QDate startDate, double mainUsage,
                                               QDate endDate, double nextUsage,
                                               QDate nextDate, QDate date)
@@ -304,7 +311,7 @@ bool RCalculator :: solveSystemOfLinearEquations(double matrix[3][4],
 
 /**********************************************************************************************/
 
-double RCalculator :: polynomialExterpolation(RUsageMap :: iterator it,
+double RCalculator :: polynomialExtrapolation(RUsageMap :: iterator it,
                                               RUsageMap :: iterator begin,
                                               RUsageMap :: iterator end,
                                               QDate date)
@@ -339,7 +346,7 @@ double RCalculator :: polynomialExterpolation(RUsageMap :: iterator it,
   } else {
     nextDate = it.key();
   }
-  return polynomialExterpolation(prevDate, prevUsage, startDate, mainUsage,
+  return polynomialExtrapolation(prevDate, prevUsage, startDate, mainUsage,
                                  endDate, nextUsage, nextDate, date);
 }
 
@@ -358,3 +365,10 @@ bool RCalculator :: nonNegativeInInterval(double coefficients[3], int from, int 
   if (roots[0] > roots[1]) std::swap(roots[0], roots[1]);
   return roots[0] >= to || roots[1] <= from;
 }
+
+/**********************************************************************************************/
+
+ void RCalculator :: setExtrapolationEnabled(bool enabled)
+ {
+   m_extrapolationEnabled = enabled;
+ }
