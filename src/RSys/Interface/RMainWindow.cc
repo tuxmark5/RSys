@@ -42,6 +42,7 @@
 #include <RSys/Interface/RUserAdmTab.hh>
 #include <RSys/Interface/RUserTab.hh>
 
+#include <RSys/Logic/RCalculator.hh>
 #include <RSys/Logic/RResults.hh>
 #include <RSys/Parse/RParser.hh>
 #include <RSys/Store/RDatabase.hh>
@@ -204,6 +205,9 @@ void RMainWindow :: createActions()
   m_exitAction            = R_ACTION(":/icons/exit.png",        "Išeiti");
   m_exitAction->setShortcut(QKeySequence("Ctrl+Shift+X"));
 
+  m_exterpolationAction   = R_ACTION(QString(),                 "Ekstrapoliuoti rezultatus");
+  m_exterpolationAction->setCheckable(true);
+
   m_searchAction          = R_ACTION(":/icons/find_interval.png", "Mažiausiai apkrauti intervalai");
   m_searchAction->setCheckable(true);
   m_searchAction->setShortcut(QKeySequence("Ctrl+F"));
@@ -244,6 +248,9 @@ void RMainWindow :: createConnections()
 
 void RMainWindow :: createConnections1()
 {
+  //connect(m_exterpolationAction, SIGNAL(toggled(bool)), m_results->calculator0(), SLOT(set));
+  //connect(m_results->calculator0(), SIGNAL())
+
   (*m_data1)[RData::errorMessage]             << [=](const QString& message)
   { if (!m_importing) showMessage(message); };
   (*m_data1)[RDivision::onMeasureSet]         << std::bind(&RResults::updateDelayed, m_results);

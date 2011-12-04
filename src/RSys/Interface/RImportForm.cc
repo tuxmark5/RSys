@@ -16,7 +16,7 @@ Vacuum RImportForm :: RImportForm(RParser* parser, RData* data, QWidget* parent)
   m_parser(parser),
   m_data(data)
 {
-  QGridLayout* layout = new QGridLayout(this);
+  /*QGridLayout* layout =*/ new QGridLayout(this);
 
   if (s_modeNames.isEmpty())
   {

@@ -49,24 +49,42 @@ auto RResults :: field(ResultType type, RUnit* unit) -> Getter
     case Usage0: return [this, unit](int x) -> QVariant
     {
       if (RUnit* buddy = unit->buddy())
-        return buddy->usageAt(x);
+        return buddy->usageAt(x).first;
+      return 0.0;
+    };
+
+    case Usage0Count: return [this, unit](int x) -> QVariant
+    {
+      if (RUnit* buddy = unit->buddy())
+        return buddy->usageAt(x).second;
       return 0.0;
     };
 
     case Usage1: return [this, unit](int x) -> QVariant
     {
-      return unit->usageAt(x);
+      return unit->usageAt(x).first;
+    };
+
+    case Usage1Count: return [this, unit](int x) -> QVariant
+    {
+      return unit->usageAt(x).second;
     };
 
     case Usage1Tooltip: return [this, unit](int x) -> QVariant
     {
-      return R_S("Intervalas: %1.\nApkrova: %2").
-        arg(intervalStr(x)).arg(unit->usageAt(x));
+      const RUsage& usage = unit->usageAt(x);
+      return R_S("Intervalas: %1.\nApkrova: %2\nSkaičius: %3").
+        arg(intervalStr(x)).arg(usage.first).arg(usage.second);
     };
 
     case DeltaUsage: return [this, unit](int x) -> QVariant
     {
       return fieldDeltaUsage(unit, x);
+    };
+
+    case DeltaUsageCount: return [this, unit](int x) -> QVariant
+    {
+      return fieldDeltaUsageCount(unit, x);
     };
 
     case DeltaUsageTooltip: return [this, unit](int x) -> QVariant
@@ -79,8 +97,8 @@ auto RResults :: field(ResultType type, RUnit* unit) -> Getter
     {
       if (RUnit* buddy = unit->buddy())
       {
-        double usage0 = buddy->usageAt(x);
-        double usage1 = unit->usageAt(x);
+        double usage0 = buddy->usageAt(x).first;
+        double usage1 = unit->usageAt(x).first;
         return (usage1 - usage0) / usage1 * 100.0; // usage0?
       }
       return QVariant();
@@ -105,8 +123,17 @@ auto RResults :: field(ResultType type, RUnit* unit) -> Getter
 double RResults :: fieldDeltaUsage(RUnit* unit, int x)
 {
   if (RUnit* buddy = unit->buddy())
-    return unit->usageAt(x) - buddy->usageAt(x);
-  return round(unit->usageAt(x) * 100.0) / 100.0;
+    return unit->usageAt(x).first - buddy->usageAt(x).first;
+  return unit->usageAt(x).first;
+}
+
+/**********************************************************************************************/
+
+double RResults :: fieldDeltaUsageCount(RUnit* unit, int x)
+{
+  if (RUnit* buddy = unit->buddy())
+    return unit->usageAt(x).second - buddy->usageAt(x).second;
+  return unit->usageAt(x).second;
 }
 
 /**********************************************************************************************/

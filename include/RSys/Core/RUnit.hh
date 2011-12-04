@@ -5,6 +5,8 @@
 #include <QtCore/QVector>
 #include <RSys/Core/RElement.hh>
 #include <RSys/Util/RSignal.hh>
+/**********************************************************************************************/
+extern RUsage g_emptyUsage;
 /********************************************* RS *********************************************/
 /*                                           RUnit                                            */
 /**********************************************************************************************/
@@ -52,7 +54,7 @@ class RUnit: public RElement
     _M bool               setIdentifier(const QString& identifier);
     _M bool               setName(const QString& name);
     _M const UsageVector& usage() const { return m_usage; }
-    _M double             usageAt(int x) const { return x < m_usage.size() ? m_usage.at(x).first : 0.0; }
+    _M const RUsage&      usageAt(int x) const { return x < m_usage.size() ? m_usage.at(x) : g_emptyUsage; }
 };
 
 /**********************************************************************************************/

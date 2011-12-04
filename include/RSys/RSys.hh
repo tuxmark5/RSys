@@ -2,11 +2,11 @@
 #define RSYS_RSYS_HH
 
 /**********************************************************************************************/
+#include <QtCore/QDate>
 #include <QtCore/QDebug>
 #include <QtCore/QObject>
-#include <QtCore/QVariant>
 #include <QtCore/QString>
-#include <QtCore/QDate>
+#include <QtCore/QVariant>
 /********************************************* RS *********************************************/
 /*                                            RSys                                            */
 /**********************************************************************************************/
@@ -100,13 +100,13 @@ class QTabWidget;
 class QTableView;
 class QVBoxLayout;
 /**********************************************************************************************/
+typedef QHash<RDivision*, double>       RDivisionHash;
 typedef long long                       RID;
 typedef std::tuple<QString, int, int>   RImportMode;
 typedef QList<RImportMode>              RImportModes;
 typedef std::tuple<QDate, QDate>        RInterval;
 typedef QHash<RMeasure*, double>        RMeasureHash;
 typedef QHash<RSystem*, double>         RSystemHash;
-typedef QHash<RDivision*, double>       RDivisionHash;
 typedef QPair<double, double>           RUsage;
 /**********************************************************************************************/
 enum RDataType
@@ -132,29 +132,25 @@ enum RMessageLevel
 #include <RSys/Util/ROList.hh>
 #include <RSys/Util/RSharedPtr.hh>
 /**********************************************************************************************/
-typedef RSharedPtr<RDivision>           RDivisionPtr;
-typedef RSharedPtr<RMeasure>            RMeasurePtr;
-typedef RSharedPtr<RSubmission>         RSubmissionPtr;
-typedef RSharedPtr<RSystem>             RSystemPtr;
-typedef RSharedPtr<RUnit>               RUnitPtr;
-typedef RSharedPtr<RUser>               RUserPtr;
-
 typedef RSharedPtr<RContainer>          RContainerPtr;
-
 typedef ROList<RDivision*>              RDivisionList;
-typedef ROList<RMeasure*>               RMeasureList;
-typedef ROList<RSystem*>                RSubmissionList;
-typedef ROList<RSystem*>                RSystemList;
-typedef ROList<RUnit*>                  RUnitList;
-
+typedef RSharedPtr<RDivision>           RDivisionPtr;
 typedef ROList<RDivisionPtr>            RDivisionPtrList;
-typedef ROList<RMeasurePtr>             RMeasurePtrList;
-typedef ROList<RSubmissionPtr>          RSubmissionPtrList;
-typedef ROList<RSystemPtr>              RSystemPtrList;
-typedef ROList<RUnitPtr>                RUnitPtrList;
-typedef ROList<RUserPtr>                RUserPtrList;
-
 typedef std::function<RInterval (int)>  RIntervalFun;
+typedef ROList<RMeasure*>               RMeasureList;
+typedef RSharedPtr<RMeasure>            RMeasurePtr;
+typedef ROList<RMeasurePtr>             RMeasurePtrList;
+typedef ROList<RSystem*>                RSubmissionList;
+typedef RSharedPtr<RSubmission>         RSubmissionPtr;
+typedef ROList<RSubmissionPtr>          RSubmissionPtrList;
+typedef ROList<RSystem*>                RSystemList;
+typedef RSharedPtr<RSystem>             RSystemPtr;
+typedef ROList<RSystemPtr>              RSystemPtrList;
+typedef ROList<RUnit*>                  RUnitList;
+typedef RSharedPtr<RUnit>               RUnitPtr;
+typedef ROList<RUnitPtr>                RUnitPtrList;
+typedef RSharedPtr<RUser>               RUserPtr;
+typedef ROList<RUserPtr>                RUserPtrList;
 /**********************************************************************************************/
 using namespace std::placeholders;
 /**********************************************************************************************/

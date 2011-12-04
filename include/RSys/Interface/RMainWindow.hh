@@ -48,19 +48,21 @@ class RMainWindow: public QMainWindow
     _M QTabWidget*          m_tabWidgetR;
 
     _M QMenu*               m_viewMenu;
-    _M QAction*             m_importAction;
-    _M QAction*             m_commitAction;
-    _M QAction*             m_rollbackAction;
-    _M QAction*             m_disconnectAction;
-    _M QAction*             m_exitAction;
-    _M QAction*             m_searchAction;
-    _M QAction*             m_divisionsStateAction;
-    _M QAction*             m_systemsStateAction;
-    _M QAction*             m_helpAction;
 
+    _M QAction*             m_commitAction;
+    _M QAction*             m_disconnectAction;
+    _M QAction*             m_divisionsStateAction;
+    _M QAction*             m_exitAction;
+    _M QAction*             m_exterpolationAction;
+    _M QAction*             m_helpAction;
+    _M QAction*             m_importAction;
+    _M QAction*             m_rollbackAction;
+    _M QAction*             m_searchAction;
+    _M QAction*             m_systemsStateAction;
+
+    /*_M QAction*             m_showIntervalToolbarAction;
     _M QAction*             m_showMainToolbarAction;
-    _M QAction*             m_showIntervalToolbarAction;
-    _M QAction*             m_showPaletteAction;
+    _M QAction*             m_showPaletteAction;*/
 
     _M RDatabase*           m_database;
     _M RData*               m_data0;

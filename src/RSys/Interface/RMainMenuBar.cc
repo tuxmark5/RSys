@@ -16,9 +16,11 @@ Vacuum RMainMenuBar :: RMainMenuBar(RMainWindow* parent):
   QMenu* helpMenu     = new QMenu("&Apie",     this);
 
   systemMenu->addAction(parent->m_importAction);
+
   systemMenu->addSeparator();
   systemMenu->addAction(parent->m_commitAction);
   systemMenu->addAction(parent->m_rollbackAction);
+
   systemMenu->addSeparator();
   systemMenu->addAction(parent->m_disconnectAction);
   systemMenu->addAction(parent->m_exitAction);
@@ -27,9 +29,13 @@ Vacuum RMainMenuBar :: RMainMenuBar(RMainWindow* parent):
 
   m_viewMenu->addAction(parent->m_divisionsStateAction);
   m_viewMenu->addAction(parent->m_systemsStateAction);
+
   m_viewMenu->addSeparator();
   m_viewMenu->addAction(parent->logDock()->toggleViewAction());
   m_viewMenu->addAction(parent->m_paletteDock->toggleViewAction());
+
+  m_viewMenu->addSeparator();
+  m_viewMenu->addAction(parent->m_exterpolationAction);
 
   helpMenu->addAction(parent->m_helpAction);
 

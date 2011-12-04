@@ -60,6 +60,8 @@ class RResults: public QObject
   public:
     _M Vacuum           RResults(RData* data0, RData* data1, QObject* parent = 0);
     _M Vacuum           ~RResults();
+    _M RCalculator*     calculator0() const { return m_calculator0; }
+    _M RCalculator*     calculator1() const { return m_calculator1; }
     _M RData*           data1() const { return m_data1; }
     _M Getter           field(ResultType type, RUnit* unit);
     _M RInterval        findLowUsageInterval(RUnit* unit);
@@ -84,6 +86,7 @@ class RResults: public QObject
 
   private:
     _S double           fieldDeltaUsage(RUnit* unit, int x);
+    _S double           fieldDeltaUsageCount(RUnit* unit, int x);
     _M QString          intervalStr(int x);
 };
 

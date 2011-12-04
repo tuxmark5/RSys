@@ -11,14 +11,18 @@ Vacuum RMainToolBar :: RMainToolBar(RMainWindow* parent):
   setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
   addAction(parent->m_importAction);
+
   addSeparator();
   addAction(parent->m_commitAction);
   addAction(parent->m_rollbackAction);
+
   addSeparator();
   addAction(parent->m_searchAction);
+
   addSeparator();
   addAction(parent->m_disconnectAction);
   addAction(parent->m_exitAction);
+
   addSeparator();
   addAction(parent->m_helpAction);
 }
