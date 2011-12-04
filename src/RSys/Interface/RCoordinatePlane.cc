@@ -27,7 +27,7 @@ void RCoordinatePlane :: paint(QPainter* painter)
   if ((m_interval0.first != 0) || (m_interval0.second != 0))
     paintRect(painter, m_interval0.first, m_interval0.second, QColor(0xFF, 0xFF, 0x00, 0x60));
   if ((m_interval1.first != 0) || (m_interval1.second != 0))
-    paintRect(painter, m_interval1.first, m_interval1.second, QColor(0x00, 0xFF, 0x00, 0x80));
+    paintRect(painter, m_interval1.first, m_interval1.second, QColor(0x00, 0xFF, 0x00, 0x20));
 }
 
 /**********************************************************************************************/

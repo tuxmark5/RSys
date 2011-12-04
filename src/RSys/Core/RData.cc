@@ -41,6 +41,8 @@ void RData :: calculateIntervals(RSubmissionPtrList* submissions)
     if (((*it)->date0() < m_interval0) || m_interval0.isNull()) m_interval0 = (*it)->date0();
     if (((*it)->date1() > m_interval1) || m_interval1.isNull()) m_interval1 = (*it)->date1();
   }
+
+  emit globalIntervalChanged();
 }
 
 /**********************************************************************************************/
@@ -114,7 +116,10 @@ void RData :: onDate0Change(RSubmission* submission, QDate oldDate0)
   R_GUARD(submission->date0().isValid(), Vacuum);
 
   /**/ if (submission->date0() < m_interval0)
+  {
     m_interval0 = submission->date0();
+    emit globalIntervalChanged();
+  }
   else if (oldDate0 == m_interval0)
     calculateIntervals();
 }
@@ -126,7 +131,10 @@ void RData :: onDate1Change(RSubmission* submission, QDate oldDate1)
   R_GUARD(submission->date1().isValid(), Vacuum);
 
   /**/ if (submission->date1() > m_interval1)
+  {
     m_interval1 = submission->date1();
+    emit globalIntervalChanged();
+  }
   else if (oldDate1 == m_interval1)
     calculateIntervals();
 }

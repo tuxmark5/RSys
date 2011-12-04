@@ -42,6 +42,8 @@ Vacuum RUsageWidget :: RUsageWidget(int mode, RUnit* unit, RResults* results, QW
 
   setMode(mode);
   updateGlobalInterval();
+
+  connect(results->data1(), SIGNAL(globalIntervalChanged()), this, SLOT(updateGlobalInterval()));
 }
 
 /**********************************************************************************************/
