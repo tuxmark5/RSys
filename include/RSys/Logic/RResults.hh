@@ -55,6 +55,7 @@ class RResults: public QObject
     _M int              m_seasonalLengths[4];
 
     _M bool             m_updatesEnabled: 1;
+    _M bool             m_updatePending: 1;
 
   public:
     _M Vacuum           RResults(RData* data0, RData* data1, QObject* parent = 0);

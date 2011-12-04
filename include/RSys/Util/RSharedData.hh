@@ -16,6 +16,9 @@ class RSharedData
     _M Vacuum         RSharedData():
       m_numRefs(0) { }
 
+    _M int            numRefs()
+    { return m_numRefs; }
+
     _M int            release()
     { return --m_numRefs; }
 

@@ -77,24 +77,27 @@ class REntity1DI: public REntity1D,
 
     _M bool               commit(QSqlQuery& query)
     {
-      bool result = true;
+      bool result = false;
 
-      for (auto it = m_log.begin(); it != m_log.end(); ++it)
+      for (int state = 0; state < 3; state++)
       {
-        qDebug() << "DOIN" << m_exprs[it.value()];
+        auto keys = m_log.keys(state);
+        query.prepare(m_exprs[state]);
 
-        qDebug() << "PREP" << query.prepare(m_exprs[it.value()]);
-        qDebug() << "LA" << query.lastError().text();
-
-        switch (it.value())
+        for (auto it = keys.begin(); it != keys.end(); it++)
         {
-          case Insert: result = syncInsert(query, *it.key()); break;
-          case Update: result = syncUpdate(query, *it.key()); break;
-          case Remove: result = syncRemove(query, *it.key()); break;
+          switch (state)
+          {
+            case Insert: result = syncInsert(query, **it); break;
+            case Update: result = syncUpdate(query, **it); break;
+            case Remove: result = syncRemove(query, **it); break;
+          }
         }
 
         if (!result)
-          qDebug() << "ERR" << query.lastError();
+        {
+          qDebug() << "ERR" << m_exprs[state] << query.lastError();
+        }
       }
 
       m_log.clear();

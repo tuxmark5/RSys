@@ -26,7 +26,30 @@ Vacuum RDivision :: RDivision(RDivision& division, RData* data):
 
 Vacuum RDivision :: ~RDivision()
 {
-  m_data->purgeDivision(this);
+  R_NZ(m_data)->purgeDivision(this);
+}
+
+/**********************************************************************************************/
+
+void RDivision :: purge()
+{
+  RUnit::purge();
+
+  for (auto it = m_measureHash.begin(); it != m_measureHash.end(); ++it)
+    (*m_data)[onMeasureUnset](this, it.key());
+  for (auto it = m_systemHash.begin(); it != m_systemHash.end(); ++it)
+    (*m_data)[onSystemUnset](this, it.key());
+
+  m_measureHash.clear();
+  m_systemHash.clear();
+  R_NZ(m_data)->purgeDivision(this);
+}
+
+/**********************************************************************************************/
+
+void RDivision :: remove()
+{
+  purge();
 }
 
 /**********************************************************************************************/
@@ -38,8 +61,12 @@ bool RDivision :: setMeasure(RMeasure* measure, double value)
 
   if (value == 0.0)
   {
-    (*m_data)[onMeasureUnset](this, measure);
-    m_measureHash.remove(measure);
+    auto it = m_measureHash.find(measure);
+    if (it != m_measureHash.end())
+    {
+      (*m_data)[onMeasureUnset](this, measure);
+      m_measureHash.erase(it);
+    }
   }
   else
   {
@@ -75,8 +102,12 @@ void RDivision :: setSystem(RSystem* system, double value)
 
   if (!value)
   {
-    (*m_data)[onSystemUnset](this, system);
-    m_systemHash.remove(system);
+    auto it = m_systemHash.find(system);
+    if (it != m_systemHash.end())
+    {
+      (*m_data)[onSystemUnset](this, system);
+      m_systemHash.erase(it);
+    }
   }
   else
   {

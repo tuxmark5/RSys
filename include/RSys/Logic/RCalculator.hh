@@ -76,13 +76,12 @@ class RCalculator
      */
     _M bool             solveSystemOfLinearEquations(double matrix[3][4],
                                                      double solution[3]);
-
-    public:
-      _M Vacuum           RCalculator(RData* data);
-      _M Vacuum           ~RCalculator();
-      _M void             update();
-      _M void             setIntervalFun(IntervalFun intervalFun, int numIntervals);
-  };
+  public:
+    _M Vacuum           RCalculator(RData* data);
+    _M Vacuum           ~RCalculator();
+    _M void             update();
+    _M void             setIntervalFun(IntervalFun intervalFun, int numIntervals);
+};
 
 /**********************************************************************************************/
 

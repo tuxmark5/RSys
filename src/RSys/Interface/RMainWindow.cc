@@ -1,3 +1,4 @@
+#include <QtCore/QSettings>
 #include <QtGui/QAction>
 #include <QtGui/QCloseEvent>
 #include <QtGui/QFileDialog>
@@ -419,12 +420,15 @@ void RMainWindow :: findIntervalNow()
 void RMainWindow :: importData()
 {
   QString       fileName    = QFileDialog::getOpenFileName
-      (this, QString::fromUtf8("Importuoti"), QString(),
+      (this, QString::fromUtf8("Importuoti"),
+       g_settings->value("importDir", ".").toString(),
        QString("Microsoft Excel bylos (*.xls)"));
   R_GUARD(!fileName.isNull(), Vacuum);
 
   RParser*      parser      = new RParser();
   RImportForm*  importForm;
+
+  g_settings->setValue("importDir", fileName);
 
   connect(parser, SIGNAL(report(QString)), this, SLOT(showMessage(QString)));
   connect(parser, SIGNAL(log(RMessageLevel,RID,QString)), m_logDock, SLOT(addMessage(RMessageLevel,RID,QString)));

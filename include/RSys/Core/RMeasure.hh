@@ -16,8 +16,8 @@ class RMeasure: public RUnit
   private:
     _M RID              m_groupId;
 
-    _M RSystemHash       m_systemUsage;
-    _M RDivisionHash     m_divisionUsage;
+    _M RDivisionHash    m_divisionUsage;
+    _M RSystemHash      m_systemUsage;
 
   public:
     _M Vacuum           RMeasure(RData* data);

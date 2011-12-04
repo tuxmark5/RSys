@@ -25,11 +25,7 @@ Vacuum RUnit :: RUnit(RUnit& unit, RData* data):
 
 Vacuum RUnit :: ~RUnit()
 {
-  if (m_data)
-  {
-    m_data->m_unitHash[m_type].remove(m_identifier, this);
-    qDebug() << "UNIT DIES WITH" << m_type << m_identifier;
-  }
+  R_NZ(m_data)->m_unitHash[m_type].remove(m_identifier, this);
 }
 
 /**********************************************************************************************/
@@ -37,6 +33,13 @@ Vacuum RUnit :: ~RUnit()
 QString RUnit :: fullName() const
 {
   return QString("(%1) %2").arg(m_identifier, m_name);
+}
+
+/**********************************************************************************************/
+
+void RUnit :: purge()
+{
+  R_NZ(m_data)->m_unitHash[m_type].remove(m_identifier, this);
 }
 
 /**********************************************************************************************/

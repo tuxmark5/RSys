@@ -42,6 +42,7 @@ class RUnit: public RElement
     _M QString            fullName() const;
     _M QString            identifier() const { return m_identifier; }
     _M QString            name() const { return m_name; }
+    _V void               purge();
     _M bool               setIdentifier(const QString& identifier);
     _M bool               setName(const QString& name);
     _M const UsageVector& usage() const { return m_usage; }

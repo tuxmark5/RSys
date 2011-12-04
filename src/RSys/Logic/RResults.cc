@@ -13,7 +13,8 @@ Vacuum RResults :: RResults(RData* data0, RData* data1, QObject* parent):
   m_data0(data0),
   m_data1(data1),
   m_numRecords(0),
-  m_updatesEnabled(true)
+  m_updatesEnabled(true),
+  m_updatePending(false)
 {
   m_calculator0 = new RCalculator(m_data0);
   m_calculator1 = new RCalculator(m_data1);
@@ -223,14 +224,16 @@ void RResults :: update()
 
   for (auto it = m_models.begin(); it != m_models.end(); ++it)
     emit (*it)->reset();
+  m_updatePending = false;
 }
 
 /**********************************************************************************************/
 
 void RResults :: updateDelayed()
 {
-  R_GUARD(m_updatesEnabled, Vacuum);
+  R_GUARD(m_updatesEnabled && !m_updatePending, Vacuum);
 
+  m_updatePending = true;
   QMetaObject::invokeMethod(this, "update", Qt::QueuedConnection);
 }
 

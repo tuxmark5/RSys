@@ -14,6 +14,7 @@ class RSystem: public RUnit
     _M Vacuum           RSystem(RSystem& system, RData* data);
     _V Vacuum           ~RSystem();
     _M RSystem*         buddy() const { return static_cast<RSystem*>(m_buddy); }
+    _M void             remove();
 };
 
 /**********************************************************************************************/

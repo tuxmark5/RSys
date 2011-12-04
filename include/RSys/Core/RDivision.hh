@@ -16,9 +16,9 @@ class RDivision: public RUnit
     _F class          TestRValidator;
 
   private:
-    _M RMeasureHash    m_measureHash;
-    _M RMeasureHash    m_measureHash1;  // planned measures
-    _M RSystemHash     m_systemHash;
+    _M RMeasureHash   m_measureHash;
+    _M RMeasureHash   m_measureHash1;  // planned measures
+    _M RSystemHash    m_systemHash;
 
   public:
     _M Vacuum         RDivision(RData* data);
@@ -26,6 +26,8 @@ class RDivision: public RUnit
     _V Vacuum         ~RDivision();
     _M double         measure(RMeasure* measure) const { return m_measureHash.value(measure, 0); }
     _M double         measure1(RMeasure* measure) const { return m_measureHash1.value(measure, 0); }
+    _M void           purge();
+    _M void           remove();
     _M bool           setMeasure(RMeasure* measure, double value);
     _M void           setMeasure1(RMeasure* measure, double value);
     _M void           setSystem(RSystem* system, double value);

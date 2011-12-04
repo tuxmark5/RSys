@@ -60,20 +60,26 @@ class REntity2DI: public REntity2D
 
     _V bool               commit(QSqlQuery& query)
     {
-      for (auto it = m_journal.begin(); it != m_journal.end(); ++it)
+      for (int state = 0; state < 3; state++)
       {
-        const JournalKey&     key     = it.key();
-        const JournalValue&   value   = it.value();
-        //bool                  result  = false;
+        query.prepare(m_exprs[state]);
+        qDebug() << "DOIN" << m_exprs[state];
 
-        query.prepare(m_exprs[value.second]);
-        qDebug() << "DOIN" << m_exprs[value.second];
-        switch (value.second)
+        for (auto it = m_journal.begin(); it != m_journal.end(); ++it)
         {
-          case Remove: syncRemove(query, key, value); break;
-          case Update: syncUpdate(query, key, value); break;
+          const JournalKey&     key     = it.key();
+          const JournalValue&   value   = it.value();
+
+          if (value.second != state)
+            continue;
+
+          switch (state)
+          {
+            case Remove: syncRemove(query, key, value); break;
+            case Update: syncUpdate(query, key, value); break;
+          }
+          query.exec();
         }
-        query.exec();
       }
 
       return m_journal.clear(), true;
