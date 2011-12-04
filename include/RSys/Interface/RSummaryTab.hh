@@ -18,6 +18,9 @@ class RSummaryTab: public RTab
   public:
     _M Vacuum           RSummaryTab(RMainWindow* parent = 0);
     _V Vacuum           ~RSummaryTab();
+
+  public slots:
+    _M void             updateModeName();
 };
 
 /**********************************************************************************************/

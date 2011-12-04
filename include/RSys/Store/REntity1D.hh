@@ -77,7 +77,7 @@ class REntity1DI: public REntity1D,
 
     _M bool               commit(QSqlQuery& query)
     {
-      bool result = false;
+      bool result = true;
 
       for (int state = 0; state < 3; state++)
       {

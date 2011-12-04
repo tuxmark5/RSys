@@ -79,26 +79,20 @@ void RChart :: setDiagram(Diagram* diagram)
 
 /**********************************************************************************************/
 
-void RChart :: setFillRange(QDate fill0, QDate fill1)
+void RChart :: setFillRange(int id, QDate fill0, QDate fill1)
 {
   RCoordinatePlane* plane = static_cast<RCoordinatePlane*>(coordinatePlane());
 
-  if (fill0.isValid() && fill1.isValid())
+  /*if (fill0.isValid() && fill1.isValid())
   {
-    int     height      = m_diagram->numberOfAbscissaSegments();
-    QDate   interval0   = m_model->headerData(0, Qt::Vertical).toDate();
-    QDate   interval1   = m_model->headerData(height - 1, Qt::Vertical).toDate();
-    auto    hrange      = plane->horizontalRange();
-    double  scale       = (hrange.second - hrange.first) / interval0.daysTo(interval1);
-    double  fillX0      = interval0.daysTo(fill0) * scale;
-    double  fillX1      = interval0.daysTo(fill1) * scale;
+    DoublePair fill = translate(DatePair(fill0, fill1));
 
-    plane->setFillRange(fillX0, fillX1);
+    plane->setFillInterval(id, fill);
   }
   else
   {
-    plane->setFillEnabled(false);
-  }
+    plane->setFillInterval(id, DoublePair(0, 0));
+  }*/
 }
 
 /**********************************************************************************************/
@@ -138,6 +132,21 @@ void RChart :: setType(ChartType type)
   if (m_legend)
     m_legend->addDiagram(diagram);
   setDiagram(diagram);
+}
+
+/**********************************************************************************************/
+
+auto RChart :: translate(DatePair date) -> DoublePair
+{
+  auto    plane       = static_cast<RCoordinatePlane*>(coordinatePlane());
+  int     numRecords  = m_diagram->numberOfAbscissaSegments();
+  QDate   interval0   = m_model->headerData(0, Qt::Vertical).toDate();
+  QDate   interval1   = m_model->headerData(numRecords - 1, Qt::Vertical).toDate();
+  auto    hrange      = plane->horizontalRange();
+  double  scale       = (hrange.second - hrange.first) / interval0.daysTo(interval1);
+
+  return DoublePair(interval0.daysTo(date.first)  * scale,
+                    interval0.daysTo(date.second) * scale);
 }
 
 /**********************************************************************************************/

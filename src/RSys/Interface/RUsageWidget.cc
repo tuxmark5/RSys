@@ -3,6 +3,7 @@
 #include <QtGui/QMenu>
 #include <QtGui/QPushButton>
 #include <QtGui/QStackedLayout>
+#include <RSys/Core/RData.hh>
 #include <RSys/Core/RUnit.hh>
 #include <RSys/Interface/RChart.hh>
 #include <RSys/Interface/RResultsModel.hh>
@@ -40,6 +41,7 @@ Vacuum RUsageWidget :: RUsageWidget(int mode, RUnit* unit, RResults* results, QW
   setFixedHeight(200);
 
   setMode(mode);
+  updateGlobalInterval();
 }
 
 /**********************************************************************************************/
@@ -97,6 +99,8 @@ void RUsageWidget :: setMode()
 
 void RUsageWidget :: setMode(int mode)
 {
+  R_NZ(m_unit)->m_viewMode = mode;
+
   switch (mode)
   {
     case Usage1Bar:
@@ -155,7 +159,7 @@ void RUsageWidget :: setSearchInterval(bool search)
     m_lowInterval = RInterval();
 
   if (RChart* chart = qobject_cast<RChart*>(widget()))
-    chart->setFillRange(std::get<0>(m_lowInterval), std::get<1>(m_lowInterval));
+    chart->setFillRange(0, std::get<0>(m_lowInterval), std::get<1>(m_lowInterval));
 
   updateHeader();
 }
@@ -166,6 +170,16 @@ void RUsageWidget :: setTitle(const char* title)
 {
   m_title = QString::fromUtf8(title);
   updateHeader();
+}
+
+/**********************************************************************************************/
+
+void RUsageWidget :: updateGlobalInterval()
+{
+  if (RChart* chart = qobject_cast<RChart*>(widget()))
+  {
+    chart->setFillRange(1, m_results->data1()->interval1(), QDate(5000, 1, 1));
+  }
 }
 
 /**********************************************************************************************/

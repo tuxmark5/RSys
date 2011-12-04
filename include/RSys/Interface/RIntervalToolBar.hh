@@ -47,6 +47,9 @@ class RIntervalToolBar: public QToolBar
     _M QDate          date1() const;
     _V bool           eventFilter(QObject* watched, QEvent* event);
     _M void           getInterval(QDate& date0, QDate& date1, RIntervalFun& fun, int& num);
+    _M QString        getIntervalMessage(QDate date0, QDate date1, int num);
+    _M QDate          globalInterval0() const;
+    _M QDate          globalInterval1() const;
     _M bool           isIntervalValid() const { return m_validInterval; }
     _M void           modifyDate(int deltaYear, int deltaMonth);
     _M RResults*      results() const;

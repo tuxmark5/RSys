@@ -62,7 +62,6 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
 {
   m_data0             = new RData();
   m_data1             = new RData();
-  m_data1->enableIntervalTracking();
   m_database          = new RDatabase(m_data1, this);
   createContainers();
 
@@ -245,17 +244,19 @@ void RMainWindow :: createConnections()
 
 void RMainWindow :: createConnections1()
 {
-  (*m_data1)[RData::errorMessage]         << [=](const QString& message)
+  (*m_data1)[RData::errorMessage]             << [=](const QString& message)
   { if (!m_importing) showMessage(message); };
-  (*m_data1)[RSubmission::measureChange]  << std::bind(&RResults::updateDelayed, m_results);
-  (*m_data1)[RSubmission::countChange]    << std::bind(&RResults::updateDelayed, m_results);
-  (*m_data1)[RSubmission::date0Change]    << std::bind(&RResults::updateDelayed, m_results);
-  (*m_data1)[RSubmission::date1Change]    << std::bind(&RResults::updateDelayed, m_results);
-  (*m_data1)[RDivision::onMeasureSet]     << std::bind(&RResults::updateDelayed, m_results);
-  (*m_data1)[RDivision::onMeasureUnset]   << std::bind(&RResults::updateDelayed, m_results);
-  (*m_data1)[RDivision::onSystemSet]      << std::bind(&RResults::updateDelayed, m_results);
-  (*m_data1)[RDivision::onSystemUnset]    << std::bind(&RResults::updateDelayed, m_results);
-  (*m_data1)[RUser::onSql]                << std::bind(&RSqlEntity::exec, m_database->sqlEntity(), _1, _2, _3);
+  (*m_data1)[RDivision::onMeasureSet]         << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RDivision::onMeasureUnset]       << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RDivision::onSystemSet]          << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RDivision::onSystemUnset]        << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RSubmission::countChange]        << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RSubmission::date0Changed]       << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RSubmission::date1Changed]       << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RSubmission::measureChange]      << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RSubmission::submissionRemoval]  << std::bind(&RResults::updateDelayed, m_results);
+  (*m_data1)[RUser::onSql]                    << std::bind(&RSqlEntity::exec, m_database->sqlEntity(), _1, _2, _3);
+  m_data1->enableIntervalTracking();
 }
 
 /**********************************************************************************************/

@@ -31,6 +31,8 @@ class RChart: public KDChart::Chart
     _T KDChart::CartesianAxis               Axis;
     _T KDChart::CartesianCoordinatePlane    CoordinatePlane;
     _T KDChart::Chart                       Chart;
+    _T QPair<QDate, QDate>                  DatePair;
+    _T QPair<double, double>                DoublePair;
     _T KDChart::AbstractCartesianDiagram    Diagram;
     _T KDChart::Legend                      Legend;
 
@@ -46,7 +48,8 @@ class RChart: public KDChart::Chart
     _V Vacuum           ~RChart();
     _M void             setDiagram(Diagram* diagram);
     _M void             setDiagramType(Diagram* diagram);
-    _M void             setFillRange(QDate date0, QDate date1);
+    _M void             setFillRange(int id, QDate date0, QDate date1);
+    _M DoublePair       translate(DatePair date);
 
   public slots:
     _M void             setShowLegend(bool show);

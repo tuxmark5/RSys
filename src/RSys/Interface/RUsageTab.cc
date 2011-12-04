@@ -67,7 +67,8 @@ void RUsageTab :: clearUnits()
 
 RUsageWidget* RUsageTab :: createWidget(RUnit* unit)
 {
-  RUsageWidget* widget = new RUsageWidget(m_defaultMode, unit, m_results);
+  int           mode    = unit->m_viewMode != -1 ? unit->m_viewMode : m_defaultMode;
+  RUsageWidget* widget  = new RUsageWidget(mode, unit, m_results);
 
   connect(m_mainWindow, SIGNAL(searchModeChanged(bool)), widget, SLOT(setSearchInterval(bool)));
 

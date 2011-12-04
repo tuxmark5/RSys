@@ -37,9 +37,17 @@ Vacuum RIntervalToolBar :: RIntervalToolBar(RMainWindow* parent):
   m_intervalLen   = new QComboBox(this);
   m_applyButton   = new QPushButton("Rodyti", this);
 
-  QDateEdit::connect(m_interval0, SIGNAL(dateChanged(QDate)), this, SLOT(validate()));
-  QDateEdit::connect(m_interval1, SIGNAL(dateChanged(QDate)), this, SLOT(validate()));
-  QDateEdit::connect(m_applyButton, SIGNAL(clicked()), this, SLOT(applyInterval()));
+  m_intervalLen->addItem(R_S("savaites"),     (int) ByWeek);
+  m_intervalLen->addItem(R_S("mėnesius"),     (int) ByMonth);
+  m_intervalLen->addItem(R_S("ketvirčius"),   (int) ByQuarter);
+  m_intervalLen->addItem(R_S("metus"),        (int) ByYear);
+  m_intervalLen->setCurrentIndex(1);
+
+  connect(m_interval0, SIGNAL(dateChanged(QDate)), this, SLOT(validate()));
+  connect(m_interval1, SIGNAL(dateChanged(QDate)), this, SLOT(validate()));
+  connect(m_intervalLen, SIGNAL(currentIndexChanged(int)), this, SLOT(applyInterval()));
+  connect(m_applyButton, SIGNAL(clicked()), this, SLOT(applyInterval()));
+
   m_interval0->installEventFilter(this);
   m_interval1->installEventFilter(this);
 
@@ -48,18 +56,21 @@ Vacuum RIntervalToolBar :: RIntervalToolBar(RMainWindow* parent):
   addWidget(m_interval0);
   addLabel(u"iki");
   addWidget(m_interval1);
+  addWidget(m_applyButton);
+
+  addSeparator();
   addLabel(u"po");
   addWidget(m_intervalLen);
+
   addSeparator();
   addWidget(decYear);
   addLabel(u"Metai");
   addWidget(incYear);
+
   addSeparator();
   addWidget(decMonth);
   addLabel(u"Mėnuo");
   addWidget(incMonth);
-  addSeparator();
-  addWidget(m_applyButton);
 
   connect(decMonth, SIGNAL(clicked()), this, SLOT(decMonth()));
   connect(decYear,  SIGNAL(clicked()), this, SLOT(decYear()));
@@ -70,12 +81,6 @@ Vacuum RIntervalToolBar :: RIntervalToolBar(RMainWindow* parent):
   decYear->setFixedWidth(25);
   incMonth->setFixedWidth(25);
   incYear->setFixedWidth(25);
-
-  m_intervalLen->addItem(R_S("savaites"),     (int) ByWeek);
-  m_intervalLen->addItem(R_S("mėnesius"),     (int) ByMonth);
-  m_intervalLen->addItem(R_S("ketvirčius"),   (int) ByQuarter);
-  m_intervalLen->addItem(R_S("metus"),        (int) ByYear);
-  m_intervalLen->setCurrentIndex(1);
   //m_intervalLen->addItem(R_S("lygias 10 dalių"));
   //m_intervalLen->addItem(R_S("lygias 12 dalių"));
 
@@ -136,19 +141,28 @@ bool RIntervalToolBar :: applyInterval()
   int           num       = 0;
   QDate         date0     = m_interval0->date();
   QDate         date1     = m_interval1->date();
-  bool          modified  = adjustInterval(date0, date1);
-
+  QDate         date0Org  = date0;
+  QDate         date1Org  = date1;
+  bool          modified0 = adjustInterval(date0, date1);
   getInterval(date0, date1, fun, num);
 
-  QString       msgText   = R_S("Rodomas intervalas: nuo <b>%1</b> iki <b>%2</b>")
-    .arg(date0.toString(Qt::DefaultLocaleShortDate))
-    .arg(date1.addDays(-1).toString(Qt::DefaultLocaleShortDate));
+  bool          modified1 = (date0 != date0Org) || (date1 != date1Org.addDays(1));
 
-  if (modified)
+  QString       msgText   = R_S("<html>Rodomas intervalas: nuo <b>%1</b> iki <b>%2</b>")
+    .arg(R_DATE_TO_S(date0), R_DATE_TO_S(date1.addDays(-1)));
+
+  if (modified0 || modified1)
   {
-    msgText += R_S("<br>Nes pateikti intervalo galai viršyja duomenų apimtis, tai"
-                   "<br>itervalas buvo pakoreguotas, kad atitiktų turimus duomenis.");
+    msgText += R_S("<br>Intervalas buvo pataisytas, kad:<ul style='margin-top:0px'>");
+    if (modified0)
+      msgText += R_S("<li>Atitiktų turimus duomenis (nuo <b>%1</b> iki <b>%2</b>)</li>")
+        .arg(R_DATE_TO_S(globalInterval0()), R_DATE_TO_S(globalInterval1()));
+    if (modified1)
+      msgText += getIntervalMessage(date0, date1, num);
+    msgText += "</ul>";
   }
+
+  msgText += "</html>";
 
   emit message(msgText, -1);
 
@@ -271,6 +285,53 @@ void RIntervalToolBar :: getInterval(QDate& date0, QDate& date1, RIntervalFun& f
       };
       break;
   }
+}
+
+/**********************************************************************************************/
+
+QString RIntervalToolBar :: getIntervalMessage(QDate date0, QDate date1, int num)
+{
+  Q_UNUSED(date0);
+  Q_UNUSED(date1);
+
+  switch (m_intervalLen->currentIndex())
+  {
+    case ByWeek:
+      return R_S("<li>Prasidėtų pirmadiniu</li>"
+                 "<li>Į jį tilptų tikslus savaičių sk. (<b>%1</b>)</li>")
+            .arg(num);
+
+    case ByMonth:
+      return R_S("<li>Prasidėtų pirmąja mėnesio diena</li>"
+                 "<li>Į jį tilptų tikslus mėnesių sk. (<b>%1</b>)</li>")
+            .arg(num);
+
+    case ByQuarter:
+      return R_S("<li>Prasidėtų ketvirčio pradžia</li>"
+                 "<li>Į jį tilptų tikslius ketvirčių sk. (<b>%1</b>)</li>")
+            .arg(num);
+
+    case ByYear:
+      return R_S("<li>Prasidėtų pirmąja metų diena</li>"
+                 "<li>Į jį tilptų tikslius metų sk.(<b>%1</b>)</li>")
+            .arg(num);
+  }
+
+  return QString();
+}
+
+/**********************************************************************************************/
+
+QDate RIntervalToolBar :: globalInterval0() const
+{
+  return m_mainWindow->results()->data1()->interval0();
+}
+
+/**********************************************************************************************/
+
+QDate RIntervalToolBar :: globalInterval1() const
+{
+  return m_mainWindow->results()->data1()->interval1();
 }
 
 /**********************************************************************************************/

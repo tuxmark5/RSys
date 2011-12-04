@@ -13,20 +13,22 @@ class RCoordinatePlane: public KDChart::CartesianCoordinatePlane
   Q_OBJECT
 
   public:
-    _T KDChart::CartesianCoordinatePlane   Base;
-    _T KDChart::Chart                      Chart;
+    _T KDChart::CartesianCoordinatePlane    Base;
+    _T KDChart::Chart                       Chart;
+    _T QPair<double, double>                Interval;
 
   public:
-    _M double         m_fillX0;
-    _M double         m_fillX1;
-    _M bool           m_fillBack;
+    _M Interval       m_interval0;
+    _M Interval       m_interval1;
 
   public:
     _M Vacuum         RCoordinatePlane(Chart* parent = 0);
     _V Vacuum         ~RCoordinatePlane();
     _V void           paint(QPainter* painter);
-    _M void           setFillEnabled(bool fill);
-    _M void           setFillRange(double x0, double x1);
+    _M void           setFillInterval(int id, Interval interval0);
+
+  protected:
+    _M void           paintRect(QPainter* painter, double x0, double x1, const QColor& color);
 };
 
 /**********************************************************************************************/

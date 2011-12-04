@@ -50,6 +50,13 @@ RID RSubmission :: measureId() const
 
 /**********************************************************************************************/
 
+void RSubmission :: remove()
+{
+  (*m_data)[submissionRemoval](this);
+}
+
+/**********************************************************************************************/
+
 bool RSubmission :: setCount(int count)
 {
   R_DATA_GUARD(count >= 0, false, "Kiekis negali būti neigiamas skaičius.");
@@ -66,8 +73,9 @@ bool RSubmission :: setDate0(const QDate& date0)
   R_DATA_GUARD(m_date1.isValid() ? (date0 < m_date1) : true, false,
                "Klaidingas kairysis intervalo galas.");
 
-  (*m_data)[date0Change](this, date0);
-  m_date0 = date0;
+  QDate oldDate0  = m_date0;
+  m_date0         = date0;
+  (*m_data)[date0Changed](this, oldDate0);
   return true;
 }
 
@@ -79,8 +87,9 @@ bool RSubmission :: setDate1(const QDate& date1)
   R_DATA_GUARD(m_date0.isValid() ? (m_date0 < date1) : true, false,
                "Klaidingas dešinysis intervalo galas.");
 
-  (*m_data)[date1Change](this, date1);
-  m_date1 = date1;
+  QDate oldDate1  = m_date1;
+  m_date1         = date1;
+  (*m_data)[date1Changed](this, oldDate1);
   return true;
 }
 

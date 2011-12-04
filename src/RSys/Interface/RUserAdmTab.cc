@@ -1,6 +1,7 @@
 #include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
 #include <QtGui/QGridLayout>
+#include <QtGui/QItemSelection>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
 #include <RSys/Core/RData.hh>
@@ -29,7 +30,8 @@ Vacuum RUserAdmTab :: RUserAdmTab(RUserTab* userTab, RMainWindow* parent):
   QSpacerItem*  spacer    = new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
   RTableView*   tableView = userTab->findChild<RTableView*>();
 
-  connect(tableView, SIGNAL(activated(QModelIndex)), this, SLOT(onActivated(const QModelIndex&)));
+  connect(tableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+    this, SLOT(onSelectionChanged(QItemSelection,QItemSelection)));
 
   addField3("mea",  R_S("Paramos priem."));
   addField3("div",  R_S("Padaliniai"));
@@ -105,16 +107,6 @@ void RUserAdmTab :: addPasswordField()
 
 /**********************************************************************************************/
 
-void RUserAdmTab :: onActivated(const QModelIndex& index)
-{
-  if (index.isValid() && index.row() < m_users->size())
-    setUser(m_users->at(index.row()));
-  else
-    setUser(0);
-}
-
-/**********************************************************************************************/
-
 void RUserAdmTab :: onField2Changed(bool value)
 {
   QString key = m_fields.value(sender());
@@ -138,11 +130,31 @@ void RUserAdmTab :: onPasswordChanged(const QString& newPass)
 
 /**********************************************************************************************/
 
+void RUserAdmTab :: onSelectionChanged(const QItemSelection& sel1, const QItemSelection& sel0)
+{
+  Q_UNUSED(sel0);
+
+  RUser* user = [&]() -> RUser*
+  {
+    QModelIndexList sel1List  = sel1.indexes();
+    R_GUARD(sel1List.size() >= 1, 0);
+    QModelIndex     index     = sel1List.first();
+    R_GUARD(index.isValid() && index.row() < m_users->size(), 0);
+    return m_users->at(index.row());
+  }();
+
+  setUser(user);
+}
+
+/**********************************************************************************************/
+
 void RUserAdmTab :: setUser(RUser* user)
 {
-  m_user = user;
+  R_GUARD(m_user != user, Vacuum);
+
   m_widget->setEnabled(bool(user));
 
+  m_user = user;
   R_GUARD(user, Vacuum);
 
   for (auto it = m_fields.begin(); it != m_fields.end(); ++it)

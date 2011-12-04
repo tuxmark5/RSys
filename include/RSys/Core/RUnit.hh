@@ -4,6 +4,7 @@
 /**********************************************************************************************/
 #include <QtCore/QVector>
 #include <RSys/Core/RElement.hh>
+#include <RSys/Util/RSignal.hh>
 /********************************************* RS *********************************************/
 /*                                           RUnit                                            */
 /**********************************************************************************************/
@@ -33,6 +34,9 @@ class RUnit: public RElement
 
     _M RUsageMap          m_usageChangeMap; // paraiškų per dieną skaičiaus pokytis
     _M RUsageMap          m_usageMap;       // paraiškų per dieną pradedant nuo datos
+
+  public:
+    _M int                m_viewMode;
 
   public:
     _M Vacuum             RUnit(Type type, RData* data);

@@ -38,6 +38,7 @@ class RSubmission: public RElement
     _M QString          measureFullName() const;
     _M RID              measureId() const;
     _M QString          measureName() const { return m_measureName; }
+    _M void             remove();
     _M bool             setCount(int count);
     _M bool             setDate0(const QDate& date0);
     _M bool             setDate1(const QDate& date1);
@@ -48,9 +49,10 @@ class RSubmission: public RElement
 
   public:
     _G(void,            countChange, RSubmission* submission, int newCount);
-    _G(void,            date0Change, RSubmission* submission, QDate newDate0);
-    _G(void,            date1Change, RSubmission* submission, QDate newDate1);
+    _G(void,            date0Changed, RSubmission* submission, QDate oldDate0);
+    _G(void,            date1Changed, RSubmission* submission, QDate oldDate1);
     _G(void,            measureChange, RSubmission* submission, RMeasure* measure);
+    _G(void,            submissionRemoval, RSubmission* submission);
 };
 
 /**********************************************************************************************/

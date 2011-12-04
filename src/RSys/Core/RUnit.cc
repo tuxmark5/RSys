@@ -7,7 +7,8 @@
 
 Vacuum RUnit :: RUnit(Type type, RData* data):
   RElement(data),
-  m_type(type)
+  m_type(type),
+  m_viewMode(-1)
 {
 }
 
@@ -17,7 +18,8 @@ Vacuum RUnit :: RUnit(RUnit& unit, RData* data):
   RElement(unit, data),
   m_type(unit.m_type),
   m_identifier(unit.m_identifier),
-  m_name(unit.m_name)
+  m_name(unit.m_name),
+  m_viewMode(unit.m_viewMode)
 {
 }
 
@@ -39,7 +41,9 @@ QString RUnit :: fullName() const
 
 void RUnit :: purge()
 {
-  R_NZ(m_data)->m_unitHash[m_type].remove(m_identifier, this);
+  R_GUARD(m_data, Vacuum);
+
+  m_data->m_unitHash[m_type].remove(m_identifier, this);
 }
 
 /**********************************************************************************************/

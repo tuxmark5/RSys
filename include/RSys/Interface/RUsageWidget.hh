@@ -45,6 +45,7 @@ class RUsageWidget: public RLayerWidget
     _M void             setMode();
     _M void             setMode(int mode);
     _M void             setSearchInterval(bool search);
+    _M void             updateGlobalInterval();
 };
 
 /**********************************************************************************************/

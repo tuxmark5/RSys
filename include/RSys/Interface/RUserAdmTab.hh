@@ -33,10 +33,10 @@ class RUserAdmTab: public RTab
     _M void           setUser(RUser* user);
 
   private slots:
-    _M void           onActivated(const QModelIndex& index);
     _M void           onField2Changed(bool value);
     _M void           onField3Changed(int newIndex);
     _M void           onPasswordChanged(const QString& newPass);
+    _M void           onSelectionChanged(const QItemSelection& sel0, const QItemSelection& sel1);
 };
 
 /**********************************************************************************************/

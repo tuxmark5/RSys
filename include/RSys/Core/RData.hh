@@ -75,14 +75,15 @@ class RData: public QObject, public RSignal
 
   private:
     _M void                   calculateIntervals(RSubmissionPtrList* submissions);
-    _M void                   onDate0Change(RSubmission* submission, QDate date0);
-    _M void                   onDate1Change(RSubmission* submission, QDate date1);
+    _M void                   onDate0Change(RSubmission* submission, QDate oldDate0);
+    _M void                   onDate1Change(RSubmission* submission, QDate oldDate1);
 
   signals:
     _M void                   elementChanged(RElement* element, int changeType);
 
   public:
     _G(void,                  errorMessage, const QString& message);
+    _G(void,                  globalIntervalChanged, QDate date0, QDate date1);
 };
 
 /**********************************************************************************************/

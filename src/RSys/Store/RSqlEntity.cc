@@ -67,6 +67,7 @@ void RSqlEntity :: rollback()
 
 bool RSqlEntity :: select(QSqlQuery& query)
 {
+  Q_UNUSED(query);
   return true;
 }
 
