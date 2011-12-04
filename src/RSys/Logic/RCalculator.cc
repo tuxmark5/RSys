@@ -149,6 +149,8 @@ void RCalculator :: calculateIntervals(RUnitPtrList* units)
     for (int i = 0; i < m_numIntervals; i++)
     {
       (*unitIt)->m_usage[i] = calculateUsage(intervals[i], (*unitIt)->m_usageMap);
+      if ((*unitIt)->m_usage[i] < MIN_USAGE)
+        (*unitIt)->m_usage[i] = 0;
     }
   }
 }
@@ -216,7 +218,9 @@ double RCalculator :: polynomialExterpolation(QDate prevDate, double prevUsage,
   matrix[0][3] = prevDate.daysTo(startDate) * prevUsage;
   matrix[1][3] = startDate.daysTo(endDate) * mainUsage;
   matrix[2][3] = endDate.daysTo(nextDate) * nextUsage;
-  if (solveSystemOfLinearEquations(matrix, coefficients))
+  if (solveSystemOfLinearEquations(matrix, coefficients)
+      && nonNegativeInInterval(coefficients, prevDate.daysTo(startDate),
+                         prevDate.daysTo(endDate)))
   {
     double answer = 0;
     for (int i = 0; i < 3; i++)
@@ -226,7 +230,7 @@ double RCalculator :: polynomialExterpolation(QDate prevDate, double prevUsage,
     }
     return answer;
   } else { // jei neišsprendžiame (gali nutikti, pavyzdžiui, jei neturime
-           // ankstesnių duomenų), laikome tolygiu
+   // ankstesnių duomenų) arba galime gauti neigiamas apkrovas, laikome tolygiu
     return startDate.daysTo(date) * mainUsage;
   }
 }
@@ -322,4 +326,20 @@ double RCalculator :: polynomialExterpolation(RUsageMap :: iterator it,
   }
   return polynomialExterpolation(prevDate, prevUsage, startDate, mainUsage,
                                  endDate, nextUsage, nextDate, date);
+}
+
+/**********************************************************************************************/
+
+bool RCalculator :: nonNegativeInInterval(double coefficients[3], int from, int to)
+{
+  double discriminant = coefficients[1] * coefficients[1]
+                        - 4 * coefficients[0] * coefficients[2];
+  if (discriminant <= 0)
+  {
+    return coefficients[0] > 0;
+  }
+  double roots[] = {(-coefficients[1] - sqrt(discriminant)) / (2 * coefficients[0]),
+                    (-coefficients[1] + sqrt(discriminant)) / (2 * coefficients[0])};
+  if (roots[0] > roots[1]) std::swap(roots[0], roots[1]);
+  return roots[0] >= to || roots[1] <= from;
 }

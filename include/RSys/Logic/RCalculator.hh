@@ -5,6 +5,8 @@
 #include <RSys/RSys.hh>
 #include <RSys/Logic/RResults.hh>
 #include <RSys/Core/RUnit.hh>
+/**********************************************************************************************/
+#define MIN_USAGE 1e-4 // m_usage reikšmės, mažesnės už šią, paverčiamos nuliu
 /********************************************* RS *********************************************/
 /*                                        RCalculator                                         */
 /**********************************************************************************************/
@@ -36,6 +38,9 @@ class RCalculator
      * Randa tokią 2 laipsnio polinominę funkciją f(x), kad jos integralai duotuose
      * intervaluose atitiktų duotas apkrovas, ir grąžina apskaičiuotą reikiamo
      * intervalo integralą.
+     * Jei [startDate; endDate) intervale f(x) įgyja neigiamą reikšmę, jame
+     * apkrovas paskirstome tolygiai. Taip pat tolygiai apkrovos skirstomos ir
+     * jei f(x) rasti nepavyksta.
      *
      * @param prevDate  intervalo, esančio iškart prieš nagrinėjamą, pradžia
      * @param prevUsage intervalo iškart prieš nagrinėjamą vidutinė dienos apkrova
@@ -76,6 +81,16 @@ class RCalculator
      */
     _M bool             solveSystemOfLinearEquations(double matrix[3][4],
                                                      double solution[3]);
+
+    /**
+     *  Patikrina, ar kvadratinė funkcija duotame intervale yra neneigiama.
+     *
+     * @param coefficients funkcijos koeficientai
+     * @param from         intervalo pradžia
+     * @param to           intervalo pabaiga
+     */
+    _M bool             nonNegativeInInterval(double coefficients[3], int from, int to);
+
   public:
     _M Vacuum           RCalculator(RData* data);
     _M Vacuum           ~RCalculator();
