@@ -59,7 +59,8 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   m_searchForm(0),
   m_splitter(0),
   m_results(0),
-  m_importing(false)
+  m_importing(false),
+  m_loggingIn(false)
 {
   m_data0             = new RData();
   m_data1             = new RData();
@@ -207,6 +208,7 @@ void RMainWindow :: createActions()
 
   m_exterpolationAction   = R_ACTION(QString(),                 "Ekstrapoliuoti rezultatus");
   m_exterpolationAction->setCheckable(true);
+  m_exterpolationAction->setChecked(g_settings->value("extrapolation", true).toBool());
 
   m_searchAction          = R_ACTION(":/icons/find_interval.png", "Mažiausiai apkrauti intervalai");
   m_searchAction->setCheckable(true);
@@ -235,23 +237,20 @@ void RMainWindow :: createActions()
 
 void RMainWindow :: createConnections()
 {
-  QAction::connect(m_disconnectAction, SIGNAL(triggered()), this, SLOT(logout()));
-  QAction::connect(m_commitAction, SIGNAL(triggered()), this, SLOT(commit()));
-  QAction::connect(m_exitAction, SIGNAL(triggered()), this, SLOT(close()));
-  QAction::connect(m_importAction, SIGNAL(triggered()), this, SLOT(importData()));
-  QAction::connect(m_rollbackAction, SIGNAL(triggered()), this, SLOT(rollback()));
-  QAction::connect(m_searchAction, SIGNAL(toggled(bool)), this, SLOT(setShowSearchForm(bool)));
-  QAction::connect(m_systemsStateAction, SIGNAL(toggled(bool)), this, SLOT(updateUnits()));
+  connect(m_disconnectAction, SIGNAL(triggered()), this, SLOT(logout()));
+  connect(m_commitAction, SIGNAL(triggered()), this, SLOT(commit()));
+  connect(m_exitAction, SIGNAL(triggered()), this, SLOT(close()));
+  connect(m_exterpolationAction, SIGNAL(triggered(bool)), this, SLOT(setExtrapolationEnabled(bool)));
+  connect(m_importAction, SIGNAL(triggered()), this, SLOT(importData()));
+  connect(m_rollbackAction, SIGNAL(triggered()), this, SLOT(rollback()));
+  connect(m_searchAction, SIGNAL(toggled(bool)), this, SLOT(setShowSearchForm(bool)));
+  connect(m_systemsStateAction, SIGNAL(toggled(bool)), this, SLOT(updateUnits()));
 }
 
 /**********************************************************************************************/
 
 void RMainWindow :: createConnections1()
 {
-  connect(m_exterpolationAction, SIGNAL(toggled(bool)), m_results->calculator0(), SLOT(setExtrapolationEnabled(bool)));
-  connect(m_exterpolationAction, SIGNAL(toggled(bool)), m_results->calculator1(), SLOT(setExtrapolationEnabled(bool)));
-  connect(m_exterpolationAction, SIGNAL(triggered()), m_intervalToolBar, SLOT(applyInterval()), Qt::QueuedConnection);
-
   (*m_data1)[RData::errorMessage]             << [=](const QString& message)
   { if (!m_importing) showMessage(message); };
   (*m_data1)[RDivision::onMeasureSet]         << std::bind(&RResults::updateDelayed, m_results);
@@ -476,6 +475,7 @@ void RMainWindow :: login()
 {
   R_GUARD(m_loginWidget, Vacuum);
 
+  m_loggingIn     = true;
   m_results       = new RResults(m_data0, m_data1);
 
   m_data1->withBlock([this]
@@ -496,6 +496,7 @@ void RMainWindow :: login()
 
   m_loginWidget   = 0; // deleted by QMainWindow::setCentralWidget
   *m_data0        = *m_data1;
+  m_loggingIn     = false;
   m_intervalToolBar->applyInterval();
 }
 
@@ -543,6 +544,18 @@ void RMainWindow :: rollback()
 
 /**********************************************************************************************/
 
+void RMainWindow :: setExtrapolationEnabled(bool enabled)
+{
+  m_results->calculator0()->setExtrapolationEnabled(enabled);
+  m_results->calculator1()->setExtrapolationEnabled(enabled);
+
+  R_GUARD(!m_loggingIn, Vacuum);
+  g_settings->setValue("extrapolation", enabled);
+  m_intervalToolBar->applyInterval();
+}
+
+/**********************************************************************************************/
+
 void RMainWindow :: setInterfaceEnabled(bool enabled)
 {
   if (enabled)
@@ -550,6 +563,7 @@ void RMainWindow :: setInterfaceEnabled(bool enabled)
     createInterface();
     createConnections1();
     setCentralWidget(m_splitter);
+    setExtrapolationEnabled(m_exterpolationAction->isChecked());
   }
   else if (m_splitter)
   {

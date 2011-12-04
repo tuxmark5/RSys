@@ -1,3 +1,4 @@
+#include <QtCore/QSettings>
 #include <QtGui/QComboBox>
 #include <QtGui/QDateEdit>
 #include <QtGui/QKeyEvent>
@@ -17,9 +18,6 @@ Vacuum RIntervalToolBar :: RIntervalToolBar(RMainWindow* parent):
   m_mainWindow(parent),
   m_validInterval(true)
 {
-  QDate         currDate  = QDate::currentDate();
-  QDate         date1     = QDate(currDate.year(), currDate.month(), 1);
-  QDate         date0     = date1.addYears(-1);
   QIcon         arrowL    = QIcon(":/icons/arrow_left.png");
   QIcon         arrowR    = QIcon(":/icons/arrow_right.png");
   QPushButton*  decMonth  = new QPushButton(arrowL, QString());
@@ -32,11 +30,12 @@ Vacuum RIntervalToolBar :: RIntervalToolBar(RMainWindow* parent):
   incMonth->setFixedSize(16, 21);
   incYear->setFixedSize(16, 21);
 
-  m_interval0     = new QDateEdit(date0, this);
-  m_interval1     = new QDateEdit(date1, this);
+  m_interval0     = new QDateEdit(this);
+  m_interval1     = new QDateEdit(this);
   m_intervalLen   = new QComboBox(this);
   m_applyButton   = new QPushButton("Rodyti", this);
 
+  setDefaultInterval();
   m_intervalLen->addItem(R_S("savaites"),     (int) ByWeek);
   m_intervalLen->addItem(R_S("mėnesius"),     (int) ByMonth);
   m_intervalLen->addItem(R_S("ketvirčius"),   (int) ByQuarter);
@@ -165,10 +164,12 @@ bool RIntervalToolBar :: applyInterval()
   msgText += "</html>";
 
   emit message(msgText, -1);
-
   results()->setInterval(m_interval0->date(), m_interval1->date());
   results()->setInterval(std::move(fun), num);
   emit intervalChanged();
+
+  g_settings->setValue("date0", date0);
+  g_settings->setValue("date1", date1);
   return true;
 }
 
@@ -372,6 +373,25 @@ void RIntervalToolBar :: modifyDate(int deltaYear, int deltaMonth)
 RResults* RIntervalToolBar :: results() const
 {
   return m_mainWindow->results();
+}
+
+/**********************************************************************************************/
+
+void RIntervalToolBar :: setDefaultInterval()
+{
+  QDate     date0     = g_settings->value("date0").toDate();
+  QDate     date1     = g_settings->value("date1").toDate();
+
+  if (!date0.isValid() || !date1.isValid())
+  {
+    QDate currDate = QDate::currentDate();
+
+    date0 = QDate(currDate.year() - 1, currDate.month(),  1);
+    date1 = QDate(currDate.year(),     currDate.month(), 31);
+  }
+
+  m_interval0->setDate(date0);
+  m_interval1->setDate(date1);
 }
 
 /**********************************************************************************************/

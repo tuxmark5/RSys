@@ -67,6 +67,7 @@ class RIntervalToolBar: public QToolBar
     _M void           addLabel(const char16_t* label);
     _M bool           adjustInterval(QDate& date0, QDate& date1);
     _M void           emitErrorMessage(int error);
+    _M void           setDefaultInterval();
 
   signals:
     _M void           intervalChanged();

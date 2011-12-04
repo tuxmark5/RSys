@@ -77,6 +77,7 @@ class RMainWindow: public QMainWindow
     _M RContainerPtr        m_systemContainer;
 
     _M bool                 m_importing: 1;
+    _M bool                 m_loggingIn: 1;
 
   public:
     _M Vacuum               RMainWindow(QWidget* parent = 0);
@@ -103,6 +104,7 @@ class RMainWindow: public QMainWindow
     _M void                 logout();
     _M void                 onSearchFormDestroyed();
     _M void                 rollback();
+    _M void                 setExtrapolationEnabled(bool enabled);
     _M void                 setInterfaceEnabled(bool enabled);
     _M void                 setInterval();
     _M void                 setShowSearchForm(bool show);
