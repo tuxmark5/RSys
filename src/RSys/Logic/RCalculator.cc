@@ -96,7 +96,7 @@ void RCalculator :: updateUsageChanges(RUnitHash* units, RSubmission* submission
 {
   for (auto it = units->begin(); it != units->end(); it++)
   {
-    double usage = submission->count()
+    double usage = (double)submission->count()
                    / (submission->date0().daysTo(submission->date1()) + 1);
     it.key()->m_usageCntChangeMap[submission->date0()] += usage;
     it.key()->m_usageCntChangeMap[submission->date1().addDays(1)] -= usage;
