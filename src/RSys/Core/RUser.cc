@@ -124,7 +124,7 @@ void RUser :: setUserNameE(const QString& userName)
   QString userName1 = userName.toLower();
 
   R_DATA_GUARD(m_userName.isNull(), Vacuum,
-    "Dėl DB apribojimų vartotojo vardų keisti neleidžiama.");
+    "Dėl DB apribojimų naudotojo vardų keisti neleidžiama.");
   R_DATA_GUARD(userName1.size() >= 4, Vacuum,
     "Per trumpas naudotojo vardas. Minimalus leistinas ilgis yra 4 simboliai.");
   R_DATA_GUARD(g_userRegExp.exactMatch(userName1), Vacuum,
