@@ -17,12 +17,15 @@ class RResultsModel: public RAbstractItemModel
   public:
     _E FieldType
     {
-      Usage0      = 0x00,
-      Usage1      = 0x01,
-      UsageD      = 0x02,
-      UsageDP     = 0x03,
-      Title       = 0x00,
-      Identifier  = 0x10
+      Usage0      = 0x0001,
+      Usage1      = 0x0002,
+      UsageD      = 0x0003,
+      UsageDP     = 0x0004,
+
+      Hours       = 0x0010,
+      Counts      = 0x0020,
+      Identifier  = 0x0040,
+      Title       = 0x0000
     };
 
   public:

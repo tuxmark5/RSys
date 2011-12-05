@@ -113,26 +113,8 @@ int RResultsModel :: insertField(int index, int type, RUnit* unit)
   m_units.insert(fieldKey, unit);
   m_results->registerField(unit, this, fieldKey);
 
-  switch (type & 0x0F)
-  {
-    case Usage0:
-      addGetter(fieldKey, Qt::DisplayRole, m_results->field(RResults::Usage0, unit));
-      break;
-
-    case Usage1:
-      addGetter(fieldKey, Qt::DisplayRole, m_results->field(RResults::Usage1, unit));
-      addGetter(fieldKey, Qt::ToolTipRole, m_results->field(RResults::Usage1Tooltip, unit));
-      break;
-
-    case UsageD:
-      addGetter(fieldKey, Qt::DisplayRole, m_results->field(RResults::DeltaUsage, unit));
-      addGetter(fieldKey, Qt::ToolTipRole, m_results->field(RResults::DeltaUsageTooltip, unit));
-      break;
-
-    case UsageDP:
-      addGetter(fieldKey, Qt::DisplayRole, m_results->field(RResults::DeltaPUsage, unit));
-      break;
-  }
+  addGetter(fieldKey, Qt::DisplayRole, m_results->field((type & 0x3F), unit));
+  addGetter(fieldKey, Qt::ToolTipRole, m_results->field((type & 0x3F) | RResults::Tooltip, unit));
 
   if (type & Identifier)
   {
@@ -165,14 +147,22 @@ int RResultsModel :: insertField(int index, int type, RUnit* unit)
 
 QString RResultsModel :: longTitleForField(int type)
 {
+  QString title;
+
   switch (type & 0x0F)
   {
-    case Usage0:    return R_S("Pradinės apkrovos");
-    case Usage1:    return R_S("Galinės apkrovos");
-    case UsageD:    return R_S("Apkrovų skirtumai");
-    case UsageDP:   return R_S("Procentiniai apkrovų skirtumai");
+    case Usage0:    title = R_S("Pradinės apkrovos"); break;
+    case Usage1:    title = R_S("Galinės apkrovos");  break;
+    case UsageD:    title = R_S("Apkrovų skirtumai"); break;
+    case UsageDP:   title = R_S("Procentiniai apkrovų skirtumai"); break;
   }
-  return QString();
+
+  if (type & Counts)
+    title += R_S(" (pagal paraiškų skaičių)");
+  else
+    title += R_S(" (pagal valandas)");
+
+  return title;
 }
 
 /**********************************************************************************************/

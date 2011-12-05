@@ -24,18 +24,18 @@ class RResults: public QObject
   public:   
     _E ResultType
     {
-      Date,
-      Usage0,
-      Usage1,
-      Usage0Count,
-      Usage1Count,
-      Usage1Tooltip,
-      DeltaUsage,
-      DeltaUsageCount,
-      DeltaUsageTooltip,
-      DeltaPUsage,
-      Identifier,
-      FullName
+      Usage0      = 0x0001,
+      Usage1      = 0x0002,
+      UsageD      = 0x0003,
+      UsageDP     = 0x0004,
+
+      Date        = 0x0005,
+      Identifier  = 0x0006,
+      FullName    = 0x0007,
+
+      Hours       = 0x0010,
+      Counts      = 0x0020,
+      Tooltip     = 0x0080
     };
 
   private:
@@ -63,7 +63,7 @@ class RResults: public QObject
     _M RCalculator*     calculator0() const { return m_calculator0; }
     _M RCalculator*     calculator1() const { return m_calculator1; }
     _M RData*           data1() const { return m_data1; }
-    _M Getter           field(ResultType type, RUnit* unit);
+    _M Getter           field(int type, RUnit* unit);
     _M RInterval        findLowUsageInterval(RUnit* unit);
     _M RInterval        interval(int x) const { return m_intervalFun(x); }
     _M IntervalFun      intervalFun();

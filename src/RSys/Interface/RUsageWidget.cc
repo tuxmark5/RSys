@@ -58,7 +58,7 @@ Vacuum RUsageWidget :: ~RUsageWidget()
 void RUsageWidget :: createButtons(const ButtonCallback& callback)
 {
   QPushButton*  button  = new QPushButton(R_S("Rodyti"));
-  QMenu*        menu    = createModeMenu(this, SLOT(setMode()));
+  QMenu*        menu    = createModeMenu(this, SLOT(modifyMode()), m_unit->m_viewMode);
 
   connect(menu, SIGNAL(aboutToHide()), menu, SLOT(deleteLater()));
 
@@ -68,33 +68,70 @@ void RUsageWidget :: createButtons(const ButtonCallback& callback)
 
 /**********************************************************************************************/
 
-#define MODE(menu, name, mode) menu->addAction(R_S(name), receiver, slot)->setData(int(mode))
+#define ACTION(menu, mode) menu->addAction(a)
 
-QMenu* RUsageWidget :: createModeMenu(QObject* receiver, const char* slot)
+QMenu* RUsageWidget :: createModeMenu(QObject* receiver, const char* slot, int initialMode)
 {
   QMenu*        menu          = new QMenu();
-  QMenu*        usage1        = menu->addMenu(R_S("Apkrovas"));
-  QMenu*        usageD        = menu->addMenu(R_S("Skirtumus"));
+  QActionGroup* dataGroup     = new QActionGroup(menu);
+  QActionGroup* dmodGroup     = new QActionGroup(menu);
+  QActionGroup* viewGroup     = new QActionGroup(menu);
 
-  MODE(usage1,  "Stulpeline diagrama",  Usage1Bar);
-  MODE(usage1,  "Linijine diagrama",    Usage1Line);
+  QAction*      usage0Action  = new QAction(R_S("Pradines apkrovas"), dataGroup);
+  QAction*      usage1Action  = new QAction(R_S("Galines apkrovas"), dataGroup);
+  QAction*      usageDAction  = new QAction(R_S("Apkrovų skirtumus"), dataGroup);
+  QAction*      usageDPAction = new QAction(R_S("Apkrovų procentinius skirtumus"), dataGroup);
 
-  MODE(usageD,  "Stulpeline diagrama",  UsageDBar);
-  MODE(usageD,  "Linijine diagrama",    UsageDLine);
+  QAction*      hourAction    = new QAction(R_S("Pagal valandas"), dmodGroup);
+  QAction*      countsAction  = new QAction(R_S("Pagal paraiškų skaičių"), dmodGroup);
 
-  MODE(menu,    "Sumarine lentele",     UsageTable);
+  QAction*      barAction     = new QAction(R_S("Stulpeline diagrama"), viewGroup);
+  QAction*      lineAction    = new QAction(R_S("Linijine diagrama"), viewGroup);
+  QAction*      tableAction   = new QAction(R_S("Sumarine lentele"), viewGroup);
+
+  auto          init = [&](QAction* a, int mask, int data)
+  {
+    a->setCheckable(true);
+    if ((mask & initialMode) == data)
+      a->setChecked(true);
+    connect(a, SIGNAL(triggered()), receiver, slot);
+    menu->addAction(a);
+    a->setData((~mask << 16) | data);
+  };
+
+  init(usage0Action,  DataMask, Usage0);
+  init(usage1Action,  DataMask, Usage1);
+  init(usageDAction,  DataMask, UsageD);
+  init(usageDPAction, DataMask, UsageDP);
+  menu->addSeparator();
+
+  init(hourAction,    DataModMask,  Hours);
+  init(countsAction,  DataModMask,  Counts);
+  menu->addSeparator();
+
+  init(barAction,     ViewMask, Bar);
+  init(lineAction,    ViewMask, Line);
+  init(tableAction,   ViewMask, Table);
+  menu->addSeparator();
 
   return menu;
 }
 
 /**********************************************************************************************/
 
-void RUsageWidget :: setMode()
+void RUsageWidget :: modifyMode()
 {
   if (QAction* action = qobject_cast<QAction*>(sender()))
-  {
-    setMode(action->data().toInt());
-  }
+    modifyMode(action->data().toInt());
+}
+
+/**********************************************************************************************/
+
+void RUsageWidget :: modifyMode(int modifier)
+{
+  m_unit->m_viewMode &= modifier >> 16;
+  m_unit->m_viewMode |= modifier & 0xFFFF;
+  setMode(m_unit->m_viewMode);
 }
 
 /**********************************************************************************************/
@@ -103,51 +140,45 @@ void RUsageWidget :: setMode(int mode)
 {
   R_NZ(m_unit)->m_viewMode = mode;
 
-  switch (mode)
+  m_model->removeFields();
+
+  switch (mode & ViewMask)
   {
-    case Usage1Bar:
-      setTitle("Apkrovos");
-      m_model->removeFields();
-      m_model->addField(RResultsModel::Usage1, m_unit);
-
+    case Bar:
       ensure<RChart>(this)->setType(RChart::Bar);
       break;
 
-    case Usage1Line:
-      setTitle("Apkrovos");
-      m_model->removeFields();
-      m_model->addField(RResultsModel::Usage1, m_unit);
-
+    case Line:
       ensure<RChart>(this)->setType(RChart::Line);
       break;
 
-    case UsageDBar:
-      setTitle("Apkrovų skirtumai");
-      m_model->removeFields();
-      m_model->addField(RResultsModel::UsageD, m_unit);
-
-      ensure<RChart>(this)->setType(RChart::Bar);
-      break;
-
-    case UsageDLine:
-      setTitle("Apkrovų skirtumai");
-      m_model->removeFields();
-      m_model->addField(RResultsModel::UsageD, m_unit);
-
-      ensure<RChart>(this)->setType(RChart::Line);
-      break;
-
-    case UsageTable:
-      setTitle("Apkrovų ir jų skirtumų lentelė");
-      m_model->removeFields();
+    case Table:
+    {
+      int fieldMod = mode & DataModMask;
+      m_model->addField(RResultsModel::Usage0   | fieldMod, m_unit);
+      m_model->addField(RResultsModel::Usage1   | fieldMod, m_unit);
+      m_model->addField(RResultsModel::UsageD   | fieldMod, m_unit);
+      m_model->addField(RResultsModel::UsageDP  | fieldMod, m_unit);
       m_model->setOrientation(Qt::Horizontal);
-      m_model->addField(RResultsModel::Usage0, m_unit);
-      m_model->addField(RResultsModel::Usage1, m_unit);
-      m_model->addField(RResultsModel::UsageD, m_unit);
-      m_model->addField(RResultsModel::UsageDP, m_unit);
-
       ensure<RTableView>(this)->setFrameStyle(QFrame::NoFrame);
       break;
+    }
+
+    default:
+      qDebug() << "INVALID viewMode" << mode;
+      break;
+  }
+
+  if ((mode & ViewMask) == Table)
+  {
+    setTitle(R_S("Apkrovų ir jų skirtumų lentelė"));
+  }
+  else
+  {
+    int field = mode & (DataMask | DataModMask);
+
+    setTitle(RResultsModel::longTitleForField(field));
+    m_model->addField(field, m_unit);
   }
 }
 
@@ -168,9 +199,9 @@ void RUsageWidget :: setSearchInterval(bool search)
 
 /**********************************************************************************************/
 
-void RUsageWidget :: setTitle(const char* title)
+void RUsageWidget :: setTitle(const QString& title)
 {
-  m_title = QString::fromUtf8(title);
+  m_title = title;
   updateHeader();
 }
 

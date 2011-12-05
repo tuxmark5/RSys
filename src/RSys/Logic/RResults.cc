@@ -37,71 +37,13 @@ Vacuum RResults :: ~RResults()
 
 /**********************************************************************************************/
 
-auto RResults :: field(ResultType type, RUnit* unit) -> Getter
+auto RResults :: field(int type, RUnit* unit) -> Getter
 {
   switch (type)
   {
     case Date: return [this](int x) -> QVariant
     {
       return std::get<0>(this->m_intervalFun(x));
-    };
-
-    case Usage0: return [this, unit](int x) -> QVariant
-    {
-      if (RUnit* buddy = unit->buddy())
-        return buddy->usageAt(x).first;
-      return 0.0;
-    };
-
-    case Usage0Count: return [this, unit](int x) -> QVariant
-    {
-      if (RUnit* buddy = unit->buddy())
-        return buddy->usageAt(x).second;
-      return 0.0;
-    };
-
-    case Usage1: return [this, unit](int x) -> QVariant
-    {
-      return unit->usageAt(x).first;
-    };
-
-    case Usage1Count: return [this, unit](int x) -> QVariant
-    {
-      return unit->usageAt(x).second;
-    };
-
-    case Usage1Tooltip: return [this, unit](int x) -> QVariant
-    {
-      const RUsage& usage = unit->usageAt(x);
-      return R_S("Intervalas: %1.\nApkrova: %2\nSkaičius: %3").
-        arg(intervalStr(x)).arg(usage.first).arg(usage.second);
-    };
-
-    case DeltaUsage: return [this, unit](int x) -> QVariant
-    {
-      return fieldDeltaUsage(unit, x);
-    };
-
-    case DeltaUsageCount: return [this, unit](int x) -> QVariant
-    {
-      return fieldDeltaUsageCount(unit, x);
-    };
-
-    case DeltaUsageTooltip: return [this, unit](int x) -> QVariant
-    {
-      return R_S("Intervalas: %1.\nSkirtumas: %2").
-        arg(intervalStr(x)).arg(fieldDeltaUsage(unit, x));
-    };
-
-    case DeltaPUsage: return [this, unit](int x) -> QVariant
-    {
-      if (RUnit* buddy = unit->buddy())
-      {
-        double usage0 = buddy->usageAt(x).first;
-        double usage1 = unit->usageAt(x).first;
-        return (usage1 - usage0) / usage1 * 100.0; // usage0?
-      }
-      return QVariant();
     };
 
     case Identifier: return [=](int) -> QVariant
@@ -113,6 +55,74 @@ auto RResults :: field(ResultType type, RUnit* unit) -> Getter
     {
       return unit->fullName();
     };
+
+    case Usage0 | Hours: return [this, unit](int x) -> QVariant
+    {
+      if (RUnit* buddy = unit->buddy())
+        return buddy->usageAt(x).first;
+      return 0.0;
+    };
+
+    case Usage0 | Counts: return [this, unit](int x) -> QVariant
+    {
+      if (RUnit* buddy = unit->buddy())
+        return buddy->usageAt(x).second;
+      return 0.0;
+    };
+
+    case Usage1 | Hours: return [this, unit](int x) -> QVariant
+    {
+      return unit->usageAt(x).first;
+    };
+
+    case Usage1 | Counts: return [this, unit](int x) -> QVariant
+    {
+      return unit->usageAt(x).second;
+    };
+
+    case Usage1 | Hours  | Tooltip:
+    case Usage1 | Counts | Tooltip: return [this, unit](int x) -> QVariant
+    {
+      const RUsage& usage = unit->usageAt(x);
+      return R_S("Intervalas: %1.\nApkrova: %2\nSkaičius: %3").
+        arg(intervalStr(x)).arg(usage.first).arg(usage.second);
+    };
+
+    case UsageD | Hours: return [this, unit](int x) -> QVariant
+    {
+      return fieldDeltaUsage(unit, x);
+    };
+
+    case UsageD | Counts: return [this, unit](int x) -> QVariant
+    {
+      return fieldDeltaUsageCount(unit, x);
+    };
+
+    case UsageD | Counts | Tooltip: break;
+    case UsageD | Hours  | Tooltip: return [this, unit](int x) -> QVariant
+    {
+      return R_S("Intervalas: %1.\nSkirtumas: %2").
+        arg(intervalStr(x)).arg(fieldDeltaUsage(unit, x));
+    };
+
+    case UsageDP | Hours: return [this, unit](int x) -> QVariant
+    {
+      if (RUnit* buddy = unit->buddy())
+      {
+        double usage0 = buddy->usageAt(x).first;
+        double usage1 = unit->usageAt(x).first;
+        return (usage1 - usage0) / usage1 * 100.0; // usage0?
+      }
+      return QVariant();
+    };
+
+    case UsageDP | Counts | Tooltip: break;
+    case UsageDP | Hours  | Tooltip: break;
+
+    default:
+    {
+      qDebug() << "WARNING: unknown field type" << QString::number(type, 16);
+    }
   }
 
   return Getter();

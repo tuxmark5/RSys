@@ -7,6 +7,7 @@
 #include <RSys/Interface/RResultsModel.hh>
 #include <RSys/Interface/RSummaryWidget.hh>
 #include <RSys/Interface/RTableView.hh>
+#include <RSys/Interface/RUsageWidget.hh>
 #include <RSys/Logic/RResults.hh>
 
 /**********************************************************************************************/
@@ -32,7 +33,7 @@ Vacuum RSummaryWidget :: RSummaryWidget(RResults* results, QWidget* parent):
   m_units(0)
 {
   setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-  setMode(RResultsModel::Usage1 | Table);
+  setMode(RUsageWidget::Usage1 | RUsageWidget::Hours | RUsageWidget::Table);
 }
 
 /**********************************************************************************************/
@@ -67,23 +68,8 @@ int RSummaryWidget :: fieldType() const
 
 void RSummaryWidget :: createButtons(const ButtonCallback& callback)
 {
-  QPushButton*  button        = new QPushButton(R_S("Rodyti"));
-  QMenu*        menu          = new QMenu();
-  QMenu*        usage1        = menu->addMenu(R_S("Apkrovas"));
-  QMenu*        usageD        = menu->addMenu(R_S("Skirtumus"));
-  QMenu*        usageDP       = menu->addMenu(R_S("Procentinius skirtumus"));
-
-  MODE(usage1,  "Stulpeline diagrama", RResultsModel::Usage1 | Bar);
-  MODE(usage1,  "Linijine diagrama",   RResultsModel::Usage1 | Line);
-  MODE(usage1,  "Lentele",             RResultsModel::Usage1 | Table);
-
-  MODE(usageD,  "Stulpeline diagrama", RResultsModel::UsageD | Bar);
-  MODE(usageD,  "Linijine diagrama",   RResultsModel::UsageD | Line);
-  MODE(usageD,  "Lentele",             RResultsModel::UsageD | Table);
-
-  MODE(usageDP, "Stulpeline diagrama", RResultsModel::UsageDP | Bar);
-  MODE(usageDP, "Linijine diagrama",   RResultsModel::UsageDP | Line);
-  MODE(usageDP, "Lentele",             RResultsModel::UsageDP | Table);
+  QPushButton*  button  = new QPushButton(R_S("Rodyti"));
+  QMenu*        menu    = RUsageWidget::createModeMenu(this, SLOT(modifyMode()), m_mode);
 
   connect(menu, SIGNAL(aboutToHide()), menu, SLOT(deleteLater()));
   button->setMenu(menu);
@@ -105,14 +91,28 @@ QString RSummaryWidget :: modeName() const
 {
   QString modeName = RResultsModel::longTitleForField(m_mode);
 
-  switch (m_mode & 0xF00)
+  switch (m_mode & RUsageWidget::ViewMask)
   {
-    case Bar:   modeName += R_S(" (stulpelinė diagrama)");  break;
-    case Line:  modeName += R_S(" (linijinė diagrama)");    break;
-    case Table: modeName += R_S(" (sumarinė lentelė)");     break;
+    case RUsageWidget::Bar:   modeName += R_S(" (stulpelinė diagrama)");  break;
+    case RUsageWidget::Line:  modeName += R_S(" (linijinė diagrama)");    break;
+    case RUsageWidget::Table: modeName += R_S(" (sumarinė lentelė)");     break;
   }
 
   return modeName;
+}
+
+/**********************************************************************************************/
+
+void RSummaryWidget :: modifyMode()
+{
+  if (QAction* action = qobject_cast<QAction*>(sender()))
+  {
+    int modifier = action->data().toInt();
+
+    m_mode &= modifier >> 16;
+    m_mode |= modifier & 0xFFFF;
+    setMode(m_mode);
+  }
 }
 
 /**********************************************************************************************/
@@ -160,24 +160,14 @@ void RSummaryWidget :: resetObservable()
 
 /**********************************************************************************************/
 
-void RSummaryWidget :: setMode()
-{
-  if (QAction* action = qobject_cast<QAction*>(sender()))
-  {
-    setMode(action->data().toInt());
-  }
-}
-
-/**********************************************************************************************/
-
 void RSummaryWidget :: setMode(int mode)
 {
   m_mode = mode;
   setUnits(m_units);
 
-  switch (mode & 0xF00)
+  switch (mode & RUsageWidget::ViewMask)
   {
-    case Bar:
+    case RUsageWidget::Bar:
       if (RChart* chart = ensure<RChart>(this))
       {
         chart->setType(RChart::Bar);
@@ -185,7 +175,7 @@ void RSummaryWidget :: setMode(int mode)
       }
       break;
 
-    case Line:
+    case RUsageWidget::Line:
       if (RChart* chart = ensure<RChart>(this))
       {
         chart->setType(RChart::Line);
@@ -193,7 +183,7 @@ void RSummaryWidget :: setMode(int mode)
       }
       break;
 
-    case Table:
+    case RUsageWidget::Table:
       m_resultsModel->setOrientation(Qt::Horizontal);
       ensure<RTableView>(this)->setFrameStyle(QFrame::NoFrame);
       break;

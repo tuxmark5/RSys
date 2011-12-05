@@ -15,11 +15,21 @@ class RUsageWidget: public RLayerWidget
   public:
     _E Mode
     {
-      Usage1Bar,
-      Usage1Line,
-      UsageDBar,
-      UsageDLine,
-      UsageTable
+      Usage0      = 0x0001,
+      Usage1      = 0x0002,
+      UsageD      = 0x0003,
+      UsageDP     = 0x0004,
+
+      Hours       = 0x0010,
+      Counts      = 0x0020,
+
+      Bar         = 0x1000,
+      Line        = 0x2000,
+      Table       = 0x3000,
+
+      DataMask    = 0x000F,
+      DataModMask = 0x00F0,
+      ViewMask    = 0xF000
     };
 
   private:
@@ -33,16 +43,17 @@ class RUsageWidget: public RLayerWidget
   public:
     _M Vacuum           RUsageWidget(int mode, RUnit* unit, RResults* results, QWidget* parent = 0);
     _V Vacuum           ~RUsageWidget();
-    _S QMenu*           createModeMenu(QObject* receiver, const char* slot);
+    _S QMenu*           createModeMenu(QObject* receiver, const char* slot, int initialMode);
     _M RResultsModel*   model() const { return m_model; }
     _M void             updateHeader();
 
   protected:
     _V void             createButtons(const ButtonCallback& callback);
-    _M void             setTitle(const char* title);
+    _M void             setTitle(const QString& title);
 
   public slots:
-    _M void             setMode();
+    _M void             modifyMode();
+    _M void             modifyMode(int modifier);
     _M void             setMode(int mode);
     _M void             setSearchInterval(bool search);
     _M void             updateGlobalInterval();

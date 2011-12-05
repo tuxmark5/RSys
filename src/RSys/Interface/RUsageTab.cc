@@ -19,9 +19,9 @@ Vacuum RUsageTab :: RUsageTab(RMainWindow* parent):
   m_scrollArea(new QScrollArea(this)),
   m_results(parent->results()),
   m_units(0),
-  m_defaultMode(RUsageWidget::Usage1Bar)
+  m_defaultMode(RUsageWidget::Usage1 | RUsageWidget::Hours | RUsageWidget::Bar)
 {
-  QMenu* menu = RUsageWidget::createModeMenu(this, SLOT(setMode()));
+  QMenu* menu = RUsageWidget::createModeMenu(this, SLOT(setMode()), m_defaultMode);
 
   menu->setTitle(R_S("Pateikti visus rezultatus"));
   parent->menuBar()->m_viewMenu->addSeparator()->setParent(this);
@@ -155,11 +155,14 @@ void RUsageTab :: setMode()
 {
   if (QAction* action = qobject_cast<QAction*>(sender()))
   {
-    m_defaultMode = action->data().toInt();
+    int modifier = action->data().toInt();
+
+    m_defaultMode &= modifier >> 16;
+    m_defaultMode |= modifier &  0xFFFF;
 
     for (int i = 0; i < m_innerLayout->count(); i++)
       if (RUsageWidget* widget = qobject_cast<RUsageWidget*>(m_innerLayout->itemAt(i)->widget()))
-        widget->setMode(m_defaultMode);
+        widget->modifyMode(modifier);
   }
 }
 

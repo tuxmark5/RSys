@@ -15,14 +15,6 @@ class RSummaryWidget: public RLayerWidget, public RIObserver
   public:
     _T RResultsModel::FieldType     FieldType;
 
-  public:
-    _E Mode
-    {
-      Bar       = 0x000,
-      Line      = 0x100,
-      Table     = 0x200
-    };
-
   private:
     _M RResults*        m_results;
     _M RResultsModel*   m_resultsModel;
@@ -42,9 +34,9 @@ class RSummaryWidget: public RLayerWidget, public RIObserver
     _M void             setFieldType(FieldType type);
 
   public slots:
+    _M void             modifyMode();
     _M void             resetBegin();
     _M void             resetEnd();
-    _M void             setMode();
     _M void             setMode(int mode);
     _M void             setUnits(RUnitPtrList* units);
     _M void             updateElement(RElement* unit, int updateType);
