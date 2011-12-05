@@ -125,7 +125,7 @@ class ROList
     {
       int i0 = m_list.length();
 
-      guarded(&RIObserver::insert0, &RIObserver::insert1, [=]() -> bool
+      guarded(&RIObserver::insert0, &RIObserver::insert1, [&]() -> bool
       { return this->m_list.append(x), true; }, i0, i0 + 1);
     }
 
