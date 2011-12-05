@@ -99,8 +99,10 @@ void RDivision :: setMeasure1(RMeasure* measure, double value)
 void RDivision :: setSystem(RSystem* system, double value)
 {
   R_GUARD(system, Vacuum);
+  R_DATA_GUARD((value == 0) || (value == 1), Vacuum,
+    "Šiame lauke galima įvesti tik 0 arba 1");
 
-  if (!value)
+  if (value == 0)
   {
     auto it = m_systemHash.find(system);
     if (it != m_systemHash.end())

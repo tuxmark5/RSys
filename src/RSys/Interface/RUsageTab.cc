@@ -24,8 +24,8 @@ Vacuum RUsageTab :: RUsageTab(RMainWindow* parent):
   QMenu* menu = RUsageWidget::createModeMenu(this, SLOT(setMode()));
 
   menu->setTitle(R_S("Pateikti visus rezultatus"));
-  parent->menuBar()->m_viewMenu->addSeparator();
-  parent->menuBar()->m_viewMenu->addMenu(menu);
+  parent->menuBar()->m_viewMenu->addSeparator()->setParent(this);
+  parent->menuBar()->m_viewMenu->addMenu(menu)->setParent(this);
 
   RData::connect(parent->data(), SIGNAL(elementChanged(RElement*,int)),
     this, SLOT(updateElement(RElement*,int)));
