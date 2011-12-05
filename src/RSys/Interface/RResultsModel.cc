@@ -142,7 +142,7 @@ int RResultsModel :: insertField(int index, int type, RUnit* unit)
   else
   {
     QVariant title = titleForField(type);
-    addGetter(fieldKey, 0xFF, [title](int) -> QVariant { return title; });
+    addGetter(fieldKey, Qt::DisplayRole | 0xFF00, [title](int) -> QVariant { return title; });
   }
 
   if (m_orientation == Qt::Horizontal)

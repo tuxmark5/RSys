@@ -219,13 +219,12 @@ void RResults :: setInterval(RIntervalFun fun, int num)
   m_intervalFun   = std::move(fun);
   m_numRecords    = num;
 
+  resetBegin();
   m_calculator0->update();
   m_calculator0->setIntervalFun(m_intervalFun, m_numRecords);
   m_calculator1->update();
   m_calculator1->setIntervalFun(m_intervalFun, m_numRecords);
-
-  for (auto it = m_models.begin(); it != m_models.end(); ++it)
-    emit (*it)->reset();
+  resetEnd();
 }
 
 /**********************************************************************************************/

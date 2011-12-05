@@ -175,7 +175,9 @@ void RMainWindow :: commit()
 {
   if (m_database->commit())
   {
+    m_results->resetBegin();
     *m_data0 = *m_data1;
+    m_results->resetEnd();
     showMessage(R_S("Duomenys išsaugoti."));
   }
   else
@@ -384,7 +386,7 @@ void RMainWindow :: createTabs()
   addTab(Right, "res", "Apkrovos ir prognozės", "Individualios padalinių/sistemų apkrovos ir prognozės", [=]()
   { return new RUsageTab(this); });
 
-  addTab(Right, "res", "Apžvalga", "Apžvalga", [=]()
+  addTab(Right, "sum", "Apžvalga", "Apžvalga", [=]()
   { return new RSummaryTab(this); });
 
   if (user->adminAcc())

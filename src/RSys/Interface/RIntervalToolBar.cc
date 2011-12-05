@@ -140,11 +140,13 @@ bool RIntervalToolBar :: applyInterval()
   int           num       = 0;
   QDate         date0     = m_interval0->date();
   QDate         date1     = m_interval1->date();
+  g_settings->setValue("date0", date0);
+  g_settings->setValue("date1", date1);
+
   QDate         date0Org  = date0;
   QDate         date1Org  = date1;
   bool          modified0 = adjustInterval(date0, date1);
   getInterval(date0, date1, fun, num);
-
   bool          modified1 = (date0 != date0Org) || (date1 != date1Org.addDays(1));
 
   QString       msgText   = R_S("<html>Rodomas intervalas: nuo <b>%1</b> iki <b>%2</b>")
@@ -168,8 +170,6 @@ bool RIntervalToolBar :: applyInterval()
   results()->setInterval(std::move(fun), num);
   emit intervalChanged();
 
-  g_settings->setValue("date0", date0);
-  g_settings->setValue("date1", date1);
   return true;
 }
 
