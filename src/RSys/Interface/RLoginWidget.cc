@@ -9,6 +9,26 @@
 #include <RSys/Interface/RMessage.hh>
 #include <RSys/Store/RDatabase.hh>
 
+/**********************************************************************************************/
+
+struct RSquare: public QWidget
+{
+  _M QWidget*   m_widget;
+  _M Vacuum     RSquare(QWidget* widget):
+    m_widget(widget) { widget->setParent(this); }
+
+  _M void       resizeEvent(QResizeEvent*)
+  {
+    int   a = qMin(width(), height());
+    int   x = (width() - a) / 2;
+    int   y = (height() - a) / 2;
+    m_widget->setGeometry(x, y, a, a);
+  }
+
+  _M QSize      sizeHint() const
+  { return m_widget->sizeHint(); }
+};
+
 /********************************************* RS *********************************************/
 /*                                        RLoginWidget                                        */
 /**********************************************************************************************/
@@ -17,23 +37,27 @@ Vacuum RLoginWidget :: RLoginWidget(RDatabase* database, QWidget* parent):
   QWidget(parent),
   m_database(database)
 {
-  QGridLayout*  layout0   = new QGridLayout(this);
-  QLabel*       logo      = new QLabel();
-  QTabWidget*   tabWidget = new QTabWidget();
-  QSpacerItem*  spacer    = new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+  QGridLayout*  layout0     = new QGridLayout(this);
+  QLabel*       logo        = new QLabel();
+  QTabWidget*   tabWidget   = new QTabWidget();
+  QSpacerItem*  spacer      = new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
 
   tabWidget->setMinimumSize(400, 200);
   tabWidget->setMaximumSize(600, 300);
+  tabWidget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
   tabWidget->addTab(createRemoteTab(),  R_S("Nuotolinis prisijungimas"));
   tabWidget->addTab(createLocalTab(),   R_S("Vietinė DB"));
 
   logo->setPixmap(QPixmap(":/logo.png"));
-  layout0->addWidget(logo, 0, 0, 1, 1, Qt::AlignHCenter);
-  layout0->addWidget(tabWidget, 1, 0, 1, 1, Qt::AlignTop);
-  layout0->addItem(spacer, 2, 0, 1, 1);
-  layout0->setRowStretch(0, 1);
-  layout0->setRowStretch(2, 1);
+  logo->setScaledContents(true);
+
+  layout0->addWidget(tabWidget,         0, 0, 1, 1, Qt::AlignVCenter);
+  layout0->addWidget(new RSquare(logo), 0, 1, 1, 1, Qt::AlignVCenter);
+
+  //layout0->addItem(spacer, 2, 0, 1, 1);
+  //layout0->setRowStretch(0, 1);
+  //layout0->setRowStretch(2, 1);
 
   m_dbAddressField->setText(g_settings->value("dbAddress", "127.0.0.1").toString());
   m_dbNameField->setText(g_settings->value("dbName", "test.db").toString());
