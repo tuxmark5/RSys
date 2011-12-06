@@ -1,3 +1,4 @@
+#include <QtCore/QSettings>
 #include <QtGui/QGridLayout>
 #include <QtGui/QToolButton>
 #include <QtGui/QPushButton>
@@ -96,7 +97,7 @@ void RPaletteDock :: createContainers(RMainWindow* main)
   auto cd = newContainer(main->data()->divisions());
   cd->addColumn("Padalinys");
   cd->addAccessor2<int>    (0, Qt::CheckStateRole)
-    >> f(getBool) * f(&RDivision::visible)
+    >> f(getBool) * f(&RDivision::isVisible)
     << f(&RDivision::setVisible) * f(setBool);
   cd->addAccessor2<QString>(0, Qt::DisplayRole)   >> &RDivision::fullName;
   cd->addAccessor2<QString>(0, Qt::ToolTipRole)   >> &RDivision::fullName;
@@ -104,7 +105,7 @@ void RPaletteDock :: createContainers(RMainWindow* main)
   auto cs = newContainer(main->data()->systems());
   cs->addColumn("Sistema");
   cs->addAccessor2<int>     (0, Qt::CheckStateRole)
-    >> f(getBool) * f(&RSystem::visible)
+    >> f(getBool) * f(&RSystem::isVisible)
     << f(&RSystem::setVisible) * f(setBool);
   cs->addAccessor2<QString> (0, Qt::DisplayRole)  >> &RSystem::fullName;
   cs->addAccessor2<QString> (0, Qt::ToolTipRole)  >> &RSystem::fullName;
@@ -120,7 +121,7 @@ void RPaletteDock :: inverseChecks()
   UnitList units = selectedUnits();
 
   for (auto it = units.begin(); it != units.end(); ++it)
-    (*it)->setVisibleRaw((*it)->visible() ^ true);
+    (*it)->setVisibleRaw((*it)->isVisible() ^ true);
 
   m_mainWindow->updateUnits();
   m_model->notifyAllRowsChanged();

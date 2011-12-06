@@ -34,6 +34,7 @@ class RUsageTab: public RTab, public RIObserver
     _V void           clearUnits();
     _M RUsageWidget*  createWidget(RUnit* unit);
     _V void           populateUnits();
+    _M RUsageWidget*  widgetForElement(RElement* element);
 
   public slots:
     //_M void           resetBegin();
@@ -41,6 +42,7 @@ class RUsageTab: public RTab, public RIObserver
     _M void           setMode();
     _M void           setUnits(RUnitPtrList* units);
     _M void           updateElement(RElement* unit, int updateType);
+    _M void           updateElementVisibility(RUnit* unit);
 };
 
 /**********************************************************************************************/

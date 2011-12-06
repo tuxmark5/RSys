@@ -14,8 +14,7 @@ Vacuum RSummaryTab :: RSummaryTab(RMainWindow* parent):
 {
   m_widget = new RSummaryWidget(parent->results(), this);
 
-  connect(parent->data(), SIGNAL(elementChanged(RElement*,int)),
-    m_widget, SLOT(updateElement(RElement*,int)));
+  connect(parent->data(), SIGNAL(visibilityChanged(RUnit*)), m_widget, SLOT(updateUnit(RUnit*)));
   connect(parent, SIGNAL(unitsChanged(RUnitPtrList*)), m_widget, SLOT(setUnits(RUnitPtrList*)));
   connect(m_widget, SIGNAL(modeChanged()), this, SLOT(updateModeName()));
 

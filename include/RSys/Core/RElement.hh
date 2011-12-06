@@ -3,6 +3,7 @@
 
 /**********************************************************************************************/
 #include <RSys/Util/RSharedData.hh>
+#include <RSys/Util/RSignal.hh>
 /********************************************* RS *********************************************/
 /*                                          RElement                                          */
 /**********************************************************************************************/
@@ -13,8 +14,8 @@ class RElement: public RSharedData
     _M RData*           m_data;
     _M RElement*        m_buddy;
     _M RID              m_id;
-    _M bool             m_valid: 1;
-    _M bool             m_visible: 1;
+    _M bool             m_null:     1;
+    _M bool             m_valid:    1;
 
   public:
     _M Vacuum           RElement(RData* data);
@@ -22,13 +23,11 @@ class RElement: public RSharedData
     _V Vacuum           ~RElement();
     _M RData*           data() const { return m_data; }
     _M RID              id() const { return m_id; }
+    _M bool             isNull() const { return m_null; }
     _M bool             isValid() const { return m_valid; }
     _V void             remove();
-    _M bool             visible() const { return m_visible; }
     _M void             setId(RID id);
     _M void             setValid(bool valid);
-    _M void             setVisible(bool visible);
-    _M void             setVisibleRaw(bool visible);
 };
 
 /**********************************************************************************************/

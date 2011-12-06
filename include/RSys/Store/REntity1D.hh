@@ -81,16 +81,18 @@ class REntity1DI: public REntity1D,
 
       for (int state = 0; state < 3; state++)
       {
-        auto keys = m_log.keys(state);
         query.prepare(m_exprs[state]);
 
-        for (auto it = keys.begin(); it != keys.end(); it++)
+        for (auto it = m_log.begin(); it != m_log.end(); it++)
         {
+          if (it.value() != state)
+            continue;
+
           switch (state)
           {
-            case Insert: result = syncInsert(query, **it); break;
-            case Update: result = syncUpdate(query, **it); break;
-            case Remove: result = syncRemove(query, **it); break;
+            case Insert: result = syncInsert(query, *it.key()); break;
+            case Update: result = syncUpdate(query, *it.key()); break;
+            case Remove: result = syncRemove(query, *it.key()); break;
           }
         }
 
@@ -118,7 +120,7 @@ class REntity1DI: public REntity1D,
     {
       Q_UNUSED(i1);
       Value   value = m_list->at(i0);
-      if (!m_log.contains(m_list->at(i0)))
+      if (!m_log.contains(value))
         m_log.insert(value, Update);
     }
 
@@ -145,7 +147,7 @@ class REntity1DI: public REntity1D,
     _M bool               select(QSqlQuery& query)
     {
       m_allowInsert = false;
-      query.exec(m_exprs[Select]);
+      R_GUARD(query.exec(m_exprs[Select]), false);
 
       for (query.first(); query.isValid(); query.next())
       {

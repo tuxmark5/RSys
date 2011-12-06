@@ -10,7 +10,8 @@ RUsage g_emptyUsage;
 Vacuum RUnit :: RUnit(Type type, RData* data):
   RElement(data),
   m_type(type),
-  m_viewMode(-1)
+  m_viewMode(-1),
+  m_visible(true)
 {
 }
 
@@ -26,7 +27,8 @@ Vacuum RUnit :: RUnit(RUnit& unit, RData* data):
   m_usageCntMap       (unit.m_usageCntMap),
   m_usageHrsChangeMap (unit.m_usageHrsChangeMap),
   m_usageHrsMap       (unit.m_usageHrsMap),
-  m_viewMode          (unit.m_viewMode)
+  m_viewMode          (unit.m_viewMode),
+  m_visible           (unit.m_visible)
 {
 }
 
@@ -64,7 +66,8 @@ bool RUnit :: setIdentifier(const QString& identifier)
     "Elementas su identifikatoriumi <b>%1</b> jau egzistuoja.", .arg(identifier1));
 
   m_data->m_unitHash[m_type].remove(m_identifier, this);
-  m_identifier = identifier1;
+  m_identifier  = identifier1;
+  m_null        = false;
   m_data->m_unitHash[m_type].insert(m_identifier, this);
   emit m_data->elementChanged(this, RData::TitleOrName);
 
@@ -81,6 +84,31 @@ bool RUnit :: setName(const QString& name)
   m_name = name1;
   emit m_data->elementChanged(this, RData::TitleOrName);
   return true;
+}
+
+/**********************************************************************************************/
+
+void RUnit :: setViewMode(int viewMode)
+{
+  m_viewMode = viewMode;
+  (*m_data)[viewModeChanged](this);
+}
+
+/**********************************************************************************************/
+
+void RUnit :: setVisible(bool visible)
+{
+  m_visible = visible;
+  emit m_data->visibilityChanged(this);
+  (*m_data)[visibilityChanged](this);
+}
+
+/**********************************************************************************************/
+
+void RUnit :: setVisibleRaw(bool visible)
+{
+  m_visible = visible;
+  (*m_data)[visibilityChanged](this);
 }
 
 /**********************************************************************************************/

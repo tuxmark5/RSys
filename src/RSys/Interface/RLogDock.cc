@@ -49,10 +49,11 @@ Vacuum RLogDock :: RLogDock(RMainWindow* parent):
   titleLayout->addWidget(closeButton);
   titleLayout->setSpacing(5);
 
-  m_model->setColumnCount(3);
+  m_model->setColumnCount(4);
   m_model->setHeaderData(0, Qt::Horizontal, R_S("Lygis"), Qt::DisplayRole);
   m_model->setHeaderData(1, Qt::Horizontal, R_S("Tipas"), Qt::DisplayRole);
-  m_model->setHeaderData(2, Qt::Horizontal, R_S("Pranešimas"), Qt::DisplayRole);
+  m_model->setHeaderData(2, Qt::Horizontal, R_S("Laikas"), Qt::DisplayRole);
+  m_model->setHeaderData(3, Qt::Horizontal, R_S("Pranešimas"), Qt::DisplayRole);
 
   tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
   //setFeatures(QDockWidget::DockWidgetClosable);
@@ -79,12 +80,14 @@ void RLogDock :: addMessage(RMessageLevel level, RID id, const QString& message)
   ItemList        items;
   QString         message1  = message;
   QStandardItem*  item;
+  QString         timeStamp = QDateTime::currentDateTime().toString(Qt::DefaultLocaleShortDate);
 
   message1.remove(g_htmlTagRegExp);
 
   items << (item = new QStandardItem(levelName(level)));
   item->setData(level, Qt::UserRole);
   items << (item = new QStandardItem(QString::number(id)));
+  items << (item = new QStandardItem(timeStamp));
   items << (item = new QStandardItem(message1));
 
   m_model->appendRow(items);

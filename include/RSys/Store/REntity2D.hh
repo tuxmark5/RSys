@@ -104,7 +104,7 @@ class REntity2DI: public REntity2D
 
     _V bool               select(QSqlQuery& query)
     {
-      query.exec(m_exprs[Select]);
+      R_GUARD(query.exec(m_exprs[Select]), false);
 
       m_allowInsert = false;
       for (query.first(); query.isValid(); query.next())
