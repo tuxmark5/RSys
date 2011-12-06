@@ -157,7 +157,7 @@ void RDatabase :: emitPSQLError(const QSqlError& error)
                   "(pasibaigė prisijungimui skirtas laikas)<br>"
                   "Gal nurodytas blogas serverio adresas?");
       else if (text.contains("authentication failed"))
-        msg = R_S("Neteisingas vartotojo vardas arba slaptažodis");
+        msg = R_S("Neteisingas naudotojo vardas arba slaptažodis");
       break;
 
     default:

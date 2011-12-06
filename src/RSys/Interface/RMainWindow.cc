@@ -392,8 +392,8 @@ void RMainWindow :: createTabs()
   if (user->adminAcc())
   {
     RUserTab* userTab;
-    addLeftTab(userTab = new RUserTab(this), "Vartotojai", "Sistemos vartotojai");
-    addRightTab(new RUserAdmTab(userTab, this), "Vart. adm.", "Sistemos vartotojų administravimas");
+    addLeftTab(userTab = new RUserTab(this), "Naudotojai", "Sistemos naudotojai");
+    addRightTab(new RUserAdmTab(userTab, this), "Naud. adm.", "Sistemos naudotojų administravimas");
   }
 }
 

@@ -118,7 +118,7 @@ QWidget* RLoginWidget :: createRemoteTab()
   layout->addWidget(new QLabel(R_S("Duomenų bazės pavadinimas")), 1, 0);
   layout->addWidget(m_dbNameField, 1, 1);
 
-  layout->addWidget(new QLabel(R_S("Vartotojo vardas")),          2, 0);
+  layout->addWidget(new QLabel(R_S("Naudotojo vardas")),          2, 0);
   layout->addWidget(m_usernameField, 2, 1);
 
   layout->addWidget(new QLabel(R_S("Slaptažodis")),               3, 0);
