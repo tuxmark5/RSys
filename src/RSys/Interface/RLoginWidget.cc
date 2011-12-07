@@ -54,10 +54,10 @@ Vacuum RLoginWidget :: RLoginWidget(RDatabase* database, QWidget* parent):
 
   layout0->addWidget(tabWidget,         0, 0, 1, 1, Qt::AlignVCenter);
   layout0->addWidget(new RSquare(logo), 0, 1, 1, 1, Qt::AlignVCenter);
+  layout0->addItem(spacer,              1, 0, 1, 2);
 
-  //layout0->addItem(spacer, 2, 0, 1, 1);
-  //layout0->setRowStretch(0, 1);
-  //layout0->setRowStretch(2, 1);
+  //layout0->setRowStretch(0, 0);
+  //layout0->setRowStretch(1, 1);
 
   m_dbAddressField->setText(g_settings->value("dbAddress", "127.0.0.1").toString());
   m_dbNameField->setText(g_settings->value("dbName", "test.db").toString());
@@ -79,8 +79,9 @@ QWidget* RLoginWidget :: createLocalTab()
 {
   QWidget*      widget        = new QWidget();
   QGridLayout*  layout        = new QGridLayout(widget);
-  QPushButton*  loginButton   = new QPushButton("Atverti");
   QPushButton*  openButton    = new QPushButton("...");
+  QPushButton*  createButton  = new QPushButton(R_S("Sukurti naują DB"));
+  QPushButton*  loginButton   = new QPushButton("Atverti");
 
   openButton->setFixedSize(25, 20);
 
@@ -90,9 +91,11 @@ QWidget* RLoginWidget :: createLocalTab()
   layout->addWidget(m_dbFileField, 0, 1);
   layout->addWidget(openButton, 0, 2);
 
-  layout->addWidget(loginButton, 1, 1, 1, 2);
+  layout->addWidget(createButton, 1, 0, 1, 1);
+  layout->addWidget(loginButton,  1, 1, 1, 1);
 
   connect(openButton, SIGNAL(clicked()), this, SLOT(onOpenDatabasePressed()));
+  connect(createButton, SIGNAL(clicked()), this, SLOT(onLocalCreatePressed()));
   connect(loginButton, SIGNAL(clicked()), this, SLOT(onLocalLoginPressed()));
 
   return widget;
@@ -139,6 +142,23 @@ QWidget* RLoginWidget :: createRemoteTab()
 
 /**********************************************************************************************/
 
+void RLoginWidget :: loadData()
+{
+  bool result;
+
+  loginBegin();
+
+  if (!(result = m_database->select()))
+  {
+    m_database->logout();
+    showMessage(R_S("Nepavyko atidaryti vietinės DB"));
+  }
+
+  loginEnd(result);
+}
+
+/**********************************************************************************************/
+
 void RLoginWidget :: showMessage(const QString& message)
 {
   if (m_message)
@@ -147,7 +167,22 @@ void RLoginWidget :: showMessage(const QString& message)
   m_message->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Minimum);
 
   if (QGridLayout* l = static_cast<QGridLayout*>(layout()))
-    l->addWidget(m_message, l->rowCount() - 1, 0, 1, 1, Qt::AlignTop);
+    l->addWidget(m_message, 0, 0, 1, 1, Qt::AlignTop);
+}
+
+/**********************************************************************************************/
+
+void RLoginWidget :: onLocalCreatePressed()
+{
+  QString fileName = QFileDialog::getSaveFileName(this, R_S("Sukurti DB"),
+    m_dbFileField->text(), R_S("RSys duomenų bazės (*.rdb)"));
+  R_GUARD(!fileName.isNull(), Vacuum);
+
+  if (m_database->localCreate(fileName))
+  {
+    loadData();
+    g_settings->setValue("dbFile", fileName);
+  }
 }
 
 /**********************************************************************************************/
@@ -158,9 +193,9 @@ void RLoginWidget :: onLocalLoginPressed()
 
   g_settings->setValue("dbFile", dbFile);
 
-  if (m_database->login(dbFile))
+  if (m_database->localLogin(dbFile))
   {
-    emit loggedIn();
+    loadData();
   }
 }
 
@@ -168,7 +203,8 @@ void RLoginWidget :: onLocalLoginPressed()
 
 void RLoginWidget :: onOpenDatabasePressed()
 {
-  QString dbFile = QFileDialog::getOpenFileName(this, R_S("Duomenų bazė"));
+  QString dbFile = QFileDialog::getOpenFileName(this, R_S("Duomenų bazė"),
+    m_dbFileField->text(), R_S("RSys duomenų bazės (*.rdb)"));
 
   if (!dbFile.isNull())
   {
@@ -189,9 +225,9 @@ void RLoginWidget :: onRemoteLoginPressed()
   g_settings->setValue("dbName",      dbName);
   g_settings->setValue("dbUser",      userName);
 
-  if (m_database->login(dbAddress, dbName, userName, password))
+  if (m_database->remoteLogin(dbAddress, dbName, userName, password))
   {
-    emit loggedIn();
+    loadData();
   }
 }
 

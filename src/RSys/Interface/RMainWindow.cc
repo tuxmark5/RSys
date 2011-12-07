@@ -476,38 +476,47 @@ void RMainWindow :: importData()
 
 /**********************************************************************************************/
 
-void RMainWindow :: login()
+void RMainWindow :: loginBegin()
 {
-  R_GUARD(m_loginWidget, Vacuum);
-
   m_loggingIn     = true;
   m_results       = new RResults(m_data0, m_data1);
+}
 
-  // loginBegin
-  // loginEnd(bool success)
+/**********************************************************************************************/
 
-  m_data1->withBlock([this] { m_database->select(); });
-  m_data1->calculateIntervals();
+void RMainWindow :: loginEnd(bool success)
+{
+  if (success)
+  {
+    m_data1->calculateIntervals();
 
-  RUser* user = m_database->user();
+    RUser* user = m_database->user();
 
-  RSettings::loadUnitSettings(m_data1);
-  setInterfaceEnabled(true);
+    RSettings::loadUnitSettings(m_data1);
+    setInterfaceEnabled(true);
 
-  // permissions
-  m_importAction->setEnabled(user->property("imp"));
-  m_divisionsStateAction->setEnabled(user->divisionModeAcc());
-  m_systemsStateAction->setEnabled(user->systemModeAcc());
+    // permissions
+    m_importAction->setEnabled(user->property("imp"));
+    m_divisionsStateAction->setEnabled(user->divisionModeAcc());
+    m_systemsStateAction->setEnabled(user->systemModeAcc());
 
-  /**/ if (!m_divisionsStateAction->isEnabled())
-    m_systemsStateAction->setChecked(true);
-  else if (!m_systemsStateAction->isEnabled())
-    m_divisionsStateAction->setChecked(true);
+    /**/ if (!m_divisionsStateAction->isEnabled())
+      m_systemsStateAction->setChecked(true);
+    else if (!m_systemsStateAction->isEnabled())
+      m_divisionsStateAction->setChecked(true);
 
-  m_loginWidget   = 0; // deleted by QMainWindow::setCentralWidget
-  *m_data0        = *m_data1;
-  m_loggingIn     = false;
-  m_intervalToolBar->applyInterval();
+    m_loginWidget   = 0; // deleted by QMainWindow::setCentralWidget
+    *m_data0        = *m_data1;
+
+    m_intervalToolBar->applyInterval();
+  }
+  else
+  {
+    delete m_results;
+    m_results = 0;
+  }
+
+  m_loggingIn = false;
 }
 
 /**********************************************************************************************/
@@ -517,11 +526,12 @@ void RMainWindow :: logout()
   R_GUARD(!m_loginWidget, Vacuum);
 
   RSettings::saveUnitSettings(m_data1);
-  m_database->logout();
   m_data1->disconnectAll();
+  m_database->logout();
 
   m_loginWidget = new RLoginWidget(m_database);
-  connect(m_loginWidget, SIGNAL(loggedIn()), this, SLOT(login()));
+  connect(m_loginWidget, SIGNAL(loginBegin()), this, SLOT(loginBegin()));
+  connect(m_loginWidget, SIGNAL(loginEnd(bool)), this, SLOT(loginEnd(bool)));
   setInterfaceEnabled(false);
   setCentralWidget(m_loginWidget);
 

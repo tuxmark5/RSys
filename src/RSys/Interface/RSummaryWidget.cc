@@ -34,6 +34,8 @@ Vacuum RSummaryWidget :: RSummaryWidget(RResults* results, QWidget* parent):
 {
   setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
   setMode(RUsageWidget::Usage1 | RUsageWidget::Hours | RUsageWidget::Table);
+
+  connect(results->data1(), SIGNAL(globalIntervalChanged()), this, SLOT(updateGlobalInterval()));
 }
 
 /**********************************************************************************************/
@@ -199,6 +201,16 @@ void RSummaryWidget :: setUnits(RUnitPtrList* units)
   resetBegin();
   m_units = units;
   resetEnd();
+}
+
+/**********************************************************************************************/
+
+void RSummaryWidget :: updateGlobalInterval()
+{
+  if (RChart* chart = qobject_cast<RChart*>(widget()))
+  {
+    chart->setFillRange(1, m_results->data1()->interval1(), QDate(5000, 1, 1));
+  }
 }
 
 /**********************************************************************************************/

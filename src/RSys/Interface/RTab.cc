@@ -1,4 +1,5 @@
 #include <QtGui/QLabel>
+#include <QtGui/QTreeView>
 #include <QtGui/QVBoxLayout>
 #include <RSys/Interface/RModel1D.hh>
 #include <RSys/Interface/RModel2D.hh>
@@ -35,7 +36,8 @@ void RTab :: makeTable1DTab(RContainer* container)
   RModel1D*   model     = new RModel1D(container, this);
   RTableView* tableView = new RTableView(model, this);
 
-  layout()->addWidget(tableView);
+  tableView->setSortingEnabled(true);
+  layout()->addWidget(tableView);  
 }
 
 /**********************************************************************************************/
@@ -47,6 +49,18 @@ RModel2D* RTab :: makeTable2DTab(RContainer* containerX, RContainer* containerY)
 
   layout()->addWidget(tableView);
   return model;
+}
+
+/**********************************************************************************************/
+
+void RTab :: makeTree1DTab(RContainer* container)
+{
+  RModel1D*   model     = new RModel1D(container, this);
+  QTreeView*  treeView  = new QTreeView(this);
+
+  treeView->setModel(model);
+  treeView->setSortingEnabled(true);
+  layout()->addWidget(treeView);
 }
 
 /**********************************************************************************************/

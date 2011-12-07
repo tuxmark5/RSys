@@ -14,16 +14,21 @@ class RContainer: public RSharedData
 {
   public:
     _V Vacuum         ~RContainer() { }
-    _V bool           add()                                                 = 0;
-    _V void           addObserver(RIObserver* observer)                     = 0;
-    _V QVariant       get(int x, int y, int role) const                     = 0;
-    _V QString        header(int x) const                                   = 0;
-    _V int            height() const                                        = 0;
-    _V bool           remove(int x)                                         = 0;
-    _V void           removeObserver(RIObserver* observer)                  = 0;
-    _V bool           set(int x, int y, int role, const QVariant& variant)  = 0;
-    _V int            width() const                                         = 0;
-    _V bool           writable() const                                      = 0;
+    _V bool           add()                                                     = 0;
+    _V void           addObserver(RIObserver* observer)                         = 0;
+    _V QVariant       get(int x, int y, int role) const                         = 0;
+    _V QVariant       get(int x, void* pointer, int role) const                 = 0;
+    _V QString        header(int x) const                                       = 0;
+    _V int            height() const                                            = 0;
+    _V int            indexOf(void* pointer) const                              = 0;
+    _V bool           less(int x, void* y0p, void* y1p, int role) const         = 0;
+    _V void*          pointer(int y) const                                      = 0;
+    _V bool           remove(int x)                                             = 0;
+    _V void           removeObserver(RIObserver* observer)                      = 0;
+    _V bool           set(int x, int y, int role, const QVariant& variant)      = 0;
+    _V bool           set(int x, void* yp, int role, const QVariant& variant)   = 0;
+    _V int            width() const                                             = 0;
+    _V bool           writable() const                                          = 0;
 };
 
 /**********************************************************************************************/
@@ -107,11 +112,31 @@ class RContainerI: public RContainer
       return QVariant();
     }
 
+    _V QVariant       get(int x, void* pointer, int role) const
+    {
+      if (Accessor* accessor  = m_columns.value(x << 8 | role))
+        return accessor->get(*static_cast<Entry*>(pointer));
+      return QVariant();
+    }
+
     _V QString        header(int x) const
     { return m_headers.at(x); }
 
     _V int            height() const
     { return m_list->length(); }
+
+    _V int            indexOf(void* pointer) const
+    { return m_list->indexOf(static_cast<Entry*>(pointer)); }
+
+    _V bool           less(int x, void* y0p, void* y1p, int role) const
+    {
+      if (Accessor* accessor = m_columns.value(x << 8 | role))
+        return accessor->less(*static_cast<Entry*>(y0p), *static_cast<Entry*>(y1p));
+      return false;
+    }
+
+    _V void*          pointer(int y) const
+    { return static_cast<void*>(m_list->at(y)); }
 
     _V bool           remove(int x)
     { m_list->at(x)->remove(); return m_list->removeAt(x); }
@@ -125,6 +150,17 @@ class RContainerI: public RContainer
       {
         accessor->set(*m_list->at(y), variant);
         m_list->modify(y);
+      }
+      return true;
+    }
+
+    _V bool           set(int x, void* yp, int role, const QVariant& variant)
+    {
+      if (Accessor* accessor = m_columns.value(x << 8 | role))
+      {
+        Entry* entry = static_cast<Entry*>(yp);
+        accessor->set(*entry, variant);
+        m_list->modify(m_list->indexOf(entry));
       }
       return true;
     }

@@ -29,8 +29,9 @@ class RDatabase: public QObject
     _V Vacuum           ~RDatabase();
     _M RData*           data() const { return m_data; }
     _M bool             isPostgres() const { return m_postgres; }
-    _M bool             login(const QString& dbFile);
-    _M bool             login(const QString& addr, const QString& db, const QString& user, const QString& pass);
+    _M bool             localCreate(const QString& fileName);
+    _M bool             localLogin(const QString& dbFile);
+    _M bool             remoteLogin(const QString& addr, const QString& db, const QString& user, const QString& pass);
     _M RSqlEntity*      sqlEntity() const { return m_sqlEntity; }
     _M RUser*           user() const { return m_user; }
 
@@ -46,10 +47,11 @@ class RDatabase: public QObject
     _M void             emitPSQLError(const QSqlError& error);
     _M void             emitSQLiteError(const QSqlError& error);
     _M void             initDb();
-    _M bool             load();
+    _M bool             initEntities();
+    _M bool             initSQLite0(const QString& dbFile);
+    _M bool             initSQLite1();
 
   signals:
-    _M void             loggedIn();
     _M void             message(const QString& text);
 };
 

@@ -65,6 +65,9 @@ struct RSignal
     _M Vacuum         RSignal():
       m_block(false) { }
 
+    _M const Connections& connections()
+    { return m_connections; }
+
     _M void           disconnect(int connId);
     _M void           disconnectAll();
 

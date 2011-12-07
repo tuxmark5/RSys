@@ -35,17 +35,20 @@ class RLoginWidget: public QWidget
   private:
     _M QWidget*         createLocalTab();
     _M QWidget*         createRemoteTab();
+    _M void             loadData();
 
   public slots:
     _M void             showMessage(const QString& message);
 
   protected slots:
+    _M void             onLocalCreatePressed();
     _M void             onLocalLoginPressed();
     _M void             onOpenDatabasePressed();
     _M void             onRemoteLoginPressed();
 
   signals:
-    _M void             loggedIn();
+    _M void             loginBegin();
+    _M void             loginEnd(bool success);
 };
 
 /**********************************************************************************************/

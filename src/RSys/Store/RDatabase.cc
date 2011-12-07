@@ -1,3 +1,4 @@
+#include <QtCore/QFile>
 #include <QtSql/QSqlQuery>
 #include <RSys/Core/RData.hh>
 #include <RSys/Core/RUser.hh>
@@ -46,21 +47,19 @@ Vacuum RDatabase :: ~RDatabase()
 
 bool RDatabase :: commit()
 {
-  QSqlQuery   query(m_database);
-  bool        result = true;
+  QSqlQuery query(m_database);
 
-  m_database.transaction();
+  R_GUARD(m_database.transaction(), false);
+
   for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
   {
     if (!(*it)->commit(query))
     {
       qDebug() << "FAIL";
-      result = false;
     }
   }
-  m_database.commit();
 
-  return result;
+  return m_database.commit();
 }
 
 /**********************************************************************************************/
@@ -71,7 +70,7 @@ void RDatabase :: createAdminDataEntities()
   auto toKey        = [=](const QVariant& var)  -> QString    { return var.toString(); };
   auto fromUser     = [ ](RUser* user)          -> QVariant   { return user->id(); };
   auto fromKey      = [ ](const QString& key)   -> QVariant   { return key; };
-  auto setValue     = [ ](RUser* u, const QString& k, int v) { u->setProperty(k, v); };
+  auto setValue     = [ ](RUser* u, const QString& k, int v) { if (u) u->setProperty(k, v); };
 
   auto de = newEntity1D("users", this, m_data->users(), alloc<RUser>::make(m_data));
   de->addField<RID>     ("uid")       >> &RUser::id           << &RUser::setId;
@@ -120,8 +119,8 @@ void RDatabase :: createDataEntities()
   auto fromDivision = [ ](RDivision* unit)     -> QVariant   { return unit->id(); };
   auto fromMeasure  = [ ](RMeasure* unit)      -> QVariant   { return unit->id(); };
   auto fromSystem   = [ ](RSystem* unit)       -> QVariant   { return unit->id(); };
-  auto setMeasure   = [ ](RDivision* d, RMeasure* m, double v) { d->setMeasure(m, v); };
-  auto setSystem    = [ ](RDivision* d, RSystem* s, double v) { d->setSystem(s, v); };
+  auto setMeasure   = [ ](RDivision* d, RMeasure* m, double v) { if (d && m) d->setMeasure(m, v); };
+  auto setSystem    = [ ](RDivision* d, RSystem* s, double v) { if (d && s) d->setSystem(s, v); };
 
   auto mae = new DivisionMeasureE("measureAdm", this, "division", "measure", "weight");
   (*m_data)[RDivision::onMeasureSet] << std::bind(&DivisionMeasureE::onSet, mae, _1, _2, _3);
@@ -181,21 +180,19 @@ void RDatabase :: emitSQLiteError(const QSqlError& error)
 
 /**********************************************************************************************/
 
-bool RDatabase :: load()
+bool RDatabase :: initEntities()
 {
   if (m_postgres)
     createAdminDataEntities();
   createDataEntities();
   m_sqlEntity = new RSqlEntity();
   m_entities << m_sqlEntity;
-
-  emit loggedIn();
   return true;
 }
 
 /**********************************************************************************************/
 
-bool RDatabase :: login(const QString& dbFile)
+bool RDatabase :: initSQLite0(const QString& dbFile)
 {
   m_database  = QSqlDatabase::addDatabase("QSQLITE");
   m_postgres  = 0;
@@ -207,9 +204,46 @@ bool RDatabase :: login(const QString& dbFile)
   }
 
   m_database.setDatabaseName(dbFile);
+  return m_database.open();
+}
 
-  if (m_database.open())
-    return load();
+/**********************************************************************************************/
+
+bool RDatabase :: initSQLite1()
+{
+  R_GUARD(m_database.transaction(), false);
+
+  m_database.exec("CREATE TABLE divisions(id INTEGER, ident, name, PRIMARY KEY(id));");
+  m_database.exec("CREATE TABLE measures(id INTEGER, ident, name, PRIMARY KEY(id));");
+  m_database.exec("CREATE TABLE systems(id INTEGER, ident, name, PRIMARY KEY(id));");
+  m_database.exec("CREATE TABLE submissions(id INTEGER, measure, count, date0, date1, PRIMARY KEY(id));");
+  m_database.exec("CREATE TABLE measureAdm(division, measure, weight, PRIMARY KEY(division, measure));");
+  m_database.exec("CREATE TABLE systemAdm(division, system, weight, PRIMARY KEY(division, system));");
+
+  R_GUARD(m_database.commit(), false);
+
+  return initEntities();
+}
+
+/**********************************************************************************************/
+
+bool RDatabase :: localCreate(const QString& fileName)
+{
+  QFile::remove(fileName);
+
+  if (initSQLite0(fileName))
+  {
+    return initSQLite1();
+  }
+  return false;
+}
+
+/**********************************************************************************************/
+
+bool RDatabase :: localLogin(const QString& dbFile)
+{
+  if (initSQLite0(dbFile))
+    return initEntities();
 
   emitSQLiteError(m_database.lastError());
   return false;
@@ -217,7 +251,22 @@ bool RDatabase :: login(const QString& dbFile)
 
 /**********************************************************************************************/
 
-bool RDatabase :: login(const QString& addr, const QString& db, const QString& user, const QString& pass)
+void RDatabase :: logout()
+{
+  R_GUARD(m_database.isValid(), Vacuum);
+
+  m_database.close();
+  QSqlDatabase::removeDatabase(m_database.connectionName());
+
+  qDeleteAll(m_entities);
+  m_entities.clear();
+  m_sqlEntity   = 0;
+  m_user        = 0;
+}
+
+/**********************************************************************************************/
+
+bool RDatabase :: remoteLogin(const QString& addr, const QString& db, const QString& user, const QString& pass)
 {
   m_database = QSqlDatabase::addDatabase("QPSQL");
   m_postgres = 1;
@@ -235,19 +284,10 @@ bool RDatabase :: login(const QString& addr, const QString& db, const QString& u
   m_database.setPassword(pass);
 
   if (m_database.open())
-    return load();
+    return initEntities();
 
   emitPSQLError(m_database.lastError());
   return false;
-}
-
-/**********************************************************************************************/
-
-void RDatabase :: logout()
-{
-  m_database.close();
-  qDeleteAll(m_entities);
-  m_entities.clear();
 }
 
 /**********************************************************************************************/

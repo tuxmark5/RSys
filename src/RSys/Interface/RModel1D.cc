@@ -5,6 +5,119 @@
 /**********************************************************************************************/
 QFont g_lastRowFont;
 /********************************************* RS *********************************************/
+/*                                         RAdapter1D                                         */
+/**********************************************************************************************/
+
+Vacuum RAdapter1D :: RAdapter1D(RModel1D* model):
+  m_model(model)
+{
+}
+
+/**********************************************************************************************/
+
+bool RAdapter1D :: insert0(int i0, int i1)
+{
+  Q_UNUSED(i0);
+  Q_UNUSED(i1);
+  return true;
+}
+
+/**********************************************************************************************/
+
+void RAdapter1D :: insert1(int i0, int i1)
+{
+  Q_UNUSED(i1);
+  RNode1D&  root    = m_model->m_root;
+  int       dstId   = root.m_children.size();
+  auto      it      = root.m_children.end();
+
+  m_model->beginInsertRows(QModelIndex(), dstId + 1, dstId + 1);
+  root.m_children.insert(it, RNode1D(m_model, &root, m_model->m_container->pointer(i0)));
+  m_model->endInsertRows();
+}
+
+/**********************************************************************************************/
+
+void RAdapter1D :: modify0(int i0, int i1)
+{
+  Q_UNUSED(i0);
+  Q_UNUSED(i1);
+}
+
+/**********************************************************************************************/
+
+void RAdapter1D :: modify1(int i0, int i1)
+{
+  Q_UNUSED(i1);
+  void*             ptr   = m_model->m_container->pointer(i0);
+  int               index = m_model->m_root.find(ptr);
+  QModelIndex       left  = m_model->index(index, 0);
+  QModelIndex       right = m_model->index(index, m_model->m_container->width());
+
+  m_model->dataChanged(left, right);
+}
+
+/**********************************************************************************************/
+
+bool RAdapter1D :: remove0(int i0, int i1)
+{
+  void*   ptr   = m_model->m_container->pointer(i0);
+  int     index = m_model->m_root.find(ptr);
+
+  m_model->beginRemoveRows(QModelIndex(), index, index);
+  m_model->m_root.m_children.removeAt(index);
+  m_model->endRemoveRows();
+  return true;
+}
+
+/**********************************************************************************************/
+
+void RAdapter1D :: remove1(int i0, int i1)
+{
+  Q_UNUSED(i0);
+  Q_UNUSED(i1);
+}
+
+/**********************************************************************************************/
+
+void RAdapter1D :: resetObservable0()
+{
+  m_model->resetBegin();
+}
+
+/**********************************************************************************************/
+
+void RAdapter1D :: resetObservable()
+{
+  m_model->resetEnd();
+}
+
+/********************************************* RS *********************************************/
+/*                                          RNode1D                                           */
+/**********************************************************************************************/
+
+Vacuum RNode1D :: RNode1D(RModel1D* model, RNode1D* parent, void* value):
+  m_model(model), m_parent(parent), m_value(value)
+{
+}
+
+/**********************************************************************************************/
+
+Vacuum RNode1D :: ~RNode1D()
+{
+}
+
+/**********************************************************************************************/
+
+int RNode1D :: find(void* pointer)
+{
+  for (auto it = m_children.begin(); it != m_children.end(); ++it)
+    if (it->m_value == pointer)
+      return it - m_children.begin();
+  return -1;
+}
+
+/********************************************* RS *********************************************/
 /*                                          RModel1D                                          */
 /**********************************************************************************************/
 
@@ -15,8 +128,9 @@ Vacuum RModel1D :: RModel1D(RContainerPtr container, QObject* parent):
   if (!container->writable())
     m_editable = false;
 
-  m_rowAdapter = new RRowObserverAdapter(this);
+  m_rowAdapter = new RAdapter1D(this);
   m_container->addObserver(m_rowAdapter);
+  resetEnd();
 
   if (!g_lastRowFont.italic())
     g_lastRowFont.setItalic(true);
@@ -62,12 +176,12 @@ QVariant RModel1D :: data(const QModelIndex& index, int role) const
   if (m_editable && index.row() == height)
     return lastRowData(index, role);
 
-  R_GUARD(index.row()    <  height, QVariant());
-
   if (role == Qt::EditRole)
     role = Qt::DisplayRole;
 
-  return m_container->get(index.column(), index.row(), role);
+  if (const RNode1D* node = this->node(index))
+    return m_container->get(index.column(), node->m_value, role);
+  return QVariant();
 }
 
 /**********************************************************************************************/
@@ -101,8 +215,8 @@ QVariant RModel1D :: headerData(int section, Qt::Orientation orientation, int ro
 
 QModelIndex RModel1D :: index(int row, int column, const QModelIndex& parent) const
 {
-  R_GUARD(!parent.isValid(), QModelIndex());
-
+  if (const RNode1D* node = this->node(row, parent))
+    return createIndex(row, column, (void*) node);
   return createIndex(row, column, 0);
 }
 
@@ -123,6 +237,24 @@ QVariant RModel1D :: lastRowData(const QModelIndex& index, int role) const
   }
 
   return QVariant();
+}
+
+/**********************************************************************************************/
+
+const RNode1D* RModel1D :: node(const QModelIndex& index) const
+{
+  return index.isValid() ? static_cast<const RNode1D*>(index.internalPointer()) : &m_root;
+}
+
+/**********************************************************************************************/
+
+const RNode1D* RModel1D :: node(int row, const QModelIndex& parent) const
+{
+  const RNode1D* node = parent.isValid()
+      ? static_cast<const RNode1D*>(parent.internalPointer()) : &m_root;
+  if (row < node->m_children.size())
+    return &node->m_children.at(row);
+  return 0;
 }
 
 /**********************************************************************************************/
@@ -163,16 +295,45 @@ bool RModel1D :: removeRows(int row, int count, const QModelIndex& parent)
   R_GUARD(!parent.isValid(),              false);
   R_GUARD(row < m_container->height(),    false);
 
-  return m_container->remove(row);
+  if (RNode1D* node = const_cast<RNode1D*>(this->node(row, parent)))
+  {
+    int index = m_container->indexOf(node->m_value);
+    m_container->remove(index);
+    return true;
+  }
+  return false;
+}
+
+/**********************************************************************************************/
+
+void RModel1D :: resetBegin()
+{
+  //m_nodes.clear();
+  m_root.m_children.clear();
+}
+
+/**********************************************************************************************/
+
+void RModel1D :: resetEnd()
+{
+  int   height = m_container->height();
+  auto  it     = m_root.m_children.end();
+
+  for (int y = 0; y < height; y++)
+  {
+    it = m_root.m_children.insert(it, RNode1D(this, &m_root, m_container->pointer(y)));
+    //m_nodes.insert(y, &*it);
+    ++it;
+  }
 }
 
 /**********************************************************************************************/
 
 int RModel1D :: rowCount(const QModelIndex& parent) const
 {
-  R_GUARD(!parent.isValid(), 0);
-
-  return m_container->height() + int(m_editable);
+  if (const RNode1D* node = this->node(parent))
+    return node->m_children.size() + int(m_editable);
+  return 0;
 }
 
 /**********************************************************************************************/
@@ -180,9 +341,11 @@ int RModel1D :: rowCount(const QModelIndex& parent) const
 void RModel1D :: setContainer(RContainer* container)
 {
   beginResetModel();
+  resetBegin();
   m_container->removeObserver(m_rowAdapter);
   m_container = container;
   m_container->addObserver(m_rowAdapter);
+  resetEnd();
   endResetModel();
 }
 
@@ -195,17 +358,32 @@ bool RModel1D :: setData(const QModelIndex& index, const QVariant& value, int ro
   if (role == Qt::EditRole)
     role = Qt::DisplayRole;
 
-  if (index.row() < m_container->height())
+  RNode1D* node = const_cast<RNode1D*>(this->node(index));
+
+  if (!node)
+    node = const_cast<RNode1D*>(this->node(index.row(), QModelIndex()));
+
+  if (node)
   {
-    QVariant old = m_container->get(index.column(), index.row(), role);
+    QVariant old = m_container->get(index.column(), node->m_value, role);
     if (old != value)
-    {
-      m_container->set(index.column(), index.row(), role, value);
-      notifyRowChanged(index.row());
-    }
+      m_container->set(index.column(), node->m_value, role, value);
   }
 
   return true;
+}
+
+/**********************************************************************************************/
+
+void RModel1D :: sort(int column, Qt::SortOrder order)
+{
+  beginResetModel();
+  qStableSort(m_root.m_children.begin(), m_root.m_children.end(), [=](const RNode1D& a, const RNode1D& b) -> bool
+  {
+    return m_container->less(column, a.m_value, b.m_value, Qt::DisplayRole)
+            != (order == Qt::AscendingOrder);
+  });
+  endResetModel();
 }
 
 /**********************************************************************************************/

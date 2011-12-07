@@ -100,7 +100,8 @@ class RMainWindow: public QMainWindow
   public slots:
     _M void                 commit();
     _M void                 importData();
-    _M void                 login();
+    _M void                 loginBegin();
+    _M void                 loginEnd(bool success);
     _M void                 logout();
     _M void                 onSearchFormDestroyed();
     _M void                 rollback();

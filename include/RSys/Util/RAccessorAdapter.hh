@@ -15,8 +15,9 @@ class RAccessorAdapter
 
   public:
     _V Vacuum         ~RAccessorAdapter() { }
-    _V QVariant       get(const Entry& entry) const               = 0;
-    _V void           set(Entry& entry, const QVariant& variant)  = 0;
+    _V QVariant       get(const Entry& entry) const                         = 0;
+    _V bool           less(const Entry& entry0, const Entry& entry1) const  = 0;
+    _V void           set(Entry& entry, const QVariant& variant)            = 0;
 };
 
 /**********************************************************************************************/
@@ -42,6 +43,9 @@ class RAccessorAdapterI: public RAccessorAdapter<typename _Accessor::Entry>
 
     _M QVariant       get(const Entry& entry) const
     { return QVariant::fromValue(m_accessor.get(entry)); }
+
+    _V bool           less(const Entry& entry0, const Entry& entry1) const
+    { return m_accessor.get(entry0) < m_accessor.get(entry1); }
 
     _M void           set(Entry& entry, const QVariant& variant)
     { m_accessor.set(entry, qvariant_cast<Value>(variant)); }

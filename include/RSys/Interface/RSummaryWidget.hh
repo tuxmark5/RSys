@@ -39,6 +39,7 @@ class RSummaryWidget: public RLayerWidget, public RIObserver
     _M void             resetEnd();
     _M void             setMode(int mode);
     _M void             setUnits(RUnitPtrList* units);
+    _M void             updateGlobalInterval();
     _M void             updateUnit(RUnit* unit);
 
   protected:
