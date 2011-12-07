@@ -15,9 +15,10 @@ class RCalculator: public QObject
   Q_OBJECT
 
   private:
-    _T QHash<RUnit*, double>              RUnitHash;
+    _T QHash<RUnit*, double>              UnitHash;
     _T RResults::IntervalFun              IntervalFun;
-    _T RUnit::RUsageMap                   RUsageMap;
+    _T RUnit::UsageMap                    UsageMap;
+    _T RUnit::UsageVector                 UsageVector;
 
   private:
     _M RData*           m_data;
@@ -26,14 +27,23 @@ class RCalculator: public QObject
     _M bool             m_extrapolationEnabled: 1;
 
   private:
+    /**
+     * Visoms duotoms priemonėms priskiriamas padalinys ir jo naudojamos
+     * sistemos.
+     *
+     * @param division  padalinys
+     * @param measures  priemonės
+     */
     _M void             updateMeasures(RDivision* division, RMeasureHash& measures);
-    _M void             updateUsages(RSubmissionPtrList* submissions);
-    _M void             updateUsageChanges(RUnitHash* units, RSubmission* submission);
+    _M void             updateUsageChanges(RSubmissionPtrList* submissions);
+    // TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
+    // _M void             updateUsageChanges(UnitHash* units, RSubmission* submission);
     _M void             updateUsages(RUnitPtrList* units);
-    _M void             updateUsages(RUsageMap& usageMap, RUsageMap& usageChangeMap);
+    _M void             updateUsages(UsageMap& usageMap, UsageMap& usageChangeMap);
     _M void             calculateIntervals();
-    _M void             calculateIntervals(RUnitPtrList* units);
-    _M double           calculateUsage(RInterval interval, RUsageMap& usageMap);
+    _M void             calculateIntervals(UnitHash* units, UsageVector& usage);
+    _M double           calculateUsage(RInterval interval, UsageMap& usageMap);
+    _M void             zeroUsages(RUnitPtrList* units);
 
     /**
      * Nuspėja apkrovą intervale, remiantas gretimų intervalų apkrovomis.
@@ -69,9 +79,9 @@ class RCalculator: public QObject
      * @param date  data, iki kurios (ne imtinai) reikia numatyti apkrovas
      * @return numanoma apkrova [it.key(); date) intervale
      */
-    _M double           polynomialExtrapolation(RUsageMap :: iterator it,
-                                                RUsageMap :: iterator begin,
-                                                RUsageMap :: iterator end,
+    _M double           polynomialExtrapolation(UsageMap :: iterator it,
+                                                UsageMap :: iterator begin,
+                                                UsageMap :: iterator end,
                                                 QDate date);
 
     /**

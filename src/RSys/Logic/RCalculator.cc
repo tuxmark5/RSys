@@ -33,6 +33,7 @@ Vacuum RCalculator :: ~RCalculator()
 
 void RCalculator :: update()
 {
+  /* TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
   for (auto it = m_data->systems()->begin(); it != m_data->systems()->end(); it++)
   {
     (*it)->m_usageHrsMap.clear();
@@ -40,24 +41,31 @@ void RCalculator :: update()
     (*it)->m_usageCntMap.clear();
     (*it)->m_usageCntChangeMap.clear();
   }
+  */
   for (auto it = m_data->measures()->begin(); it != m_data->measures()->end(); it++)
   {
     (*it)->m_systemUsage.clear();
     (*it)->m_divisionUsage.clear();
+    (*it)->m_usageCntMap.clear();
+    (*it)->m_usageCntChangeMap.clear();
   }
   for (auto it = m_data->divisions()->begin(); it != m_data->divisions()->end(); it++)
   {
+    /* TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
     (*it)->m_usageHrsMap.clear();
     (*it)->m_usageHrsChangeMap.clear();
     (*it)->m_usageCntMap.clear();
     (*it)->m_usageCntChangeMap.clear();
+    */
     updateMeasures(it->get(), (*it)->m_measureHash);
     updateMeasures(it->get(), (*it)->m_measureHash1);
   }
-  updateUsages(m_data->submissions());
-  updateUsages(m_data->submissions1());
-  updateUsages((RUnitPtrList*) m_data->divisions());
-  updateUsages((RUnitPtrList*) m_data->systems());
+  updateUsageChanges(m_data->submissions());
+  updateUsageChanges(m_data->submissions1());
+  // TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
+  // updateUsages((RUnitPtrList*) m_data->divisions());
+  // updateUsages((RUnitPtrList*) m_data->systems());
+  updateUsages((RUnitPtrList*) m_data->measures());
 
   calculateIntervals();
 }
@@ -78,21 +86,27 @@ void RCalculator :: updateMeasures(RDivision* division, RMeasureHash& measures)
 
 /**********************************************************************************************/
 
-void RCalculator :: updateUsages(RSubmissionPtrList* submissions)
+void RCalculator :: updateUsageChanges(RSubmissionPtrList* submissions)
 {
   for (auto it = submissions->begin(); it != submissions->end(); it++)
   {
     if ((*it)->measure() != NULL)
     {
-      updateUsageChanges((RUnitHash*) &(*it)->measure()->m_divisionUsage, it->get());
-      updateUsageChanges((RUnitHash*) &(*it)->measure()->m_systemUsage, it->get());
+      // TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
+      // updateUsageChanges((UnitHash*) &(*it)->measure()->m_divisionUsage, it->get());
+      // updateUsageChanges((UnitHash*) &(*it)->measure()->m_systemUsage, it->get());
+      double usage = (double)(*it)->count()
+                     / ((*it)->date0().daysTo((*it)->date1()) + 1);
+      (*it)->measure()->m_usageCntChangeMap[(*it)->date0()] += usage;
+      (*it)->measure()->m_usageCntChangeMap[(*it)->date1().addDays(1)] -= usage;
     }
   }
 }
 
 /**********************************************************************************************/
 
-void RCalculator :: updateUsageChanges(RUnitHash* units, RSubmission* submission)
+/* TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
+void RCalculator :: updateUsageChanges(UnitHash* units, RSubmission* submission)
 {
   for (auto it = units->begin(); it != units->end(); it++)
   {
@@ -105,21 +119,23 @@ void RCalculator :: updateUsageChanges(RUnitHash* units, RSubmission* submission
     it.key()->m_usageHrsChangeMap[submission->date1().addDays(1)] -= usage;
   }
 }
+*/
 
 /**********************************************************************************************/
 
 void RCalculator :: updateUsages(RUnitPtrList* units)
 {
-  for (auto unitIt = units->begin(); unitIt != units->end(); unitIt++)
+  for (auto it = units->begin(); it != units->end(); it++)
   {
-    updateUsages((*unitIt)->m_usageHrsMap, (*unitIt)->m_usageHrsChangeMap);
-    updateUsages((*unitIt)->m_usageCntMap, (*unitIt)->m_usageCntChangeMap);
+    // TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
+    // updateUsages((*it)->m_usageHrsMap, (*it)->m_usageHrsChangeMap);
+    updateUsages((*it)->m_usageCntMap, (*it)->m_usageCntChangeMap);
   }
 }
 
 /**********************************************************************************************/
 
-void RCalculator :: updateUsages(RUsageMap& usageMap, RUsageMap& usageChangeMap)
+void RCalculator :: updateUsages(UsageMap& usageMap, UsageMap& usageChangeMap)
 {
   double usage = 0;
   for (auto it = usageChangeMap.begin(); it != usageChangeMap.end(); it++)
@@ -144,39 +160,59 @@ void RCalculator :: calculateIntervals()
 {
   if (m_numIntervals > 0)
   {
-    calculateIntervals((RUnitPtrList*) m_data->divisions());
-    calculateIntervals((RUnitPtrList*) m_data->systems());
-  }
-}
-
-/**********************************************************************************************/
-
-void RCalculator :: calculateIntervals(RUnitPtrList* units)
-{
-  QVector<RInterval> intervals;
-  for (int i = 0; i < m_numIntervals; i++)
-  {
-    intervals.push_back(m_intervalFun(i));
-  }
-  for (auto unitIt = units->begin(); unitIt != units->end(); unitIt++)
-  {
-    (*unitIt)->m_usage.resize(m_numIntervals);
+    zeroUsages((RUnitPtrList*)m_data->systems());
+    zeroUsages((RUnitPtrList*)m_data->divisions());
+    QVector<RInterval> intervals;
     for (int i = 0; i < m_numIntervals; i++)
     {
-      double usageHrs = calculateUsage(intervals[i], (*unitIt)->m_usageHrsMap);
-      double usageCnt = calculateUsage(intervals[i], (*unitIt)->m_usageCntMap);
-      (*unitIt)->m_usage[i] = qMakePair(usageHrs, usageCnt);
+      intervals.push_back(m_intervalFun(i));
+    }
+    for (auto it = m_data->measures()->begin(); it != m_data->measures()->end(); it++)
+    {
+      (*it)->m_usage.clear();
+      (*it)->m_usage.reserve(m_numIntervals);
+      for (int i = 0; i < m_numIntervals; i++)
+      {
+        (*it)->m_usage.push_back(qMakePair(0.0, calculateUsage(intervals[i], (*it)->m_usageCntMap)));
+      }
+      calculateIntervals((UnitHash*)&(*it)->m_divisionUsage, (*it)->m_usage);
+      calculateIntervals((UnitHash*)&(*it)->m_systemUsage, (*it)->m_usage);
     }
   }
 }
 
 /**********************************************************************************************/
 
-double RCalculator :: calculateUsage(RInterval interval, RUsageMap& usageMap)
+void RCalculator :: zeroUsages(RUnitPtrList* units)
+{
+  for (auto it = units->begin(); it != units->end(); it++)
+  {
+    (*it)->m_usage.clear();
+    (*it)->m_usage.resize(m_numIntervals);
+  }
+}
+
+/**********************************************************************************************/
+
+void RCalculator :: calculateIntervals(UnitHash* units, UsageVector& usage)
+{
+  for (auto it = units->begin(); it != units->end(); it++)
+  {
+    for (int i = 0; i < m_numIntervals; i++)
+    {
+      it.key()->m_usage[i].first += usage[i].second * it.value();
+      it.key()->m_usage[i].second += usage[i].second;
+    }
+  }
+}
+
+/**********************************************************************************************/
+
+double RCalculator :: calculateUsage(RInterval interval, UsageMap& usageMap)
 {
   double usage = 0, curUsage;
   QDate curDate = FROM(interval);
-  RUsageMap :: iterator it = usageMap.upperBound(curDate);
+  UsageMap :: iterator it = usageMap.upperBound(curDate);
   if (it == usageMap.end()) {
     return 0;
   }
@@ -311,9 +347,9 @@ bool RCalculator :: solveSystemOfLinearEquations(double matrix[3][4],
 
 /**********************************************************************************************/
 
-double RCalculator :: polynomialExtrapolation(RUsageMap :: iterator it,
-                                              RUsageMap :: iterator begin,
-                                              RUsageMap :: iterator end,
+double RCalculator :: polynomialExtrapolation(UsageMap :: iterator it,
+                                              UsageMap :: iterator begin,
+                                              UsageMap :: iterator end,
                                               QDate date)
 {
   QDate prevDate, startDate, endDate, nextDate;
