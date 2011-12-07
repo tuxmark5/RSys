@@ -17,7 +17,7 @@ class RUnit: public RElement
 
   public:
     _T QVector<RUsage>     UsageVector;
-    _T QMap<QDate, double> RUsageMap;
+    _T QMap<QDate, double> UsageMap;
 
   public:
     _E Type
@@ -33,10 +33,10 @@ class RUnit: public RElement
     _M QString            m_name;
     _M UsageVector        m_usage; // MARTYNO FIELD
 
-    _M RUsageMap          m_usageCntChangeMap; // paraiškų per dieną skaičiaus pokytis
-    _M RUsageMap          m_usageCntMap;       // paraiškų per dieną pradedant nuo datos
-    _M RUsageMap          m_usageHrsChangeMap; // paraiškų apdorojimo valandų per dieną skaičiaus pokytis
-    _M RUsageMap          m_usageHrsMap;       // paraiškų apdorojimo valandų per dieną pradedant nuo datos
+    _M UsageMap          m_usageCntChangeMap; // paraiškų per dieną skaičiaus pokytis
+    _M UsageMap          m_usageCntMap;       // paraiškų per dieną pradedant nuo datos
+    _M UsageMap          m_usageHrsChangeMap; // paraiškų apdorojimo valandų per dieną skaičiaus pokytis
+    _M UsageMap          m_usageHrsMap;       // paraiškų apdorojimo valandų per dieną pradedant nuo datos
 
     _M int                m_viewMode;
     _M bool               m_visible:  1;

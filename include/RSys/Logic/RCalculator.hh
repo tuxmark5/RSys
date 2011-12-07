@@ -15,9 +15,10 @@ class RCalculator: public QObject
   Q_OBJECT
 
   private:
-    _T QHash<RUnit*, double>              RUnitHash;
+    _T QHash<RUnit*, double>              UnitHash;
     _T RResults::IntervalFun              IntervalFun;
-    _T RUnit::RUsageMap                   RUsageMap;
+    _T RUnit::UsageMap                    UsageMap;
+    _T RUnit::UsageVector                 UsageVector;
 
   private:
     _M RData*           m_data;
@@ -26,14 +27,24 @@ class RCalculator: public QObject
     _M bool             m_extrapolationEnabled: 1;
 
   private:
+    /**
+     * Visoms duotoms priemonėms priskiriamas padalinys ir jo naudojamos
+     * sistemos.
+     *
+     * @param division  padalinys
+     * @param measures  priemonės
+     */
     _M void             updateMeasures(RDivision* division, RMeasureHash& measures);
-    _M void             updateUsages(RSubmissionPtrList* submissions);
-    _M void             updateUsageChanges(RUnitHash* units, RSubmission* submission);
+    _M void             updateUsageChanges(RSubmissionPtrList* submissions);
+    // TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
+    // _M void             updateUsageChanges(UnitHash* units, RSubmission* submission);
     _M void             updateUsages(RUnitPtrList* units);
-    _M void             updateUsages(RUsageMap& usageMap, RUsageMap& usageChangeMap);
+    _M void             updateUsages(UsageMap& usageMap, UsageMap& usageChangeMap);
     _M void             calculateIntervals();
-    _M void             calculateIntervals(RUnitPtrList* units);
-    _M double           calculateUsage(RInterval interval, RUsageMap& usageMap);
+    _M void             calculateIntervals(UnitHash* units, UsageVector& usage);
+    _M double           calculateUsage(RInterval interval, UsageMap& usageMap);
+    _M double           predictUsage(RInterval interval, UsageMap& usageMap);
+    _M void             zeroUsages(RUnitPtrList* units);
 
     /**
      * Nuspėja apkrovą intervale, remiantas gretimų intervalų apkrovomis.
@@ -69,10 +80,41 @@ class RCalculator: public QObject
      * @param date  data, iki kurios (ne imtinai) reikia numatyti apkrovas
      * @return numanoma apkrova [it.key(); date) intervale
      */
-    _M double           polynomialExtrapolation(RUsageMap :: iterator it,
-                                                RUsageMap :: iterator begin,
-                                                RUsageMap :: iterator end,
+    _M double           polynomialExtrapolation(UsageMap :: iterator it,
+                                                UsageMap :: iterator begin,
+                                                UsageMap :: iterator end,
                                                 QDate date);
+    /**
+     * Randa 2 laipsnio polinominę funkciją pagal duotus nuosekliai einančių
+     * atkarpų integralus.
+     *
+     * Pastaba: tikriausiai būtų patogu pasirašyti bendrą atvejį, atkarpas
+     * paduodant kaip QVector<QPair<double, double> >, o rezultatą sudedant į
+     * QVector<double> – kai iškils toks poreikis, reikės taip ir padaryti.
+     *
+     * @param segment1         pirmos atkarpos pabaigos taškas; atkarpa [0; segment1)
+     * @param segment1Integral pirmos atkarpos integralas
+     * @param segment2         antros atkarpos pabaigos taškas; atkarpa [segment1; segment2)
+     * @param segment2Integral antros atkarpos integralas
+     * @param segment3         trečios atkarpos pabaigos taškas; atkarpa [segment2; segment3)
+     * @param segment3Integral trečios atkarpos integralas
+     * @param coefficients     rodyklė į 3 elementų masyvą gautos funkcijos koeficientams
+     * @return true, jei koeficientus rasti pavyksta; false priešingu atveju
+     */
+    _M bool             polynomialExtrapolation(int segment1, double segment1Integral,
+                                                int segment2, double segment2Integral,
+                                                int segment3, double segment3Integral,
+                                                double coefficients[3]);
+
+    /**
+     * Apskaičiuoja duotos 2 laipsnio polinominės funkcijos apibrėžtinį integralą.
+     *
+     * @param coefficients  rodyklė į funkcijos koeficientus
+     * @param from          intervalo, kuriame integruojame, pradžia
+     * @param to            intervalo, kuriame integruojame, pabaiga
+     * @return apskaičiuotas apibrėžtinis integralas
+     */
+    _M double          integrate(double coefficients[3], int from, int to);
 
     /**
      * Išsprendžia 3 tiesinių lygčių sistemą.

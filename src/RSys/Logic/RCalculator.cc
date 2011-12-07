@@ -9,8 +9,9 @@
 #include <cmath>
 #include <algorithm>
 
-#define FROM(x) std::get<0>(x)
-#define TO(x)   std::get<1>(x)
+#define FROM(x)       std::get<0>(x)
+#define TO(x)         std::get<1>(x)
+#define IS_LEAP(x)    (x).daysInYear() == 366
 
 /********************************************* RS *********************************************/
 /*                                        RCalculator                                         */
@@ -33,6 +34,7 @@ Vacuum RCalculator :: ~RCalculator()
 
 void RCalculator :: update()
 {
+  /* TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
   for (auto it = m_data->systems()->begin(); it != m_data->systems()->end(); it++)
   {
     (*it)->m_usageHrsMap.clear();
@@ -40,24 +42,31 @@ void RCalculator :: update()
     (*it)->m_usageCntMap.clear();
     (*it)->m_usageCntChangeMap.clear();
   }
+  */
   for (auto it = m_data->measures()->begin(); it != m_data->measures()->end(); it++)
   {
     (*it)->m_systemUsage.clear();
     (*it)->m_divisionUsage.clear();
+    (*it)->m_usageCntMap.clear();
+    (*it)->m_usageCntChangeMap.clear();
   }
   for (auto it = m_data->divisions()->begin(); it != m_data->divisions()->end(); it++)
   {
+    /* TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
     (*it)->m_usageHrsMap.clear();
     (*it)->m_usageHrsChangeMap.clear();
     (*it)->m_usageCntMap.clear();
     (*it)->m_usageCntChangeMap.clear();
+    */
     updateMeasures(it->get(), (*it)->m_measureHash);
     updateMeasures(it->get(), (*it)->m_measureHash1);
   }
-  updateUsages(m_data->submissions());
-  updateUsages(m_data->submissions1());
-  updateUsages((RUnitPtrList*) m_data->divisions());
-  updateUsages((RUnitPtrList*) m_data->systems());
+  updateUsageChanges(m_data->submissions());
+  updateUsageChanges(m_data->submissions1());
+  // TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
+  // updateUsages((RUnitPtrList*) m_data->divisions());
+  // updateUsages((RUnitPtrList*) m_data->systems());
+  updateUsages((RUnitPtrList*) m_data->measures());
 
   calculateIntervals();
 }
@@ -78,21 +87,27 @@ void RCalculator :: updateMeasures(RDivision* division, RMeasureHash& measures)
 
 /**********************************************************************************************/
 
-void RCalculator :: updateUsages(RSubmissionPtrList* submissions)
+void RCalculator :: updateUsageChanges(RSubmissionPtrList* submissions)
 {
   for (auto it = submissions->begin(); it != submissions->end(); it++)
   {
     if ((*it)->measure() != NULL)
     {
-      updateUsageChanges((RUnitHash*) &(*it)->measure()->m_divisionUsage, it->get());
-      updateUsageChanges((RUnitHash*) &(*it)->measure()->m_systemUsage, it->get());
+      // TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
+      // updateUsageChanges((UnitHash*) &(*it)->measure()->m_divisionUsage, it->get());
+      // updateUsageChanges((UnitHash*) &(*it)->measure()->m_systemUsage, it->get());
+      double usage = (double)(*it)->count()
+                     / ((*it)->date0().daysTo((*it)->date1()) + 1);
+      (*it)->measure()->m_usageCntChangeMap[(*it)->date0()] += usage;
+      (*it)->measure()->m_usageCntChangeMap[(*it)->date1().addDays(1)] -= usage;
     }
   }
 }
 
 /**********************************************************************************************/
 
-void RCalculator :: updateUsageChanges(RUnitHash* units, RSubmission* submission)
+/* TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
+void RCalculator :: updateUsageChanges(UnitHash* units, RSubmission* submission)
 {
   for (auto it = units->begin(); it != units->end(); it++)
   {
@@ -105,21 +120,23 @@ void RCalculator :: updateUsageChanges(RUnitHash* units, RSubmission* submission
     it.key()->m_usageHrsChangeMap[submission->date1().addDays(1)] -= usage;
   }
 }
+*/
 
 /**********************************************************************************************/
 
 void RCalculator :: updateUsages(RUnitPtrList* units)
 {
-  for (auto unitIt = units->begin(); unitIt != units->end(); unitIt++)
+  for (auto it = units->begin(); it != units->end(); it++)
   {
-    updateUsages((*unitIt)->m_usageHrsMap, (*unitIt)->m_usageHrsChangeMap);
-    updateUsages((*unitIt)->m_usageCntMap, (*unitIt)->m_usageCntChangeMap);
+    // TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
+    // updateUsages((*it)->m_usageHrsMap, (*it)->m_usageHrsChangeMap);
+    updateUsages((*it)->m_usageCntMap, (*it)->m_usageCntChangeMap);
   }
 }
 
 /**********************************************************************************************/
 
-void RCalculator :: updateUsages(RUsageMap& usageMap, RUsageMap& usageChangeMap)
+void RCalculator :: updateUsages(UsageMap& usageMap, UsageMap& usageChangeMap)
 {
   double usage = 0;
   for (auto it = usageChangeMap.begin(); it != usageChangeMap.end(); it++)
@@ -144,39 +161,72 @@ void RCalculator :: calculateIntervals()
 {
   if (m_numIntervals > 0)
   {
-    calculateIntervals((RUnitPtrList*) m_data->divisions());
-    calculateIntervals((RUnitPtrList*) m_data->systems());
-  }
-}
-
-/**********************************************************************************************/
-
-void RCalculator :: calculateIntervals(RUnitPtrList* units)
-{
-  QVector<RInterval> intervals;
-  for (int i = 0; i < m_numIntervals; i++)
-  {
-    intervals.push_back(m_intervalFun(i));
-  }
-  for (auto unitIt = units->begin(); unitIt != units->end(); unitIt++)
-  {
-    (*unitIt)->m_usage.resize(m_numIntervals);
+    zeroUsages((RUnitPtrList*)m_data->systems());
+    zeroUsages((RUnitPtrList*)m_data->divisions());
+    QVector<RInterval> intervals;
     for (int i = 0; i < m_numIntervals; i++)
     {
-      double usageHrs = calculateUsage(intervals[i], (*unitIt)->m_usageHrsMap);
-      double usageCnt = calculateUsage(intervals[i], (*unitIt)->m_usageCntMap);
-      (*unitIt)->m_usage[i] = qMakePair(usageHrs, usageCnt);
+      intervals.push_back(m_intervalFun(i));
+    }
+    for (auto it = m_data->measures()->begin(); it != m_data->measures()->end(); it++)
+    {
+      (*it)->m_usage.clear();
+      (*it)->m_usage.reserve(m_numIntervals);
+      for (int i = 0; i < m_numIntervals; i++)
+      {
+        double usage;
+        if (TO(intervals[i]).daysTo(m_data->interval1()) > -1) { // intervalas istorijoje
+          usage = calculateUsage(intervals[i], (*it)->m_usageCntMap);
+        } else if (FROM(intervals[i]).daysTo(m_data->interval1()) < 0) { // prognozė
+          usage = predictUsage(intervals[i], (*it)->m_usageCntMap);
+        } else { // ir istorija, ir prognozė
+          RInterval interval = intervals[i];
+          TO(interval) = m_data->interval1().addDays(1);
+          usage = calculateUsage(interval, (*it)->m_usageCntMap);
+          FROM(interval) = TO(interval);
+          TO(interval) = TO(intervals[i]);
+          usage += predictUsage(interval, (*it)->m_usageCntMap);
+        }
+        (*it)->m_usage.push_back(qMakePair(0.0, usage));
+      }
+      calculateIntervals((UnitHash*)&(*it)->m_divisionUsage, (*it)->m_usage);
+      calculateIntervals((UnitHash*)&(*it)->m_systemUsage, (*it)->m_usage);
     }
   }
 }
 
 /**********************************************************************************************/
 
-double RCalculator :: calculateUsage(RInterval interval, RUsageMap& usageMap)
+void RCalculator :: zeroUsages(RUnitPtrList* units)
+{
+  for (auto it = units->begin(); it != units->end(); it++)
+  {
+    (*it)->m_usage.clear();
+    (*it)->m_usage.resize(m_numIntervals);
+  }
+}
+
+/**********************************************************************************************/
+
+void RCalculator :: calculateIntervals(UnitHash* units, UsageVector& usage)
+{
+  for (auto it = units->begin(); it != units->end(); it++)
+  {
+    for (int i = 0; i < m_numIntervals; i++)
+    {
+      it.key()->m_usage[i].first += usage[i].second * it.value();
+      it.key()->m_usage[i].second += usage[i].second;
+    }
+  }
+}
+
+/**********************************************************************************************/
+
+double RCalculator :: calculateUsage(RInterval interval, UsageMap& usageMap)
 {
   double usage = 0, curUsage;
   QDate curDate = FROM(interval);
-  RUsageMap :: iterator it = usageMap.upperBound(curDate);
+  UsageMap :: iterator it = usageMap.upperBound(curDate);
   if (it == usageMap.end()) {
     return 0;
   }
@@ -217,44 +267,131 @@ double RCalculator :: calculateUsage(RInterval interval, RUsageMap& usageMap)
 
 /**********************************************************************************************/
 
+double RCalculator :: predictUsage(RInterval interval, UsageMap& usageMap)
+{
+  QDate newestData = m_data->interval1();
+  if (newestData.isNull())
+    return 0;
+  bool feb29 = FROM(interval).month() == 2 && FROM(interval).month() == 29;
+  int distance = 0;
+  if (FROM(interval).month() > newestData.month()
+      || (FROM(interval).month() == newestData.month()
+                        && FROM(interval).day() > newestData.day()
+                        && (feb29 == false || IS_LEAP(newestData))))
+  {
+    distance = -1;
+  }
+  if (feb29)
+  {
+    FROM(interval).addDays(-1);
+    TO(interval).addDays(-1);
+  }
+  int yearsToFuture = FROM(interval).year() - (newestData.year() + distance);
+  distance = FROM(interval).daysTo(QDate(newestData.year() + distance,
+                                         FROM(interval).month(), FROM(interval).day()));
+  double usage[3];
+  int pastYears; // kelių metų duomenis turime
+  for (pastYears = 0; pastYears < 3; pastYears++)
+  {
+    FROM(interval) = FROM(interval).addDays(distance);
+    TO(interval) = TO(interval).addDays(distance);
+    if (feb29 && IS_LEAP(FROM(interval)))
+    {
+      FROM(interval) = FROM(interval).addDays(1);
+      TO(interval) = TO(interval).addDays(1);
+    }
+    if (m_data->interval0().daysTo(TO(interval)) <= 0)
+      break;
+    if (TO(interval).daysTo(newestData) >= -1)
+    {
+      usage[pastYears] = calculateUsage(interval, usageMap);
+    } else {
+      RInterval interval0 = interval;
+      RInterval interval1 = interval;
+      TO(interval0) = newestData.addDays(1);
+      FROM(interval1) = TO(interval0);
+      usage[pastYears] = calculateUsage(interval0, usageMap) + predictUsage(interval1, usageMap);
+    }
+    distance = FROM(interval).daysTo(FROM(interval).addYears(-1));
+  }
+  switch (pastYears)
+  {
+    case 0:
+      return 0;
+    case 1:
+      return usage[0];
+    case 3:
+      double coefficients[3];
+      if (polynomialExtrapolation(1, usage[2], 2, usage[1], 3, usage[0], coefficients))
+      {
+        return std::max(0.0, integrate(coefficients, 2 + yearsToFuture, 3 + yearsToFuture));
+      }
+    case 2:
+      return std::max(0.0, usage[0] + (usage[0] - usage[1]) * yearsToFuture);
+  }
+  return -1; // neturėtų įvykti
+}
+
+/**********************************************************************************************/
+
 double RCalculator :: polynomialExtrapolation(QDate prevDate, double prevUsage,
                                               QDate startDate, double mainUsage,
                                               QDate endDate, double nextUsage,
                                               QDate nextDate, QDate date)
 {
-  double matrix[3][4];
   double coefficients[3]; // antro laipsnio polinomo koeficientai
                           // (koeficientas prie laipsnio i yra indeksu 2 - i)
+  if (polynomialExtrapolation(prevDate.daysTo(startDate), prevDate.daysTo(startDate) * prevUsage,
+                          prevDate.daysTo(endDate), startDate.daysTo(endDate) * mainUsage,
+                          prevDate.daysTo(nextDate), endDate.daysTo(nextDate) * nextUsage,
+                          coefficients)
+      && nonNegativeInInterval(coefficients, prevDate.daysTo(startDate),
+                               prevDate.daysTo(endDate)))
+  {
+    return integrate(coefficients, prevDate.daysTo(startDate), prevDate.daysTo(date));
+  } else { // jei neišsprendžiame (gali nutikti, pavyzdžiui, jei neturime
+   // ankstesnių duomenų) arba galime gauti neigiamas apkrovas, laikome tolygiu
+    return startDate.daysTo(date) * mainUsage;
+  }
+}
+
+/**********************************************************************************************/
+
+bool RCalculator :: polynomialExtrapolation(int segment1, double segment1Integral,
+                                              int segment2, double segment2Integral,
+                                              int segment3, double segment3Integral,
+                                              double coefficients[3])
+{
+  double matrix[3][4];
+  // (rezultate koeficientas prie laipsnio i yra indeksu 2 - i)
   // susikuriame matricą, kurią išsprendę gausime ieškomos funkcijos koeficientus
   // prevDate laikysime abscisės pradžia
 
   for (int i = 1; i <= 3; i++)
   {
-    matrix[0][3 - i] = pow(prevDate.daysTo(startDate), i) / i;
-    matrix[1][3 - i] = (pow(prevDate.daysTo(endDate), i)
-                       - pow(prevDate.daysTo(startDate), i)) / i;
-    matrix[2][3 - i] = (pow(prevDate.daysTo(nextDate), i)
-                       - pow(prevDate.daysTo(endDate), i)) / i;
+    matrix[0][3 - i] = pow(segment1, i) / i;
+    matrix[1][3 - i] = (pow(segment2, i)
+                       - pow(segment1, i)) / i;
+    matrix[2][3 - i] = (pow(segment3, i)
+                       - pow(segment2, i)) / i;
   }
   // lygybių sprendiniai (norimos atitinkamų integralų reikšmės)
-  matrix[0][3] = prevDate.daysTo(startDate) * prevUsage;
-  matrix[1][3] = startDate.daysTo(endDate) * mainUsage;
-  matrix[2][3] = endDate.daysTo(nextDate) * nextUsage;
-  if (solveSystemOfLinearEquations(matrix, coefficients)
-      && nonNegativeInInterval(coefficients, prevDate.daysTo(startDate),
-                         prevDate.daysTo(endDate)))
+  matrix[0][3] = segment1Integral;
+  matrix[1][3] = segment2Integral;
+  matrix[2][3] = segment3Integral;
+  return solveSystemOfLinearEquations(matrix, coefficients);
+}
+
+/**********************************************************************************************/
+
+double RCalculator :: integrate(double coefficients[3], int from, int to)
+{
+  double answer = 0;
+  for (int i = 0; i < 3; i++)
   {
-    double answer = 0;
-    for (int i = 0; i < 3; i++)
-    {
-      answer += coefficients[i] / (3 - i) * (pow(prevDate.daysTo(date), 3 - i)
-                                            - pow(prevDate.daysTo(startDate), 3 - i));
-    }
-    return answer;
-  } else { // jei neišsprendžiame (gali nutikti, pavyzdžiui, jei neturime
-   // ankstesnių duomenų) arba galime gauti neigiamas apkrovas, laikome tolygiu
-    return startDate.daysTo(date) * mainUsage;
+    answer += coefficients[i] / (3 - i) * (pow(to, 3 - i) - pow(from, 3 - i));
   }
+  return answer;
 }
 
 /**********************************************************************************************/
@@ -311,9 +448,9 @@ bool RCalculator :: solveSystemOfLinearEquations(double matrix[3][4],
 
 /**********************************************************************************************/
 
-double RCalculator :: polynomialExtrapolation(RUsageMap :: iterator it,
-                                              RUsageMap :: iterator begin,
-                                              RUsageMap :: iterator end,
+double RCalculator :: polynomialExtrapolation(UsageMap :: iterator it,
+                                              UsageMap :: iterator begin,
+                                              UsageMap :: iterator end,
                                               QDate date)
 {
   QDate prevDate, startDate, endDate, nextDate;
