@@ -29,6 +29,8 @@ Vacuum RUsageTab :: RUsageTab(RMainWindow* parent):
 
   RData::connect(parent->data(), SIGNAL(elementChanged(RElement*,int)),
     this, SLOT(updateElement(RElement*,int)));
+  RData::connect(parent->data(), SIGNAL(visibilityChanged(RUnit*)),
+    this, SLOT(updateElementVisibility(RUnit*)));
   QAction::connect(parent, SIGNAL(unitsChanged(RUnitPtrList*)),
     this, SLOT(setUnits(RUnitPtrList*)));
 
@@ -67,7 +69,7 @@ void RUsageTab :: clearUnits()
 
 RUsageWidget* RUsageTab :: createWidget(RUnit* unit)
 {
-  int           mode    = unit->m_viewMode != -1 ? unit->m_viewMode : m_defaultMode;
+  int           mode    = unit->viewMode() != -1 ? unit->viewMode() : m_defaultMode;
   RUsageWidget* widget  = new RUsageWidget(mode, unit, m_results);
 
   connect(m_mainWindow, SIGNAL(searchModeChanged(bool)), widget, SLOT(setSearchInterval(bool)));
@@ -101,7 +103,7 @@ void RUsageTab :: populateUnits()
     RUsageWidget* widget = createWidget(*it);
 
     m_innerLayout->addWidget(widget);
-    widget->setVisible((*it)->visible());
+    widget->setVisible((*it)->isVisible());
   }
 
   m_innerWidget->setVisible(true);
@@ -187,22 +189,27 @@ void RUsageTab :: setUnits(RUnitPtrList* units)
 
 void RUsageTab :: updateElement(RElement* element, int updateType)
 {
+  if (RUsageWidget* widget = widgetForElement(element))
+    widget->updateHeader();
+}
+
+/**********************************************************************************************/
+
+void RUsageTab :: updateElementVisibility(RUnit* unit)
+{
+  if (RUsageWidget* widget = widgetForElement(unit))
+    widget->setVisible(unit->isVisible());
+}
+
+/**********************************************************************************************/
+
+RUsageWidget* RUsageTab :: widgetForElement(RElement* element)
+{
   RUnit*          unit    = static_cast<RUnit*>(element);
   int             index   = m_units->indexOf(unit);
-  R_GUARD(index != -1, Vacuum);
-  RUsageWidget*   widget  = qobject_cast<RUsageWidget*>(m_innerLayout->itemAt(index)->widget());
-  R_GUARD(widget, Vacuum);
+  R_GUARD(index != -1, 0);
 
-  switch (updateType)
-  {
-    case RData::TitleOrName:
-      widget->updateHeader();
-      break;
-
-    case RData::Visibility:
-      widget->setVisible(unit->visible());
-      break;
-  }
+  return qobject_cast<RUsageWidget*>(m_innerLayout->itemAt(index)->widget());
 }
 
 /**********************************************************************************************/

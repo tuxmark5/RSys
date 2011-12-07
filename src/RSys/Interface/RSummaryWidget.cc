@@ -51,7 +51,7 @@ int RSummaryWidget :: countVisible(int till)
   int numVisible = 0;
 
   for (int i = 0; i < till; i++)
-    numVisible += m_units->at(i)->visible();
+    numVisible += m_units->at(i)->isVisible();
   return numVisible;
 }
 
@@ -145,7 +145,7 @@ void RSummaryWidget :: resetEnd()
 
   for (auto it = m_units->begin(); it != m_units->end(); ++it)
   {
-    if ((*it)->visible())
+    if ((*it)->isVisible())
       m_resultsModel->addField(fieldType(), *it);
   }
 }
@@ -203,18 +203,15 @@ void RSummaryWidget :: setUnits(RUnitPtrList* units)
 
 /**********************************************************************************************/
 
-void RSummaryWidget :: updateElement(RElement* unit, int updateType)
+void RSummaryWidget :: updateUnit(RUnit* unit)
 {
-  if (updateType == RData::Visibility)
-  {
-    int index = m_units->indexOf(static_cast<RUnit*>(unit));
-    R_GUARD(index != -1, Vacuum);
+  int index = m_units->indexOf(unit);
+  R_GUARD(index != -1, Vacuum);
 
-    if (unit->visible())
-      insert1(index, index);
-    else
-      remove0(index, index);
-  }
+  if (unit->isVisible())
+    insert1(index, index);
+  else
+    remove0(index, index);
 }
 
 /**********************************************************************************************/

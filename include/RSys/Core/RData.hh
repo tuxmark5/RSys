@@ -81,6 +81,7 @@ class RData: public QObject, public RSignal
   signals:
     _M void                   elementChanged(RElement* element, int changeType);
     _M void                   globalIntervalChanged();
+    _M void                   visibilityChanged(RUnit* element);
 
   public:
     _G(void,                  errorMessage, const QString& message);

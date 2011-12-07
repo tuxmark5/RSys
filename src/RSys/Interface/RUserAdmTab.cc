@@ -14,15 +14,15 @@
 /**********************************************************************************************/
 QStringList g_mode3 = QStringList()
   << R_S("Nerodyti")
-  << R_S("Leisti tik skaityti")
-  << R_S("Leisti ir rašyti");
+  << R_S("Leisti skaityti")
+  << R_S("Leisti skaityti ir rašyti");
 /********************************************* RS *********************************************/
 /*                                        RUserAdmTab                                         */
 /**********************************************************************************************/
 
 Vacuum RUserAdmTab :: RUserAdmTab(RUserTab* userTab, RMainWindow* parent):
   RTab(R_S("Naudotojų administravimas"), parent),
-  m_user(0),
+  m_user((RUser*) 1), // overwritten by setUser
   m_users(parent->data()->users()),
   m_widget(new QWidget(this))
 {
@@ -48,10 +48,10 @@ Vacuum RUserAdmTab :: RUserAdmTab(RUserTab* userTab, RMainWindow* parent):
   addPasswordField();
   layout1->addItem(spacer, layout1->rowCount(), 0, 1, 2);
 
-  m_widget->setEnabled(false);
   m_widget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
   layout()->addWidget(m_widget);
+  setUser(0);
 }
 
 /**********************************************************************************************/
@@ -152,9 +152,17 @@ void RUserAdmTab :: setUser(RUser* user)
 {
   R_GUARD(m_user != user, Vacuum);
 
-  m_widget->setEnabled(bool(user));
+  if ((m_user = user))
+  {
+    m_label->setText(R_S("Sistemos naudotojų administravimas"));
+    m_widget->setEnabled(true);
+  }
+  else
+  {
+    m_label->setText(R_S("Pasirinkite naudotoją kortelėje <b>Naudotojai</b>"));
+    m_widget->setEnabled(false);
+  }
 
-  m_user = user;
   R_GUARD(user, Vacuum);
 
   for (auto it = m_fields.begin(); it != m_fields.end(); ++it)

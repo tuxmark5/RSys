@@ -100,6 +100,7 @@ void RSubmission :: setMeasure(RMeasure* measure)
   (*m_data)[measureChange](this, measure);
   m_measure       = measure;
   m_measureName   = measure ? measure->identifier() : QString();
+  m_null          = bool(measure);
 }
 
 /**********************************************************************************************/
@@ -121,6 +122,7 @@ bool RSubmission :: setMeasureName(const QString& measureName)
   m_measureName   = measureName1;
   (*m_data)[measureChange](this, measure1.get());
   m_measure       = measure1;
+  m_null          = false;
   return true;
 }
 
@@ -142,6 +144,7 @@ void RSubmission :: setMeasure1Name(const QString& measureName)
 
   (*m_data)[measureChange](this, measure1.get());
   m_measure       = measure1;
+  m_null          = false;
 }
 
 /**********************************************************************************************/

@@ -58,7 +58,7 @@ Vacuum RUsageWidget :: ~RUsageWidget()
 void RUsageWidget :: createButtons(const ButtonCallback& callback)
 {
   QPushButton*  button  = new QPushButton(R_S("Rodyti"));
-  QMenu*        menu    = createModeMenu(this, SLOT(modifyMode()), m_unit->m_viewMode);
+  QMenu*        menu    = createModeMenu(this, SLOT(modifyMode()), m_unit->viewMode());
 
   connect(menu, SIGNAL(aboutToHide()), menu, SLOT(deleteLater()));
 
@@ -129,16 +129,17 @@ void RUsageWidget :: modifyMode()
 
 void RUsageWidget :: modifyMode(int modifier)
 {
-  m_unit->m_viewMode &= modifier >> 16;
-  m_unit->m_viewMode |= modifier & 0xFFFF;
-  setMode(m_unit->m_viewMode);
+  int viewMode = m_unit->viewMode();
+  viewMode &= modifier >> 16;
+  viewMode |= modifier & 0xFFFF;
+  setMode(viewMode);
 }
 
 /**********************************************************************************************/
 
 void RUsageWidget :: setMode(int mode)
 {
-  R_NZ(m_unit)->m_viewMode = mode;
+  R_NZ(m_unit)->setViewMode(mode);
 
   m_model->removeFields();
 

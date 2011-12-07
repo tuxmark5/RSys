@@ -39,7 +39,7 @@ class RSummaryWidget: public RLayerWidget, public RIObserver
     _M void             resetEnd();
     _M void             setMode(int mode);
     _M void             setUnits(RUnitPtrList* units);
-    _M void             updateElement(RElement* unit, int updateType);
+    _M void             updateUnit(RUnit* unit);
 
   protected:
     _V void             createButtons(const ButtonCallback& callback);

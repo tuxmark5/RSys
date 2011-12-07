@@ -88,6 +88,7 @@ SOURCES             +=                              \
   src/RSys/Store/RDatabase.cc                       \
   src/RSys/Store/REntity1D.cc                       \
   src/RSys/Store/REntity2D.cc                       \
+  src/RSys/Store/RSettings.cc                       \
   src/RSys/Store/RSqlEntity.cc                      \
   src/RSys/Parse/RParser.cc                         \
   src/RSys/Parse/RValidator.cc                      \
@@ -157,6 +158,7 @@ HEADERS             +=                              \
   include/RSys/Store/REntity.hh                     \
   include/RSys/Store/REntity1D.hh                   \
   include/RSys/Store/REntity2D.hh                   \
+  include/RSys/Store/RSettings.hh                   \
   include/RSys/Store/RSqlEntity.hh                  \
   include/RSys/Util/RAccessorAdapter.hh             \
   include/RSys/Util/RAlgorithm.hh                   \

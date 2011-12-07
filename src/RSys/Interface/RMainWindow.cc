@@ -46,6 +46,7 @@
 #include <RSys/Logic/RResults.hh>
 #include <RSys/Parse/RParser.hh>
 #include <RSys/Store/RDatabase.hh>
+#include <RSys/Store/RSettings.hh>
 #include <RSys/Store/RSqlEntity.hh>
 #include <RSys/Util/RContainer.hh>
 
@@ -264,6 +265,8 @@ void RMainWindow :: createConnections1()
   (*m_data1)[RSubmission::date1Changed]       << std::bind(&RResults::updateDelayed, m_results);
   (*m_data1)[RSubmission::measureChange]      << std::bind(&RResults::updateDelayed, m_results);
   (*m_data1)[RSubmission::submissionRemoval]  << std::bind(&RResults::updateDelayed, m_results);
+  //(*m_data1)[RUnit::viewModeChanged]          << RSettings::updateUnitViewMode;
+  //(*m_data1)[RUnit::visibilityChanged]        << RSettings::updateUnitVisibility;
   (*m_data1)[RUser::onSql]                    << std::bind(&RSqlEntity::exec, m_database->sqlEntity(), _1, _2, _3);
   m_data1->enableIntervalTracking();
 }
@@ -480,20 +483,25 @@ void RMainWindow :: login()
   m_loggingIn     = true;
   m_results       = new RResults(m_data0, m_data1);
 
-  m_data1->withBlock([this]
-  {
-    m_database->select();
-  });
+  // loginBegin
+  // loginEnd(bool success)
+
+  m_data1->withBlock([this] { m_database->select(); });
   m_data1->calculateIntervals();
 
   RUser* user = m_database->user();
 
+  RSettings::loadUnitSettings(m_data1);
   setInterfaceEnabled(true);
+
+  // permissions
   m_importAction->setEnabled(user->property("imp"));
   m_divisionsStateAction->setEnabled(user->divisionModeAcc());
   m_systemsStateAction->setEnabled(user->systemModeAcc());
 
-  if (!m_divisionsStateAction->isEnabled())
+  /**/ if (!m_divisionsStateAction->isEnabled())
+    m_systemsStateAction->setChecked(true);
+  else if (!m_systemsStateAction->isEnabled())
     m_divisionsStateAction->setChecked(true);
 
   m_loginWidget   = 0; // deleted by QMainWindow::setCentralWidget
@@ -508,6 +516,7 @@ void RMainWindow :: logout()
 {
   R_GUARD(!m_loginWidget, Vacuum);
 
+  RSettings::saveUnitSettings(m_data1);
   m_database->logout();
   m_data1->disconnectAll();
 
@@ -534,6 +543,10 @@ void RMainWindow :: onSearchFormDestroyed()
 
 void RMainWindow :: rollback()
 {
+  int button = QMessageBox::question(this, R_S("Atstatyti"), R_S("Ar tikrai norite atstatyti pakeitimus?"),
+    QMessageBox::Yes, QMessageBox::No);
+  R_GUARD(button == QMessageBox::Yes, Vacuum);
+
   if (m_database->rollback())
   {
     emit unitsChanged(0);
@@ -541,6 +554,10 @@ void RMainWindow :: rollback()
     emit unitsChanged(currentUnits());
     m_intervalToolBar->applyInterval();
     showMessage(R_S("Duomenys atstatyti."));
+  }
+  else
+  {
+    showMessage(R_S("Duomenų atstatyti nepavyko."));
   }
 }
 
