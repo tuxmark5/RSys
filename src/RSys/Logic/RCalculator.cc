@@ -173,7 +173,20 @@ void RCalculator :: calculateIntervals()
       (*it)->m_usage.reserve(m_numIntervals);
       for (int i = 0; i < m_numIntervals; i++)
       {
-        (*it)->m_usage.push_back(qMakePair(0.0, calculateUsage(intervals[i], (*it)->m_usageCntMap)));
+        double usage;
+        if (TO(intervals[i]).daysTo(m_data->interval1()) > -1) { // intervalas istorijoje
+          usage = calculateUsage(intervals[i], (*it)->m_usageCntMap);
+        } else if (FROM(intervals[i]).daysTo(m_data->interval1()) < 0) { // prognozė
+          usage = predictUsage(intervals[i], (*it)->m_usageCntMap);
+        } else { // ir istorija, ir prognozė
+          RInterval interval = intervals[i];
+          TO(interval) = m_data->interval1().addDays(1);
+          usage = calculateUsage(interval, (*it)->m_usageCntMap);
+          FROM(interval) = TO(interval);
+          TO(interval) = TO(intervals[i]);
+          usage += predictUsage(interval, (*it)->m_usageCntMap);
+        }
+        (*it)->m_usage.push_back(qMakePair(0.0, usage));
       }
       calculateIntervals((UnitHash*)&(*it)->m_divisionUsage, (*it)->m_usage);
       calculateIntervals((UnitHash*)&(*it)->m_systemUsage, (*it)->m_usage);
@@ -253,44 +266,71 @@ double RCalculator :: calculateUsage(RInterval interval, UsageMap& usageMap)
 
 /**********************************************************************************************/
 
+double RCalculator :: predictUsage(RInterval interval, UsageMap& usageMap)
+{
+  return 1;
+}
+
+/**********************************************************************************************/
+
 double RCalculator :: polynomialExtrapolation(QDate prevDate, double prevUsage,
                                               QDate startDate, double mainUsage,
                                               QDate endDate, double nextUsage,
                                               QDate nextDate, QDate date)
 {
-  double matrix[3][4];
   double coefficients[3]; // antro laipsnio polinomo koeficientai
                           // (koeficientas prie laipsnio i yra indeksu 2 - i)
+  if (polynomialExtrapolation(prevDate.daysTo(startDate), prevDate.daysTo(startDate) * prevUsage,
+                          prevDate.daysTo(endDate), prevDate.daysTo(endDate) * mainUsage,
+                          prevDate.daysTo(nextDate), prevDate.daysTo(nextDate) * nextUsage,
+                          coefficients)
+      && nonNegativeInInterval(coefficients, prevDate.daysTo(startDate),
+                               prevDate.daysTo(endDate)))
+  {
+    return integrate(coefficients, prevDate.daysTo(startDate), prevDate.daysTo(date));
+  } else { // jei neišsprendžiame (gali nutikti, pavyzdžiui, jei neturime
+   // ankstesnių duomenų) arba galime gauti neigiamas apkrovas, laikome tolygiu
+    return startDate.daysTo(date) * mainUsage;
+  }
+}
+
+/**********************************************************************************************/
+
+bool RCalculator :: polynomialExtrapolation(int segment1, double segment1Integral,
+                                              int segment2, double segment2Integral,
+                                              int segment3, double segment3Integral,
+                                              double coefficients[3])
+{
+  double matrix[3][4];
+  // (rezultate koeficientas prie laipsnio i yra indeksu 2 - i)
   // susikuriame matricą, kurią išsprendę gausime ieškomos funkcijos koeficientus
   // prevDate laikysime abscisės pradžia
 
   for (int i = 1; i <= 3; i++)
   {
-    matrix[0][3 - i] = pow(prevDate.daysTo(startDate), i) / i;
-    matrix[1][3 - i] = (pow(prevDate.daysTo(endDate), i)
-                       - pow(prevDate.daysTo(startDate), i)) / i;
-    matrix[2][3 - i] = (pow(prevDate.daysTo(nextDate), i)
-                       - pow(prevDate.daysTo(endDate), i)) / i;
+    matrix[0][3 - i] = pow(segment1, i) / i;
+    matrix[1][3 - i] = (pow(segment2, i)
+                       - pow(segment1, i)) / i;
+    matrix[2][3 - i] = (pow(segment3, i)
+                       - pow(segment2, i)) / i;
   }
   // lygybių sprendiniai (norimos atitinkamų integralų reikšmės)
-  matrix[0][3] = prevDate.daysTo(startDate) * prevUsage;
-  matrix[1][3] = startDate.daysTo(endDate) * mainUsage;
-  matrix[2][3] = endDate.daysTo(nextDate) * nextUsage;
-  if (solveSystemOfLinearEquations(matrix, coefficients)
-      && nonNegativeInInterval(coefficients, prevDate.daysTo(startDate),
-                         prevDate.daysTo(endDate)))
+  matrix[0][3] = segment1Integral;
+  matrix[1][3] = segment2Integral;
+  matrix[2][3] = segment3Integral;
+  return solveSystemOfLinearEquations(matrix, coefficients);
+}
+
+/**********************************************************************************************/
+
+double RCalculator :: integrate(double coefficients[3], int from, int to)
+{
+  double answer = 0;
+  for (int i = 0; i < 3; i++)
   {
-    double answer = 0;
-    for (int i = 0; i < 3; i++)
-    {
-      answer += coefficients[i] / (3 - i) * (pow(prevDate.daysTo(date), 3 - i)
-                                            - pow(prevDate.daysTo(startDate), 3 - i));
-    }
-    return answer;
-  } else { // jei neišsprendžiame (gali nutikti, pavyzdžiui, jei neturime
-   // ankstesnių duomenų) arba galime gauti neigiamas apkrovas, laikome tolygiu
-    return startDate.daysTo(date) * mainUsage;
+    answer += coefficients[i] / (3 - i) * (pow(to, 3 - i) - pow(from, 3 - i));
   }
+  return answer;
 }
 
 /**********************************************************************************************/

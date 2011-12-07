@@ -43,6 +43,7 @@ class RCalculator: public QObject
     _M void             calculateIntervals();
     _M void             calculateIntervals(UnitHash* units, UsageVector& usage);
     _M double           calculateUsage(RInterval interval, UsageMap& usageMap);
+    _M double           predictUsage(RInterval interval, UsageMap& usageMap);
     _M void             zeroUsages(RUnitPtrList* units);
 
     /**
@@ -83,6 +84,37 @@ class RCalculator: public QObject
                                                 UsageMap :: iterator begin,
                                                 UsageMap :: iterator end,
                                                 QDate date);
+    /**
+     * Randa 2 laipsnio polinominę funkciją pagal duotus nuosekliai einančių
+     * atkarpų integralus.
+     *
+     * Pastaba: tikriausiai būtų patogu pasirašyti bendrą atvejį, atkarpas
+     * paduodant kaip QVector<QPair<double, double> >, o rezultatą sudedant į
+     * QVector<double> – kai iškils toks poreikis, reikės taip ir padaryti.
+     *
+     * @param segment1         pirmos atkarpos pabaigos taškas; atkarpa [0; segment1)
+     * @param segment1Integral pirmos atkarpos integralas
+     * @param segment2         antros atkarpos pabaigos taškas; atkarpa [segment1; segment2)
+     * @param segment2Integral antros atkarpos integralas
+     * @param segment3         trečios atkarpos pabaigos taškas; atkarpa [segment2; segment3)
+     * @param segment3Integral trečios atkarpos integralas
+     * @param coefficients     rodyklė į 3 elementų masyvą gautos funkcijos koeficientams
+     * @return true, jei koeficientus rasti pavyksta; false priešingu atveju
+     */
+    _M bool             polynomialExtrapolation(int segment1, double segment1Integral,
+                                                int segment2, double segment2Integral,
+                                                int segment3, double segment3Integral,
+                                                double coefficients[3]);
+
+    /**
+     * Apskaičiuoja duotos 2 laipsnio polinominės funkcijos apibrėžtinį integralą.
+     *
+     * @param coefficients  rodyklė į funkcijos koeficientus
+     * @param from          intervalo, kuriame integruojame, pradžia
+     * @param to            intervalo, kuriame integruojame, pabaiga
+     * @return apskaičiuotas apibrėžtinis integralas
+     */
+    _M double          integrate(double coefficients[3], int from, int to);
 
     /**
      * Išsprendžia 3 tiesinių lygčių sistemą.
