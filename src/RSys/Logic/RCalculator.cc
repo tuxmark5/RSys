@@ -327,7 +327,7 @@ double RCalculator :: predictUsage(RInterval interval, UsageMap& usageMap)
         return std::max(0.0, integrate(coefficients, 2 + yearsToFuture, 3 + yearsToFuture));
       }
     case 2:
-      return std::max(0.0, usage[1] + (usage[1] - usage[0]));
+      return std::max(0.0, usage[1] + (usage[1] - usage[0]) * yearsToFuture);
   }
   return -1; // neturėtų įvykti
 }
