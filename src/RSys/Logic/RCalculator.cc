@@ -9,8 +9,9 @@
 #include <cmath>
 #include <algorithm>
 
-#define FROM(x) std::get<0>(x)
-#define TO(x)   std::get<1>(x)
+#define FROM(x)       std::get<0>(x)
+#define TO(x)         std::get<1>(x)
+#define IS_LEAP(x)    (x).daysInYear() == 366
 
 /********************************************* RS *********************************************/
 /*                                        RCalculator                                         */
@@ -268,7 +269,67 @@ double RCalculator :: calculateUsage(RInterval interval, UsageMap& usageMap)
 
 double RCalculator :: predictUsage(RInterval interval, UsageMap& usageMap)
 {
-  return 1;
+  QDate newestData = m_data->interval1();
+  if (newestData.isNull())
+    return 0;
+  bool feb29 = FROM(interval).month() == 2 && FROM(interval).month() == 29;
+  int distance = 0;
+  if (FROM(interval).month() > newestData.month()
+      || (FROM(interval).month() == newestData.month()
+                        && FROM(interval).day() > newestData.day()
+                        && (feb29 == false || IS_LEAP(newestData))))
+  {
+    distance = -1;
+  }
+  if (feb29)
+  {
+    FROM(interval).addDays(-1);
+    TO(interval).addDays(-1);
+  }
+  int yearsToFuture = FROM(interval).year() - (newestData.year() + distance);
+  distance = FROM(interval).daysTo(QDate(newestData.year() + distance,
+                                         FROM(interval).month(), FROM(interval).day()));
+  double usage[3];
+  int pastYears; // kelių metų duomenis turime
+  for (pastYears = 0; pastYears < 3; pastYears++)
+  {
+    FROM(interval) = FROM(interval).addDays(distance);
+    TO(interval) = TO(interval).addDays(distance);
+    if (feb29 && IS_LEAP(FROM(interval)))
+    {
+      FROM(interval) = FROM(interval).addDays(1);
+      TO(interval) = TO(interval).addDays(1);
+    }
+    if (m_data->interval0().daysTo(TO(interval)) <= 0)
+      break;
+    if (TO(interval).daysTo(newestData) >= -1)
+    {
+      usage[pastYears] = calculateUsage(interval, usageMap);
+    } else {
+      RInterval interval0 = interval;
+      RInterval interval1 = interval;
+      TO(interval0) = newestData.addDays(1);
+      FROM(interval1) = TO(interval0);
+      usage[pastYears] = calculateUsage(interval0, usageMap) + predictUsage(interval1, usageMap);
+    }
+    distance = FROM(interval).daysTo(FROM(interval).addYears(-1));
+  }
+  switch (pastYears)
+  {
+    case 0:
+      return 0;
+    case 1:
+      return usage[0];
+    case 3:
+      double coefficients[3];
+      if (polynomialExtrapolation(1, usage[2], 2, usage[1], 3, usage[0], coefficients))
+      {
+        return std::max(0.0, integrate(coefficients, 2 + yearsToFuture, 3 + yearsToFuture));
+      }
+    case 2:
+      return std::max(0.0, usage[1] + (usage[1] - usage[0]));
+  }
+  return -1; // neturėtų įvykti
 }
 
 /**********************************************************************************************/
@@ -281,8 +342,8 @@ double RCalculator :: polynomialExtrapolation(QDate prevDate, double prevUsage,
   double coefficients[3]; // antro laipsnio polinomo koeficientai
                           // (koeficientas prie laipsnio i yra indeksu 2 - i)
   if (polynomialExtrapolation(prevDate.daysTo(startDate), prevDate.daysTo(startDate) * prevUsage,
-                          prevDate.daysTo(endDate), prevDate.daysTo(endDate) * mainUsage,
-                          prevDate.daysTo(nextDate), prevDate.daysTo(nextDate) * nextUsage,
+                          prevDate.daysTo(endDate), startDate.daysTo(endDate) * mainUsage,
+                          prevDate.daysTo(nextDate), endDate.daysTo(nextDate) * nextUsage,
                           coefficients)
       && nonNegativeInInterval(coefficients, prevDate.daysTo(startDate),
                                prevDate.daysTo(endDate)))
