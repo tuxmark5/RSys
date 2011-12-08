@@ -122,12 +122,51 @@ enum RDataType
 
 enum RMessageLevel
 {
-  RDEBUG,
-  RINFO,
-  RWARNING,
-  RERROR,
-  RCRITICAL
+  RDEBUG      = 0x00,
+  RINFO       = 0x01,
+  RWARNING    = 0x02,
+  RERROR      = 0x03,
+  RCRITICAL   = 0x04
 };
+
+enum RMessageType
+{
+  RollbackSuccess,
+  RollbackFailure,
+  CommitSuccess,
+  CommitFailure,
+  ValidIntervalRequired,
+  ImportBeginFailure,
+  IntervalTooLong,
+  IntervalTooShort,
+  IntervalEndpointsInvalid,
+  ParseOpenFileFailure,
+  InvalidMeasureDiscarded,
+  UnableToLocateMeasureHeaderRow,
+  MeasuresParsed,
+  InvalidDivisionDiscarded,
+  UnableToLocateDivisionHeaderRow,
+  DivisionsParsed,
+  InvalidSystemDiscarded,
+  UnableToLocateSystemHeaderRow,
+  SystemsParsed,
+  InternalParseError,
+  UnableToLocateDivisionAdmHeaderRow,
+  UnableToLocateSystemIdent,
+  UnableToLocateDivisionIdent,
+  DivisionAdmParsed,
+  InvalidMeasureAdmEntryDiscarded,
+  UnableToLocateMeasureAdmHeaderRow,
+  FloatParseError,
+  UnableToLocateMeasureIdent,
+  UnableToLocateDivisionIdent2,
+  MeasureAdmParsed,
+  InvalidSubmissionDiscarded,
+  UnableToLocateSubmissionsHeaderRow,
+  IntegerParseError,
+  SubmissionsParsed
+};
+
 /**********************************************************************************************/
 #include <RSys/Util/ROList.hh>
 #include <RSys/Util/RSharedPtr.hh>

@@ -26,14 +26,16 @@ class RSubmission: public RElement
     _M QDate            m_date0;
     _M QDate            m_date1;
     _M int              m_count;
+    _M bool             m_planned: 1;
 
   public:
-    _M Vacuum           RSubmission(RData* data);
+    _M Vacuum           RSubmission(RData* data, bool planned = false);
     _M Vacuum           RSubmission(RSubmission& other, RData* data);
     _V Vacuum           ~RSubmission();
     _M int              count() const { return m_count; }
     _M QDate            date0() const { return m_date0; }
     _M QDate            date1() const { return m_date1; }
+    _M bool             isPlanned() const { return m_planned; }
     _M RMeasure*        measure() const { return m_measure.get(); }
     _M QString          measureFullName() const;
     _M RID              measureId() const;

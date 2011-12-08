@@ -165,7 +165,7 @@ bool RIntervalToolBar :: applyInterval()
 
   msgText += "</html>";
 
-  emit message(msgText, -1);
+  emit message(msgText);
   results()->setInterval(m_interval0->date(), m_interval1->date());
   results()->setInterval(std::move(fun), num);
   emit intervalChanged();
@@ -211,15 +211,18 @@ void RIntervalToolBar :: emitErrorMessage(int error)
       break;
 
     case TooLong:
-      emit message(R_S("Per ilgas intervalas. Ilgiausias leistinas intervalo ilgis yra 10 metų"), 8000);
+      emit message(R_S("Per ilgas intervalas. Ilgiausias leistinas intervalo ilgis yra 10 metų"),
+        IntervalTooLong, RERROR);
       break;
 
     case TooShort:
-      emit message(R_S("Per trumpas intervalas."), 8000);
+      emit message(R_S("Per trumpas intervalas."),
+        IntervalTooShort, RERROR);
       break;
 
     case InvalidOrder:
-      emit message(R_S("Intervalo pabaigos data turi būti vėliau už intervalo pradžią."), 8000);
+      emit message(R_S("Intervalo pabaigos data turi būti vėliau už intervalo pradžią."),
+        IntervalEndpointsInvalid, RERROR);
       break;
   }
 }

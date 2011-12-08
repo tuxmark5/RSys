@@ -6,7 +6,7 @@ bool RParser::open(const QString &filename)
   RXLSDocument *document = new RXLSDocument(filename);
   if (!document->isOpen())
   {
-    log(RERROR, 20, R_S("Nepavyko atverti failo „%1“.").arg(filename));
+    log(R_S("Nepavyko atverti failo „%1“.").arg(filename), ParseOpenFileFailure, RERROR);
     return false;
   }
   else
@@ -27,21 +27,18 @@ bool RParser::readMeasures(RData *data, RITable *table, QStringList &message)
   bool errors = false;
   RConnection conn = (*data)[RData::errorMessage] << [&](const QString& text)
   {
-    this->log(
-      RWARNING, 23,
-      R_S(
-        "Priemonė, aprašyta lakšte „%1“, %2 eilutėje %3 stulpelyje, "
-        "nebuvo pridėta. Priežastis: %4"
-        ).arg(table->title())
-        .arg(rowIndex + 1).arg(codeColumn + 1).arg(text));
+    this->log(R_S(
+      "Priemonė, aprašyta lakšte „%1“, %2 eilutėje %3 stulpelyje, "
+      "nebuvo pridėta. Priežastis: %4")
+      .arg(table->title()).arg(rowIndex + 1).arg(codeColumn + 1).arg(text),
+      InvalidMeasureDiscarded, RWARNING);
   };
   QPoint start = findCaptionRow(table, m_guessInfo[RMEASURE]);
   if (start.x() == -1)
   {
     this->log(
-          RERROR, 21,
-          R_S("Lakšte „%1“ nepavyko rasti eilutės su stulpelių antraštėmis.")
-          .arg(table->title()));
+      R_S("Lakšte „%1“ nepavyko rasti eilutės su stulpelių antraštėmis.")
+      .arg(table->title()), UnableToLocateMeasureHeaderRow, RERROR);
     errors = true;
   }
   else
@@ -75,10 +72,9 @@ bool RParser::readMeasures(RData *data, RITable *table, QStringList &message)
     }
   }
   this->log(
-          RINFO, 21,
-          R_S("Iš lakšto „%1“ buvo sėkmingai pridėta informacija "
-              "apie %2 naujas paramos priemones.")
-          .arg(table->title()).arg(added));
+    R_S("Iš lakšto „%1“ buvo sėkmingai pridėta informacija "
+        "apie %2 naujas paramos priemones.")
+    .arg(table->title()).arg(added), MeasuresParsed, RINFO);
   message << R_S("<li>„%1“ → +%2 paramos priemonės.</li>")
              .arg(table->title()).arg(added);
   conn.disconnect();
@@ -95,21 +91,18 @@ bool RParser::readDivisions(RData *data, RITable *table, QStringList &message)
   bool errors = false;
   RConnection conn = (*data)[RData::errorMessage] << [&](const QString& text)
   {
-    this->log(
-      RWARNING, 24,
-      R_S(
-        "Padalinys, aprašytas lakšte „%1“, %2 eilutėje %3 stulpelyje, "
-        "nebuvo pridėtas. Priežastis: %4"
-        ).arg(table->title())
-        .arg(rowIndex + 1).arg(codeColumn + 1).arg(text));
+    this->log(R_S(
+      "Padalinys, aprašytas lakšte „%1“, %2 eilutėje %3 stulpelyje, "
+      "nebuvo pridėtas. Priežastis: %4")
+       .arg(table->title()).arg(rowIndex + 1).arg(codeColumn + 1).arg(text),
+       InvalidDivisionDiscarded, RWARNING);
   };
   QPoint start = findCaptionRow(table, m_guessInfo[RDIVISION]);
   if (start.x() == -1)
   {
     this->log(
-          RERROR, 21,
-          R_S("Lakšte „%1“ nepavyko rasti eilutės su stulpelių antraštėmis.")
-          .arg(table->title()));
+      R_S("Lakšte „%1“ nepavyko rasti eilutės su stulpelių antraštėmis.")
+      .arg(table->title()), UnableToLocateDivisionHeaderRow, RERROR);
     errors = true;
   }
   else
@@ -141,11 +134,9 @@ bool RParser::readDivisions(RData *data, RITable *table, QStringList &message)
       }
     }
   }
-  this->log(
-          RINFO, 21,
-          R_S("Iš lakšto „%1“ buvo sėkmingai pridėta informacija "
-              "apie %2 naujus padalinius.")
-          .arg(table->title()).arg(added));
+  this->log(R_S("Iš lakšto „%1“ buvo sėkmingai pridėta informacija "
+    "apie %2 naujus padalinius.")
+    .arg(table->title()).arg(added), DivisionsParsed, RINFO);
   message << R_S("<li>„%1“ → +%2 padaliniai.</li>")
              .arg(table->title()).arg(added);
   conn.disconnect();
@@ -162,21 +153,19 @@ bool RParser::readSystems(RData *data, RITable *table, QStringList &message)
   int added = 0;
   RConnection conn = (*data)[RData::errorMessage] << [&](const QString& text)
   {
-    this->log(
-      RWARNING, 24,
-      R_S(
-        "Sistema, aprašyta lakšte „%1“, %2 eilutėje %3 stulpelyje, "
-        "nebuvo pridėta. Priežastis: %4"
-        ).arg(table->title())
-        .arg(rowIndex + 1).arg(codeColumn + 1).arg(text));
+    this->log(R_S(
+      "Sistema, aprašyta lakšte „%1“, %2 eilutėje %3 stulpelyje, "
+      "nebuvo pridėta. Priežastis: %4")
+      .arg(table->title()).arg(rowIndex + 1).arg(codeColumn + 1).arg(text),
+      InvalidSystemDiscarded, RWARNING);
   };
   QPoint start = findCaptionRow(table, m_guessInfo[RSYSTEM]);
   if (start.x() == -1)
   {
     this->log(
-          RERROR, 21,
-          R_S("Lakšte „%1“ nepavyko rasti eilutės su stulpelių antraštėmis.")
-          .arg(table->title()));
+      R_S("Lakšte „%1“ nepavyko rasti eilutės su stulpelių antraštėmis.")
+      .arg(table->title()),
+      UnableToLocateSystemHeaderRow, RERROR);
     errors = true;
   }
   else
@@ -208,11 +197,9 @@ bool RParser::readSystems(RData *data, RITable *table, QStringList &message)
       }
     }
   }
-  this->log(
-          RINFO, 21,
-          R_S("Iš lakšto „%1“ buvo sėkmingai pridėta informacija "
-              "apie %2 naujas sistemas.")
-          .arg(table->title()).arg(added));
+
+  this->log(R_S("Iš lakšto „%1“ buvo sėkmingai pridėta informacija apie %2 naujas sistemas.")
+    .arg(table->title()).arg(added), SystemsParsed, RINFO);
   message << R_S("<li>„%1“ → +%2 sistemos.</li>")
              .arg(table->title()).arg(added);
   conn.disconnect();
@@ -226,17 +213,15 @@ bool RParser::readDivisionsSystems(RData *data, RITable *table, QStringList &mes
   int nonExistRelations = 0;
   RConnection conn = (*data)[RData::errorMessage] << [&](const QString& text)
   {
-    this->log(
-      RCRITICAL, 28,
-      R_S("Įvyko vidinė sistemos klaida: %1").arg(text));
+    this->log(R_S("Įvyko vidinė sistemos klaida: %1").arg(text),
+      InternalParseError, RCRITICAL);
   };
   QPoint start = findCaptionRow(table, m_guessInfo[RDIVISIONSYSTEMS]);
   if (start.x() == -1)
   {
     this->log(
-          RERROR, 21,
-          R_S("Lakšte „%1“ nepavyko rasti eilutės su stulpelių antraštėmis.")
-          .arg(table->title()));
+      R_S("Lakšte „%1“ nepavyko rasti eilutės su stulpelių antraštėmis.")
+      .arg(table->title()), UnableToLocateDivisionAdmHeaderRow, RERROR);
     errors = true;
   }
   else
@@ -280,37 +265,35 @@ bool RParser::readDivisionsSystems(RData *data, RITable *table, QStringList &mes
               }
               else if (colIndex == start.x() + 1)
               {
-                this->log(
-                  RWARNING, 31,
-                  R_S(
-                        "Nepavyko rasti sistemos, kurios "
-                        "identifikatorius yra „%1“ "
-                        "(„%2“ lakšto %3 eilutės %4 stulpelis)."
-                        ).arg(systemID).arg(table->title())
-                        .arg(rowIndex + 1).arg(start.x()));
+                this->log(R_S(
+                  "Nepavyko rasti sistemos, kurios "
+                  "identifikatorius yra „%1“ "
+                  "(„%2“ lakšto %3 eilutės %4 stulpelis).")
+                  .arg(systemID).arg(table->title())
+                  .arg(rowIndex + 1).arg(start.x()),
+                  UnableToLocateSystemIdent, RWARNING);
               }
             }
           }
         }
         else
         {
-          this->log(
-            RWARNING, 30,
-            R_S(
-                  "Nepavyko rasti padalinio, kurio identifikatorius yra „%1“ "
-                  "(„%2“ lakšto %3 eilutės %4 stulpelis)."
-                  ).arg(divisionID).arg(table->title())
-                  .arg(start.y() + 1).arg(colIndex + 1));
+          this->log(R_S(
+            "Nepavyko rasti padalinio, kurio identifikatorius yra „%1“ "
+            "(„%2“ lakšto %3 eilutės %4 stulpelis).")
+            .arg(divisionID).arg(table->title())
+            .arg(start.y() + 1).arg(colIndex + 1),
+            UnableToLocateDivisionIdent, RWARNING);
         }
       }
     }
   }
-  this->log(
-          RINFO, 21,
-          R_S("Iš lakšto „%1“ buvo atnaujinta informacija apie "
-              "padalinių naudojamas informacines sistemas. "
-              "(Buvo sukurti %2 naudojimo ir %3 nenaudojimo ryšiai.)")
-          .arg(table->title()).arg(existRelations).arg(nonExistRelations));
+  this->log(R_S(
+    "Iš lakšto „%1“ buvo atnaujinta informacija apie "
+    "padalinių naudojamas informacines sistemas. "
+    "(Buvo sukurti %2 naudojimo ir %3 nenaudojimo ryšiai.)")
+    .arg(table->title()).arg(existRelations).arg(nonExistRelations),
+    DivisionAdmParsed, RINFO);
   message << R_S("<li>„%1“ → %2 sistemų naudojimo ir %3 nenaudojimo ryšiai.</li>")
              .arg(table->title()).arg(existRelations).arg(nonExistRelations);
   conn.disconnect();
@@ -325,21 +308,20 @@ bool RParser::readDivisionsMeasures(RData *data, RITable *table, QStringList &me
   int updatedRelations = 0;
   RConnection conn = (*data)[RData::errorMessage] << [&](const QString& text)
   {
-    this->log(
-      RWARNING, 24,
-      R_S(
-        "Duomuo, aprašytas lakšte „%1“, %2 eilutėje %3 stulpelyje, "
-        "nebuvo pridėtas. Priežastis: %4"
-        ).arg(table->title())
-        .arg(rowIndex + 1).arg(colIndex + 1).arg(text));
+    this->log(R_S(
+      "Duomuo, aprašytas lakšte „%1“, %2 eilutėje %3 stulpelyje, "
+      "nebuvo pridėtas. Priežastis: %4")
+      .arg(table->title())
+      .arg(rowIndex + 1).arg(colIndex + 1).arg(text),
+      InvalidMeasureAdmEntryDiscarded, RWARNING);
   };
   QPoint start = findCaptionRow(table, m_guessInfo[RDIVISIONMEASURES]);
   if (start.x() == -1)
   {
     this->log(
-          RERROR, 21,
-          R_S("Lakšte „%1“ nepavyko rasti eilutės su stulpelių antraštėmis.")
-          .arg(table->title()));
+      R_S("Lakšte „%1“ nepavyko rasti eilutės su stulpelių antraštėmis.")
+      .arg(table->title()),
+      UnableToLocateMeasureAdmHeaderRow, RERROR);
     errors = true;
   }
   else
@@ -388,49 +370,46 @@ bool RParser::readDivisionsMeasures(RData *data, RITable *table, QStringList &me
                 }
                 else
                 {
-                  this->log(
-                    RWARNING, 31,
-                    R_S(
-                          "Nepavyko konvertuoti langelio reikšmės „%1“ "
-                          "į slankaus kablelio skaičių."
-                          "(„%2“ lakšto %3 eilutės %4 stulpelis)."
-                          ).arg(table->cell(colIndex, rowIndex).toString())
-                          .arg(table->title()).arg(rowIndex + 1).arg(colIndex + 1));
+                  this->log(R_S(
+                    "Nepavyko konvertuoti langelio reikšmės „%1“ "
+                    "į slankaus kablelio skaičių."
+                    "(„%2“ lakšto %3 eilutės %4 stulpelis).")
+                    .arg(table->cell(colIndex, rowIndex).toString())
+                    .arg(table->title()).arg(rowIndex + 1).arg(colIndex + 1),
+                    FloatParseError, RWARNING);
                 }
               }
               else if (colIndex == start.x() + 1)
               {
-                this->log(
-                  RWARNING, 31,
-                  R_S(
-                        "Nepavyko rasti priemonės, kurios "
-                        "identifikatorius yra „%1“ "
-                        "(„%2“ lakšto %3 eilutės %4 stulpelis)."
-                        ).arg(measureID).arg(table->title())
-                        .arg(rowIndex + 1).arg(start.x()));
+                this->log(R_S(
+                  "Nepavyko rasti priemonės, kurios "
+                  "identifikatorius yra „%1“ "
+                  "(„%2“ lakšto %3 eilutės %4 stulpelis).")
+                  .arg(measureID).arg(table->title())
+                  .arg(rowIndex + 1).arg(start.x()),
+                  UnableToLocateMeasureIdent, RWARNING);
               }
             }
           }
         }
         else
         {
-          this->log(
-            RWARNING, 30,
-            R_S(
-                  "Nepavyko rasti padalinio, kurio identifikatorius yra „%1“ "
-                  "(„%2“ lakšto %3 eilutės %4 stulpelis)."
-                  ).arg(divisionID).arg(table->title())
-                  .arg(start.y() + 1).arg(colIndex + 1));
+          this->log(R_S(
+            "Nepavyko rasti padalinio, kurio identifikatorius yra „%1“ "
+            "(„%2“ lakšto %3 eilutės %4 stulpelis).")
+            .arg(divisionID).arg(table->title())
+            .arg(start.y() + 1).arg(colIndex + 1),
+            UnableToLocateDivisionIdent2, RWARNING);
         }
       }
     }
   }
-  this->log(
-          RINFO, 21,
-          R_S("Iš lakšto „%1“ buvo atnaujinta informacija apie "
-              "paramos administravimo sąnaudas. (Buvo atnaujinti "
-              "%2 ryšiai.)")
-             .arg(table->title()).arg(updatedRelations));
+  this->log(R_S(
+    "Iš lakšto „%1“ buvo atnaujinta informacija apie "
+    "paramos administravimo sąnaudas. (Buvo atnaujinti "
+    "%2 ryšiai.)")
+    .arg(table->title()).arg(updatedRelations),
+    MeasureAdmParsed, RINFO);
   message << R_S("<li>„%1“ → atnaujinti %2 administravimo ryšiai.</li>")
              .arg(table->title()).arg(updatedRelations);
   conn.disconnect();
@@ -449,21 +428,19 @@ bool RParser::readSubmissions(RData *data, RITable *table, QStringList &message)
   bool errors = false;
   RConnection conn = (*data)[RData::errorMessage] << [&](const QString& text)
   {
-    this->log(
-      RWARNING, 26,
-      R_S(
-        "Duomuo, aprašytas lakšte „%1“, %2 eilutėje %3 stulpelyje, "
-        "nebuvo pridėtas. Priežastis: %4"
-        ).arg(table->title())
-        .arg(rowIndex + 1).arg(measureColumn + 1).arg(text));
+    this->log(R_S(
+      "Duomuo, aprašytas lakšte „%1“, %2 eilutėje %3 stulpelyje, "
+      "nebuvo pridėtas. Priežastis: %4")
+      .arg(table->title())
+      .arg(rowIndex + 1).arg(measureColumn + 1).arg(text),
+      InvalidSubmissionDiscarded, RWARNING);
   };
   QPoint start = findCaptionRow(table, m_guessInfo[RSUBMISSION]);
   if (start.x() == -1)
   {
-    this->log(
-          RERROR, 21,
-          R_S("Lakšte „%1“ nepavyko rasti eilutės su stulpelių antraštėmis.")
-          .arg(table->title()));
+    this->log(R_S(
+      "Lakšte „%1“ nepavyko rasti eilutės su stulpelių antraštėmis.")
+      .arg(table->title()), UnableToLocateSubmissionsHeaderRow, RERROR);
     errors = true;
   }
   else
@@ -495,12 +472,11 @@ bool RParser::readSubmissions(RData *data, RITable *table, QStringList &message)
               table->cell(amountColumn,rowIndex).toInt(&countOk));
         if (!countOk)
         {
-          this->log(
-            RWARNING, 27,
-            R_S(
-              "Duomuo, aprašytas lakšte „%1“, %2 eilutėje %3 stulpelyje, "
-              "nebuvo pridėtas. Priežastis: kiekis nėra skaičius."
-              ).arg(table->title()).arg(rowIndex + 1).arg(measureColumn + 1));
+          this->log(R_S(
+            "Duomuo, aprašytas lakšte „%1“, %2 eilutėje %3 stulpelyje, "
+            "nebuvo pridėtas. Priežastis: kiekis nėra skaičius.")
+            .arg(table->title()).arg(rowIndex + 1).arg(measureColumn + 1),
+            IntegerParseError, RWARNING);
         }
         if (correct && countOk)
         {
@@ -514,11 +490,11 @@ bool RParser::readSubmissions(RData *data, RITable *table, QStringList &message)
       }
     }
   }
-  this->log(
-          RINFO, 21,
-          R_S("Iš lakšto „%1“ buvo sėkmingai pridėta %2 įrašai "
-              "apie paramos priemonių administravimą.")
-          .arg(table->title()).arg(added));
+  this->log(R_S(
+    "Iš lakšto „%1“ buvo sėkmingai pridėta %2 įrašai "
+    "apie paramos priemonių administravimą.")
+    .arg(table->title()).arg(added),
+    SubmissionsParsed, RINFO);
   message << R_S("<li>„%1“ → +%2 įrašai apie priemonių administravimą.</li>")
              .arg(table->title()).arg(added);
   conn.disconnect();
@@ -529,13 +505,13 @@ bool RParser::readTable(RData *data, RDataType type, RITable *table, QStringList
 {
   switch (type)
   {
-  case RMEASURE: return readMeasures(data, table, message);
-  case RDIVISION: return readDivisions(data, table, message);
-  case RSYSTEM: return readSystems(data, table, message);
-  case RDIVISIONSYSTEMS: return readDivisionsSystems(data, table, message);
-  case RDIVISIONMEASURES: return readDivisionsMeasures(data, table, message);
-  case RSUBMISSION: return readSubmissions(data, table, message);
-  case RUNKNOWN: return false;
+    case RMEASURE:          return readMeasures(data, table, message);
+    case RDIVISION:         return readDivisions(data, table, message);
+    case RSYSTEM:           return readSystems(data, table, message);
+    case RDIVISIONSYSTEMS:  return readDivisionsSystems(data, table, message);
+    case RDIVISIONMEASURES: return readDivisionsMeasures(data, table, message);
+    case RSUBMISSION:       return readSubmissions(data, table, message);
+    case RUNKNOWN:          return false;
   }
   return false;
 }
@@ -565,7 +541,7 @@ bool RParser::read(RData *data, QList<std::tuple<QString, int, int> > guesses)
   if (!allOk)
     message.insert(1, R_S("<p>Importuojant buvo klaidų. "
                           "Jas galite peržiūrėti žurnale.</p>"));
-  report(message.join(R_S("\n")));
+  log(message.join(R_S("\n")), -1, -1);
   return allOk;
 }
 
@@ -684,20 +660,22 @@ void RParser::makeGuessing()
 RParser::RParser()
 {
   m_document = NULL;
-  m_guessInfo[RMEASURE] = RTableTypeGuessInfo(
-        (QStringList() << R_S("Paramos priemones") << R_S("Paramos priemonės")),
-        (QList<QStringList>()
-         << (QStringList() << R_S("Kodas"))
-         << (QStringList() << R_S("Paramos priemonė") << R_S("Paramos priemone"))
-         )
-        );
+  m_guessInfo[RMEASURE] = RTableTypeGuessInfo
+  (
+    (QStringList() << R_S("Paramos priemones") << R_S("Paramos priemonės")),
+    (QList<QStringList>()
+      << (QStringList() << R_S("Kodas"))
+      << (QStringList() << R_S("Paramos priemonė") << R_S("Paramos priemone"))
+    )
+  );
   m_guessInfo[RDIVISION] = RTableTypeGuessInfo(
-        (QStringList() << R_S("Padaliniai")),
-        (QList<QStringList>()
-         << (QStringList() << R_S("Kodas"))
-         << (QStringList() << R_S("Padalinys") << R_S("Padaliniai"))
-         )
-        );
+  (
+    QStringList() << R_S("Padaliniai")),
+    (QList<QStringList>()
+      << (QStringList() << R_S("Kodas"))
+      << (QStringList() << R_S("Padalinys") << R_S("Padaliniai"))
+    )
+  );
   m_guessInfo[RSYSTEM] = RTableTypeGuessInfo(
         (QStringList()
          << R_S("IS")
@@ -747,23 +725,24 @@ RParser::RParser()
              << R_S("Priemones/Padalinys"))
          )
         );
-  m_guessInfo[RSUBMISSION] = RTableTypeGuessInfo(
-        (QStringList()
-         << R_S("Paramos kiekiai")),
-        (QList<QStringList>()
-         << (QStringList()
-             << R_S("Priemonės")
-             << R_S("Priemones")
-             << R_S("Priemonė")
-             << R_S("Priemone"))
-         << (QStringList()
-             << R_S("Nuo"))
-         << (QStringList()
-             << R_S("Iki"))
-         << (QStringList()
-             << R_S("Kiekis"))
-         )
-        );
+  m_guessInfo[RSUBMISSION] = RTableTypeGuessInfo
+  (
+    (QStringList()
+      << R_S("Paramos kiekiai")),
+    (QList<QStringList>()
+      << (QStringList()
+        << R_S("Priemonės")
+        << R_S("Priemones")
+        << R_S("Priemonė")
+        << R_S("Priemone"))
+      << (QStringList()
+        << R_S("Nuo"))
+      << (QStringList()
+        << R_S("Iki"))
+      << (QStringList()
+        << R_S("Kiekis"))
+    )
+  );
 }
 
 RParser::RParser(QMap<RDataType, RTableTypeGuessInfo> guessInfo)

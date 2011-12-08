@@ -71,7 +71,7 @@ class RIntervalToolBar: public QToolBar
 
   signals:
     _M void           intervalChanged();
-    _M void           message(QString message, int timeout);
+    _M void           message(QString message, int id = -1, int type = -1);
 };
 
 /**********************************************************************************************/

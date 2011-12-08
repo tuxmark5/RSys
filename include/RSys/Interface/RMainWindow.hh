@@ -109,7 +109,7 @@ class RMainWindow: public QMainWindow
     _M void                 setInterfaceEnabled(bool enabled);
     _M void                 setInterval();
     _M void                 setShowSearchForm(bool show);
-    _M void                 showMessage(const QString& message, int timeout = -1);
+    _M void                 showMessage(const QString& message, int id = -1, int type = RINFO);
     _M void                 updateUnits();
 
   protected:

@@ -175,6 +175,7 @@ void RSummaryWidget :: setMode(int mode)
         chart->setType(RChart::Bar);
         chart->setShowLegend(true);
       }
+      updateGlobalInterval();
       break;
 
     case RUsageWidget::Line:
@@ -183,6 +184,7 @@ void RSummaryWidget :: setMode(int mode)
         chart->setType(RChart::Line);
         chart->setShowLegend(true);
       }
+      updateGlobalInterval();
       break;
 
     case RUsageWidget::Table:

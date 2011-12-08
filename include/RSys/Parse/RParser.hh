@@ -80,8 +80,7 @@ class RParser: public QObject
     _M  QString               nameAt(int index);
 
   signals:
-    _M  void          log(RMessageLevel level, RID id, QString message);
-    _M  void          report(QString message);
+    _M  void          log(QString message, int id, int type);
     _M  void          parsed(double part);
 
 };

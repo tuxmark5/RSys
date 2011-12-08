@@ -85,7 +85,7 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   addDockWidget(Qt::BottomDockWidgetArea, m_logDock);
 
   connect(m_intervalToolBar, SIGNAL(intervalChanged()), this, SLOT(setInterval()));
-  connect(m_intervalToolBar, SIGNAL(message(QString,int)), this, SLOT(showMessage(QString,int)));
+  connect(m_intervalToolBar, SIGNAL(message(QString,int,int)), this, SLOT(showMessage(QString,int,int)));
 
   logout();
 }
@@ -179,11 +179,11 @@ void RMainWindow :: commit()
     m_results->resetBegin();
     *m_data0 = *m_data1;
     m_results->resetEnd();
-    showMessage(R_S("Duomenys išsaugoti."));
+    showMessage(R_S("Duomenys išsaugoti."), CommitSuccess, RINFO);
   }
   else
   {
-    showMessage(R_S("KLAIDA: Nepavyko išsaugoti duomenų."));
+    showMessage(R_S("KLAIDA: Nepavyko išsaugoti duomenų."), CommitFailure, RERROR);
   }
 }
 
@@ -424,7 +424,7 @@ void RMainWindow :: findIntervalNow()
   }
   else
   {
-    showMessage(R_S("Pirma pasirinkite validų paieškos intervalą"));
+    showMessage(R_S("Pirma pasirinkite validų paieškos intervalą"), ValidIntervalRequired, RWARNING);
   }
 }
 
@@ -444,7 +444,8 @@ void RMainWindow :: importData()
   g_settings->setValue("importDir", fileName);
 
   connect(parser, SIGNAL(report(QString)), this, SLOT(showMessage(QString)));
-  connect(parser, SIGNAL(log(RMessageLevel,RID,QString)), m_logDock, SLOT(addMessage(RMessageLevel,RID,QString)));
+  connect(parser, SIGNAL(log(QString,int,int)), m_logDock,
+    SLOT(addMessage(QString,int,int)));
 
   if (parser->open(fileName))
   {
@@ -469,7 +470,7 @@ void RMainWindow :: importData()
   }
   else
   {
-    showMessage(R_S("Importo startuoti nepavyko"), 8000);
+    showMessage(R_S("Importo startuoti nepavyko"), ImportBeginFailure, RERROR);
     delete parser;
   }
 }
@@ -563,11 +564,11 @@ void RMainWindow :: rollback()
     *m_data1 = *m_data0;
     emit unitsChanged(currentUnits());
     m_intervalToolBar->applyInterval();
-    showMessage(R_S("Duomenys atstatyti."));
+    showMessage(R_S("Duomenys atstatyti."), RollbackSuccess, RINFO);
   }
   else
   {
-    showMessage(R_S("Duomenų atstatyti nepavyko."));
+    showMessage(R_S("Duomenų atstatyti nepavyko."), RollbackFailure, RERROR);
   }
 }
 
@@ -644,17 +645,19 @@ void RMainWindow :: setShowSearchForm(bool show)
 
 /**********************************************************************************************/
 
-void RMainWindow :: showMessage(const QString& message, int timeout)
+void RMainWindow :: showMessage(const QString& message, int id, int type)
 {
-  if (timeout == -1)
-  {
-    timeout = 5000 + message.size() * 40;
-  }
+  int timeout = 5000 + message.size() * 40;
 
   RMessage* widget = new RMessage(message, timeout);
 
   widget->setOwner(sender());
   addStatusWidget(widget, sender());
+
+  if (id != -1)
+  {
+    m_logDock->addMessage(message, id, type);
+  }
 }
 
 /**********************************************************************************************/

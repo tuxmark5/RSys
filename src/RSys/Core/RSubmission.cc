@@ -6,10 +6,11 @@
 /*                                        RSubmission                                         */
 /**********************************************************************************************/
 
-Vacuum RSubmission :: RSubmission(RData* data):
+Vacuum RSubmission :: RSubmission(RData* data, bool planned):
   RElement(data),
   m_measure(0),
-  m_count(0)
+  m_count(0),
+  m_planned(planned)
 {
 }
 
@@ -21,7 +22,8 @@ Vacuum RSubmission :: RSubmission(RSubmission& other, RData* data):
   m_measureName(other.m_measureName),
   m_date0(other.m_date0),
   m_date1(other.m_date1),
-  m_count(other.m_count)
+  m_count(other.m_count),
+  m_planned(other.m_planned)
 {
 }
 

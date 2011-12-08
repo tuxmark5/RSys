@@ -114,6 +114,7 @@ RMeasure* RData :: measure(const QString& identifier) const
 void RData :: onDate0Change(RSubmission* submission, QDate oldDate0)
 {
   R_GUARD(submission->date0().isValid(), Vacuum);
+  R_GUARD(!submission->isPlanned(), Vacuum);
 
   /**/ if (submission->date0() < m_interval0)
   {
@@ -129,6 +130,7 @@ void RData :: onDate0Change(RSubmission* submission, QDate oldDate0)
 void RData :: onDate1Change(RSubmission* submission, QDate oldDate1)
 {
   R_GUARD(submission->date1().isValid(), Vacuum);
+  R_GUARD(!submission->isPlanned(), Vacuum);
 
   /**/ if (submission->date1() > m_interval1)
   {

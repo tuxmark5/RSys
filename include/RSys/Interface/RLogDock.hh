@@ -19,6 +19,7 @@ class RLogDock: public QDockWidget
   private:
     _M Model*         m_model;
     _M int            m_messageIndex;
+    _M bool           m_autoShow: 1;
 
   public:
     _M Vacuum         RLogDock(RMainWindow* parent = 0);
@@ -26,8 +27,9 @@ class RLogDock: public QDockWidget
     _S QString        levelName(int level);
 
   public slots:
-    _M void           addMessage(RMessageLevel level, RID id, const QString& message);
+    _M void           addMessage(const QString& message, int id, int level);
     _M void           clearLog();
+    _M void           setAutoShow(bool autoShow);
 };
 
 /**********************************************************************************************/

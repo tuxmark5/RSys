@@ -1,4 +1,5 @@
 #include <QtCore/QRegExp>
+#include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QLabel>
@@ -19,13 +20,15 @@ QRegExp g_htmlTagRegExp("\\</?\\w+\\>");
 Vacuum RLogDock :: RLogDock(RMainWindow* parent):
   QDockWidget(parent),
   m_model(new QStandardItemModel(this)),
-  m_messageIndex(0)
+  m_messageIndex(0),
+  m_autoShow(true)
 {
   RLogFilterModel*  filterModel = new RLogFilterModel();
   RTableView*       tableView   = new RTableView(filterModel);
   QWidget*          titleBar    = new QWidget();
   QHBoxLayout*      titleLayout = new QHBoxLayout(titleBar);
   QLabel*           label1      = new QLabel(R_S("<b>Pranešimų žurnalas</b>"));
+  QCheckBox*        autoShowBox = new QCheckBox(R_S("Rodyti žurnalą įvykus klaidai"));
   QLabel*           label2      = new QLabel(R_S("Rodyti bent:"));
   QComboBox*        levelBox    = new QComboBox();
   QPushButton*      clearButton = new QPushButton(R_S("Valyti"));
@@ -35,6 +38,8 @@ Vacuum RLogDock :: RLogDock(RMainWindow* parent):
 
   label1->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
   label1->setTextInteractionFlags(Qt::NoTextInteraction);
+
+  autoShowBox->setChecked(true);
 
   levelBox->addItem(R_S("Visus pranešimus"));
   levelBox->addItem(R_S("Informacinius pranešimus"));
@@ -46,6 +51,7 @@ Vacuum RLogDock :: RLogDock(RMainWindow* parent):
   titleLayout->addWidget(label2);
   titleLayout->addWidget(levelBox);
   titleLayout->addWidget(clearButton);
+  titleLayout->addWidget(autoShowBox);
   titleLayout->addWidget(closeButton);
   titleLayout->setSpacing(5);
 
@@ -61,6 +67,7 @@ Vacuum RLogDock :: RLogDock(RMainWindow* parent):
   setWindowTitle(R_S("Pranešimų žurnalas"));
   setWidget(tableView);
 
+  connect(autoShowBox, SIGNAL(toggled(bool)), this, SLOT(setAutoShow(bool)));
   connect(clearButton, SIGNAL(clicked()), this, SLOT(clearLog()));
   connect(closeButton, SIGNAL(clicked()), this, SLOT(hide()));
   connect(levelBox, SIGNAL(currentIndexChanged(int)), filterModel, SLOT(setMinimumLevel(int)));
@@ -75,7 +82,7 @@ Vacuum RLogDock :: ~RLogDock()
 
 /**********************************************************************************************/
 
-void RLogDock :: addMessage(RMessageLevel level, RID id, const QString& message)
+void RLogDock :: addMessage(const QString& message, int id, int level)
 {
   ItemList        items;
   QString         message1  = message;
@@ -93,7 +100,7 @@ void RLogDock :: addMessage(RMessageLevel level, RID id, const QString& message)
   m_model->appendRow(items);
   m_model->setHeaderData(m_model->rowCount(), Qt::Vertical, m_messageIndex++, Qt::DisplayRole);
 
-  if (isHidden())
+  if (m_autoShow && isHidden())
     show();
 }
 
@@ -118,6 +125,13 @@ QString RLogDock :: levelName(int level)
   }
 
   return R_S("Nežinomas");
+}
+
+/**********************************************************************************************/
+
+void RLogDock :: setAutoShow(bool autoShow)
+{
+  m_autoShow = autoShow;
 }
 
 /**********************************************************************************************/
