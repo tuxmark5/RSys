@@ -130,6 +130,7 @@ Vacuum RModel1D :: RModel1D(RContainerPtr container, QObject* parent):
 
   m_rowAdapter = new RAdapter1D(this);
   m_container->addObserver(m_rowAdapter);
+  resetBegin();
   resetEnd();
 
   if (!g_lastRowFont.italic())
@@ -308,7 +309,7 @@ bool RModel1D :: removeRows(int row, int count, const QModelIndex& parent)
 
 void RModel1D :: resetBegin()
 {
-  //m_nodes.clear();
+  beginResetModel();
   m_root.m_children.clear();
 }
 
@@ -325,6 +326,8 @@ void RModel1D :: resetEnd()
     //m_nodes.insert(y, &*it);
     ++it;
   }
+
+  endResetModel();
 }
 
 /**********************************************************************************************/
