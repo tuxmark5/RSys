@@ -33,6 +33,8 @@ void RMeasure :: remove()
   RUnit::purge();
 
   R_NZ(m_data)->purgeMeasure(this);
+
+  m_data->modify();
 }
 
 /**********************************************************************************************/

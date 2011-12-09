@@ -47,7 +47,7 @@ class RSubmission: public RElement
     _M void             setMeasure(RMeasure* measure);
     _M void             setMeasureId(RID id);
     _M bool             setMeasureName(const QString& measureName);
-    _M void             setMeasure1Name(const QString& measureName);
+    _M void             setMeasure1NameE(const QString& measureName);
 
   public:
     _G(void,            countChange, RSubmission* submission, int newCount);

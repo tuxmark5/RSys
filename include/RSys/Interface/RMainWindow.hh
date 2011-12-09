@@ -99,7 +99,7 @@ class RMainWindow: public QMainWindow
     _M void                 importData();
     _M void                 loginBegin();
     _M void                 loginEnd(bool success);
-    _M void                 logout();
+    _M void                 logout(bool interactive = true);
     _M void                 onSearchFormDestroyed();
     _M void                 rollback();
     _M void                 setExtrapolationEnabled(bool enabled);
@@ -122,6 +122,7 @@ class RMainWindow: public QMainWindow
     _M void                 createContainers();
     _M void                 createInterface();
     _M void                 createTabs();
+    _M bool                 showSaveDialog(const QString& title);
 
   private slots:
     _M void                 findIntervalNow();

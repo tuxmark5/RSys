@@ -79,6 +79,7 @@ void RUser :: remove()
   R_GUARD(m_created, Vacuum);
 
   m_created = false;
+  m_data->modify();
 }
 
 /**********************************************************************************************/
@@ -86,6 +87,7 @@ void RUser :: remove()
 void RUser :: setDescription(const QString& description)
 {
   m_description = description;
+  m_data->modify();
 }
 
 /**********************************************************************************************/
@@ -93,8 +95,11 @@ void RUser :: setDescription(const QString& description)
 void RUser :: setPassword(const QString& password)
 {
   m_password = password;
+
   (*m_data)[onSql]((void*) this, 0, R_S("ALTER ROLE %1 WITH PASSWORD '%2';")
     .arg(m_userName, m_password.replace("'", "''")));
+
+  m_data->modify();
 }
 
 /**********************************************************************************************/
@@ -108,6 +113,8 @@ void RUser :: setProperty(const QString& name, int value)
     m_properties.remove(name);
   else
     m_properties.insert(name, value);
+
+  m_data->modify();
 }
 
 /**********************************************************************************************/
@@ -115,6 +122,7 @@ void RUser :: setProperty(const QString& name, int value)
 void RUser :: setUserName(const QString& userName)
 {
   m_userName = userName;
+  m_data->modify();
 }
 
 /**********************************************************************************************/
@@ -134,6 +142,7 @@ void RUser :: setUserNameE(const QString& userName)
 
   m_created   = true;
   m_userName  = userName1;
+  m_data->modify();
 }
 
 /**********************************************************************************************/

@@ -86,8 +86,9 @@ RDivision* RData :: division(const QString& identifier) const
 
 void RData :: enableIntervalTracking()
 {
-  (*this)[RSubmission::date0Changed] << std::bind(&RData::onDate0Change, this, _1, _2);
-  (*this)[RSubmission::date1Changed] << std::bind(&RData::onDate1Change, this, _1, _2);
+  (*this)[RSubmission::date0Changed]      << std::bind(&RData::onDate0Change, this, _1, _2);
+  (*this)[RSubmission::date1Changed]      << std::bind(&RData::onDate1Change, this, _1, _2);
+  (*this)[RSubmission::submissionRemoval] << std::bind(&RData::onSubmissionRemoval, this, _1);
 }
 
 /**********************************************************************************************/
@@ -143,6 +144,19 @@ void RData :: onDate1Change(RSubmission* submission, QDate oldDate1)
 
 /**********************************************************************************************/
 
+void RData :: onSubmissionRemoval(RSubmission* submission)
+{
+  R_GUARD(!submission->isPlanned(), Vacuum);
+
+  bool left   = m_interval0.isValid() && (m_interval0 == submission->date0());
+  bool right  = m_interval1.isValid() && (m_interval1 == submission->date1());
+
+  if (left || right)
+    calculateIntervals();
+}
+
+/**********************************************************************************************/
+
 void RData :: operator = (RData& data)
 {
   m_purgeEnabled = false;
@@ -161,6 +175,9 @@ void RData :: operator = (RData& data)
   r_cloneMap(m_unitHash[0], data.m_unitHash[0]);
   r_cloneMap(m_unitHash[1], data.m_unitHash[1]);
   r_cloneMap(m_unitHash[2], data.m_unitHash[2]);
+
+  m_interval0 = data.m_interval0;
+  m_interval1 = data.m_interval1;
 }
 
 /**********************************************************************************************/
@@ -198,6 +215,13 @@ void RData :: purgeSystem(RSystem* system)
     (*it)->setSystem(system, 0);
   for (auto it = m_measures.begin(); it != m_measures.end(); ++it)
     (*it)->m_systemUsage.remove(system);
+}
+
+/**********************************************************************************************/
+
+void RData :: setModified(bool modified)
+{
+  m_modified = modified;
 }
 
 /**********************************************************************************************/

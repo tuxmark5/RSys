@@ -12,8 +12,8 @@
 Vacuum RPlannedTab :: RPlannedTab(RMainWindow* parent):
   RTab(R_S("Planuojami paramos priemonių kiekiai"), parent)
 {
-  RData*    data = parent->data();
-  RModel2D* model;
+  RData*        data = parent->data();
+  RModel2D*     model;
 
   auto getter = [=](int x, int y) -> QVariant
   {
@@ -32,7 +32,7 @@ Vacuum RPlannedTab :: RPlannedTab(RMainWindow* parent):
     division->setMeasure1(measure, var.toDouble());
   };
 
-  /*****/ makeTable1DTab(parent->submission1Container());
+  addSubmissionTable(parent->submission1Container());
   model = makeTable2DTab(parent->measure1Container(), parent->divisionContainer());
 
   model->setGetter(getter);

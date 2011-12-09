@@ -1,2 +1,10 @@
-ABOUT RSYS
+RSys - tai sistema, skirta apkrovų skaičiavimui.
 
+Autoriai:
+Audrius Šaikūnas
+Egidijus Lukauskas
+Justinas Jucevičius
+Martynas Budriūnas
+Vytautas Astrauskas
+
+2011 visos teisės saugomos

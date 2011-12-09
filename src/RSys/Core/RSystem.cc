@@ -31,6 +31,7 @@ void RSystem :: remove()
   RUnit::purge();
 
   R_NZ(m_data)->purgeSystem(this);
+  m_data->modify();
 }
 
 /**********************************************************************************************/

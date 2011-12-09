@@ -1,3 +1,4 @@
+#include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QTreeView>
 #include <QtGui/QVBoxLayout>
@@ -31,13 +32,28 @@ Vacuum RTab :: ~RTab()
 
 /**********************************************************************************************/
 
-void RTab :: makeTable1DTab(RContainer* container)
+RTableView* RTab :: addSubmissionTable(RContainer* container)
+{
+  RTableView*   tableView = makeTable1DTab(container);
+  QHeaderView*  header    = tableView->horizontalHeader();
+
+  header->setResizeMode(QHeaderView::Interactive);
+  header->resizeSection(0, 60);
+  header->resizeSection(1, 60);
+  header->resizeSection(2, 100);
+  header->resizeSection(3, 100);
+}
+
+/**********************************************************************************************/
+
+RTableView* RTab :: makeTable1DTab(RContainer* container)
 {
   RModel1D*   model     = new RModel1D(container, this);
   RTableView* tableView = new RTableView(model, this);
 
   tableView->setSortingEnabled(true);
   layout()->addWidget(tableView);  
+  return tableView;
 }
 
 /**********************************************************************************************/

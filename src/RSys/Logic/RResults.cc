@@ -60,7 +60,7 @@ auto RResults :: field(int type, RUnit* unit) -> Getter
     {
       if (RUnit* buddy = unit->buddy())
         return buddy->usageAt(x).first;
-      return 0.0;
+      return 5.0;
     };
 
     case Usage0 | Counts: return [this, unit](int x) -> QVariant
@@ -243,11 +243,11 @@ void RResults :: unregisterField(RUnit* unit, RResultsModel* model, int key)
 
 void RResults :: update()
 {
+  resetBegin();
   m_calculator1->update();
   m_calculator1->setIntervalFun(m_intervalFun, m_numRecords);
+  resetEnd();
 
-  for (auto it = m_models.begin(); it != m_models.end(); ++it)
-    emit (*it)->reset();
   m_updatePending = false;
 }
 

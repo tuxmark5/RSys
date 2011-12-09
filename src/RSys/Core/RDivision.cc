@@ -50,6 +50,7 @@ void RDivision :: purge()
 void RDivision :: remove()
 {
   purge();
+  m_data->modify();
 }
 
 /**********************************************************************************************/
@@ -73,6 +74,8 @@ bool RDivision :: setMeasure(RMeasure* measure, double value)
     (*m_data)[onMeasureSet](this, measure, value);
     m_measureHash.insert(measure, value);
   }
+
+  m_data->modify();
   return true;
 }
 
@@ -92,6 +95,8 @@ void RDivision :: setMeasure1(RMeasure* measure, double value)
     (*m_data)[onMeasureSet](this, measure, value);
     m_measureHash1.insert(measure, value);
   }
+
+  m_data->modify();
 }
 
 /**********************************************************************************************/
@@ -116,6 +121,8 @@ void RDivision :: setSystem(RSystem* system, double value)
     (*m_data)[onSystemSet](this, system, value);
     m_systemHash.insert(system, value);
   }
+
+  m_data->modify();
 }
 
 /**********************************************************************************************/
