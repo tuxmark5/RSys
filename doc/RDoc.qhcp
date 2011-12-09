@@ -5,7 +5,7 @@
     <startPage>qthelp://resoft.rsys.1.0/doc/html/index.html</startPage>
     <applicationIcon>../res/logo.png</applicationIcon>
     <cacheDirectory>ReSoft/RSys</cacheDirectory>
-    <enableAddressBar visible="true">false</enableAddressBar>
+    <enableAddressBar visible="true">true</enableAddressBar>
     <enableDocumentationManager>false</enableDocumentationManager>
     <enableFilterFunctionality>false</enableFilterFunctionality>
     <aboutMenuText>
