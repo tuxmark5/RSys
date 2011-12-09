@@ -175,9 +175,11 @@ void RCalculator :: calculateIntervals()
       for (int i = 0; i < m_numIntervals; i++)
       {
         double usage;
-        if (TO(intervals[i]).daysTo(m_data->interval1()) > -1) { // intervalas istorijoje
+        if (TO(intervals[i]).daysTo(m_data->interval1()) > -1)
+        { // intervalas istorijoje
           usage = calculateUsage(intervals[i], (*it)->m_usageCntMap);
-        } else if (FROM(intervals[i]).daysTo(m_data->interval1()) < 0) { // prognozė
+        } else if (FROM(intervals[i]).daysTo(m_data->interval1()) < 0)
+        { // prognozė
           usage = predictUsage(intervals[i], (*it)->m_usageCntMap);
         } else { // ir istorija, ir prognozė
           RInterval interval = intervals[i];
@@ -501,6 +503,94 @@ bool RCalculator :: nonNegativeInInterval(double coefficients[3], int from, int 
                     (-coefficients[1] + sqrt(discriminant)) / (2 * coefficients[0])};
   if (roots[0] > roots[1]) std::swap(roots[0], roots[1]);
   return roots[0] >= to || roots[1] <= from;
+}
+
+/**********************************************************************************************/
+
+RInterval RCalculator :: findLowUsageInterval(RUnit* unit, RInterval interval,
+                                             int daysBySeasons[4])
+{
+  RInterval result;
+  int fractionsBySeasons[4]; // kokią dalį reikiamo ilgio sudaro viena diena
+  int fractionsNeeded = 1;
+  for (int i = 0; i < 4; i++)
+  {
+    if (daysBySeasons[i] > 0)
+    {
+      fractionsNeeded *= daysBySeasons[i];
+    }
+  }
+  if (fractionsNeeded <= 0) return result;
+  for (int i = 0; i < 4; i++)
+  {
+    if (daysBySeasons[i] > 0)
+    {
+      fractionsBySeasons[i] = fractionsNeeded / daysBySeasons[i];
+    }
+  }
+
+  int intervalLength = FROM(interval).daysTo(TO(interval)) + 1;
+  QVector<double> usage;
+  QVector<int> fraction;
+  usage.reserve(intervalLength);
+  fraction.reserve(intervalLength);
+  QDate day = FROM(interval);
+  for (int i = 0; i < intervalLength; i++)
+  {
+    usage.push_back(daysUsage(day, unit->m_usageHrsMap));
+    fraction.push_back(fractionsBySeasons[seasonOf(day)]);
+    day = day.addDays(1);
+  }
+
+  double currentUsage = 0;
+  double lowestUsage;
+  int currentFractions = 0;
+  for (int from = 0, to = 0; to < intervalLength; to++)
+  {
+    if (fraction[to] == 0) // netinkamas sezonas
+    {
+      while (to < intervalLength && fraction[to] == 0) to++;
+      from = to;
+      currentUsage = 0;
+      currentFractions = 0;
+      if (to >= intervalLength) break;
+    }
+    currentFractions += fraction[to];
+    currentUsage += usage[to];
+    while (currentFractions - fraction[from] >= fractionsNeeded)
+    { // čia visada from < intervalLength, nes užtikrinam fractionsNeeded > 0
+      currentUsage -= usage[from];
+      currentFractions -= fraction[from];
+      from++;
+    }
+    if (currentFractions >= fractionsNeeded
+        && (FROM(result).isNull() || currentUsage < lowestUsage))
+    {
+      lowestUsage = currentUsage;
+      result = RInterval(FROM(interval).addDays(from), FROM(interval).addDays(to));
+    }
+  }
+  return result;
+}
+
+/**********************************************************************************************/
+
+int RCalculator :: seasonOf(QDate date)
+{
+  return date.month() % 12 / 3; // elegantiška, ar ne? :D
+}
+
+/**********************************************************************************************/
+
+double RCalculator :: daysUsage(QDate day, UsageMap& usageMap)
+{
+  RInterval interval = RInterval(day, day.addDays(1));
+  if (day <= m_data->interval1())
+  {
+    return calculateUsage(interval, usageMap);
+  } else {
+    return predictUsage(interval, usageMap);
+  }
 }
 
 /**********************************************************************************************/
