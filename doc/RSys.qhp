@@ -6,12 +6,46 @@
     <toc>
       <section title="RSys dokumentacija" ref="./html/index.html">
         <section title="Pagrindinės užduotys">
-          <section title="Sistemos instaliavimas" ref="./html/task-install.html"/>
+          <section ref="./html/task-install.html" title="Sistemos instaliavimas"/>
+          <section ref="./html/task-login.html" title="Prisijungimas prie sistemos"/>
+          <section ref="./html/task-import.html" title="Duomenų importavimas"/>
+          <section ref="./html/task-usages.html" title="Apkrovų skaičiavimas ir prognozavimas"/>
+          <section ref="./html/task-interval-search.html" title="Mažiausiai apkrautų intervalų paieška"/>
+          <section ref="./html/task-user-adm.html" title="Naudotojų administravimas"/>
+          <section ref="./html/task-db-setup.html" title="Duomenų bazės paruošimas"/>
         </section>
 
-        <section title="Chapter 1" ref="./html/index.html#chapter1"/>
-        <section title="Chapter 2" ref="./html/index.html#chapter2"/>
-        <section title="Chapter 3" ref="./html/index.html#chapter3"/>
+        <section title="Sąsajos">
+          <section title="Duomenų įvedimo ir importavimo">
+            <section ref="./html/iface-import.html" title="Duomenų importavimo"/>
+            <section ref="./html/iface-measure.html" title="Paramos priemonių"/>
+            <section ref="./html/iface-division.html" title="Padalinių"/>
+            <section ref="./html/iface-system.html" title="Informacinių sistemų"/>
+            <section ref="./html/iface-measure-adm.html" title="Paramos priemonių administravimo"/>
+            <section ref="./html/iface-system-adm.html" title="Informacinių sistemų administravimo"/>
+            <section ref="./html/iface-submission.html" title="Istorinių duomenų"/>
+            <section ref="./html/iface-planned.html" title="Planuojamų kiekių"/>
+          </section>
+
+          <section title="Rezultatų">
+            <section ref="./html/iface-usages.html" title="Apkrovų ir prognozių"/>
+            <section ref="./html/iface-summary.html" title="Apžvalgos"/>
+          </section>
+
+          <section title="Įrankių juostos ir meniu">
+            <section ref="./html/menu-main.html" title="Pagrindinis meniu"/>
+            <section ref="./html/bar-main.html" title="Pagrindinė įrankių juosta"/>
+            <section ref="./html/bar-interval.html" title="Intervalo pasirinkimo įrankių juosta"/>
+          </section>
+
+          <section title="Papildimos">
+            <section ref="./html/iface-login.html" title="Prisijungimo"/>
+            <section ref="./html/iface-interval-search.html" title="Mažiausios apkrovos intervalo paieškos"/>
+            <section ref="./html/iface-log.html" title="Pranešimų žurnalas"/>
+            <section ref="./html/iface-palette.html" title="Rėžimo pasirinkimo"/>
+            <section ref="./html/iface-user-adm.html" title="Naudotojų administravimo"/>
+          </section>
+        </section>
       </section>
     </toc>
     <keywords>
