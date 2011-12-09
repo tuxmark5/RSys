@@ -150,19 +150,7 @@ double RResults :: fieldDeltaUsageCount(RUnit* unit, int x)
 
 RInterval RResults :: findLowUsageInterval(RUnit* unit)
 {
-  // HARDCODED STUFF FOR TESTING
-  if (m_interval0 == QDate(2012, 01, 01) && m_interval1 == QDate(2012, 06, 01))
-  {
-    if (m_seasonalLengths[0] > 0)
-    {
-      uint  mod   = qHash(unit->identifier()) % 20;
-      QDate base  = QDate(2012, 02, 01).addDays(mod);
-
-      return RInterval(base, base.addDays(m_seasonalLengths[0]));
-    }
-  }
-
-  return RInterval(QDate(2011, 02, 01), QDate(2011, 03, 01));
+  return m_calculator1->findLowUsageInterval(unit, RInterval(m_interval0, m_interval1), m_seasonalLengths);
 }
 
 /**********************************************************************************************/

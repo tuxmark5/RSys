@@ -2,13 +2,7 @@
 <QtHelpProject version="1.0">
   <namespace>resoft.rsys.1.0</namespace>
   <virtualFolder>doc</virtualFolder>
-  <customFilter name="RSys 1.0">
-    <filterAttribute>RSys</filterAttribute>
-    <filterAttribute>1.0</filterAttribute>
-  </customFilter>
   <filterSection>
-    <filterAttribute>RSys</filterAttribute>
-    <filterAttribute>1.0</filterAttribute>
     <toc>
       <section title="RSys dokumentacija" ref="./html/index.html">
         <section title="Chapter 1" ref="./html/index.html#chapter1"/>
