@@ -488,8 +488,6 @@ void RMainWindow :: loginEnd(bool success)
 {
   if (success)
   {
-    m_data1->calculateIntervals();
-
     RUser* user = m_database->user();
 
     RSettings::loadUnitSettings(m_data1);
@@ -506,10 +504,9 @@ void RMainWindow :: loginEnd(bool success)
       m_divisionsStateAction->setChecked(true);
 
     m_loginWidget   = 0; // deleted by QMainWindow::setCentralWidget
-    *m_data0        = *m_data1;
-    m_data0->calculateIntervals();
+    m_data1->calculateIntervals();
     m_data1->setModified(false);
-
+    *m_data0        = *m_data1;
     m_intervalToolBar->applyInterval();
   }
   else
