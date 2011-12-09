@@ -44,6 +44,7 @@ class RCalculator: public QObject
     _M void             calculateIntervals(UnitHash* units, UsageVector& usage);
     _M double           calculateUsage(RInterval interval, UsageMap& usageMap);
     _M double           predictUsage(RInterval interval, UsageMap& usageMap);
+    _M double           daysUsage(QDate day, UsageMap& usageMap);
     _M void             zeroUsages(RUnitPtrList* units);
 
     /**
@@ -136,11 +137,41 @@ class RCalculator: public QObject
      */
     _M bool             nonNegativeInInterval(double coefficients[3], int from, int to);
 
+    /**
+     * Nustato, kuriam sezonui priklauso duota data.
+     *
+     * @param date data
+     * @return 0, jei žiema, 1 – pavasaris, 2 – vasara, 3 – ruduo
+     */
+    _S int              seasonOf(QDate date);
+
   public:
     _M Vacuum           RCalculator(RData* data);
     _M Vacuum           ~RCalculator();
     _M void             update();
     _M void             setIntervalFun(IntervalFun intervalFun, int numIntervals);
+
+    /**
+     * Randa mažiausiai apkrautą padalinio ar sistemos intervalą.
+     * Apribojama, kuriame dienų intervale ieškoti bei koks dienų kiekis
+     * reikalingas ieškomame intervale atsižvelgiant į sezoną.
+     *
+     * @param unit           sistema ar paramos priemonė, kurios mažiausiai
+     *                       apkrauto intervalo ieškome
+     * @param interval       intervalas, kuriame ieškoti (imtinai)
+     * @param daysBySeasons  rodyklė į 4 skaičius, kurie atitinka reikalavimus
+     *                       gauto mažiausios apkrovos intervalo ilgiui, jei
+     *                       jis priklauso atitinkamai žiemos, pavasario,
+     *                       vasaros, rudens sezonams; skaičiumi 0 nurodoma,
+     *                       kad atitinkamo sezono rastame intervale turi nebūti
+     * @return tas intervale interval esantis dienų intervalas (imtinai), kurio
+     *         apkrova pagal valandas mažiausia, tačiau atitinka nurodytus
+     *         daysBySeasons ilgio reikalavimus; jei yra keli tokie intervalai,
+     *         grąžina anksčiausią; jei nėra nė vieno, grąžina nulinių datų
+     *         intervalą
+     */
+    _M RInterval        findLowUsageInterval(RUnit* unit, RInterval interval,
+                                             int daysBySeasons[4]);
 
   public slots:
     _M void             setExtrapolationEnabled(bool enabled);

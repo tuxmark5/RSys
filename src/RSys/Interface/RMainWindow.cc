@@ -428,7 +428,7 @@ void RMainWindow :: findIntervalNow()
   }
   else
   {
-    showMessage(R_S("Pirma pasirinkite validų paieškos intervalą"), ValidIntervalRequired, RWARNING);
+    showMessage(R_S("Pirma pasirinkite teisingą paieškos intervalą"), ValidIntervalRequired, RWARNING);
   }
 }
 
