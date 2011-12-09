@@ -2,7 +2,7 @@
 .defects.pickle
 deps/*
 doc/*.qch
-doc/*.qhcp
+doc/*.qhc
 dist/*
 lib/External/*
 *.user
