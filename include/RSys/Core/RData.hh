@@ -36,7 +36,7 @@ class RData: public QObject, public RSignal
     _M RUnitMultiHash         m_unitHash[3];
     _M RDivisionPtrList       m_divisions;
     _M RMeasurePtrList        m_measures;
-    _M RMeasureList           m_measures1;      // planned measures / phantom
+    _M RMeasurePtrList        m_measures1;      // planned measures / phantom
     _M RSubmissionPtrList     m_submissions;
     _M RSubmissionPtrList     m_submissions1;   // planned submissions
     _M RSystemPtrList         m_systems;
@@ -61,7 +61,7 @@ class RData: public QObject, public RSignal
     _M RMeasure*              measure(RID id) const;
     _M RMeasure*              measure(const QString& identifier) const;
     _M RMeasurePtrList*       measures()      { return &m_measures; }
-    _M RMeasureList*          measures1()     { return &m_measures1; }
+    _M RMeasurePtrList*       measures1()     { return &m_measures1; }
     _M void                   modify()        { m_modified = true; }
     _M void                   operator = (RData& data);
     _M void                   purgeDivision(RDivision* division);

@@ -56,6 +56,11 @@ void RSubmission :: remove()
 {
   (*m_data)[submissionRemoval](this);
   m_data->modify();
+
+  if (m_planned && m_measure && m_measure->numRefs() == 2)
+  {
+    m_data->measures1()->removeOne(m_measure);
+  }
 }
 
 /**********************************************************************************************/
