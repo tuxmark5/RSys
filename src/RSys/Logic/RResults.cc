@@ -1,3 +1,4 @@
+#include <QtGui/QColor>
 #include <RSys/Core/RUnit.hh>
 #include <RSys/Interface/RResultsModel.hh>
 #include <RSys/Logic/RCalculator.hh>
@@ -13,6 +14,7 @@ Vacuum RResults :: RResults(RData* data0, RData* data1, QObject* parent):
   m_data0(data0),
   m_data1(data1),
   m_numRecords(0),
+  m_highlightedInterval(-1),
   m_updatesEnabled(true),
   m_updatePending(false)
 {
@@ -41,6 +43,13 @@ auto RResults :: field(int type, RUnit* unit) -> Getter
 {
   switch (type)
   {
+    case Background: return [this](int x) -> QVariant
+    {
+      if (std::get<0>(interval(x)).month() == m_highlightedInterval)
+        return QColor(0x00, 0x00, 0x80, 0x40);
+      return QVariant();
+    };
+
     case Date: return [this](int x) -> QVariant
     {
       return std::get<0>(this->m_intervalFun(x));
@@ -196,10 +205,28 @@ void RResults :: resetBegin()
 
 /**********************************************************************************************/
 
+void RResults :: resetData()
+{
+  for (auto it = m_models.begin(); it != m_models.end(); ++it)
+    emit (*it)->updateAllData();
+}
+
+/**********************************************************************************************/
+
 void RResults :: resetEnd()
 {
   for (auto it = m_models.begin(); it != m_models.end(); ++it)
     emit (*it)->endResetModel();
+}
+
+/**********************************************************************************************/
+
+void RResults :: setHighlightedInterval(int x)
+{
+  R_GUARD(x != m_highlightedInterval, Vacuum);
+
+  m_highlightedInterval = std::get<0>(interval(x)).month();
+  resetData();
 }
 
 /**********************************************************************************************/
@@ -243,10 +270,9 @@ void RResults :: unregisterField(RUnit* unit, RResultsModel* model, int key)
 
 void RResults :: update()
 {
-  resetBegin();
   m_calculator1->update();
   m_calculator1->setIntervalFun(m_intervalFun, m_numRecords);
-  resetEnd();
+  resetData();
 
   m_updatePending = false;
 }

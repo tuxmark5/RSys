@@ -3,6 +3,7 @@
 
 /**********************************************************************************************/
 #include <KDChart/KDChartChart>
+#include <QtCore/QModelIndex>
 #include <RSys/RSys.hh>
 /**********************************************************************************************/
 namespace KDChart
@@ -61,6 +62,9 @@ class RChart: public KDChart::Chart
 
   protected:
     _M void             paintEvent(QPaintEvent* event);
+
+  signals:
+    _M void             clicked(QModelIndex index);
 };
 
 /**********************************************************************************************/

@@ -47,16 +47,19 @@ class RUsageWidget: public RLayerWidget
     _M RResultsModel*   model() const { return m_model; }
     _M void             updateHeader();
 
-  protected:
-    _V void             createButtons(const ButtonCallback& callback);
-    _M void             setTitle(const QString& title);
-
   public slots:
     _M void             modifyMode();
     _M void             modifyMode(int modifier);
     _M void             setMode(int mode);
     _M void             setSearchInterval(bool search);
     _M void             updateGlobalInterval();
+
+  protected:
+    _V void             createButtons(const ButtonCallback& callback);
+    _M void             setTitle(const QString& title);
+
+  protected slots:
+    _M void             onViewClicked(const QModelIndex& index);
 };
 
 /**********************************************************************************************/

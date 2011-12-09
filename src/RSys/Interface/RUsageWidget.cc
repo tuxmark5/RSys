@@ -137,6 +137,16 @@ void RUsageWidget :: modifyMode(int modifier)
 
 /**********************************************************************************************/
 
+void RUsageWidget :: onViewClicked(const QModelIndex& index)
+{
+  if (m_model->isHorizontal())
+    m_results->setHighlightedInterval(index.column());
+  else
+    m_results->setHighlightedInterval(index.row());
+}
+
+/**********************************************************************************************/
+
 void RUsageWidget :: setMode(int mode)
 {
   R_NZ(m_unit)->setViewMode(mode);
@@ -147,15 +157,17 @@ void RUsageWidget :: setMode(int mode)
   {
     case Bar:
       ensure<RChart>(this)->setType(RChart::Bar);
+      updateGlobalInterval();
       break;
 
     case Line:
       ensure<RChart>(this)->setType(RChart::Line);
+      updateGlobalInterval();
       break;
 
     case Table:
     {
-      int fieldMod = mode & DataModMask;
+      int fieldMod = (mode & DataModMask) | RResultsModel::Background;
       m_model->addField(RResultsModel::Usage0   | fieldMod, m_unit);
       m_model->addField(RResultsModel::Usage1   | fieldMod, m_unit);
       m_model->addField(RResultsModel::UsageD   | fieldMod, m_unit);
@@ -170,13 +182,15 @@ void RUsageWidget :: setMode(int mode)
       break;
   }
 
+  connect(widget(), SIGNAL(clicked(QModelIndex)), this, SLOT(onViewClicked(QModelIndex)), Qt::UniqueConnection);
+
   if ((mode & ViewMask) == Table)
   {
     setTitle(R_S("Apkrovų ir jų skirtumų lentelė"));
   }
   else
   {
-    int field = mode & (DataMask | DataModMask);
+    int field = (mode & (DataMask | DataModMask)) | RResultsModel::Background;
 
     setTitle(RResultsModel::longTitleForField(field));
     m_model->addField(field, m_unit);

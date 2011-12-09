@@ -32,6 +32,7 @@ class RResults: public QObject
       Date        = 0x0005,
       Identifier  = 0x0006,
       FullName    = 0x0007,
+      Background  = 0x0008,
 
       Hours       = 0x0010,
       Counts      = 0x0020,
@@ -53,6 +54,7 @@ class RResults: public QObject
     _M IntervalFun      m_intervalFun;
     _M int              m_numRecords;
     _M int              m_seasonalLengths[4];
+    _M int              m_highlightedInterval;
 
     _M bool             m_updatesEnabled: 1;
     _M bool             m_updatePending: 1;
@@ -71,6 +73,7 @@ class RResults: public QObject
     _M void             registerField(RUnit* unit, RResultsModel* model, int key);
     _M void             registerModel(RResultsModel* model) { m_models.insert(model); }
     _M void             resetBegin();
+    _M void             resetData();
     _M void             resetEnd();
     _M int*             seasonalLengths() { return m_seasonalLengths; }
     _M void             unregisterField(RUnit* unit, RResultsModel* model, int key);
@@ -81,6 +84,7 @@ class RResults: public QObject
     _M void             reset();
     _M void             setInterval(QDate date0, QDate date1);
     _M void             setInterval(RIntervalFun fun, int num);
+    _M void             setHighlightedInterval(int x);
     _M void             setUpdatesEnabled(bool enabled);
     _M void             update();
 
