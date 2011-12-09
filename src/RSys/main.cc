@@ -12,7 +12,6 @@ QSettings* g_settings = 0;
 
 int main(int argc, char** argv)
 {
-  qDebug() << sizeof(QList<int>);
   if (!qgetenv("R_TEST").isEmpty())
   {
     run_all_tests(argc, argv);

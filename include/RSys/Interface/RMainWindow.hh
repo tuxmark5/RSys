@@ -31,6 +31,7 @@ class RMainWindow: public QMainWindow
 
   private:
     _M RLoginWidget*        m_loginWidget;
+    _M RHelp*               m_help;
 
     _M RMainMenuBar*        m_menuBar;
     _M RMainToolBar*        m_toolBar;
@@ -59,10 +60,6 @@ class RMainWindow: public QMainWindow
     _M QAction*             m_rollbackAction;
     _M QAction*             m_searchAction;
     _M QAction*             m_systemsStateAction;
-
-    /*_M QAction*             m_showIntervalToolbarAction;
-    _M QAction*             m_showMainToolbarAction;
-    _M QAction*             m_showPaletteAction;*/
 
     _M RDatabase*           m_database;
     _M RData*               m_data0;

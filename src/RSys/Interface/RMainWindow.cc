@@ -18,6 +18,7 @@
 #include <RSys/Core/RSystem.hh>
 #include <RSys/Core/RUser.hh>
 
+#include <RSys/Interface/RHelp.hh>
 #include <RSys/Interface/RImportForm.hh>
 #include <RSys/Interface/RIntervalToolBar.hh>
 #include <RSys/Interface/RLogDock.hh>
@@ -66,16 +67,18 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   m_data0             = new RData();
   m_data1             = new RData();
   m_database          = new RDatabase(m_data1, this);
-  createContainers();
 
+  createContainers();
   createActions();
-  createConnections();
 
   m_logDock           = new RLogDock(this);
   m_paletteDock       = new RPaletteDock(this);
   m_menuBar           = new RMainMenuBar(this);
   m_toolBar           = new RMainToolBar(this);
   m_intervalToolBar   = new RIntervalToolBar(this);
+  m_help              = new RHelp(this);
+
+  createConnections();
 
   setMenuBar(m_menuBar);
   addToolBar(m_toolBar);
@@ -244,6 +247,7 @@ void RMainWindow :: createConnections()
   connect(m_commitAction, SIGNAL(triggered()), this, SLOT(commit()));
   connect(m_exitAction, SIGNAL(triggered()), this, SLOT(close()));
   connect(m_exterpolationAction, SIGNAL(triggered(bool)), this, SLOT(setExtrapolationEnabled(bool)));
+  connect(m_helpAction, SIGNAL(triggered()), m_help, SLOT(launch()));
   connect(m_importAction, SIGNAL(triggered()), this, SLOT(importData()));
   connect(m_rollbackAction, SIGNAL(triggered()), this, SLOT(rollback()));
   connect(m_searchAction, SIGNAL(toggled(bool)), this, SLOT(setShowSearchForm(bool)));
