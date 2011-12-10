@@ -17,17 +17,22 @@ class RCalculator: public QObject
   Q_OBJECT
 
   private:
-    _T RMeasure::UnitHash                 UnitHash;
-    _T RResults::IntervalFun              IntervalFun;
-    _T RMeasure::UsageMap                 UsageMap;
-    _T RUnit::UsageVector                 UsageVector;
+    _T RMeasure::UnitHash             UnitHash;
+    _T RResults::IntervalFun          IntervalFun;
+    _T RMeasure::UsageMap             UsageMap;
+    _T RUnit::UsageVector             UsageVector;
+    _T RValidList<RMeasure>           MeasurePtrList;
+    _T RValidList<RSubmission>        SubmissionPtrList;
+    _T RValidList<RDivision>          DivisionPtrList;
+    _T RValidList<RSystem>            SystemPtrList;
+    _T RValidList<RUnit>              UnitPtrList;
 
   private:
     _M RData*                         m_data;
-    _M RValidList<RMeasurePtrList>    m_measures;
-    _M RValidList<RDivisionPtrList>   m_divisions;
-    _M RValidList<RSystemPtrList>     m_systems;
-    _M RValidList<RSubmissionPtrList> m_submissions;
+    _M MeasurePtrList                 m_measures;
+    _M SubmissionPtrList              m_submissions;
+    _M DivisionPtrList                m_divisions;
+    _M SystemPtrList                  m_systems;
     _M IntervalFun                    m_intervalFun;
     _M int                            m_numIntervals;
     _M bool                           m_extrapolationEnabled: 1;
@@ -41,7 +46,7 @@ class RCalculator: public QObject
      * @param measures  priemonės
      */
     _M void             updateMeasures(RDivision* division, RMeasureHash& measures);
-    _M void             updateUsages(RSubmissionPtrList* submissions);
+    _M void             updateUsages();
     _M void             calculateIntervals();
     _M void             calculateIntervals(UnitHash& units, UsageVector& usage);
     _M double           calculateUsage(RInterval interval, UsageMap& usageMap);

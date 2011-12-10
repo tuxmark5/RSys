@@ -12,6 +12,7 @@
 #define FROM(x)       std::get<0>(x)
 #define TO(x)         std::get<1>(x)
 #define IS_LEAP(x)    (x).daysInYear() == 366
+#define MAGIC         2.718281828
 
 /********************************************* RS *********************************************/
 /*                                        RCalculator                                         */
@@ -19,11 +20,11 @@
 
 Vacuum RCalculator :: RCalculator(RData* data):
   m_data(data),
-  m_numIntervals(0),
   m_measures(data->measures(), data->measures1()),
   m_submissions(data->submissions(), data->submissions1()),
   m_divisions(data->divisions()),
   m_systems(data->systems()),
+  m_numIntervals(0),
   m_extrapolationEnabled(true)
 {
 }
@@ -43,13 +44,12 @@ void RCalculator :: update()
     (*it)->m_unitUsage.clear();
     (*it)->m_usageMap.clear();
   }
-  for (auto it = m_data->divisions()->begin(); it != m_data->divisions()->end(); it++)
+  for (auto it = m_divisions.begin(); it != m_divisions.end(); it++)
   {
-    updateMeasures(it->get(), (*it)->m_measureHash);
-    updateMeasures(it->get(), (*it)->m_measureHash1);
+    updateMeasures(*it, (*it)->m_measureHash);
+    updateMeasures(*it, (*it)->m_measureHash1);
   }
-  updateUsages(m_data->submissions());
-  updateUsages(m_data->submissions1());
+  updateUsages();
 
   calculateIntervals();
 }
@@ -70,11 +70,11 @@ void RCalculator :: updateMeasures(RDivision* division, RMeasureHash& measures)
 
 /**********************************************************************************************/
 
-void RCalculator :: updateUsages(RSubmissionPtrList* submissions)
+void RCalculator :: updateUsages()
 {
   QHash<RMeasure*, QMap<QDate, QDate> > measuresIntervalMap;
   // galėtų būti QHash – reikia QDate maišos funkcijos
-  for (auto it = submissions->begin(); it != submissions->end(); it++)
+  for (auto it = m_submissions.begin(); it != m_submissions.end(); it++)
   {
     if ((*it)->measure() != NULL)
     {
@@ -123,7 +123,7 @@ void RCalculator :: calculateIntervals()
     {
       intervals.push_back(m_intervalFun(i));
     }
-    for (auto it = m_data->measures()->begin(); it != m_data->measures()->end(); it++)
+    for (auto it = m_measures.begin(); it != m_measures.end(); it++)
     {
       (*it)->m_usage.clear();
       (*it)->m_usage.reserve(m_numIntervals);
@@ -483,7 +483,7 @@ RInterval RCalculator :: findLowUsageInterval(RUnit* unit, RInterval interval,
   }
 
   QHash<RMeasure*, double> measures;
-  for (auto it = m_data->measures()->begin(); it != m_data->measures()->end(); it++)
+  for (auto it = m_measures.begin(); it != m_measures.end(); it++)
   {
     double measureUsage = (*it)->m_unitUsage.value(unit, 0);
     if (measureUsage > 0)
@@ -511,7 +511,7 @@ RInterval RCalculator :: findLowUsageInterval(RUnit* unit, RInterval interval,
   }
 
   double currentUsage = 0;
-  double lowestUsage;
+  double lowestUsage = MAGIC;
   int currentFractions = 0;
   for (int from = 0, to = 0; to < intervalLength; to++)
   {
