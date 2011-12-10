@@ -5,6 +5,7 @@
 #include <RSys/Logic/RResults.hh>
 #include <RSys/Core/RUnit.hh>
 #include <RSys/Core/RMeasure.hh>
+#include <RSys/Logic/RValidList.hh>
 /**********************************************************************************************/
 #define MIN_USAGE 1e-4 // m_usage reikšmės, mažesnės už šią, paverčiamos nuliu
 /********************************************* RS *********************************************/
@@ -22,10 +23,14 @@ class RCalculator: public QObject
     _T RUnit::UsageVector                 UsageVector;
 
   private:
-    _M RData*           m_data;
-    _M IntervalFun      m_intervalFun;
-    _M int              m_numIntervals;
-    _M bool             m_extrapolationEnabled: 1;
+    _M RData*                         m_data;
+    _M RValidList<RMeasurePtrList>    m_measures;
+    _M RValidList<RDivisionPtrList>   m_divisions;
+    _M RValidList<RSystemPtrList>     m_systems;
+    _M RValidList<RSubmissionPtrList> m_submissions;
+    _M IntervalFun                    m_intervalFun;
+    _M int                            m_numIntervals;
+    _M bool                           m_extrapolationEnabled: 1;
 
   private:
     /**

@@ -156,6 +156,7 @@ HEADERS             +=                              \
   include/RSys/Interface/RUsageWidget.hh            \
   include/RSys/Logic/RCalculator.hh                 \
   include/RSys/Logic/RResults.hh                    \
+  include/RSys/Logic/RValidList.hh                  \
   include/RSys/Store/RDatabase.hh                   \
   include/RSys/Store/REntity.hh                     \
   include/RSys/Store/REntity1D.hh                   \

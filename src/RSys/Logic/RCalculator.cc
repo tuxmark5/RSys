@@ -20,6 +20,10 @@
 Vacuum RCalculator :: RCalculator(RData* data):
   m_data(data),
   m_numIntervals(0),
+  m_measures(data->measures(), data->measures1()),
+  m_submissions(data->submissions(), data->submissions1()),
+  m_divisions(data->divisions()),
+  m_systems(data->systems()),
   m_extrapolationEnabled(true)
 {
 }
@@ -34,7 +38,7 @@ Vacuum RCalculator :: ~RCalculator()
 
 void RCalculator :: update()
 {
-  for (auto it = m_data->measures()->begin(); it != m_data->measures()->end(); it++)
+  for (auto it = m_measures.begin(); it != m_measures.end(); it++)
   {
     (*it)->m_unitUsage.clear();
     (*it)->m_usageMap.clear();
