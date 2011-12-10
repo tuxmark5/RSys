@@ -22,6 +22,7 @@
 #define R_GUARD(x, r)   if (!(x)) return r
 #define R_NZ(x)         if (x) (x)
 #define R_S(x)          QString::fromUtf16((const ushort*) u##x)
+#define R_Z(x)          if (!(x)) x
 #define R_DATE_TO_S(d)  d.toString(Qt::DefaultLocaleShortDate)
 /**********************************************************************************************/
 #define Vacuum
@@ -38,6 +39,7 @@ class RUser;
 /**********************************************************************************************/
 // Interface
 class RAbstractItemModel;
+class RHelp;
 class RIntervalToolBar;
 class RLogDock;
 class RMainToolBar;
@@ -87,6 +89,7 @@ class QLayoutItem;
 class QLineEdit;
 class QMenu;
 class QModelIndex;
+class QProcess;
 class QPushButton;
 class QRadioButton;
 class QScrollArea;

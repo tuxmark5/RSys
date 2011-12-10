@@ -52,6 +52,7 @@ SOURCES             +=                              \
   src/RSys/Interface/RColumnObserverAdapter.cc      \
   src/RSys/Interface/RCoordinatePlane.cc            \
   src/RSys/Interface/RDivisionTab.cc                \
+  src/RSys/Interface/RHelp.cc                       \
   src/RSys/Interface/RImportForm.cc                 \
   src/RSys/Interface/RIntervalToolBar.cc            \
   src/RSys/Interface/RLayerWidget.cc                \
@@ -123,6 +124,7 @@ HEADERS             +=                              \
   include/RSys/Interface/RDivisionTab.hh            \
   include/RSys/Interface/RImportForm.hh             \
   include/RSys/Interface/RIntervalToolBar.hh        \
+  include/RSys/Interface/RHelp.hh                   \
   include/RSys/Interface/RLayerWidget.hh            \
   include/RSys/Interface/RLogDock.hh                \
   include/RSys/Interface/RLogFilterModel.hh         \

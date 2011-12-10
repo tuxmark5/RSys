@@ -22,7 +22,8 @@ class RTab: public QWidget
   public:
     _M Vacuum       RTab(const QString& title, QWidget* parent = 0);
     _V Vacuum       ~RTab();
-    _M void         makeTable1DTab(RContainer* container);
+    _M RTableView*  addSubmissionTable(RContainer* container);
+    _M RTableView*  makeTable1DTab(RContainer* container);
     _M RModel2D*    makeTable2DTab(RContainer* containerX, RContainer* containerY);
     _M void         makeTree1DTab(RContainer* container);
     _M void         setEditable(bool writable);

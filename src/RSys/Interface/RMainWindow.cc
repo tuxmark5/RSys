@@ -18,6 +18,7 @@
 #include <RSys/Core/RSystem.hh>
 #include <RSys/Core/RUser.hh>
 
+#include <RSys/Interface/RHelp.hh>
 #include <RSys/Interface/RImportForm.hh>
 #include <RSys/Interface/RIntervalToolBar.hh>
 #include <RSys/Interface/RLogDock.hh>
@@ -66,16 +67,18 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   m_data0             = new RData();
   m_data1             = new RData();
   m_database          = new RDatabase(m_data1, this);
-  createContainers();
 
+  createContainers();
   createActions();
-  createConnections();
 
   m_logDock           = new RLogDock(this);
   m_paletteDock       = new RPaletteDock(this);
   m_menuBar           = new RMainMenuBar(this);
   m_toolBar           = new RMainToolBar(this);
   m_intervalToolBar   = new RIntervalToolBar(this);
+  m_help              = new RHelp(this);
+
+  createConnections();
 
   setMenuBar(m_menuBar);
   addToolBar(m_toolBar);
@@ -87,14 +90,14 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   connect(m_intervalToolBar, SIGNAL(intervalChanged()), this, SLOT(setInterval()));
   connect(m_intervalToolBar, SIGNAL(message(QString,int,int)), this, SLOT(showMessage(QString,int,int)));
 
-  logout();
+  logout(false);
 }
 
 /**********************************************************************************************/
 
 Vacuum RMainWindow :: ~RMainWindow()
 {
-  logout();
+  logout(false);
   delete m_data0;
   delete m_data1;
 }
@@ -155,19 +158,12 @@ void RMainWindow :: addStatusWidget(QWidget* widget, QObject* owner)
 
 void RMainWindow :: closeEvent(QCloseEvent* event)
 {
-  int button = QMessageBox::question(this, R_S("Išeiti"), R_S("Ar tikrai norite išeiti?"),
-    QMessageBox::Ok | QMessageBox::Cancel);
+  R_GUARD(!m_loginWidget, event->accept());
 
-  switch (button)
-  {
-    case QMessageBox::Ok:
-      event->accept();
-      return;
-
-    case QMessageBox::Cancel:
-      event->ignore();
-      return;
-  }
+  if (showSaveDialog(R_S("Išeiti")))
+    event->accept();
+  else
+    event->ignore();
 }
 
 /**********************************************************************************************/
@@ -177,7 +173,8 @@ void RMainWindow :: commit()
   if (m_database->commit())
   {
     m_results->resetBegin();
-    *m_data0 = *m_data1;
+    *m_data0    = *m_data1;
+    m_data1->setModified(false);
     m_results->resetEnd();
     showMessage(R_S("Duomenys išsaugoti."), CommitSuccess, RINFO);
   }
@@ -244,6 +241,7 @@ void RMainWindow :: createConnections()
   connect(m_commitAction, SIGNAL(triggered()), this, SLOT(commit()));
   connect(m_exitAction, SIGNAL(triggered()), this, SLOT(close()));
   connect(m_exterpolationAction, SIGNAL(triggered(bool)), this, SLOT(setExtrapolationEnabled(bool)));
+  connect(m_helpAction, SIGNAL(triggered()), m_help, SLOT(launch()));
   connect(m_importAction, SIGNAL(triggered()), this, SLOT(importData()));
   connect(m_rollbackAction, SIGNAL(triggered()), this, SLOT(rollback()));
   connect(m_searchAction, SIGNAL(toggled(bool)), this, SLOT(setShowSearchForm(bool)));
@@ -310,7 +308,8 @@ void RMainWindow :: createContainers()
 
   auto cu1 = newContainer(m_data1->submissions1(), *cu);
   cu1->addAccessor2<QString>(0, Qt::DisplayRole, true)
-    >> &RSubmission::measureName << &RSubmission::setMeasure1Name;
+    >> &RSubmission::measureName << &RSubmission::setMeasure1NameE;
+  cu1->setAlloc([=]() { return new RSubmission(m_data1, true); });
 
   auto cs = newContainer(m_data1->systems());
   cs->addColumn("Pavadinimas");
@@ -489,8 +488,6 @@ void RMainWindow :: loginEnd(bool success)
 {
   if (success)
   {
-    m_data1->calculateIntervals();
-
     RUser* user = m_database->user();
 
     RSettings::loadUnitSettings(m_data1);
@@ -507,8 +504,9 @@ void RMainWindow :: loginEnd(bool success)
       m_divisionsStateAction->setChecked(true);
 
     m_loginWidget   = 0; // deleted by QMainWindow::setCentralWidget
+    m_data1->calculateIntervals();
+    m_data1->setModified(false);
     *m_data0        = *m_data1;
-
     m_intervalToolBar->applyInterval();
   }
   else
@@ -522,9 +520,12 @@ void RMainWindow :: loginEnd(bool success)
 
 /**********************************************************************************************/
 
-void RMainWindow :: logout()
+void RMainWindow :: logout(bool interactive)
 {
   R_GUARD(!m_loginWidget, Vacuum);
+
+  if (interactive && !showSaveDialog(R_S("Atsijungti")))
+    return;
 
   RSettings::saveUnitSettings(m_data1);
   m_data1->disconnectAll();
@@ -561,7 +562,8 @@ void RMainWindow :: rollback()
   if (m_database->rollback())
   {
     emit unitsChanged(0);
-    *m_data1 = *m_data0;
+    *m_data1    = *m_data0;
+    m_data1->setModified(false);
     emit unitsChanged(currentUnits());
     m_intervalToolBar->applyInterval();
     showMessage(R_S("Duomenys atstatyti."), RollbackSuccess, RINFO);
@@ -657,6 +659,29 @@ void RMainWindow :: showMessage(const QString& message, int id, int type)
   if (id != -1)
   {
     m_logDock->addMessage(message, id, type);
+  }
+}
+
+/**********************************************************************************************/
+
+bool RMainWindow :: showSaveDialog(const QString& title)
+{
+  R_GUARD(m_data1->isModified(), true);
+
+  int button = QMessageBox::question(this, title, R_S("Ar norite išsaugoti pakeitimus?"),
+    QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+
+  switch (button)
+  {
+    case QMessageBox::Save:
+      commit();
+      return true;
+
+    case QMessageBox::Discard:
+      return true;
+
+    case QMessageBox::Cancel:
+      return false;
   }
 }
 

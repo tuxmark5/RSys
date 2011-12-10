@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<QHelpCollectionProject version="1.0">
+  <assistant>
+    <title>RSys dokumentacija</title>
+    <startPage>qthelp://resoft.rsys.1.0/doc/html/index.html</startPage>
+    <applicationIcon>../res/logo.png</applicationIcon>
+    <cacheDirectory>ReSoft/RSys</cacheDirectory>
+    <enableAddressBar visible="true">true</enableAddressBar>
+    <enableDocumentationManager>false</enableDocumentationManager>
+    <enableFilterFunctionality>false</enableFilterFunctionality>
+    <aboutMenuText>
+      <text>Apie RSys</text>
+    </aboutMenuText>
+    <aboutDialog>
+      <file>about.txt</file>
+      <icon>../res/logo.png</icon>
+    </aboutDialog>
+  </assistant>
+  <docFiles>
+    <generate>
+      <file>
+        <input>RSys.qhp</input>
+        <output>RSys.qch</output>
+      </file>
+    </generate>
+    <register>
+      <file>RSys.qch</file>
+    </register>
+  </docFiles>
+</QHelpCollectionProject>

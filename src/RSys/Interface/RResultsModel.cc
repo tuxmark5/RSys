@@ -1,3 +1,4 @@
+#include <KDChart/KDChartGlobal.h>
 #include <QtCore/QDate>
 #include <RSys/Interface/RResultsModel.hh>
 #include <RSys/Logic/RResults.hh>
@@ -125,6 +126,13 @@ int RResultsModel :: insertField(int index, int type, RUnit* unit)
   {
     QVariant title = titleForField(type);
     addGetter(fieldKey, Qt::DisplayRole | 0xFF00, [title](int) -> QVariant { return title; });
+  }
+
+  if (type & Background)
+  {
+    addGetter(fieldKey, Qt::BackgroundRole,         m_results->field(RResults::Background, 0));
+    addGetter(fieldKey, KDChart::DatasetBrushRole,  m_results->field(RResults::Background, 0));
+    addGetter(fieldKey, KDChart::DatasetPenRole,    m_results->field(RResults::Background, 0));
   }
 
   if (m_orientation == Qt::Horizontal)
@@ -266,6 +274,23 @@ QString RResultsModel :: titleForField(int type)
     case UsageDP:   return "Skirt.%";
   }
   return QString();
+}
+
+/**********************************************************************************************/
+
+void RResultsModel :: updateAllData()
+{
+  QModelIndex   first   = createIndex(0, 0, 0);
+  QModelIndex   last;
+  int           right   = m_fields.size()         - 1;
+  int           bottom  = m_results->numRecords() - 1;
+
+  if (m_orientation == Qt::Horizontal)
+    last = createIndex(right, bottom, 0);
+  else
+    last = createIndex(bottom, right, 0);
+
+  emit dataChanged(first, last);
 }
 
 /**********************************************************************************************/

@@ -17,11 +17,8 @@ struct RPhantomMeasureDeleter
 
 class RSubmission: public RElement
 {
-  public:
-    _T RSharedPtr<RMeasure, RPhantomMeasureDeleter> MeasurePtr;
-
   protected:
-    _M MeasurePtr       m_measure;
+    _M RMeasurePtr      m_measure;
     _M QString          m_measureName;
     _M QDate            m_date0;
     _M QDate            m_date1;
@@ -47,7 +44,7 @@ class RSubmission: public RElement
     _M void             setMeasure(RMeasure* measure);
     _M void             setMeasureId(RID id);
     _M bool             setMeasureName(const QString& measureName);
-    _M void             setMeasure1Name(const QString& measureName);
+    _M void             setMeasure1NameE(const QString& measureName);
 
   public:
     _G(void,            countChange, RSubmission* submission, int newCount);

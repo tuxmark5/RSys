@@ -25,6 +25,7 @@ class RResultsModel: public RAbstractItemModel
       Hours       = 0x0010,
       Counts      = 0x0020,
       Identifier  = 0x0040,
+      Background  = 0x0080,
       Title       = 0x0000
     };
 
@@ -54,6 +55,7 @@ class RResultsModel: public RAbstractItemModel
     _V QVariant       headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     _V QModelIndex    index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
     _M int            insertField(int index, int type, RUnit* unit);
+    _M bool           isHorizontal() const { return m_orientation == Qt::Horizontal; }
     _S QString        longTitleForField(int type);
     _V QModelIndex    parent(const QModelIndex& index) const;
     _M void           removeDimension(int id, Qt::Orientation orientation, const Lambda& lambda);
@@ -62,6 +64,7 @@ class RResultsModel: public RAbstractItemModel
     _V int            rowCount(const QModelIndex& parent = QModelIndex()) const;
     _M void           setOrientation(Orientation orientation);
     _S QString        titleForField(int type);
+    _M void           updateAllData();
     _M void           updateField(int fieldId);
 };
 

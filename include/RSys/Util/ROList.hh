@@ -145,6 +145,7 @@ class ROList
     template <class List, class... Args>
     _M void clone(List& list, Args... args)
     {
+      notifySafe(&RIObserver::resetObservable0);
       for (auto it = list.begin(); it != list.end(); ++it)
         m_list.append(new typename std::remove_pointer<Value>::type(**it, args...));
       notifySafe(&RIObserver::resetObservable);

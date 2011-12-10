@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QtHelpProject version="1.0">
+  <namespace>resoft.rsys.1.0</namespace>
+  <virtualFolder>doc</virtualFolder>
+  <filterSection>
+    <toc>
+      <section title="RSys dokumentacija" ref="./html/index.html">
+        <section ref="./html/index.html#interfaces" title="Pagrindinės užduotys">
+          <section ref="./html/task-install.html" title="Sistemos instaliavimas"/>
+          <section ref="./html/task-login.html" title="Prisijungimas prie sistemos"/>
+          <section ref="./html/task-import.html" title="Duomenų importavimas"/>
+          <section ref="./html/task-usages.html" title="Apkrovų skaičiavimas ir prognozavimas"/>
+          <section ref="./html/task-interval-search.html" title="Mažiausiai apkrautų intervalų paieška"/>
+          <section ref="./html/task-user-adm.html" title="Naudotojų administravimas"/>
+          <section ref="./html/task-db-setup.html" title="Duomenų bazės paruošimas"/>
+        </section>
+
+        <section ref="./html/index.html#ifaces" title="Sąsajos">
+          <section ref="./html/iface-base.html" title="Bazinė"/>
+
+          <section ref="./html/index.html#ifaces-input" title="Duomenų įvedimo ir importavimo">
+            <section ref="./html/iface-import.html" title="Duomenų importavimo"/>
+            <section ref="./html/iface-measure.html" title="Paramos priemonių"/>
+            <section ref="./html/iface-division.html" title="Padalinių"/>
+            <section ref="./html/iface-system.html" title="Informacinių sistemų"/>
+            <section ref="./html/iface-measure-adm.html" title="Paramos priemonių administravimo"/>
+            <section ref="./html/iface-system-adm.html" title="Informacinių sistemų administravimo"/>
+            <section ref="./html/iface-submission.html" title="Istorinių duomenų"/>
+            <section ref="./html/iface-planned.html" title="Planuojamų kiekių"/>
+          </section>
+
+          <section ref="./html/index.html#ifaces-results" title="Rezultatų">
+            <section ref="./html/iface-usages.html" title="Apkrovų ir prognozių"/>
+            <section ref="./html/iface-summary.html" title="Apžvalgos"/>
+          </section>
+
+          <section ref="./html/index.html#ifaces-bars" title="Įrankių juostos ir meniu">
+            <section ref="./html/menu-main.html" title="Pagrindinis meniu"/>
+            <section ref="./html/bar-main.html" title="Pagrindinė įrankių juosta"/>
+            <section ref="./html/bar-interval.html" title="Intervalo pasirinkimo įrankių juosta"/>
+          </section>
+
+          <section ref="./html/index.html#ifaces-extra" title="Papildimos">
+            <section ref="./html/iface-login.html" title="Prisijungimo"/>
+            <section ref="./html/iface-interval-search.html" title="Mažiausios apkrovos intervalo paieškos"/>
+            <section ref="./html/iface-log.html" title="Pranešimų žurnalas"/>
+            <section ref="./html/iface-palette.html" title="Rėžimo pasirinkimo"/>
+            <section ref="./html/iface-user-adm.html" title="Naudotojų administravimo"/>
+          </section>
+        </section>
+      </section>
+    </toc>
+
+    <keywords>
+      <keyword name="foo" id="MyApplication::foo" ref="doc.html#foo"/>
+      <keyword name="bar" ref="doc.html#bar"/>
+      <keyword id="MyApplication::foobar" ref="doc.html#foobar"/>
+    </keywords>
+    
+    <files>
+      <file>css/classic.css</file>
+      <file>html/*.html</file>
+    </files>
+  </filterSection>
+</QtHelpProject>

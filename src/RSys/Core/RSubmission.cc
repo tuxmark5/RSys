@@ -55,6 +55,12 @@ RID RSubmission :: measureId() const
 void RSubmission :: remove()
 {
   (*m_data)[submissionRemoval](this);
+  m_data->modify();
+
+  if (m_planned && m_measure && m_measure->numRefs() == 2)
+  {
+    m_data->measures1()->removeOne(m_measure);
+  }
 }
 
 /**********************************************************************************************/
@@ -62,8 +68,11 @@ void RSubmission :: remove()
 bool RSubmission :: setCount(int count)
 {
   R_DATA_GUARD(count >= 0, false, "Kiekis negali būti neigiamas skaičius.");
+
   (*m_data)[countChange](this, count);
   m_count = count;
+
+  m_data->modify();
   return true;
 }
 
@@ -78,6 +87,8 @@ bool RSubmission :: setDate0(const QDate& date0)
   QDate oldDate0  = m_date0;
   m_date0         = date0;
   (*m_data)[date0Changed](this, oldDate0);
+  m_data->modify();
+
   return true;
 }
 
@@ -92,6 +103,8 @@ bool RSubmission :: setDate1(const QDate& date1)
   QDate oldDate1  = m_date1;
   m_date1         = date1;
   (*m_data)[date1Changed](this, oldDate1);
+
+  m_data->modify();
   return true;
 }
 
@@ -103,6 +116,7 @@ void RSubmission :: setMeasure(RMeasure* measure)
   m_measure       = measure;
   m_measureName   = measure ? measure->identifier() : QString();
   m_null          = bool(measure);
+  m_data->modify();
 }
 
 /**********************************************************************************************/
@@ -125,12 +139,14 @@ bool RSubmission :: setMeasureName(const QString& measureName)
   (*m_data)[measureChange](this, measure1.get());
   m_measure       = measure1;
   m_null          = false;
+
+  m_data->modify();
   return true;
 }
 
 /**********************************************************************************************/
 
-void RSubmission :: setMeasure1Name(const QString& measureName)
+void RSubmission :: setMeasure1NameE(const QString& measureName)
 {
   RMeasurePtr measure1;
 

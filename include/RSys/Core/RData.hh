@@ -36,13 +36,14 @@ class RData: public QObject, public RSignal
     _M RUnitMultiHash         m_unitHash[3];
     _M RDivisionPtrList       m_divisions;
     _M RMeasurePtrList        m_measures;
-    _M RMeasureList           m_measures1;      // planned measures / phantom
+    _M RMeasurePtrList        m_measures1;      // planned measures / phantom
     _M RSubmissionPtrList     m_submissions;
     _M RSubmissionPtrList     m_submissions1;   // planned submissions
     _M RSystemPtrList         m_systems;
     _M RUserPtrList           m_users;
     _M QDate                  m_interval0;
     _M QDate                  m_interval1;
+    _M bool                   m_modified: 1;
     _M bool                   m_purgeEnabled: 1;
 
   public:
@@ -56,14 +57,17 @@ class RData: public QObject, public RSignal
     _M void                   enableIntervalTracking();
     _M QDate                  interval0() const { return m_interval0; }
     _M QDate                  interval1() const { return m_interval1; }
+    _M bool                   isModified() const { return m_modified; }
     _M RMeasure*              measure(RID id) const;
     _M RMeasure*              measure(const QString& identifier) const;
     _M RMeasurePtrList*       measures()      { return &m_measures; }
-    _M RMeasureList*          measures1()     { return &m_measures1; }
+    _M RMeasurePtrList*       measures1()     { return &m_measures1; }
+    _M void                   modify()        { m_modified = true; }
     _M void                   operator = (RData& data);
     _M void                   purgeDivision(RDivision* division);
     _M void                   purgeMeasure(RMeasure* measure);
     _M void                   purgeSystem(RSystem* system);
+    _M void                   setModified(bool modified);
     _M RSubmissionPtrList*    submissions()   { return &m_submissions; }
     _M RSubmissionPtrList*    submissions1()  { return &m_submissions1; }
     _M RSystem*               system(RID id) const;
@@ -77,6 +81,7 @@ class RData: public QObject, public RSignal
     _M void                   calculateIntervals(RSubmissionPtrList* submissions);
     _M void                   onDate0Change(RSubmission* submission, QDate oldDate0);
     _M void                   onDate1Change(RSubmission* submission, QDate oldDate1);
+    _M void                   onSubmissionRemoval(RSubmission* submission);
 
   signals:
     _M void                   elementChanged(RElement* element, int changeType);

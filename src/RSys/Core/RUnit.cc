@@ -67,6 +67,7 @@ bool RUnit :: setIdentifier(const QString& identifier)
   m_data->m_unitHash[m_type].insert(m_identifier, this);
   emit m_data->elementChanged(this, RData::TitleOrName);
 
+  m_data->modify();
   return true;
 }
 
@@ -77,8 +78,11 @@ bool RUnit :: setName(const QString& name)
   QString name1 = name.trimmed();
   R_DATA_GUARD(!name1.isEmpty(), false,
     "Elemento pavadinimas negali būti tuščia eilutė.");
+
   m_name = name1;
   emit m_data->elementChanged(this, RData::TitleOrName);
+
+  m_data->modify();
   return true;
 }
 

@@ -1,3 +1,4 @@
+#include <QtGui/QColor>
 #include <RSys/Core/RUnit.hh>
 #include <RSys/Interface/RResultsModel.hh>
 #include <RSys/Logic/RCalculator.hh>
@@ -13,6 +14,7 @@ Vacuum RResults :: RResults(RData* data0, RData* data1, QObject* parent):
   m_data0(data0),
   m_data1(data1),
   m_numRecords(0),
+  m_highlightedInterval(-1),
   m_updatesEnabled(true),
   m_updatePending(false)
 {
@@ -41,6 +43,13 @@ auto RResults :: field(int type, RUnit* unit) -> Getter
 {
   switch (type)
   {
+    case Background: return [this](int x) -> QVariant
+    {
+      if (std::get<0>(interval(x)).month() == m_highlightedInterval)
+        return QColor(0x00, 0x00, 0x80, 0x40);
+      return QVariant();
+    };
+
     case Date: return [this](int x) -> QVariant
     {
       return std::get<0>(this->m_intervalFun(x));
@@ -60,7 +69,7 @@ auto RResults :: field(int type, RUnit* unit) -> Getter
     {
       if (RUnit* buddy = unit->buddy())
         return buddy->usageAt(x).first;
-      return 0.0;
+      return 5.0;
     };
 
     case Usage0 | Counts: return [this, unit](int x) -> QVariant
@@ -150,19 +159,7 @@ double RResults :: fieldDeltaUsageCount(RUnit* unit, int x)
 
 RInterval RResults :: findLowUsageInterval(RUnit* unit)
 {
-  // HARDCODED STUFF FOR TESTING
-  if (m_interval0 == QDate(2012, 01, 01) && m_interval1 == QDate(2012, 06, 01))
-  {
-    if (m_seasonalLengths[0] > 0)
-    {
-      uint  mod   = qHash(unit->identifier()) % 20;
-      QDate base  = QDate(2012, 02, 01).addDays(mod);
-
-      return RInterval(base, base.addDays(m_seasonalLengths[0]));
-    }
-  }
-
-  return RInterval(QDate(2011, 02, 01), QDate(2011, 03, 01));
+  return m_calculator1->findLowUsageInterval(unit, RInterval(m_interval0, m_interval1), m_seasonalLengths);
 }
 
 /**********************************************************************************************/
@@ -208,10 +205,28 @@ void RResults :: resetBegin()
 
 /**********************************************************************************************/
 
+void RResults :: resetData()
+{
+  for (auto it = m_models.begin(); it != m_models.end(); ++it)
+    emit (*it)->updateAllData();
+}
+
+/**********************************************************************************************/
+
 void RResults :: resetEnd()
 {
   for (auto it = m_models.begin(); it != m_models.end(); ++it)
     emit (*it)->endResetModel();
+}
+
+/**********************************************************************************************/
+
+void RResults :: setHighlightedInterval(int x)
+{
+  R_GUARD(x != m_highlightedInterval, Vacuum);
+
+  m_highlightedInterval = std::get<0>(interval(x)).month();
+  resetData();
 }
 
 /**********************************************************************************************/
@@ -257,9 +272,8 @@ void RResults :: update()
 {
   m_calculator1->update();
   m_calculator1->setIntervalFun(m_intervalFun, m_numRecords);
+  resetData();
 
-  for (auto it = m_models.begin(); it != m_models.end(); ++it)
-    emit (*it)->reset();
   m_updatePending = false;
 }
 

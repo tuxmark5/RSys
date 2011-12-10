@@ -25,6 +25,13 @@ Source: "libintl-8.dll";  DestDir: "{app}"
 Source: "libpq.dll";      DestDir: "{app}"
 Source: "ssleay32.dll";   DestDir: "{app}"
 
+Source: "assistant.exe";  DestDir: "{app}"
+Source: "QtCLucene4.dll"; DestDir: "{app}"
+Source: "QtHelp4.dll";    DestDir: "{app}"
+Source: "QtNetwork4.dll"; DestDir: "{app}"
+Source: "QtWebKit4.dll";  DestDir: "{app}"
+Source: "RDoc.qhc";       DestDir: "{app}"
+Source: "RSys.qch";       DestDir: "{app}"
 
 Source: "plugins\sqldrivers\qsqlite4.dll";  DestDir: "{app}\plugins\sqldrivers"
 Source: "plugins\sqldrivers\qsqlpsql4.dll"; DestDir: "{app}\plugins\sqldrivers"

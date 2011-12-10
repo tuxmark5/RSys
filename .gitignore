@@ -1,6 +1,8 @@
 .defects.csv
 .defects.pickle
 deps/*
+doc/*.qch
+doc/*.qhc
 dist/*
 lib/External/*
 *.user
