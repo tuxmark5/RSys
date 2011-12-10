@@ -14,10 +14,13 @@ class RMeasure: public RUnit
     _F class RData;
 
   private:
-    _M RID              m_groupId;
+    _T QMap<QDate, double>         UsageMap;
+    _T QHash<RUnit*, double>       UnitHash;
 
-    _M RDivisionHash    m_divisionUsage;
-    _M RSystemHash      m_systemUsage;
+  private:
+    _M RID              m_groupId;
+    _M UnitHash         m_unitUsage;
+    _M UsageMap         m_usageMap;       // paraiškų per dieną pradedant nuo datos
 
   public:
     _M Vacuum           RMeasure(RData* data);

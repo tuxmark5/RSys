@@ -4,6 +4,7 @@
 /**********************************************************************************************/
 #include <RSys/Logic/RResults.hh>
 #include <RSys/Core/RUnit.hh>
+#include <RSys/Core/RMeasure.hh>
 /**********************************************************************************************/
 #define MIN_USAGE 1e-4 // m_usage reikšmės, mažesnės už šią, paverčiamos nuliu
 /********************************************* RS *********************************************/
@@ -15,9 +16,9 @@ class RCalculator: public QObject
   Q_OBJECT
 
   private:
-    _T QHash<RUnit*, double>              UnitHash;
+    _T RMeasure::UnitHash                 UnitHash;
     _T RResults::IntervalFun              IntervalFun;
-    _T RUnit::UsageMap                    UsageMap;
+    _T RMeasure::UsageMap                 UsageMap;
     _T RUnit::UsageVector                 UsageVector;
 
   private:
@@ -35,13 +36,9 @@ class RCalculator: public QObject
      * @param measures  priemonės
      */
     _M void             updateMeasures(RDivision* division, RMeasureHash& measures);
-    _M void             updateUsageChanges(RSubmissionPtrList* submissions);
-    // TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
-    // _M void             updateUsageChanges(UnitHash* units, RSubmission* submission);
-    _M void             updateUsages(RUnitPtrList* units);
-    _M void             updateUsages(UsageMap& usageMap, UsageMap& usageChangeMap);
+    _M void             updateUsages(RSubmissionPtrList* submissions);
     _M void             calculateIntervals();
-    _M void             calculateIntervals(UnitHash* units, UsageVector& usage);
+    _M void             calculateIntervals(UnitHash& units, UsageVector& usage);
     _M double           calculateUsage(RInterval interval, UsageMap& usageMap);
     _M double           predictUsage(RInterval interval, UsageMap& usageMap);
     _M double           daysUsage(QDate day, UsageMap& usageMap);

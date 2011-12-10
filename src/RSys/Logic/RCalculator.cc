@@ -34,39 +34,18 @@ Vacuum RCalculator :: ~RCalculator()
 
 void RCalculator :: update()
 {
-  /* TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
-  for (auto it = m_data->systems()->begin(); it != m_data->systems()->end(); it++)
-  {
-    (*it)->m_usageHrsMap.clear();
-    (*it)->m_usageHrsChangeMap.clear();
-    (*it)->m_usageCntMap.clear();
-    (*it)->m_usageCntChangeMap.clear();
-  }
-  */
   for (auto it = m_data->measures()->begin(); it != m_data->measures()->end(); it++)
   {
-    (*it)->m_systemUsage.clear();
-    (*it)->m_divisionUsage.clear();
-    (*it)->m_usageCntMap.clear();
-    (*it)->m_usageCntChangeMap.clear();
+    (*it)->m_unitUsage.clear();
+    (*it)->m_usageMap.clear();
   }
   for (auto it = m_data->divisions()->begin(); it != m_data->divisions()->end(); it++)
   {
-    /* TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
-    (*it)->m_usageHrsMap.clear();
-    (*it)->m_usageHrsChangeMap.clear();
-    (*it)->m_usageCntMap.clear();
-    (*it)->m_usageCntChangeMap.clear();
-    */
     updateMeasures(it->get(), (*it)->m_measureHash);
     updateMeasures(it->get(), (*it)->m_measureHash1);
   }
-  updateUsageChanges(m_data->submissions());
-  updateUsageChanges(m_data->submissions1());
-  // TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
-  // updateUsages((RUnitPtrList*) m_data->divisions());
-  // updateUsages((RUnitPtrList*) m_data->systems());
-  updateUsages((RUnitPtrList*) m_data->measures());
+  updateUsages(m_data->submissions());
+  updateUsages(m_data->submissions1());
 
   calculateIntervals();
 }
@@ -77,72 +56,44 @@ void RCalculator :: updateMeasures(RDivision* division, RMeasureHash& measures)
 {
   for (auto measIt = measures.begin(); measIt != measures.end(); measIt++)
   {
-    measIt.key()->m_divisionUsage.insert(division, measIt.value());
+    measIt.key()->m_unitUsage.insert(division, measIt.value());
     for (auto sysIt = division->m_systemHash.begin(); sysIt != division->m_systemHash.end(); sysIt++)
     {
-      measIt.key()->m_systemUsage[sysIt.key()] += sysIt.value() * measIt.value();
+      measIt.key()->m_unitUsage[sysIt.key()] += sysIt.value() * measIt.value();
     }
   }
 }
 
 /**********************************************************************************************/
 
-void RCalculator :: updateUsageChanges(RSubmissionPtrList* submissions)
+void RCalculator :: updateUsages(RSubmissionPtrList* submissions)
 {
+  QHash<RMeasure*, QMap<QDate, QDate> > measuresIntervalMap;
+  // galėtų būti QHash – reikia QDate maišos funkcijos
   for (auto it = submissions->begin(); it != submissions->end(); it++)
   {
     if ((*it)->measure() != NULL)
     {
-      // TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
-      // updateUsageChanges((UnitHash*) &(*it)->measure()->m_divisionUsage, it->get());
-      // updateUsageChanges((UnitHash*) &(*it)->measure()->m_systemUsage, it->get());
-      double usage = (double)(*it)->count()
-                     / ((*it)->date0().daysTo((*it)->date1()) + 1);
-      (*it)->measure()->m_usageCntChangeMap[(*it)->date0()] += usage;
-      (*it)->measure()->m_usageCntChangeMap[(*it)->date1().addDays(1)] -= usage;
+      QDate from = (*it)->date0();
+      QDate to   = (*it)->date1().addDays(1);
+      QMap<QDate, QDate>& intervalMap = measuresIntervalMap[(*it)->measure()];
+      auto mapIt = intervalMap.find(from);
+      if (mapIt == intervalMap.end())
+      {
+        intervalMap.insert(from, to);
+      } else if (to < mapIt.value())
+      {
+        mapIt.value() = to;
+      } else {
+        continue;
+      }
+      double usage = (double)(*it)->count() / from.daysTo(to);
+      (*it)->measure()->m_usageMap.insert(from, usage);
+      if (intervalMap.find(to) == intervalMap.end())
+      {
+        (*it)->measure()->m_usageMap.insert(to, 0);
+      }
     }
-  }
-}
-
-/**********************************************************************************************/
-
-/* TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
-void RCalculator :: updateUsageChanges(UnitHash* units, RSubmission* submission)
-{
-  for (auto it = units->begin(); it != units->end(); it++)
-  {
-    double usage = (double)submission->count()
-                   / (submission->date0().daysTo(submission->date1()) + 1);
-    it.key()->m_usageCntChangeMap[submission->date0()] += usage;
-    it.key()->m_usageCntChangeMap[submission->date1().addDays(1)] -= usage;
-    usage *= it.value();
-    it.key()->m_usageHrsChangeMap[submission->date0()] += usage;
-    it.key()->m_usageHrsChangeMap[submission->date1().addDays(1)] -= usage;
-  }
-}
-*/
-
-/**********************************************************************************************/
-
-void RCalculator :: updateUsages(RUnitPtrList* units)
-{
-  for (auto it = units->begin(); it != units->end(); it++)
-  {
-    // TODO: Galbūt prireiks mažiausiai apkrauto intervalo paieškai:
-    // updateUsages((*it)->m_usageHrsMap, (*it)->m_usageHrsChangeMap);
-    updateUsages((*it)->m_usageCntMap, (*it)->m_usageCntChangeMap);
-  }
-}
-
-/**********************************************************************************************/
-
-void RCalculator :: updateUsages(UsageMap& usageMap, UsageMap& usageChangeMap)
-{
-  double usage = 0;
-  for (auto it = usageChangeMap.begin(); it != usageChangeMap.end(); it++)
-  {
-    usage += it.value();
-    usageMap.insert(it.key(), usage);
   }
 }
 
@@ -177,22 +128,21 @@ void RCalculator :: calculateIntervals()
         double usage;
         if (TO(intervals[i]).daysTo(m_data->interval1()) > -1)
         { // intervalas istorijoje
-          usage = calculateUsage(intervals[i], (*it)->m_usageCntMap);
+          usage = calculateUsage(intervals[i], (*it)->m_usageMap);
         } else if (FROM(intervals[i]).daysTo(m_data->interval1()) < 0)
         { // prognozė
-          usage = predictUsage(intervals[i], (*it)->m_usageCntMap);
+          usage = predictUsage(intervals[i], (*it)->m_usageMap);
         } else { // ir istorija, ir prognozė
           RInterval interval = intervals[i];
           TO(interval) = m_data->interval1().addDays(1);
-          usage = calculateUsage(interval, (*it)->m_usageCntMap);
+          usage = calculateUsage(interval, (*it)->m_usageMap);
           FROM(interval) = TO(interval);
           TO(interval) = TO(intervals[i]);
-          usage += predictUsage(interval, (*it)->m_usageCntMap);
+          usage += predictUsage(interval, (*it)->m_usageMap);
         }
         (*it)->m_usage.push_back(qMakePair(0.0, usage));
       }
-      calculateIntervals((UnitHash*)&(*it)->m_divisionUsage, (*it)->m_usage);
-      calculateIntervals((UnitHash*)&(*it)->m_systemUsage, (*it)->m_usage);
+      calculateIntervals((*it)->m_unitUsage, (*it)->m_usage);
     }
   }
 }
@@ -210,9 +160,9 @@ void RCalculator :: zeroUsages(RUnitPtrList* units)
 
 /**********************************************************************************************/
 
-void RCalculator :: calculateIntervals(UnitHash* units, UsageVector& usage)
+void RCalculator :: calculateIntervals(UnitHash& units, UsageVector& usage)
 {
-  for (auto it = units->begin(); it != units->end(); it++)
+  for (auto it = units.begin(); it != units.end(); it++)
   {
     for (int i = 0; i < m_numIntervals; i++)
     {
@@ -272,8 +222,7 @@ double RCalculator :: calculateUsage(RInterval interval, UsageMap& usageMap)
 double RCalculator :: predictUsage(RInterval interval, UsageMap& usageMap)
 {
   QDate newestData = m_data->interval1();
-  if (newestData.isNull())
-    return 0;
+  if (newestData.isNull()) return 0;
   bool feb29 = FROM(interval).month() == 2 && FROM(interval).month() == 29;
   int distance = 0;
   if (FROM(interval).month() > newestData.month()
@@ -529,6 +478,16 @@ RInterval RCalculator :: findLowUsageInterval(RUnit* unit, RInterval interval,
     }
   }
 
+  QHash<RMeasure*, double> measures;
+  for (auto it = m_data->measures()->begin(); it != m_data->measures()->end(); it++)
+  {
+    double measureUsage = (*it)->m_unitUsage.value(unit, 0);
+    if (measureUsage > 0)
+    {
+      measures.insert(*it, measureUsage);
+    }
+  }
+
   int intervalLength = FROM(interval).daysTo(TO(interval)) + 1;
   QVector<double> usage;
   QVector<int> fraction;
@@ -537,7 +496,12 @@ RInterval RCalculator :: findLowUsageInterval(RUnit* unit, RInterval interval,
   QDate day = FROM(interval);
   for (int i = 0; i < intervalLength; i++)
   {
-    usage.push_back(daysUsage(day, unit->m_usageHrsMap));
+    double curUsage = 0;
+    for (auto it = measures.begin(); it != measures.end(); it++)
+    {
+      curUsage += it.value() * daysUsage(day, it.key()->m_usageMap);
+    }
+    usage.push_back(curUsage);
     fraction.push_back(fractionsBySeasons[seasonOf(day)]);
     day = day.addDays(1);
   }

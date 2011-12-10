@@ -170,7 +170,7 @@ void RData :: purgeDivision(RDivision* division)
   R_GUARD(m_purgeEnabled, Vacuum);
 
   for (auto it = m_measures.begin(); it != m_measures.end(); ++it)
-    (*it)->m_divisionUsage.remove(division);
+    (*it)->m_unitUsage.remove(division);
 }
 
 /**********************************************************************************************/
@@ -197,7 +197,7 @@ void RData :: purgeSystem(RSystem* system)
   for (auto it = m_divisions.begin(); it != m_divisions.end(); ++it)
     (*it)->setSystem(system, 0);
   for (auto it = m_measures.begin(); it != m_measures.end(); ++it)
-    (*it)->m_systemUsage.remove(system);
+    (*it)->m_unitUsage.remove(system);
 }
 
 /**********************************************************************************************/

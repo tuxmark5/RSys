@@ -23,10 +23,6 @@ Vacuum RUnit :: RUnit(RUnit& unit, RData* data):
   m_identifier        (unit.m_identifier),
   m_name              (unit.m_name),
   m_usage             (unit.m_usage),
-  m_usageCntChangeMap (unit.m_usageCntChangeMap),
-  m_usageCntMap       (unit.m_usageCntMap),
-  m_usageHrsChangeMap (unit.m_usageHrsChangeMap),
-  m_usageHrsMap       (unit.m_usageHrsMap),
   m_viewMode          (unit.m_viewMode),
   m_visible           (unit.m_visible)
 {
