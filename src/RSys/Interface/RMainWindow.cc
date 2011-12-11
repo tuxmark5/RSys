@@ -151,6 +151,7 @@ void RMainWindow :: addStatusWidget(QWidget* widget, QObject* owner)
         message->onCloseClicked();
   }
 
+  widget->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
   layout->insertWidget(0, widget);
 }
 

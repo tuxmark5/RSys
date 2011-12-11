@@ -20,6 +20,7 @@ Vacuum RStatusWidget :: RStatusWidget(QWidget* inner, QWidget* parent):
 
   setFrameStyle(QFrame::Box | QFrame::Plain);
   setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+  //setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
 
   layout->setMargin(0);
 

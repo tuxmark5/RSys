@@ -11,6 +11,8 @@ Vacuum RMessage :: RMessage(const QString& message, int timeout, QWidget* parent
 {
   QLabel* label = new QLabel(message);
 
+  label->setContentsMargins(0, -8, 0, -8);
+  label->setWordWrap(true);
   setBackgroundColor(Qt::yellow);
   setWidget(label);
   startTimer(timeout);
