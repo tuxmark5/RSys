@@ -16,6 +16,7 @@ class RSearchForm: public QWidget
     _F class RMainWindow;
 
   private:
+    _M RResults*        m_results;
     _M QStackedLayout*  m_seasonLayout;
     _M QRadioButton*    m_seasonalRelevanceButton;
     _M QSpinBox*        m_defaultBox;
@@ -26,15 +27,19 @@ class RSearchForm: public QWidget
     _M QPushButton*     m_searchButton;
 
   public:
-    _M Vacuum           RSearchForm(QWidget* parent = 0);
+    _M Vacuum           RSearchForm(RResults* results, QWidget* parent = 0);
     _V Vacuum           ~RSearchForm();
     _M void             getSeasonalLengths(int* lengths);
 
   public slots:
     _M void             setSeasonRelevance(bool relevant);
 
+  private slots:
+    _M void             onFindPressed();
+
   signals:
     _M void             findIntervalPressed();
+    _M void             message(QString message, int id = -1, int type = -1);
 };
 
 /**********************************************************************************************/

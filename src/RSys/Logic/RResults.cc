@@ -164,16 +164,6 @@ RInterval RResults :: findLowUsageInterval(RUnit* unit)
 
 /**********************************************************************************************/
 
-auto RResults :: intervalFun() -> IntervalFun
-{
-  return [m_interval0](int x) -> Interval
-  {
-    return Interval(m_interval0.addMonths(x), m_interval0.addMonths(x + 1));
-  };
-}
-
-/**********************************************************************************************/
-
 QString RResults :: intervalStr(int x)
 {
   RInterval interval = m_intervalFun(x);

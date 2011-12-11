@@ -182,7 +182,7 @@ void RUsageWidget :: setMode(int mode)
       break;
   }
 
-  connect(widget(), SIGNAL(clicked(QModelIndex)), this, SLOT(onViewClicked(QModelIndex)), Qt::UniqueConnection);
+  connect(widget(), SIGNAL(pressed(QModelIndex)), this, SLOT(onViewClicked(QModelIndex)), Qt::UniqueConnection);
 
   if ((mode & ViewMask) == Table)
   {
@@ -207,7 +207,7 @@ void RUsageWidget :: setSearchInterval(bool search)
     m_lowInterval = RInterval();
 
   if (RChart* chart = qobject_cast<RChart*>(widget()))
-    chart->setFillRange(0, std::get<0>(m_lowInterval), std::get<1>(m_lowInterval));
+    chart->setFillRange(0, std::get<0>(m_lowInterval), std::get<1>(m_lowInterval).addDays(search));
 
   updateHeader();
 }

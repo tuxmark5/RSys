@@ -167,7 +167,8 @@ enum RMessageType
   InvalidSubmissionDiscarded,
   UnableToLocateSubmissionsHeaderRow,
   IntegerParseError,
-  SubmissionsParsed
+  SubmissionsParsed,
+  InvalidSearchInterval
 };
 
 /**********************************************************************************************/

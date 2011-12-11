@@ -68,7 +68,8 @@ class RResults: public QObject
     _M Getter           field(int type, RUnit* unit);
     _M RInterval        findLowUsageInterval(RUnit* unit);
     _M RInterval        interval(int x) const { return m_intervalFun(x); }
-    _M IntervalFun      intervalFun();
+    _M QDate            interval0() const { return m_interval0; }
+    _M QDate            interval1() const { return m_interval1; }
     _M int              numRecords() const { return m_numRecords; }
     _M void             registerField(RUnit* unit, RResultsModel* model, int key);
     _M void             registerModel(RResultsModel* model) { m_models.insert(model); }

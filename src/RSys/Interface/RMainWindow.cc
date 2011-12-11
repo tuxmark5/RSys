@@ -627,7 +627,7 @@ void RMainWindow :: setShowSearchForm(bool show)
   {
     RStatusWidget* statusWidget;
 
-    m_searchForm = new RSearchForm(this);
+    m_searchForm = new RSearchForm(m_results, this);
 
     addStatusWidget(statusWidget = new RStatusWidget(m_searchForm));
     // handle untoggle
@@ -635,6 +635,8 @@ void RMainWindow :: setShowSearchForm(bool show)
     // handle RStatusWidget's "X" button
     connect(m_searchForm, SIGNAL(destroyed()), this, SLOT(onSearchFormDestroyed()));
     connect(m_searchForm, SIGNAL(findIntervalPressed()), this, SLOT(findIntervalNow()));
+    // messages
+    connect(m_searchForm, SIGNAL(message(QString,int,int)), this, SLOT(showMessage(QString,int,int)));
   }
   else
   {

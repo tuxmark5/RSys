@@ -129,6 +129,7 @@ void RChart :: setType(ChartType type)
     m_legend->addDiagram(diagram);
   setDiagram(diagram);
   connect(diagram, SIGNAL(clicked(QModelIndex)), this, SIGNAL(clicked(QModelIndex)));
+  connect(diagram, SIGNAL(pressed(QModelIndex)), this, SIGNAL(pressed(QModelIndex)));
 }
 
 /**********************************************************************************************/

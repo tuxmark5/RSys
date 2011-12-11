@@ -65,6 +65,7 @@ class RChart: public KDChart::Chart
 
   signals:
     _M void             clicked(QModelIndex index);
+    _M void             pressed(QModelIndex index);
 };
 
 /**********************************************************************************************/

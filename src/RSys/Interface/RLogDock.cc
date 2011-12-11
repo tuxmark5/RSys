@@ -12,7 +12,7 @@
 #include <RSys/Interface/RTableView.hh>
 
 /**********************************************************************************************/
-QRegExp g_htmlTagRegExp("\\</?\\w+\\>");
+QRegExp g_htmlTagRegExp("\\</?\\w+\\/?>");
 /********************************************* RS *********************************************/
 /*                                          RLogDock                                          */
 /**********************************************************************************************/
@@ -90,6 +90,7 @@ void RLogDock :: addMessage(const QString& message, int id, int level)
   QString         timeStamp = QDateTime::currentDateTime().toString(Qt::DefaultLocaleShortDate);
 
   message1.remove(g_htmlTagRegExp);
+  message1.replace("&gt;", ">");
 
   items << (item = new QStandardItem(levelName(level)));
   item->setData(level, Qt::UserRole);
