@@ -11,18 +11,18 @@
 template <class T>
 class RValidList
 {
-  private:
-    _T ROList<RSharedPtr<T> >         List;
+  public:
+    _T typename T::Value          Value;
 
   private:
-    _M List*             m_list0;
-    _M List*             m_list1;
+    _M T*             m_list0;
+    _M T*             m_list1;
 
   public:
     class Iterator
     {
       private:
-        _T typename List::ConstIterator              ConstIterator;
+        _T typename T::ConstIterator              ConstIterator;
 
       private:
         ConstIterator        m_it;
@@ -30,16 +30,16 @@ class RValidList
         RValidList<T>*       m_container;
 
       public:
-        _M Vacuum        Iterator(RValidList<T>* container, ConstIterator it, bool list):
+        _M Vacuum          Iterator(RValidList<T>* container, ConstIterator it, bool list):
           m_it(it), m_list(list), m_container(container) { }
-        _M Vacuum        ~Iterator() { }
-        _M Iterator&     operator = (const Iterator& other)
+        _M Vacuum          ~Iterator() { }
+        _M Iterator&       operator = (const Iterator& other)
           { m_it = other.m_it; m_list = other.m_list; return *this; }
-        _M bool          operator == (const Iterator& other) const
+        _M bool            operator == (const Iterator& other) const
           { return m_it == other.m_it; }
-        _M bool          operator != (const Iterator& other) const
+        _M bool            operator != (const Iterator& other) const
           { return m_it != other.m_it; }
-        _M Iterator&     operator ++ ()
+        _M Iterator&       operator ++ ()
           {
             if (m_list == 1)
             {
@@ -64,19 +64,19 @@ class RValidList
             }
             return *this;
           }
-        _M Iterator&     operator ++(int)
+        _M Iterator&       operator ++(int)
           { Iterator old(*this); ++(*this); return old; }
-        _M T*    operator * () const
-          { return m_it->get(); }
-        _M T**   operator -> () const
-          { return &(*m_it).get(); }
+        _M Value           operator * () const
+          { return *m_it; }
+        _M Value*          operator -> () const
+          { return &*m_it; }
     };
 
   public:
-    _M Vacuum           RValidList(List* list0, List* list1):
+    _M Vacuum           RValidList(T* list0, T* list1):
       m_list0(list0), m_list1(list1) { }
-    _M Vacuum           RValidList(List* list):
-      m_list0(list) { } // GCC 4.7: RValidList(list, NULL) { }
+    _M Vacuum           RValidList(T* list0):
+      m_list0(list0), m_list1(NULL) { } // GCC 4.7: RValidList(list0, NULL) { }
     _M Vacuum           RValidList() { }
     _M Vacuum           ~RValidList() { }
     _M Iterator         begin()

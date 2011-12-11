@@ -21,18 +21,15 @@ class RCalculator: public QObject
     _T RResults::IntervalFun          IntervalFun;
     _T RMeasure::UsageMap             UsageMap;
     _T RUnit::UsageVector             UsageVector;
-    _T RValidList<RMeasure>           MeasurePtrList;
-    _T RValidList<RSubmission>        SubmissionPtrList;
-    _T RValidList<RDivision>          DivisionPtrList;
-    _T RValidList<RSystem>            SystemPtrList;
-    _T RValidList<RUnit>              UnitPtrList;
+    _T RValidList<RMeasurePtrList>    ValidMeasurePtrList;
+    _T RValidList<RSubmissionPtrList> ValidSubmissionPtrList;
+    _T RValidList<RDivisionPtrList>   ValidDivisionPtrList;
 
   private:
     _M RData*                         m_data;
-    _M MeasurePtrList                 m_measures;
-    _M SubmissionPtrList              m_submissions;
-    _M DivisionPtrList                m_divisions;
-    _M SystemPtrList                  m_systems;
+    _M ValidMeasurePtrList            m_validMeasures;
+    _M ValidSubmissionPtrList         m_validSubmissions;
+    _M ValidDivisionPtrList           m_validDivisions;
     _M IntervalFun                    m_intervalFun;
     _M int                            m_numIntervals;
     _M bool                           m_extrapolationEnabled: 1;
@@ -45,8 +42,7 @@ class RCalculator: public QObject
      * @param division  padalinys
      * @param measures  priemonės
      */
-    _M void             updateMeasures(RDivision* division, RMeasureHash& measures);
-    _M void             updateUsages();
+    _S void             updateMeasures(RDivisionPtr division, RMeasureHash& measures);
     _M void             calculateIntervals();
     _M void             calculateIntervals(UnitHash& units, UsageVector& usage);
     _M double           calculateUsage(RInterval interval, UsageMap& usageMap);
@@ -74,7 +70,7 @@ class RCalculator: public QObject
      *                  reikia numatyti suminę apkrovą
      * @return numanoma apkrova [startDate; date) intervale
      */
-    _M double           polynomialExtrapolation(QDate prevDate, double prevUsage,
+    _S double           polynomialExtrapolation(QDate prevDate, double prevUsage,
                                                 QDate startDate, double mainUsage,
                                                 QDate endDate, double nextUsage,
                                                 QDate nextDate, QDate date);
@@ -88,7 +84,7 @@ class RCalculator: public QObject
      * @param date  data, iki kurios (ne imtinai) reikia numatyti apkrovas
      * @return numanoma apkrova [it.key(); date) intervale
      */
-    _M double           polynomialExtrapolation(UsageMap :: iterator it,
+    _S double           polynomialExtrapolation(UsageMap :: iterator it,
                                                 UsageMap :: iterator begin,
                                                 UsageMap :: iterator end,
                                                 QDate date);
@@ -109,7 +105,7 @@ class RCalculator: public QObject
      * @param coefficients     rodyklė į 3 elementų masyvą gautos funkcijos koeficientams
      * @return true, jei koeficientus rasti pavyksta; false priešingu atveju
      */
-    _M bool             polynomialExtrapolation(int segment1, double segment1Integral,
+    _S bool             polynomialExtrapolation(int segment1, double segment1Integral,
                                                 int segment2, double segment2Integral,
                                                 int segment3, double segment3Integral,
                                                 double coefficients[3]);
@@ -122,7 +118,7 @@ class RCalculator: public QObject
      * @param to            intervalo, kuriame integruojame, pabaiga
      * @return apskaičiuotas apibrėžtinis integralas
      */
-    _M double          integrate(double coefficients[3], int from, int to);
+    _S double          integrate(double coefficients[3], int from, int to);
 
     /**
      * Išsprendžia 3 tiesinių lygčių sistemą.
@@ -132,7 +128,7 @@ class RCalculator: public QObject
      *
      * @return true, jei egzistuoja vienas sprendinys; false, jei keli arba 0
      */
-    _M bool             solveSystemOfLinearEquations(double matrix[3][4],
+    _S bool             solveSystemOfLinearEquations(double matrix[3][4],
                                                      double solution[3]);
 
     /**
@@ -142,7 +138,7 @@ class RCalculator: public QObject
      * @param from         intervalo pradžia
      * @param to           intervalo pabaiga
      */
-    _M bool             nonNegativeInInterval(double coefficients[3], int from, int to);
+    _S bool             nonNegativeInInterval(double coefficients[3], int from, int to);
 
     /**
      * Nustato, kuriam sezonui priklauso duota data.
@@ -177,7 +173,7 @@ class RCalculator: public QObject
      *         grąžina anksčiausią; jei nėra nė vieno, grąžina nulinių datų
      *         intervalą
      */
-    _M RInterval        findLowUsageInterval(RUnit* unit, RInterval interval,
+    _M RInterval        findLowUsageInterval(RUnitPtr unit, RInterval interval,
                                              int daysBySeasons[4]);
 
   public slots:
