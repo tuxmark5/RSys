@@ -28,20 +28,18 @@ template <class _Key0, class _Key1, class _Value>
 class REntity2DI: public REntity2D
 {
   public:
-    _T _Key0                                      Key0;
-    _T _Key1                                      Key1;
-    //_T RSharedPtr<Key0>                           Key0Ptr;
-    //_T RSharedPtr<Key1>                           Key1Ptr;
-    _T _Value                                     Value;
-    //_T QPair<Key0Ptr, Key1Ptr>                    JournalKey;
-    _T QPair<Key0, Key1>                          JournalKey;
-    _T QPair<Value, int>                          JournalValue;
-    _T QHash<JournalKey, JournalValue>            Journal;
-    _T std::function<QVariant (const Key0&)>      FromKey0;
-    _T std::function<QVariant (const Key1&)>      FromKey1;
-    _T std::function<Key0 (const QVariant&)>      ToKey0;
-    _T std::function<Key1 (const QVariant&)>      ToKey1;
-    _T std::function<void (Key0&, Key1&, Value)>  Setter;
+    _T _Key0                                          Key0;
+    _T _Key1                                          Key1;
+    _T _Value                                         Value;
+    _T QPair<Key0, Key1>                              JournalKey;
+    _T QPair<Value, int>                              JournalValue;
+    _T QHash<JournalKey, JournalValue>                Journal;
+    _T std::function<QVariant (const Key0&)>          FromKey0;
+    _T std::function<QVariant (const Key1&)>          FromKey1;
+    _T std::function<Key0 (const QVariant&)>          ToKey0;
+    _T std::function<Key1 (const QVariant&)>          ToKey1;
+    _T std::function<bool (const Key0&, const Key1&)> Filter;
+    _T std::function<void (Key0&, Key1&, Value)>      Setter;
 
   private:
     _M Journal            m_journal;
@@ -49,6 +47,7 @@ class REntity2DI: public REntity2D
     _M FromKey1           m_fromKey1;
     _M ToKey0             m_toKey0;
     _M ToKey1             m_toKey1;
+    _M Filter             m_filter;
     _M Setter             m_setter;
     _M bool               m_allowInsert: 1;
 
@@ -91,11 +90,13 @@ class REntity2DI: public REntity2D
     _M void               onSet(const Key0& key0, const Key1& key1, Value value)
     {
       R_GUARD(m_allowInsert, Vacuum);
+      R_GUARD(!m_filter || m_filter(key0, key1), Vacuum);
       m_journal.insert(JournalKey(key0, key1), JournalValue(value, Update));
     }
 
     _M void               onUnset(const Key0& key0, const Key1& key1)
     {
+      R_GUARD(!m_filter || m_filter(key0, key1), Vacuum);
       m_journal.insert(JournalKey(key0, key1), JournalValue(Value(), Remove));
     }
 
@@ -115,6 +116,11 @@ class REntity2DI: public REntity2D
       }
       m_allowInsert = true;
       return true;
+    }
+
+    _M void               setFilter(Filter&& filter)
+    {
+      m_filter    = std::forward<Filter>(filter);
     }
 
     _M void               setKey0(FromKey0&& fromKey0, ToKey0&& toKey0)

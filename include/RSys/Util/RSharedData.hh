@@ -16,6 +16,9 @@ class RSharedData
     _M Vacuum         RSharedData():
       m_numRefs(0) { }
 
+    _M void           destroy()
+    { m_numRefs = 1000; }
+
     _M int            numRefs()
     { return m_numRefs; }
 

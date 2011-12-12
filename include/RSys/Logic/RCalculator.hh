@@ -42,7 +42,7 @@ class RCalculator: public QObject
      * @param division  padalinys
      * @param measures  priemonės
      */
-    _S void             updateMeasures(RDivisionPtr division, RMeasureHash& measures);
+    _S void             updateMeasures(RDivisionPtr& division, RMeasureHash& measures);
     _M void             calculateIntervals();
     _M void             calculateIntervals(UnitHash& units, UsageVector& usage);
     _M double           calculateUsage(RInterval interval, UsageMap& usageMap);

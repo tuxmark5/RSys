@@ -60,6 +60,7 @@ void RSubmission :: remove()
   if (m_planned && m_measure && m_measure->numRefs() == 2)
   {
     m_data->measures1()->removeOne(m_measure);
+    m_measure = 0;
   }
 }
 
@@ -86,6 +87,7 @@ bool RSubmission :: setDate0(const QDate& date0)
 
   QDate oldDate0  = m_date0;
   m_date0         = date0;
+  validate();
   (*m_data)[date0Changed](this, oldDate0);
   m_data->modify();
 
@@ -102,6 +104,7 @@ bool RSubmission :: setDate1(const QDate& date1)
 
   QDate oldDate1  = m_date1;
   m_date1         = date1;
+  validate();
   (*m_data)[date1Changed](this, oldDate1);
 
   m_data->modify();
@@ -115,8 +118,8 @@ void RSubmission :: setMeasure(RMeasure* measure)
   (*m_data)[measureChange](this, measure);
   m_measure       = measure;
   m_measureName   = measure ? measure->identifier() : QString();
-  m_null          = bool(measure);
   m_data->modify();
+  validate();
 }
 
 /**********************************************************************************************/
@@ -138,7 +141,7 @@ bool RSubmission :: setMeasureName(const QString& measureName)
   m_measureName   = measureName1;
   (*m_data)[measureChange](this, measure1.get());
   m_measure       = measure1;
-  m_null          = false;
+  validate();
 
   m_data->modify();
   return true;
@@ -155,14 +158,28 @@ void RSubmission :: setMeasure1NameE(const QString& measureName)
 
   if (!measure1 && !m_measureName.isEmpty())
   {
-    measure1 = new RMeasure(m_data);
+    measure1 = new RMeasure(m_data, true);
     measure1->setIdentifier(m_measureName);
     m_data->measures1()->append(measure1);
   }
 
   (*m_data)[measureChange](this, measure1.get());
   m_measure       = measure1;
-  m_null          = false;
+  validate();
+}
+
+/**********************************************************************************************/
+
+void RSubmission :: validate()
+{
+  bool valid = true;
+
+  valid &= m_date0.isValid();
+  valid &= m_date1.isValid();
+  valid &= bool(m_measure);
+  valid &= m_count > 0;
+
+  setValid(valid);
 }
 
 /**********************************************************************************************/

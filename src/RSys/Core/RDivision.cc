@@ -83,9 +83,10 @@ bool RDivision :: setMeasure(RMeasure* measure, double value)
 
 void RDivision :: setMeasure1(RMeasure* measure, double value)
 {
-  R_GUARD(measure, Vacuum);
+  R_DATA_GUARD(measure, Vacuum, "Nerasta priemonė.");
+  R_DATA_GUARD(value >= 0.0, Vacuum, "Apkrova negali būti neigiama.");
 
-  if (value <= 0.0)
+  if (value == 0.0)
   {
     (*m_data)[onMeasureUnset](this, measure);
     m_measureHash1.remove(measure);

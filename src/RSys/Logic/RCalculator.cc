@@ -79,7 +79,7 @@ void RCalculator :: update()
 
 /**********************************************************************************************/
 
-void RCalculator :: updateMeasures(RDivisionPtr division, RMeasureHash& measures)
+void RCalculator :: updateMeasures(RDivisionPtr& division, RMeasureHash& measures)
 {
   for (auto measIt = measures.begin(); measIt != measures.end(); measIt++)
   {

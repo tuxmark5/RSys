@@ -12,6 +12,7 @@ struct RStandardDeleter
 {
   static void f(Value* value)
   {
+    value->destroy();
     delete value;
   }
 };

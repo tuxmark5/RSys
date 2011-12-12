@@ -5,15 +5,17 @@
 /*                                          RMeasure                                          */
 /**********************************************************************************************/
 
-Vacuum RMeasure :: RMeasure(RData* data):
-  RUnit(Measure, data)
+Vacuum RMeasure :: RMeasure(RData* data, bool planned):
+  RUnit(Measure, data),
+  m_planned(planned)
 {
 }
 
 /**********************************************************************************************/
 
 Vacuum RMeasure :: RMeasure(RMeasure& measure, RData* data):
-  RUnit(measure, data)
+  RUnit(measure, data),
+  m_planned(measure.m_planned)
 {
 }
 

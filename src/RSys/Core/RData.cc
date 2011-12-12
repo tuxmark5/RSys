@@ -196,8 +196,16 @@ void RData :: purgeMeasure(RMeasure* measure)
 {
   R_GUARD(m_purgeEnabled, Vacuum);
 
-  for (auto it = m_divisions.begin(); it != m_divisions.end(); ++it)
-    (*it)->setMeasure(measure, 0);
+  if (!measure->isPlanned())
+  {
+    for (auto it = m_divisions.begin(); it != m_divisions.end(); ++it)
+      (*it)->setMeasure(measure, 0);
+  }
+  else
+  {
+    for (auto it = m_divisions.begin(); it != m_divisions.end(); ++it)
+      (*it)->setMeasure1(measure, 0);
+  }
 
   m_submissions.removeIf([=](RSubmission* s) -> bool
   {

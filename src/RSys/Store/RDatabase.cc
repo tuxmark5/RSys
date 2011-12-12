@@ -121,12 +121,14 @@ void RDatabase :: createDataEntities()
   auto fromSystem   = [ ](RSystem* unit)       -> QVariant   { return unit->id(); };
   auto setMeasure   = [ ](RDivision* d, RMeasure* m, double v) { if (d && m) d->setMeasure(m, v); };
   auto setSystem    = [ ](RDivision* d, RSystem* s, double v) { if (d && s) d->setSystem(s, v); };
+  auto subFilter    = [ ](RDivision*, RMeasure* m) -> bool { return m ? !m->isPlanned() : false; };
 
   auto mae = new DivisionMeasureE("measureAdm", this, "division", "measure", "weight");
   (*m_data)[RDivision::onMeasureSet] << std::bind(&DivisionMeasureE::onSet, mae, _1, _2, _3);
   (*m_data)[RDivision::onMeasureUnset] << std::bind(&DivisionMeasureE::onUnset, mae, _1, _2);
   mae->setKey0(fromDivision, toDivision);
   mae->setKey1(fromMeasure, toMeasure);
+  mae->setFilter(subFilter);
   mae->setSetter(setMeasure);
 
   auto sae = new DivisionSystemE("systemAdm", this, "division", "system", "weight");
