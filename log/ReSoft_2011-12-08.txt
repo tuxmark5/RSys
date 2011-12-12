@@ -1,0 +1,8 @@
+* užbaigtas antrasis ciklas, patenkinti visi baigimo kriterijai: pilnai veikianti sistema, su visu pagrindiniu ir papildomu funkcionalumu
+* aptarti testavimo rezultatai, nuveikti darbai
+* nuspręsta trečiajame cikle testavimą vykdyti taip pat naudojant valgrind, taip sumažintant su atminties prieeiga egzistuojančių klaidų praleidimo tikimybę
+* trečiajam ciklui nuspręsta (kaip jau ir anksčiau apibrėžta buvo) užbaigti dokumentacijos rašymą, nes vartotojo interfeisas jau stabilizuotas
+* dokumentaciją nuspręsta itegruoti tiesiai į sistemą panaudojant Qt Assistant pagalbos sistemą
+* aptartas atnaujintas apkrovų prognozavimo algoritmas
+* kadangi išoriškai testuojant sistemą defektų ieškojimas tampa problematiškas (visi rasti defektai jau ištaisyti), todėl labiau pradedama koncentruotis į kodo peržiūras
+* išbandytas "dviejų žvejų" defektų vertinimo metodas
