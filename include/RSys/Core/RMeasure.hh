@@ -21,7 +21,7 @@ class RMeasure: public RUnit
     _M RID              m_groupId;
     _M UnitHash         m_unitUsage;
     _M UsageMap         m_usageMap;       // paraiškų per dieną pradedant nuo datos
-    _M bool             m_planned: 1;   // ar priklauso submissions1?
+    _M bool             m_planned: 1;     // ar priklauso submissions1?
 
   public:
     _M Vacuum           RMeasure(RData* data, bool planned = false);
@@ -30,6 +30,7 @@ class RMeasure: public RUnit
     _M RMeasure*        buddy() const { return static_cast<RMeasure*>(m_buddy); }
     _M bool             isPlanned() const { return m_planned; }
     _M void             remove();
+    _M RInterval        lastInterval();
 
   public:
     _G(void,            measureRemoval, RMeasure* measure);

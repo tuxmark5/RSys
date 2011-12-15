@@ -40,3 +40,18 @@ void RMeasure :: remove()
 }
 
 /**********************************************************************************************/
+
+RInterval RMeasure :: lastInterval()
+{
+  if (m_usageMap.empty())
+  {
+    return RInterval();
+  } else {
+    auto it = m_usageMap.end();
+    QDate to   = (--it).key().addDays(-1);
+    QDate from = (--it).key();
+    return RInterval(from, to);
+  }
+}
+
+/**********************************************************************************************/
