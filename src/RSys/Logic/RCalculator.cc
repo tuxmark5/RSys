@@ -116,21 +116,31 @@ void RCalculator :: calculateIntervals()
     for (auto measure : m_validMeasures)
     {
       measure->m_usage.clear();
+      if (measure->m_usageMap.empty())
+      {
+        measure->m_usage.resize(m_numIntervals);
+        continue;
+      }
+      QDate predictFrom = (--measure->m_usageMap.end()).key();
+      if (m_data->interval1().isValid() && m_data->interval1().daysTo(predictFrom) <= 0)
+      {
+        predictFrom = m_data->interval1().addDays(1);
+      }
       measure->m_usage.reserve(m_numIntervals);
       for (int i = 0; i < m_numIntervals; i++)
       {
         double usage;
-        if (TO(intervals[i]).daysTo(m_data->interval1()) > -1)
+        if (TO(intervals[i]).daysTo(predictFrom) >= 0)
         { // intervalas istorijoje
           usage = calculateUsage(intervals[i], measure->m_usageMap);
-        } else if (FROM(intervals[i]).daysTo(m_data->interval1()) < 0)
+        } else if (FROM(intervals[i]).daysTo(predictFrom) <= 0)
         { // prognozė
           usage = predictUsage(intervals[i], measure->m_usageMap);
         } else { // ir istorija, ir prognozė
           RInterval interval = intervals[i];
-          TO(interval) = m_data->interval1().addDays(1);
+          TO(interval) = predictFrom;
           usage = calculateUsage(interval, measure->m_usageMap);
-          FROM(interval) = TO(interval);
+          FROM(interval) = predictFrom;
           TO(interval) = TO(intervals[i]);
           usage += predictUsage(interval, measure->m_usageMap);
         }
