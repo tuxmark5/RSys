@@ -9,6 +9,8 @@
 #include <RSys/Interface/RMainWindow.hh>
 #include <RSys/Logic/RResults.hh>
 
+/**********************************************************************************************/
+std::function<QDate (QDate)> g_dateIncrementor;
 /********************************************* RS *********************************************/
 /*                                      RIntervalToolBar                                      */
 /**********************************************************************************************/
@@ -246,12 +248,15 @@ bool RIntervalToolBar :: eventFilter(QObject* watched, QEvent* event)
 
 void RIntervalToolBar :: getInterval(QDate& date0, QDate& date1, RIntervalFun& fun, int& num)
 {
+  static std::function<QDate (QDate)>& inc = g_dateIncrementor;
+
   switch (m_intervalLen->currentIndex())
   {
     case ByWeek:
       date0   = date0.addDays(-(date0.dayOfWeek() - 1));
       date1   = date1.addDays(-(date1.dayOfWeek() - 1));
       num     = date0.daysTo(date1) / 7;
+      inc     = [](QDate d) -> QDate { return d.addDays(7); };
       fun     = [date0](int x) -> RInterval
       {
         return RInterval(date0.addDays(x * 7), date0.addDays(x * 7 + 7));
@@ -262,6 +267,7 @@ void RIntervalToolBar :: getInterval(QDate& date0, QDate& date1, RIntervalFun& f
       date0   = QDate(date0.year(), date0.month(), 1);
       date1   = QDate(date1.year(), date1.month(), 1).addMonths(1);
       num     = (date1.year() - date0.year()) * 12 + (date1.month() - date0.month());
+      inc     = [](QDate d) -> QDate { return d.addMonths(1); };
       fun     = [date0](int x) -> RInterval
       {
         return RInterval(date0.addMonths(x), date0.addMonths(x + 1));
@@ -274,6 +280,7 @@ void RIntervalToolBar :: getInterval(QDate& date0, QDate& date1, RIntervalFun& f
       date0   = QDate(date0.year(), date0.month(), 1).addMonths(0 - (date0.month() - 1) % 3);
       date1   = QDate(date1.year(), date1.month(), 1).addMonths(3 - (date1.month() - 1) % 3);
       num     = date0.daysTo(date1) / 120;
+      inc     = [](QDate d) -> QDate { return d.addMonths(4); };
       fun     = [date0](int x) -> RInterval
       {
         return RInterval(date0.addMonths(x * 4), date0.addMonths(x * 4 + 4));
@@ -284,6 +291,7 @@ void RIntervalToolBar :: getInterval(QDate& date0, QDate& date1, RIntervalFun& f
       date0   = QDate(date0.year(), 1, 1);
       date1   = QDate(date1.year(), 1, 1);
       num     = date1.year() - date0.year() + 1;
+      inc     = [](QDate d) -> QDate { return d.addYears(1); };
       fun     = [date0](int x) -> RInterval
       {
         return RInterval(date0.addYears(x), date0.addYears(x + 1));

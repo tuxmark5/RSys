@@ -130,6 +130,8 @@ bool RSubmission :: setDate1(const QDate& date1)
 }
 
 /**********************************************************************************************/
+extern std::function<QDate (QDate)> g_dateIncrementor;
+/* * * * * * * * * * * * * * * * * * * * * * * ** * * * * * * * * * * * * * * * * * * * * * * */
 
 void RSubmission :: setDefaultInteval()
 {
@@ -164,7 +166,7 @@ void RSubmission :: setDefaultInteval()
   else
   {
     newDate0 = m_data->interval1().addDays(1);
-    newDate1 = newDate0.addMonths(1).addDays(-1);
+    newDate1 = g_dateIncrementor(newDate0).addDays(-1);
   }
 
   if (m_date0.isNull()) setDate0(newDate0);
