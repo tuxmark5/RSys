@@ -13,7 +13,7 @@ body {
     color:#333;
     margin: 0;
     padding: 0;
-    background: #F8F8F8 url('../images/header-bg.png') repeat-x;
+    background: #F8F8F8 url('/doc/html/images/header-bg.png') repeat-x;
 }
 p {
     margin-bottom: 10px;
