@@ -1,0 +1,119 @@
+@CHARSET "UTF-8";
+/**
+ *     Global styles
+ */
+
+/* Containers */
+body {
+    font-size: 13px;
+    font-family: Cantarell, 'Droid Sans', 'DejaVu Sans', 'Bitstream Vera Sans', Verdana, sans-serif;
+    background:#ffffff;
+    font-style: normal;
+    font-variant: normal
+    color:#333;
+    margin: 0;
+    padding: 0;
+    background: #F8F8F8 url('/doc/html/images/header-bg.png') repeat-x;
+}
+p {
+    margin-bottom: 10px;
+}
+table {
+    white-space: normal;
+    line-height: normal;
+    font-weight: normal;
+    font-size: 13px;
+    font-variant: normal;
+    font-style: normal;
+    color: #333;
+    text-align: -webkit-auto;
+}
+/* Text styles */
+h1 {
+    font-size:24pt;
+    font-style:italic;
+    font-weight:normal;
+    margin:10px;
+    padding:20px;
+    background-color: #DDD;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+h2 {
+    font-size:16px;
+    font-style:italic;
+    font-weight:normal;
+    margin:10px;
+    padding:10px;
+    border-bottom:2px solid #DDD;
+}
+a {
+    color: #3C719D;
+    text-decoration: none;
+    vertical-align:middle;
+    font-weight: bold;
+}
+a:hover {
+    color: #ce7b00;
+}
+ul li {
+    font-size: inherit;
+    vertical-align:middle;
+}
+ol li {
+    font-size: inherit;
+    vertical-align:middle;
+}
+/* Elements */
+li img {
+    vertical-align:middle;
+}
+/**
+ *     Header global styles
+ */
+div#header {
+    height: 90px;
+    position: relative;
+    color: #DDD;
+    margin-top: 10px;
+}
+div#header h1 {
+    border: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    background: none;
+    padding: 10px;
+    margin:0;
+    height: 70px;
+}
+
+div#header h1 img {
+    vertical-align:text-bottom;
+    padding:0;margin:0;
+}
+
+div#navigation {
+    border-bottom: 1px #DDD solid;
+    height: 20px;
+}
+div#navigation a {
+    margin:0;padding:0;
+    font-size: 11px;
+    margin-left: 10px;
+}
+
+/**
+ *     Content inner styles
+ */
+div#content {
+    margin: 10px;
+}
+div#content p#tasks, div#content p#ifaces {
+    font-size:14pt;
+}
+div#content table {
+    border-collapse:separate; 
+    border-spacing:5px 15px; 
+}

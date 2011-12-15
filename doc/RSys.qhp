@@ -58,8 +58,10 @@
     </keywords>
     
     <files>
-      <file>css/classic.css</file>
       <file>html/*.html</file>
+      <file>html/images/header-bg.png</file>
+      <file>html/images/logo.png</file>
+      <file>html/style/*</file>
     </files>
   </filterSection>
 </QtHelpProject>
