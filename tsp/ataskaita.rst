@@ -1,0 +1,1 @@
+Sveikas pasauli! Lietuviškos raidės.
