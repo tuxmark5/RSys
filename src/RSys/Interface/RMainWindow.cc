@@ -309,7 +309,7 @@ void RMainWindow :: createContainers()
   cu->addAccessor2<int>(1, Qt::DisplayRole)
     >> &RSubmission::count << &RSubmission::setCount;
   cu->addAccessor2<QDate>(2, Qt::DisplayRole)
-    >> &RSubmission::date0 << &RSubmission::setDate0;
+    >> &RSubmission::date0 << &RSubmission::setDate0E;
   cu->addAccessor2<QDate>(3, Qt::DisplayRole)
     >> &RSubmission::date1 << &RSubmission::setDate1;
   cu->addAccessor2<QBrush>(0xFE, Qt::BackgroundRole)

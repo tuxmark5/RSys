@@ -28,6 +28,18 @@ Vacuum RMeasure :: ~RMeasure()
 
 /**********************************************************************************************/
 
+RInterval RMeasure :: lastInterval()
+{
+  R_GUARD(!m_usageMap.empty(), RInterval());
+
+  auto  it    = m_usageMap.end();
+  QDate to    = (--it).key().addDays(-1);
+  QDate from  = (--it).key();
+  return RInterval(from, to);
+}
+
+/**********************************************************************************************/
+
 void RMeasure :: remove()
 {
   (*m_data)[measureRemoval](this);
@@ -37,21 +49,6 @@ void RMeasure :: remove()
   R_NZ(m_data)->purgeMeasure(this);
 
   m_data->modify();
-}
-
-/**********************************************************************************************/
-
-RInterval RMeasure :: lastInterval()
-{
-  if (m_usageMap.empty())
-  {
-    return RInterval();
-  } else {
-    auto it = m_usageMap.end();
-    QDate to   = (--it).key().addDays(-1);
-    QDate from = (--it).key();
-    return RInterval(from, to);
-  }
 }
 
 /**********************************************************************************************/

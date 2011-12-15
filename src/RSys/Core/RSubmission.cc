@@ -87,6 +87,10 @@ bool RSubmission :: setDate0(const QDate& date0)
   R_DATA_GUARD(date0.isValid(), false, "Neteisinga data.");
   R_DATA_GUARD(m_date1.isValid() ? (date0 < m_date1) : true, false,
                "Klaidingas kairysis intervalo galas.");
+  R_DATA_GUARD(isPlanned() ? date0 > m_data->interval1() : true, false,
+               "Planuojamos paraiškos intervalas kertasi su istoriniais duomenimis.<br>"
+               "Intervalas gali prasidėti nuo: <b>%1</b>",
+               .arg(R_DATE_TO_S(m_data->interval1().addDays(1))));
 
   QDate oldDate0  = m_date0;
   m_date0         = date0;
@@ -94,6 +98,17 @@ bool RSubmission :: setDate0(const QDate& date0)
   (*m_data)[date0Changed](this, oldDate0);
   m_data->modify();
 
+  return true;
+}
+
+/**********************************************************************************************/
+
+bool RSubmission :: setDate0E(const QDate& date0)
+{
+  R_GUARD(setDate0(date0),  false);
+  R_GUARD(m_date1.isNull(), true);
+
+  setDate1(m_date0.addMonths(1).addDays(-1));
   return true;
 }
 
@@ -112,6 +127,40 @@ bool RSubmission :: setDate1(const QDate& date1)
 
   m_data->modify();
   return true;
+}
+
+/**********************************************************************************************/
+
+void RSubmission :: setDefaultInteval()
+{
+  R_GUARD(m_measure, Vacuum);
+  R_GUARD(m_date0.isNull() || m_date1.isNull(), Vacuum);
+
+  RInterval lastInterval  = m_measure->lastInterval();
+  QDate     date0         = std::get<0>(lastInterval);
+  QDate     date1         = std::get<1>(lastInterval);
+  R_GUARD(date0.isValid() && date1.isValid(), Vacuum);
+  int       length        = date0.daysTo(date1);
+  QDate     newDate0;
+  QDate     newDate1;
+
+  switch (length)
+  {
+    case 29:
+    case 30:
+    case 31:
+      newDate0 = date0.addMonths(1);
+      newDate1 = newDate0.addMonths(1).addDays(-1);
+      break;
+
+    default:
+      newDate0 = date1.addDays(1);
+      newDate1 = newDate0.addDays(length);
+      break;
+  }
+
+  if (m_date0.isNull()) setDate0(newDate0);
+  if (m_date1.isNull()) setDate1(newDate1);
 }
 
 /**********************************************************************************************/
@@ -147,6 +196,8 @@ bool RSubmission :: setMeasureName(const QString& measureName)
   validate();
 
   m_data->modify();
+  setDefaultInteval();
+
   return true;
 }
 
@@ -169,6 +220,7 @@ void RSubmission :: setMeasure1NameE(const QString& measureName)
   (*m_data)[measureChange](this, measure1.get());
   m_measure       = measure1;
   validate();
+  setDefaultInteval();
 }
 
 /**********************************************************************************************/
@@ -180,7 +232,6 @@ void RSubmission :: validate()
   valid &= m_date0.isValid();
   valid &= m_date1.isValid();
   valid &= bool(m_measure);
-  valid &= m_count > 0;
 
   setValid(valid);
 }
