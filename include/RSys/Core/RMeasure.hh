@@ -18,7 +18,7 @@ class RMeasure: public RUnit
     _T QMap<QDate, double>         UsageMap;
 
   private:
-    _M RID              m_groupId;
+    _M RGroupPtr        m_group;
     _M UnitHash         m_unitUsage;
     _M UsageMap         m_usageMap;       // paraiškų per dieną pradedant nuo datos
     _M bool             m_planned: 1;     // ar priklauso submissions1?
@@ -28,9 +28,11 @@ class RMeasure: public RUnit
     _M Vacuum           RMeasure(RMeasure& measure, RData* data);
     _V Vacuum           ~RMeasure();
     _M RMeasure*        buddy() const { return static_cast<RMeasure*>(m_buddy); }
+    _M RID              groupId() const;
     _M bool             isPlanned() const { return m_planned; }
     _M RInterval        lastInterval();
     _M void             remove();
+    _M void             setGroupId(RID group);
 
   public:
     _G(void,            measureRemoval, RMeasure* measure);

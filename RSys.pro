@@ -40,6 +40,7 @@ SOURCES             +=                              \
   src/RSys/Core/RData.cc                            \
   src/RSys/Core/RDivision.cc                        \
   src/RSys/Core/RElement.cc                         \
+  src/RSys/Core/RGroup.cc                           \
   src/RSys/Core/RMeasure.cc                         \
   src/RSys/Core/RSubmission.cc                      \
   src/RSys/Core/RSystem.cc                          \
@@ -55,6 +56,7 @@ SOURCES             +=                              \
   src/RSys/Interface/RHelp.cc                       \
   src/RSys/Interface/RImportForm.cc                 \
   src/RSys/Interface/RIntervalToolBar.cc            \
+  src/RSys/Interface/RItemDelegate.cc               \
   src/RSys/Interface/RLayerWidget.cc                \
   src/RSys/Interface/RLogDock.cc                    \
   src/RSys/Interface/RLogFilterModel.cc             \
@@ -107,6 +109,7 @@ HEADERS             +=                              \
   include/RSys/Core/RAbstractData.hh                \
   include/RSys/Core/RData.hh                        \
   include/RSys/Core/RDivision.hh                    \
+  include/RSys/Core/RGroup.hh                       \
   include/RSys/Core/RElement.hh                     \
   include/RSys/Core/RMeasure.hh                     \
   include/RSys/Core/RSubmission.hh                  \
@@ -124,6 +127,7 @@ HEADERS             +=                              \
   include/RSys/Interface/RDivisionTab.hh            \
   include/RSys/Interface/RImportForm.hh             \
   include/RSys/Interface/RIntervalToolBar.hh        \
+  include/RSys/Interface/RItemDelegate.hh           \
   include/RSys/Interface/RHelp.hh                   \
   include/RSys/Interface/RLayerWidget.hh            \
   include/RSys/Interface/RLogDock.hh                \

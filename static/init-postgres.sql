@@ -6,6 +6,7 @@ DROP FUNCTION r_delete_user() CASCADE;
 DROP FUNCTION r_modify_user() CASCADE;
 
 DROP TABLE  divisions CASCADE;
+DROP TABLE  groups;
 DROP TABLE  measures;
 DROP TABLE  systems;
 DROP TABLE  submissions;
@@ -47,6 +48,16 @@ CREATE TABLE divisions
 );
 
 -- ########################################### RS ########################################### --
+-- #                                         groups                                         # --
+-- ########################################################################################## --
+
+CREATE TABLE groups
+(
+  id        BIGSERIAL PRIMARY KEY,
+  name      TEXT
+);
+
+-- ########################################### RS ########################################### --
 -- #                                        measures                                        # --
 -- ########################################################################################## --
 
@@ -54,7 +65,8 @@ CREATE TABLE measures
 (
   id        BIGSERIAL PRIMARY KEY,
   ident     TEXT, 
-  name      TEXT
+  name      TEXT,
+  gid       INTEGER
 );
 
 CREATE TABLE measureAdm

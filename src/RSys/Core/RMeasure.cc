@@ -1,4 +1,5 @@
 #include <RSys/Core/RData.hh>
+#include <RSys/Core/RGroup.hh>
 #include <RSys/Core/RMeasure.hh>
 
 /********************************************* RS *********************************************/
@@ -28,6 +29,13 @@ Vacuum RMeasure :: ~RMeasure()
 
 /**********************************************************************************************/
 
+RID RMeasure :: groupId() const
+{
+  return m_group ? m_group->id() : -1;
+}
+
+/**********************************************************************************************/
+
 RInterval RMeasure :: lastInterval()
 {
   R_GUARD(!m_usageMap.empty(), RInterval());
@@ -49,6 +57,13 @@ void RMeasure :: remove()
   R_NZ(m_data)->purgeMeasure(this);
 
   m_data->modify();
+}
+
+/**********************************************************************************************/
+
+void RMeasure :: setGroupId(RID group)
+{
+  //m_groupId = group;
 }
 
 /**********************************************************************************************/

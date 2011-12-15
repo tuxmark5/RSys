@@ -2,6 +2,7 @@
 #include <QtGui/QLabel>
 #include <QtGui/QTreeView>
 #include <QtGui/QVBoxLayout>
+#include <RSys/Interface/RItemDelegate.hh>
 #include <RSys/Interface/RModel1D.hh>
 #include <RSys/Interface/RModel2D.hh>
 #include <RSys/Interface/RTab.hh>
@@ -53,6 +54,7 @@ RTableView* RTab :: makeTable1DTab(RContainer* container)
   RTableView* tableView = new RTableView(model, this);
 
   tableView->setSortingEnabled(true);
+  tableView->setItemDelegate(new RItemDelegate(tableView));
   layout()->addWidget(tableView);  
   return tableView;
 }

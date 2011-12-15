@@ -1,5 +1,6 @@
 #include <RSys/Core/RData.hh>
 #include <RSys/Core/RDivision.hh>
+#include <RSys/Core/RGroup.hh>
 #include <RSys/Core/RMeasure.hh>
 #include <RSys/Core/RSubmission.hh>
 #include <RSys/Core/RSystem.hh>
@@ -165,6 +166,7 @@ void RData :: operator = (RData& data)
   clear();
   m_purgeEnabled = true;
 
+  m_groups.clone(data.m_groups, this);
   m_measures.clone(data.m_measures, this);
   m_measures1.clone(data.m_measures1, this);
   m_systems.clone(data.m_systems, this);
