@@ -34,7 +34,12 @@ class RValidList
           m_it(it), m_list(list), m_container(container) { }
         _M Vacuum          ~Iterator() { }
         _M Iterator&       operator = (const Iterator& other)
-          { m_it = other.m_it; m_list = other.m_list; return *this; }
+          {
+            m_it = other.m_it;
+            m_list = other.m_list;
+            m_container = other.m_container;
+            return *this;
+          }
         _M bool            operator == (const Iterator& other) const
           { return m_it == other.m_it; }
         _M bool            operator != (const Iterator& other) const
