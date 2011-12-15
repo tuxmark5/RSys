@@ -115,15 +115,17 @@ void RCalculator :: calculateIntervals()
     }
     for (auto measure : m_validMeasures)
     {
+      measure->m_usage.clear();
       if (measure->m_usageMap.empty())
       {
-        measure->m_usage.clear();
         measure->m_usage.resize(m_numIntervals);
         continue;
       }
-      QDate predictFrom = std::max(m_data->interval1().addDays(1),
-                                  (--measure->m_usageMap.end()).key());
-      measure->m_usage.clear();
+      QDate predictFrom = (--measure->m_usageMap.end()).key();
+      if (m_data->interval1().isValid() && m_data->interval1().daysTo(predictFrom) <= 0)
+      {
+        predictFrom = m_data->interval1().addDays(1);
+      }
       measure->m_usage.reserve(m_numIntervals);
       for (int i = 0; i < m_numIntervals; i++)
       {
