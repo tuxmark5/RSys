@@ -215,7 +215,8 @@ class ROList
     _M const Value&     at(int x)               const { return m_list.at(x);      }
     _M ConstIterator    begin()                 const { return m_list.begin();    }
     _M ConstIterator    end()                   const { return m_list.end();      }
-    _M int              indexOf(const Value& x) const { return m_list.indexOf(x);   }
+    _M int              indexOf(const Value& x) const { return m_list.indexOf(x); }
+    _M bool             isEmpty()               const { return m_list.empty();    }
     _M int              length()                const { return m_list.length();   }
     _M int              size()                  const { return m_list.size();     }
 };

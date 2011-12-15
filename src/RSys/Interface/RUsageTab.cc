@@ -189,6 +189,7 @@ void RUsageTab :: setUnits(RUnitPtrList* units)
 
 void RUsageTab :: updateElement(RElement* element, int updateType)
 {
+  Q_UNUSED(updateType);
   if (RUsageWidget* widget = widgetForElement(element))
     widget->updateHeader();
 }

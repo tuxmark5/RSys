@@ -682,10 +682,9 @@ bool RMainWindow :: showSaveDialog(const QString& title)
 
     case QMessageBox::Discard:
       return true;
-
-    case QMessageBox::Cancel:
-      return false;
   }
+
+  return false;
 }
 
 /**********************************************************************************************/

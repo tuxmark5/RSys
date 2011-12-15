@@ -61,6 +61,7 @@ void RAdapter1D :: modify1(int i0, int i1)
 
 bool RAdapter1D :: remove0(int i0, int i1)
 {
+  Q_UNUSED(i1);
   void*   ptr   = m_model->m_container->pointer(i0);
   int     index = m_model->m_root.find(ptr);
 

@@ -57,11 +57,15 @@ void RSubmission :: remove()
   (*m_data)[submissionRemoval](this);
   m_data->modify();
 
+  qDebug() << "REMOVE SUBMISSION" << m_data->submissions()->size();
+
   if (m_planned && m_measure && m_measure->numRefs() == 2)
   {
     m_data->measures1()->removeOne(m_measure);
     m_measure = 0;
   }
+
+  m_valid = false;
 }
 
 /**********************************************************************************************/
