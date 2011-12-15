@@ -12,6 +12,7 @@ Vacuum RSubmission :: RSubmission(RData* data, bool planned):
   m_count(0),
   m_planned(planned)
 {
+  m_valid = false;
 }
 
 /**********************************************************************************************/
@@ -56,8 +57,6 @@ void RSubmission :: remove()
 {
   (*m_data)[submissionRemoval](this);
   m_data->modify();
-
-  qDebug() << "REMOVE SUBMISSION" << m_data->submissions()->size();
 
   if (m_planned && m_measure && m_measure->numRefs() == 2)
   {

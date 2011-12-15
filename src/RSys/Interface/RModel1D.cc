@@ -182,7 +182,12 @@ QVariant RModel1D :: data(const QModelIndex& index, int role) const
     role = Qt::DisplayRole;
 
   if (const RNode1D* node = this->node(index))
-    return m_container->get(index.column(), node->m_value, role);
+  {
+    QVariant value = m_container->get(index.column(), node->m_value, role);
+    if (!value.isValid())
+      value = m_container->get(0xFE, node->m_value, role);
+    return value;
+  }
   return QVariant();
 }
 
