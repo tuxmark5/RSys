@@ -139,24 +139,32 @@ void RSubmission :: setDefaultInteval()
   RInterval lastInterval  = m_measure->lastInterval();
   QDate     date0         = std::get<0>(lastInterval);
   QDate     date1         = std::get<1>(lastInterval);
-  R_GUARD(date0.isValid() && date1.isValid(), Vacuum);
-  int       length        = date0.daysTo(date1);
   QDate     newDate0;
   QDate     newDate1;
 
-  switch (length)
+  if (date0.isValid() && date1.isValid())
   {
-    case 29:
-    case 30:
-    case 31:
-      newDate0 = date0.addMonths(1);
-      newDate1 = newDate0.addMonths(1).addDays(-1);
-      break;
+    int length = date0.daysTo(date1);
 
-    default:
-      newDate0 = date1.addDays(1);
-      newDate1 = newDate0.addDays(length);
-      break;
+    switch (length)
+    {
+      case 29:
+      case 30:
+      case 31:
+        newDate0 = date0.addMonths(1);
+        newDate1 = newDate0.addMonths(1).addDays(-1);
+        break;
+
+      default:
+        newDate0 = date1.addDays(1);
+        newDate1 = newDate0.addDays(length);
+        break;
+    }
+  }
+  else
+  {
+    newDate0 = m_data->interval1().addDays(1);
+    newDate1 = newDate0.addMonths(1).addDays(-1);
   }
 
   if (m_date0.isNull()) setDate0(newDate0);
