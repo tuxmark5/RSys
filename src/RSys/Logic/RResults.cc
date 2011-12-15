@@ -306,9 +306,7 @@ void RResults :: unregisterField(RUnit* unit, RResultsModel* model, int key)
 
 void RResults :: update()
 {
-  qDebug() << "U0" << this;
   m_calculator1->update();
-  qDebug() << "U1";
   m_calculator1->setIntervalFun(m_intervalFun, m_numRecords);
   resetData();
 
