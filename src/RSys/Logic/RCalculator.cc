@@ -215,8 +215,12 @@ double RCalculator :: calculateUsage(RInterval interval, UsageMap& usageMap)
 
 double RCalculator :: predictUsage(RInterval interval, UsageMap& usageMap)
 {
-  QDate newestData = m_data->interval1();
-  if (newestData.isNull()) return 0;
+  if (usageMap.empty()) return 0;
+  QDate newestData = (--usageMap.end()).key().addDays(-1);
+  if (m_data->interval1().isValid() && m_data->interval1() > newestData)
+  {
+    newestData = m_data->interval1();
+  }
   bool feb29 = FROM(interval).month() == 2 && FROM(interval).month() == 29;
   int distance = 0;
   if (FROM(interval).month() > newestData.month()
@@ -245,7 +249,7 @@ double RCalculator :: predictUsage(RInterval interval, UsageMap& usageMap)
       FROM(interval) = FROM(interval).addDays(1);
       TO(interval) = TO(interval).addDays(1);
     }
-    if (m_data->interval0().daysTo(TO(interval)) <= 0)
+    if (usageMap.begin().key().daysTo(TO(interval)) <= 0)
       break;
     if (TO(interval).daysTo(newestData) >= -1)
     {
