@@ -82,6 +82,7 @@ class RData: public QObject, public RSignal
     _M void                   onDate0Change(RSubmission* submission, QDate oldDate0);
     _M void                   onDate1Change(RSubmission* submission, QDate oldDate1);
     _M void                   onSubmissionRemoval(RSubmission* submission);
+    _M void                   validateSubmissions1();
 
   signals:
     _M void                   elementChanged(RElement* element, int changeType);

@@ -124,6 +124,7 @@ void RData :: onDate0Change(RSubmission* submission, QDate oldDate0)
   }
   else if (oldDate0 == m_interval0)
     calculateIntervals();
+  validateSubmissions1();
 }
 
 /**********************************************************************************************/
@@ -140,6 +141,7 @@ void RData :: onDate1Change(RSubmission* submission, QDate oldDate1)
   }
   else if (oldDate1 == m_interval1)
     calculateIntervals();
+  validateSubmissions1();
 }
 
 /**********************************************************************************************/
@@ -269,6 +271,14 @@ RUser* RData :: user(const QString& userName) const
     if ((*it)->userName() == userName)
       return it->get();
   return 0;
+}
+
+/**********************************************************************************************/
+
+void RData :: validateSubmissions1()
+{
+  for (auto& x: m_submissions1)
+    x->validate();
 }
 
 /**********************************************************************************************/

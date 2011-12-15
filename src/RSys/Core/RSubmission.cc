@@ -199,6 +199,8 @@ bool RSubmission :: setMeasureName(const QString& measureName)
   QString       measureName1  = measureName.trimmed().toUpper();
   RMeasurePtr   measure1      = m_data->measure(measureName1);
   R_DATA_GUARD(measure1, false, "Nežinoma paramos priemonė <b>%1</b>", .arg(measureName1));
+  R_DATA_GUARD(!isPlanned() ? !measure1->isPlanned() : true, false,
+               "Neleistinas planuojamos priemonės panaudojimas");
 
   m_measureName   = measureName1;
   (*m_data)[measureChange](this, measure1.get());
@@ -243,6 +245,8 @@ void RSubmission :: validate()
   valid &= m_date1.isValid();
   valid &= bool(m_measure);
 
+  if (valid && isPlanned())
+    valid = m_date0 > m_data->interval1();
   setValid(valid);
 }
 
