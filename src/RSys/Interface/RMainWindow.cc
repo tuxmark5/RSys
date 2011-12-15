@@ -51,6 +51,8 @@
 #include <RSys/Store/RSqlEntity.hh>
 #include <RSys/Util/RContainer.hh>
 
+/**********************************************************************************************/
+bool operator < (const QBrush&, const QBrush&) { return true; }
 /********************************************* RS *********************************************/
 /*                                        RMainWindow                                         */
 /**********************************************************************************************/
@@ -274,6 +276,11 @@ void RMainWindow :: createConnections1()
 
 void RMainWindow :: createContainers()
 {
+  auto submissionColor = [](const RSubmission& s) -> QBrush
+  {
+    return s.isValid() ? QBrush() : QBrush(QColor(0xFF, 0, 0, 0x40));
+  };
+
   auto cd = newContainer(m_data1->divisions());
   cd->addColumn("Pavadinimas");
   cd->addColumn("Aprašymas");
@@ -305,6 +312,8 @@ void RMainWindow :: createContainers()
     >> &RSubmission::date0 << &RSubmission::setDate0;
   cu->addAccessor2<QDate>(3, Qt::DisplayRole)
     >> &RSubmission::date1 << &RSubmission::setDate1;
+  cu->addAccessor2<QBrush>(0xFE, Qt::BackgroundRole)
+    >> submissionColor;
   cu->setAlloc([=]() { return new RSubmission(m_data1); });
 
   auto cu1 = newContainer(m_data1->submissions1(), *cu);
