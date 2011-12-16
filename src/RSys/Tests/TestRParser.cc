@@ -161,12 +161,12 @@ void TestRParser::testWithMissingData()
   QCOMPARE((*guesses)[7], RUNKNOWN);
 
   RParser::GuessList list = parser.guessesList();
-  QCOMPARE(list[3], std::make_tuple(R_S("DDDD"), (int) RDIVISIONSYSTEMS, 0));
-  QCOMPARE(list[5], std::make_tuple(R_S("FFFF"), (int) RSUBMISSION, 1));
-  QCOMPARE(list[4], std::make_tuple(R_S("EEEE"), (int) RDIVISIONMEASURES, 2));
-  QCOMPARE(list[2], std::make_tuple(R_S("CCCC"), (int) RSYSTEM, 3));
-  QCOMPARE(list[1], std::make_tuple(R_S("BBBB"), (int) RDIVISION, 4));
-  QCOMPARE(list[0], std::make_tuple(R_S("AAAA"), (int) RMEASURE, 5));
+  QCOMPARE(list[0], std::make_tuple(R_S("DDDD"), (int) RDIVISIONSYSTEMS, 0));
+  QCOMPARE(list[1], std::make_tuple(R_S("FFFF"), (int) RSUBMISSION, 1));
+  QCOMPARE(list[2], std::make_tuple(R_S("EEEE"), (int) RDIVISIONMEASURES, 2));
+  QCOMPARE(list[3], std::make_tuple(R_S("CCCC"), (int) RSYSTEM, 3));
+  QCOMPARE(list[4], std::make_tuple(R_S("BBBB"), (int) RDIVISION, 4));
+  QCOMPARE(list[5], std::make_tuple(R_S("AAAA"), (int) RMEASURE, 5));
   QCOMPARE(list[6], std::make_tuple(R_S("Istoriniai duomenys"), (int) RUNKNOWN, 6));
   QCOMPARE(list[7], std::make_tuple(R_S("Istorinė lentelė"), (int) RUNKNOWN, 7));
 
