@@ -545,18 +545,23 @@ bool RParser::read(RData *data, QList<std::tuple<QString, int, int> > guesses)
   QStringList message;
   message << R_S("<html>");
   message << R_S("<ul>");
-  for (auto it : guesses)
+  for (auto itType : {
+       RMEASURE, RDIVISION, RSYSTEM, RDIVISIONSYSTEMS,
+       RDIVISIONMEASURES, RSUBMISSION})
   {
-    int type = std::get<1>(it);
-    int index = std::get<2>(it);
-    if (type & 0x100)
+    for (auto it : guesses)
     {
-      // Ignore.
-    }
-    else
-    {
-      allOk &= readTable(
-            data, (RDataType) type, m_document->tableAt(index), message);
+      int type = std::get<1>(it);
+      int index = std::get<2>(it);
+      if (type & 0x100)
+      {
+        // Ignore.
+      }
+      else if (itType == type)
+      {
+        allOk &= readTable(
+              data, (RDataType) type, m_document->tableAt(index), message);
+      }
     }
   }
   message << R_S("</ul>");
