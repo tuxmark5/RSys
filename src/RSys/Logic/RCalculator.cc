@@ -250,7 +250,7 @@ double RCalculator :: predictUsage(RInterval interval, UsageMap& usageMap)
                                          FROM(interval).month(), FROM(interval).day()));
   double usage[3];
   int pastYears; // kelių metų duomenis turime
-  for (pastYears = 0; pastYears < 2; pastYears++)
+  for (pastYears = 0; pastYears < 3; pastYears++)
   {
     FROM(interval) = FROM(interval).addDays(distance);
     TO(interval) = TO(interval).addDays(distance);
@@ -281,6 +281,11 @@ double RCalculator :: predictUsage(RInterval interval, UsageMap& usageMap)
       return usage[0];
     case 2:
       return std::max(0.0, usage[0] + (usage[0] - usage[1]) * yearsToFuture);
+    case 3: // mechaninė interpretacija
+      double v0 = usage[1] - usage[2];
+      double v1 = usage[0] - usage[1];
+      double a  = v1 - v0;
+      return std::max(0.0, usage[0] + (v1 + (a + yearsToFuture * a) / 2) * yearsToFuture);
   }
   return -1; // neturėtų įvykti
 }
