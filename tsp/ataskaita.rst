@@ -25,6 +25,11 @@ Komandos naudotos TSPi praktikos
 +   Reikalavimų specifikacijos ruošimas.
 +   Projektavimas.
 
+Komandos narių naudotos PSP praktikos
+=====================================
+
++   Bendras kodavimo standartas.
+
 Pastabos apie tai, kaip buvo vykdytos praktikos
 ===============================================
 
@@ -172,11 +177,13 @@ Reikalavimų specifikacijos ruošimas
 
 Programos kūrimo metu buvo naudojami nesusisteminti reikalavimai
 (Žmogaus ir kompiuterio sąveikos darbai, užsakovo atsakymai į
-klausimus). Vėliau, trečio ciklo metu, reikalavimai buvo susisteminti
-ir sukelti į reikalavimų valdymo įrankį
-`rmtoo <http://www.flonatel.de/projekte/rmtoo/>`_. Tada, pagal
-sugeneruotą reikalavimų specifikaciją, buvo atlikta sistemos peržiūra
-– ar ji atitinka nurodytus reikalavimus.
+klausimus). Vėliau, trečio ciklo metu, reikalavimai buvo susisteminti,
+sukelti į reikalavimų valdymo įrankį
+`rmtoo <http://www.flonatel.de/projekte/rmtoo/>`_ ir atlikta jų
+peržiūra pasinaudojant įrankio pateikiamomis priemonėmis
+(reikalavimų pavaizdavimu grafu). Tada, pagal sugeneruotą reikalavimų
+specifikaciją, buvo atlikta sistemos peržiūra – ar ji atitinka
+nurodytus reikalavimus.
 
 *Pastaba:* Naudotas reikalavimų specifikavimo įrankis nėra
 internacionalizuotas, todėl nebuvo galimybės išversti terminų į
@@ -198,6 +205,8 @@ TODO
     
     +   defektų kiekiai programų išeities tekstuose;
     +   testavimui ir kūrimui sugaištas laikas;
+    +   kaip buvo vykdomos peržiūros (dokumentų, reikalavimų, kodo,
+        dviejų žvejų)
 
     TODO: Realiai iš šito nieko nesigavo, nes QtCreator rodo klaidas,
     nemoku programuoti C++0x.
