@@ -132,13 +132,13 @@ void RUser :: setUserNameE(const QString& userName)
   QString userName1 = userName.toLower();
 
   R_DATA_GUARD(m_userName.isNull(), Vacuum,
-    "Dėl DB apribojimų naudotojo vardų keisti neleidžiama.");
+    "Dėl DB apribojimų naudotojų vardų keisti neleidžiama.");
   R_DATA_GUARD(userName1.size() >= 4, Vacuum,
     "Per trumpas naudotojo vardas. Minimalus leistinas ilgis yra 4 simboliai.");
   R_DATA_GUARD(g_userRegExp.exactMatch(userName1), Vacuum,
-    "Naudotojo varde gali būti tik mažosios ir didžiosios lotyniškos raidės bei skaitmenys");
+    "Naudotojo varde gali būti tik mažosios ir didžiosios lotyniškos raidės bei skaitmenys.");
   R_DATA_GUARD(!m_data->user(userName1), Vacuum,
-    "Toks naudotojas jau egzistuoja");
+    "Naudotojas su tokiu naudotojo vardu jau egzistuoja.");
 
   m_created   = true;
   m_userName  = userName1;

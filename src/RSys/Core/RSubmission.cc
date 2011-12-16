@@ -89,7 +89,7 @@ bool RSubmission :: setDate0(const QDate& date0)
                "Klaidingas kairysis intervalo galas.");
   R_DATA_GUARD(isPlanned() ? date0 > m_data->interval1() : true, false,
                "Planuojamos paraiškos intervalas kertasi su istoriniais duomenimis.<br>"
-               "Intervalas gali prasidėti nuo: <b>%1</b>",
+               "Intervalas gali prasidėti nuo: <b>%1</b>.",
                .arg(R_DATE_TO_S(m_data->interval1().addDays(1))));
 
   QDate oldDate0  = m_date0;
@@ -216,9 +216,9 @@ bool RSubmission :: setMeasureName(const QString& measureName)
 {
   QString       measureName1  = measureName.trimmed().toUpper();
   RMeasurePtr   measure1      = m_data->measure(measureName1);
-  R_DATA_GUARD(measure1, false, "Nežinoma paramos priemonė <b>%1</b>", .arg(measureName1));
+  R_DATA_GUARD(measure1, false, "Nežinoma paramos priemonė <b>%1</b>.", .arg(measureName1));
   R_DATA_GUARD(!isPlanned() ? !measure1->isPlanned() : true, false,
-               "Neleistinas planuojamos priemonės panaudojimas");
+               "Neleistinas planuojamos priemonės panaudojimas.");
 
   m_measureName   = measureName1;
   (*m_data)[measureChange](this, measure1.get());
