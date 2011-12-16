@@ -167,6 +167,30 @@ sinchronizacijai tarp duomenų struktūrų ir naudotojo sąsajos. Taip
 pat atsirado dvi nenumatytos sąsajos: naudotojų administravimo ir
 rėžimo.
 
+Reikalavimų specifikacijos ruošimas
+===================================
+
+Programos kūrimo metu buvo naudojami nesusisteminti reikalavimai
+(Žmogaus ir kompiuterio sąveikos darbai, užsakovo atsakymai į
+klausimus). Vėliau, trečio ciklo metu, reikalavimai buvo susisteminti
+ir sukelti į reikalavimų valdymo įrankį
+`rmtoo <http://www.flonatel.de/projekte/rmtoo/>`_. Tada, pagal
+sugeneruotą reikalavimų specifikaciją, buvo atlikta sistemos peržiūra
+– ar ji atitinka nurodytus reikalavimus.
+
+*Pastaba:* Naudotas reikalavimų specifikavimo įrankis nėra
+internacionalizuotas, todėl nebuvo galimybės išversti terminų į
+lietuvių kalbą. Taip pat, kadangi įrankis pritaikytas naudoti su
+SCRUM metodika, jame reikalavimams reikia nurodyti papildomą
+informaciją („Priority“, „Owner“, „Invented by“, …),
+kurią skaitant šią reikalavimų specifikaciją reikėtų ignoruoti.
+
+Projektavimas
+=============
+
+Dėl naudoto projektavimo būdo (C++ antraščių failai) koncepcinis ir
+detalusis projektavimas susiliejo į vieną.
+
 TODO
 ====
 
