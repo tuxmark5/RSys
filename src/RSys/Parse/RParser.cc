@@ -22,6 +22,7 @@ bool RParser::readMeasures(RData *data, RITable *table, QStringList &message)
   int rowIndex;
   int codeColumn;
   int nameColumn;
+  RGroupPtrList *groupList = data->groups();
   RMeasurePtrList *list = data->measures();
   int added = 0;
   bool errors = false;
@@ -45,20 +46,42 @@ bool RParser::readMeasures(RData *data, RITable *table, QStringList &message)
   {
     codeColumn = start.x();
     nameColumn = start.x() + 1;
+    RGroupPtr group = NULL;
     for (rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
     {
-      if (table->cell(codeColumn, rowIndex).isNull())
+      if (table->cell(codeColumn, rowIndex).isNull() &&
+          table->cell(nameColumn, rowIndex).isNull())
       {
-        // Kryptis.
-        // FIXME: Kryptys (ir tuščios eilutės) yra ignoruojamos.
-        continue;
+        // Tuščios eilutės yra ignoruojamos.
+      }
+      else if (table->cell(codeColumn, rowIndex).isNull())
+      {
+        group = new RGroup(data);
+        if (group->setName(table->cell(nameColumn, rowIndex).toString()))
+        {
+          groupList->append(group);
+        }
+        else
+        {
+          errors = true;
+        }
       }
       else
       {
         RMeasurePtr measure = new RMeasure(data);
         bool correct = measure->setIdentifier(
               table->cell(codeColumn, rowIndex).toString());
+        if (!group)
+        {
+          this->log(R_S(
+                      "Priemonė, aprašyta lakšte „%1“, %2 eilutėje %3 stulpelyje, "
+                      "nebuvo pridėta. Priežastis: nenurodyta kryptis.")
+                    .arg(table->title()).arg(rowIndex + 1).arg(codeColumn + 1),
+                    InvalidMeasureDiscarded, RWARNING);
+          correct = false;
+        }
         correct &= measure->setName(table->cell(nameColumn, rowIndex).toString());
+        measure->setGroup(group);
         if (correct)
         {
           list->append(measure);

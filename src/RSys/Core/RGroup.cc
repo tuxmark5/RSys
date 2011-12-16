@@ -26,10 +26,12 @@ Vacuum RGroup :: ~RGroup()
 
 /**********************************************************************************************/
 
-void RGroup :: setName(const QString& name)
+bool RGroup :: setName(const QString& name)
 {
+  // FIXME Nėra patikrinimo ar vardas unikalus.
   qDebug() << "SN" << name;
   m_name = name;
+  return true;
 }
 
 /**********************************************************************************************/
