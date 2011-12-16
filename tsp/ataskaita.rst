@@ -41,6 +41,27 @@ Komandos išsikelti tikslai
 +   Suplanuoti 2 ciklo pabaigą 2 savaičių tikslumu.
 +   Programavimo greitis ne mažesnis nei 50 eilučių per valandą.
 
+Pagal šiuos tikslus komanda nusprendė sistemos kūrimo metu rinkti tokius
+duomenis:
+
++   defektai, kurie „iškeliavo“ į versijų kontrolės sistemą;
++   laikas minučių tikslumu.
+
+Sprendimas fiksuoti tik tuos defektus, kurie pateko į versijų kontrolės
+sistemą, priimtas dėl dviejų priežasčių:
+
++   komandos naudota IDE QtCreator sugeba realiu laiku parodyti vietas,
+    kuriose yra tikėtinos kompiliavimo klaidos;
++   dalis komandos narių dėl mažos darbo su C++ patirties „sumalė“
+    kodavimo, kompiliavimo ir testavimo stadijas į vieną. (Kartais
+    per visas tris sugebėdavo „pareiti“ greičiau nei per 1 minutę.)
+
+Taip pat, dėl antrosios priežasties, fiksuojant laiką buvo laikoma, kad
+kodavimo, kompiliavimo ir modulių testavimo stadijos yra kodavimo
+stadija. Testavimo stadija fiksuojant laiką buvo išskirta tik, kai
+buvo vykdomas jau surinktos sistemos testavimas, arba jos dalių
+kodo peržiūra.
+
 Komunikavimo procedūrų apibrėžimas
 ----------------------------------
 
@@ -248,27 +269,3 @@ Pastabos apie tai, kodėl kai kurios praktikos nebuvo vykdytos
     dirbti kitiems. Tam itin padėjo versijų kontrolės „šakų“ naudojimas.
 
 +   *Rizikų įvertinimas ir valdymas.*
-
-.. _KT:
-
-
-Pastabos
-========
-
-Buvo fiksuojami tik tie defektai, kurie pateko į versijų kontrolės
-sistemą. Toks sprendimas priimtas dėl dviejų priežasčių:
-
-+   komandos naudota IDE QtCreator sugeba realiu laiku parodyti vietas,
-    kuriose yra tikėtinos kompiliavimo klaidos;
-+   dalis komandos narių dėl mažos darbo su C++ patirties „sumalė“
-    kodavimo, kompiliavimo ir testavimo stadijas į vieną. (Kartais
-    per visas tris sugebėdavo „pareiti“ greičiau nei per 1 minutę.)
-
-Taip pat, dėl antrosios priežasties, fiksuojant laiką buvo laikoma, kad
-kodavimo, kompiliavimo ir modulių testavimo stadijos yra kodavimo
-stadija. Testavimo stadija fiksuojant laiką buvo išskirta tik, kai
-buvo vykdomas jau surinktos sistemos testavimas, arba jos dalių
-kodo peržiūra.
-
-Skaičiuojant eilutes nebuvo kreipiamas dėmesys į jų turinį. Tai yra
-komentarų bei tuščios eilutės irgi buvo įskaičiuotos.
