@@ -36,6 +36,7 @@ import datetime
 
 DEVELOPMENT_CYCLE = 1
 COMPONENTS = {
+        'c':  'Core',
         'e':  'Export',
         'i':  'Import',
         'g':  'Interface',              # g nuo GUI
