@@ -14,6 +14,19 @@
 #define IS_LEAP(x)    (x).daysInYear() == 366
 #define MAGIC         2.718281828
 
+/**********************************************************************************************/
+
+/**
+ * Informacija apie priemonės apkrovų įrašus jų teisingumo patikrinimui.
+ */
+struct MeasureInfo
+{
+  QMap<QDate, RSubmissionPtr> m_usefulSubmissions; // smulkiausi korektiški įrašai
+                                                   // pagal intervalo pradžią
+  QMap<QDate, QDate>          m_invalidIntervals; // kur yra susikertančių intervalų
+  QVector<RSubmissionPtr>     m_splitSubmissions; // kurie buvo patikslinti
+};
+
 /********************************************* RS *********************************************/
 /*                                        RCalculator                                         */
 /**********************************************************************************************/
@@ -49,30 +62,118 @@ void RCalculator :: update()
     updateMeasures(division, division->m_measureHash1);
   }
 
-  QHash<RMeasure*, QMap<QDate, QDate> > measuresIntervalMap;
-  // galėtų abu būti QHash – reikia QDate maišos funkcijos
+  QHash<RMeasure*, MeasureInfo> measureInfos;
   for (auto submission : m_validSubmissions)
   {
     QDate from = submission->date0();
     QDate to   = submission->date1().addDays(1);
-    QMap<QDate, QDate>& intervalMap = measuresIntervalMap[submission->measure()];
-    auto mapIt = intervalMap.find(from);
-    if (mapIt == intervalMap.end())
-    {
-      intervalMap.insert(from, to);
-    } else if (to < mapIt.value())
-    {
-      mapIt.value() = to;
-    } else {
-      continue;
+    MeasureInfo& info = measuresInfos[submission->measure()];
+
+    { // patikriname, ar nesikerta su anksčiau susikirtusiais
+      auto it = info.m_invalidIntervals.lower_bound(to);
+      if (it != info.m_invalidIntervals.begin() && (--it).value() > from)
+      {
+        submission->setValid(false);
+        if (from >= it.key())
+        {
+          if (to > it.value()) it.value() = to;
+        } else {
+          if (to < it.value()) to = it.value();
+          do
+          {
+            if (it != info.m_invalidIntervals.begin())
+            {
+              info.m_invalidIntervals.erase(it--);
+            } else {
+              break;
+            }
+          } while (it.key() > from);
+          if (it.key() == from)
+          {
+            it.value() = to;
+          } else if (it.key() > from) {
+            info.m_invalidIntervals.erase(it);
+            info.m_invalidIntervals.insert(from, to);
+          } else if (it.key() < from) {
+            if (it.value() >= from)
+            {
+              it.value() = to;
+            } else {
+              info.m_invalidIntervals.insert(from, to);
+            }
+          }
+        }
+        continue;
+      }
     }
+
+    { // patikrina, ar nesikerta su naudojamais
+      auto it = info.m_usefulSubmissions.lower_bound(to);
+      if (it != info.m_usefulSubmissions.begin())
+      {
+        if ((--it).value()->date1() > from)
+        {
+          submission->setValid(false);
+          if (it.value()->date1() > to) to = it.value()->date1();
+          do
+          {
+            it.value()->setValid(false);
+            if (it.value() != info.m_usefulSubmissions.begin())
+            {
+              if (it.key() < from) from = it.key();
+              info.m_usefulSubmissions.erase(it--);
+            } else {
+              break;
+            }
+          } while (it.value()->date1() > from);
+          if (it.value()->date1() > from)
+          {
+            if (it.key() < from) from = it.key();
+            info.m_usefulSubmissions.erase(it--);
+          }
+          info.m_invalidIntervals.insert(from, to);
+          continue;
+        }
+      }
+    }
+
+    { // patikrina, ar yra tikslinantis intervalas
+      auto it = info.m_usefulSubmissions.lower_bound(from);
+      if (it != info.m_usefulSubmissions.end() && it.value()->date1() < to)
+      { // buvo nedidesnis intervalas
+        info.m_splitSubmissions.push_back(submission);
+        continue;
+      } else {
+        if (it != info.m_usefulSubmissions.begin()
+            && (it == info.m_usefulSubmissions.end() || it.key() != from))
+        {
+            --it;
+        }
+        if (it != info.m_usefulSubmissions.end() && it.key() <= from
+            && it.value()->date1() >= to)
+        { // buvo didesnis intervalas
+          info.m_splitSubmissions.push_back(it->value());
+          if (it.key() == from)
+          {
+            it.value() = submission;
+            continue;
+          } else {
+            info.m_usefulSubmissions.erase(it);
+          }
+        }
+      }
+    }
+
+    info.m_usefulSubmissions.insert(from, submission);
+  }
+
+  for (info.m_usefulSubmissions)
     double usage = (double)submission->count() / from.daysTo(to);
     submission->measure()->m_usageMap.insert(from, usage);
     if (intervalMap.find(to) == intervalMap.end())
     {
       submission->measure()->m_usageMap.insert(to, 0);
     }
-  }
 
   calculateIntervals();
 }
