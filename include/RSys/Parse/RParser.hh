@@ -10,6 +10,7 @@
 #include <RSys/Core/RMeasure.hh>
 #include <RSys/Core/RSystem.hh>
 #include <RSys/Core/RSubmission.hh>
+#include <RSys/Core/RGroup.hh>
 #include <RSys/Import/RIDocument.hh>
 #include <RSys/Import/RXLSDocument.hh>
 
