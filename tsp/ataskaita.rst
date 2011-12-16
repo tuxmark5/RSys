@@ -194,7 +194,7 @@ pat atsirado dvi nenumatytos sąsajos: naudotojų administravimo ir
 rėžimo.
 
 Reikalavimų specifikacijos ruošimas
-===================================
+-----------------------------------
 
 Programos kūrimo metu buvo naudojami nesusisteminti reikalavimai
 (Žmogaus ir kompiuterio sąveikos darbai, užsakovo atsakymai į
@@ -214,13 +214,13 @@ informaciją („Priority“, „Owner“, „Invented by“, …),
 kurią skaitant šią reikalavimų specifikaciją reikėtų ignoruoti.
 
 Projektavimas
-=============
+-------------
 
 Dėl naudoto projektavimo būdo (C++ antraščių failai) koncepcinis ir
 detalusis projektavimas susiliejo į vieną.
 
-TODO
-====
+Kokybės planavimas ir valdymas
+------------------------------
 
 +   Kokybės planavimas ir valdymas:
     
