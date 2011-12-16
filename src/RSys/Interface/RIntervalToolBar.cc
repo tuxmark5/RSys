@@ -212,7 +212,7 @@ void RIntervalToolBar :: emitErrorMessage(int error)
       break;
 
     case TooLong:
-      emit message(R_S("Per ilgas intervalas. Ilgiausias leistinas intervalo ilgis yra 10 metų"),
+      emit message(R_S("Per ilgas intervalas. Ilgiausias leistinas intervalo ilgis yra 10 metų."),
         IntervalTooLong, RERROR);
       break;
 
@@ -321,12 +321,12 @@ QString RIntervalToolBar :: getIntervalMessage(QDate date0, QDate date1, int num
 
     case ByQuarter:
       return R_S("<li>Prasidėtų ketvirčio pradžia</li>"
-                 "<li>Į jį tilptų tikslius ketvirčių sk. (<b>%1</b>)</li>")
+                 "<li>Į jį tilptų tikslus ketvirčių sk. (<b>%1</b>)</li>")
             .arg(num);
 
     case ByYear:
       return R_S("<li>Prasidėtų pirmąja metų diena</li>"
-                 "<li>Į jį tilptų tikslius metų sk.(<b>%1</b>)</li>")
+                 "<li>Į jį tilptų tikslus metų sk.(<b>%1</b>)</li>")
             .arg(num);
   }
 

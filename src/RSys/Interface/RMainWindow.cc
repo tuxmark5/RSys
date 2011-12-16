@@ -442,7 +442,7 @@ void RMainWindow :: findIntervalNow()
   }
   else
   {
-    showMessage(R_S("Pirma pasirinkite teisingą paieškos intervalą"), ValidIntervalRequired, RWARNING);
+    showMessage(R_S("Pirma pasirinkite teisingą paieškos intervalą."), ValidIntervalRequired, RWARNING);
   }
 }
 
@@ -488,7 +488,7 @@ void RMainWindow :: importData()
   }
   else
   {
-    showMessage(R_S("Importo startuoti nepavyko"), ImportBeginFailure, RERROR);
+    showMessage(R_S("Nepavyko atidaryti failo importavimui."), ImportBeginFailure, RERROR);
     delete parser;
   }
 }
