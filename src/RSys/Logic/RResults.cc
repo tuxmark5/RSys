@@ -79,6 +79,18 @@ auto RResults :: field(int type, RUnit* unit) -> Getter
       return 0.0;
     };
 
+    case Usage0 | Hours  | Tooltip:
+    case Usage0 | Counts | Tooltip: return [this, unit](int x) -> QVariant
+    {
+      if (RUnit* unit0 = unit->buddy())
+      {
+        const RUsage& usage = unit0->usageAt(x);
+        return R_S("Intervalas: %1.\nValandos: %2\nParaiškos: %3").
+          arg(intervalStr(x)).arg(usage.first).arg(usage.second);
+      }
+      return QVariant();
+    };
+
     case Usage1 | Hours: return [this, unit](int x) -> QVariant
     {
       return unit->usageAt(x).first;
@@ -114,6 +126,17 @@ auto RResults :: field(int type, RUnit* unit) -> Getter
         arg(intervalStr(x)).arg(fieldDeltaUsage(unit, x));
     };
 
+    case UsageDP | Counts: return [this, unit](int x) -> QVariant
+    {
+      if (RUnit* buddy = unit->buddy())
+      {
+        double usage0 = buddy->usageAt(x).second;
+        double usage1 = unit->usageAt(x).second;
+        return (usage1 - usage0) / usage1 * 100.0; // usage0?
+      }
+      return QVariant();
+    };
+
     case UsageDP | Hours: return [this, unit](int x) -> QVariant
     {
       if (RUnit* buddy = unit->buddy())
@@ -125,8 +148,31 @@ auto RResults :: field(int type, RUnit* unit) -> Getter
       return QVariant();
     };
 
-    case UsageDP | Counts | Tooltip: break;
-    case UsageDP | Hours  | Tooltip: break;
+    case UsageDP | Counts | Tooltip: return [this, unit](int x) -> QVariant
+    {
+      if (RUnit* buddy = unit->buddy())
+      {
+        double usage0 = buddy->usageAt(x).second;
+        double usage1 = unit->usageAt(x).second;
+        double diff   = (usage1 - usage0) / usage1 * 100.0; // usage0?
+        return R_S("Intervalas: %1\nSkirtumas: %2 %")
+          .arg(intervalStr(x)).arg(diff);
+      }
+      return R_S("Intervalas: %1").arg(intervalStr(x));
+    };
+
+    case UsageDP | Hours  | Tooltip: return [this, unit](int x) -> QVariant
+    {
+      if (RUnit* buddy = unit->buddy())
+      {
+        double usage0 = buddy->usageAt(x).first;
+        double usage1 = unit->usageAt(x).first;
+        double diff   = (usage1 - usage0) / usage1 * 100.0; // usage0?
+        return R_S("Intervalas: %1\nSkirtumas: %2 %")
+          .arg(intervalStr(x)).arg(diff);
+      }
+      return R_S("Intervalas: %1").arg(intervalStr(x));
+    };
 
     default:
     {

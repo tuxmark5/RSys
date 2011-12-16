@@ -32,7 +32,7 @@ class RCalculator: public QObject
     _M ValidDivisionPtrList           m_validDivisions;
     _M IntervalFun                    m_intervalFun;
     _M int                            m_numIntervals;
-    _M bool                           m_extrapolationEnabled: 1;
+    _M bool                           m_intrapolationEnabled: 1;
 
   private:
     /**
@@ -70,7 +70,7 @@ class RCalculator: public QObject
      *                  reikia numatyti suminę apkrovą
      * @return numanoma apkrova [startDate; date) intervale
      */
-    _S double           polynomialExtrapolation(QDate prevDate, double prevUsage,
+    _S double           polynomialIntrapolation(QDate prevDate, double prevUsage,
                                                 QDate startDate, double mainUsage,
                                                 QDate endDate, double nextUsage,
                                                 QDate nextDate, QDate date);
@@ -84,7 +84,7 @@ class RCalculator: public QObject
      * @param date  data, iki kurios (ne imtinai) reikia numatyti apkrovas
      * @return numanoma apkrova [it.key(); date) intervale
      */
-    _S double           polynomialExtrapolation(UsageMap :: iterator it,
+    _S double           polynomialIntrapolation(UsageMap :: iterator it,
                                                 UsageMap :: iterator begin,
                                                 UsageMap :: iterator end,
                                                 QDate date);
@@ -105,10 +105,10 @@ class RCalculator: public QObject
      * @param coefficients     rodyklė į 3 elementų masyvą gautos funkcijos koeficientams
      * @return true, jei koeficientus rasti pavyksta; false priešingu atveju
      */
-    _S bool             polynomialExtrapolation(int segment1, double segment1Integral,
-                                                int segment2, double segment2Integral,
-                                                int segment3, double segment3Integral,
-                                                double coefficients[3]);
+    _S bool             getPolynom(int segment1, double segment1Integral,
+                                   int segment2, double segment2Integral,
+                                   int segment3, double segment3Integral,
+                                   double coefficients[3]);
 
     /**
      * Apskaičiuoja duotos 2 laipsnio polinominės funkcijos apibrėžtinį integralą.
@@ -177,7 +177,7 @@ class RCalculator: public QObject
                                              int daysBySeasons[4]);
 
   public slots:
-    _M void             setExtrapolationEnabled(bool enabled);
+    _M void             setIntrapolationEnabled(bool enabled);
 };
 
 /**********************************************************************************************/

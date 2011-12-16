@@ -13,6 +13,7 @@
 
 #include <RSys/Core/RData.hh>
 #include <RSys/Core/RDivision.hh>
+#include <RSys/Core/RGroup.hh>
 #include <RSys/Core/RMeasure.hh>
 #include <RSys/Core/RSubmission.hh>
 #include <RSys/Core/RSystem.hh>
@@ -51,6 +52,8 @@
 #include <RSys/Store/RSqlEntity.hh>
 #include <RSys/Util/RContainer.hh>
 
+/**********************************************************************************************/
+bool operator < (const QBrush&, const QBrush&) { return true; }
 /********************************************* RS *********************************************/
 /*                                        RMainWindow                                         */
 /**********************************************************************************************/
@@ -207,9 +210,9 @@ void RMainWindow :: createActions()
   m_exitAction            = R_ACTION(":/icons/exit.png",        "Išeiti");
   m_exitAction->setShortcut(QKeySequence("Ctrl+Shift+X"));
 
-  m_exterpolationAction   = R_ACTION(QString(),                 "Ekstrapoliuoti rezultatus");
+  m_exterpolationAction   = R_ACTION(QString(),                 "Intrapoliuoti rezultatus");
   m_exterpolationAction->setCheckable(true);
-  m_exterpolationAction->setChecked(g_settings->value("extrapolation", true).toBool());
+  m_exterpolationAction->setChecked(g_settings->value("intrapolation", true).toBool());
 
   m_searchAction          = R_ACTION(":/icons/find_interval.png", "Mažiausiai apkrauti intervalai");
   m_searchAction->setCheckable(true);
@@ -241,7 +244,7 @@ void RMainWindow :: createConnections()
   connect(m_disconnectAction, SIGNAL(triggered()), this, SLOT(logout()));
   connect(m_commitAction, SIGNAL(triggered()), this, SLOT(commit()));
   connect(m_exitAction, SIGNAL(triggered()), this, SLOT(close()));
-  connect(m_exterpolationAction, SIGNAL(triggered(bool)), this, SLOT(setExtrapolationEnabled(bool)));
+  connect(m_exterpolationAction, SIGNAL(triggered(bool)), this, SLOT(setIntrapolationEnabled(bool)));
   connect(m_helpAction, SIGNAL(triggered()), m_help, SLOT(launch()));
   connect(m_importAction, SIGNAL(triggered()), this, SLOT(importData()));
   connect(m_rollbackAction, SIGNAL(triggered()), this, SLOT(rollback()));
@@ -274,6 +277,11 @@ void RMainWindow :: createConnections1()
 
 void RMainWindow :: createContainers()
 {
+  auto submissionColor = [](const RSubmission& s) -> QBrush
+  {
+    return s.isValid() ? QBrush() : QBrush(QColor(0xFF, 0, 0, 0x40));
+  };
+
   auto cd = newContainer(m_data1->divisions());
   cd->addColumn("Pavadinimas");
   cd->addColumn("Aprašymas");
@@ -282,12 +290,19 @@ void RMainWindow :: createContainers()
   cd->addAccessor2<QString>(1, Qt::DisplayRole) >> &RDivision::name       << &RDivision::setName;
   cd->setAlloc([=]() { return new RDivision(m_data1); });
 
+  auto cg = newContainer(m_data1->groups());
+  cg->addColumn("Kryptis");
+  cg->addAccessor2<QString>(0, Qt::DisplayRole) >> &RGroup::name          << &RGroup::setName;
+  cg->setAlloc([=]() { return new RGroup(m_data1); });
+
   auto cm = newContainer(m_data1->measures());
   cm->addColumn("Pavadinimas");
   cm->addColumn("Aprašymas");
+  cm->addColumn("Kryptis");
   cm->addAccessor2<QString>(0, Qt::DisplayRole) >> &RMeasure::identifier << &RMeasure::setIdentifier;
   cm->addAccessor2<QString>(0, Qt::ToolTipRole) >> &RMeasure::fullName;
   cm->addAccessor2<QString>(1, Qt::DisplayRole) >> &RMeasure::name       << &RMeasure::setName;
+  cm->addAccessor2<QString>(2, Qt::DisplayRole) >> &RMeasure::groupName  << &RMeasure::setGroupName;
   cm->setAlloc([=]() { return new RMeasure(m_data1); });
 
   auto cu = newContainer(m_data1->submissions());
@@ -302,9 +317,11 @@ void RMainWindow :: createContainers()
   cu->addAccessor2<int>(1, Qt::DisplayRole)
     >> &RSubmission::count << &RSubmission::setCount;
   cu->addAccessor2<QDate>(2, Qt::DisplayRole)
-    >> &RSubmission::date0 << &RSubmission::setDate0;
+    >> &RSubmission::date0 << &RSubmission::setDate0E;
   cu->addAccessor2<QDate>(3, Qt::DisplayRole)
     >> &RSubmission::date1 << &RSubmission::setDate1;
+  cu->addAccessor2<QBrush>(0xFE, Qt::BackgroundRole)
+    >> submissionColor;
   cu->setAlloc([=]() { return new RSubmission(m_data1); });
 
   auto cu1 = newContainer(m_data1->submissions1(), *cu);
@@ -321,6 +338,7 @@ void RMainWindow :: createContainers()
   cs->setAlloc([=]() { return new RSystem(m_data1); });
 
   m_divisionContainer     = cd;
+  m_groupContainer        = cg;
   m_measureContainer      = cm;
   m_measure1Container     = newContainer(m_data1->measures1(), *cm);
   m_submissionContainer   = cu;
@@ -577,13 +595,13 @@ void RMainWindow :: rollback()
 
 /**********************************************************************************************/
 
-void RMainWindow :: setExtrapolationEnabled(bool enabled)
+void RMainWindow :: setIntrapolationEnabled(bool enabled)
 {
-  m_results->calculator0()->setExtrapolationEnabled(enabled);
-  m_results->calculator1()->setExtrapolationEnabled(enabled);
+  m_results->calculator0()->setIntrapolationEnabled(enabled);
+  m_results->calculator1()->setIntrapolationEnabled(enabled);
 
   R_GUARD(!m_loggingIn, Vacuum);
-  g_settings->setValue("extrapolation", enabled);
+  g_settings->setValue("intrapolation", enabled);
   m_intervalToolBar->applyInterval();
 }
 
@@ -596,7 +614,7 @@ void RMainWindow :: setInterfaceEnabled(bool enabled)
     createInterface();
     createConnections1();
     setCentralWidget(m_splitter);
-    setExtrapolationEnabled(m_exterpolationAction->isChecked());
+    setIntrapolationEnabled(m_exterpolationAction->isChecked());
   }
   else if (m_splitter)
   {
@@ -682,10 +700,9 @@ bool RMainWindow :: showSaveDialog(const QString& title)
 
     case QMessageBox::Discard:
       return true;
-
-    case QMessageBox::Cancel:
-      return false;
   }
+
+  return false;
 }
 
 /**********************************************************************************************/

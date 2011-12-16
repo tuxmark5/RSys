@@ -1,5 +1,6 @@
 #include <RSys/Core/RData.hh>
 #include <RSys/Core/RDivision.hh>
+#include <RSys/Core/RGroup.hh>
 #include <RSys/Core/RMeasure.hh>
 #include <RSys/Core/RSubmission.hh>
 #include <RSys/Core/RSystem.hh>
@@ -53,10 +54,11 @@ void RData :: clear()
   m_submissions.clear();        // deps: measures
   m_submissions1.clear();       // deps: measures
 
-  m_measures.clear();           // deps: -
+  m_measures.clear();           // deps: groups
   m_measures1.deleteAll();      // deps: -
   m_systems.clear();            // deps: -
   m_users.clear();
+  m_groups.clear();
 
   m_unitHash[RUnit::Division].clear();
   m_unitHash[RUnit::Measure].clear();
@@ -93,6 +95,26 @@ void RData :: enableIntervalTracking()
 
 /**********************************************************************************************/
 
+RGroup* RData :: group(RID id) const
+{
+  for (auto& g: m_groups)
+    if (g->id() == id)
+      return g;
+  return 0;
+}
+
+/**********************************************************************************************/
+
+RGroup* RData :: group(const QString& name) const
+{
+  for (auto& g: m_groups)
+    if (g->name() == name)
+      return g;
+  return 0;
+}
+
+/**********************************************************************************************/
+
 RMeasure* RData :: measure(RID id) const
 {
   for (auto it = m_measures.begin(); it != m_measures.end(); ++it)
@@ -124,6 +146,7 @@ void RData :: onDate0Change(RSubmission* submission, QDate oldDate0)
   }
   else if (oldDate0 == m_interval0)
     calculateIntervals();
+  validateSubmissions1();
 }
 
 /**********************************************************************************************/
@@ -140,6 +163,7 @@ void RData :: onDate1Change(RSubmission* submission, QDate oldDate1)
   }
   else if (oldDate1 == m_interval1)
     calculateIntervals();
+  validateSubmissions1();
 }
 
 /**********************************************************************************************/
@@ -163,6 +187,7 @@ void RData :: operator = (RData& data)
   clear();
   m_purgeEnabled = true;
 
+  m_groups.clone(data.m_groups, this);
   m_measures.clone(data.m_measures, this);
   m_measures1.clone(data.m_measures1, this);
   m_systems.clone(data.m_systems, this);
@@ -269,6 +294,14 @@ RUser* RData :: user(const QString& userName) const
     if ((*it)->userName() == userName)
       return it->get();
   return 0;
+}
+
+/**********************************************************************************************/
+
+void RData :: validateSubmissions1()
+{
+  for (auto& x: m_submissions1)
+    x->validate();
 }
 
 /**********************************************************************************************/

@@ -151,7 +151,7 @@ void RLoginWidget :: loadData()
   if (!(result = m_database->select()))
   {
     m_database->logout();
-    showMessage(R_S("Nepavyko atidaryti vietinės DB"));
+    showMessage(R_S("Nepavyko atidaryti DB"));
   }
 
   loginEnd(result);

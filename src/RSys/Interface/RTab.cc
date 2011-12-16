@@ -42,6 +42,7 @@ RTableView* RTab :: addSubmissionTable(RContainer* container)
   header->resizeSection(1, 60);
   header->resizeSection(2, 100);
   header->resizeSection(3, 100);
+  return tableView;
 }
 
 /**********************************************************************************************/

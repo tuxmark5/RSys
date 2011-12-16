@@ -34,41 +34,43 @@ class RValidList
           m_it(it), m_list(list), m_container(container) { }
         _M Vacuum          ~Iterator() { }
         _M Iterator&       operator = (const Iterator& other)
-          {
-            m_it = other.m_it;
-            m_list = other.m_list;
-            m_container = other.m_container;
-            return *this;
-          }
+        {
+          m_it        = other.m_it;
+          m_list      = other.m_list;
+          m_container = other.m_container;
+          return *this;
+        }
         _M bool            operator == (const Iterator& other) const
           { return m_it == other.m_it; }
         _M bool            operator != (const Iterator& other) const
           { return m_it != other.m_it; }
+
+        // sitas buvo neiskaitomas, tai perrasiau, kad makintu bent kiek sense
         _M Iterator&       operator ++ ()
+        {
+          if (m_list == 0)
           {
-            if (m_list == 1)
+            for (++m_it; m_it != m_container->m_list0->end(); ++m_it)
+              if ((*m_it)->isValid())
+                return *this;
+
+            if (m_container->m_list1)
             {
-              while (m_it != m_container->m_list1->end() && (*m_it)->isValid() == false);
-              {
-                m_it++;
-              }
-            } else if (m_it != m_container->m_list0->end()) {
-              do
-              {
-                m_it++;
-                if (m_it == m_container->m_list0->end() && m_container->m_list1 != NULL)
-                {
-                  m_list = 1;
-                  m_it = m_container->m_list1->begin();
-                  while (m_it != m_container->m_list1->end() && (*m_it)->isValid() == false)
-                  {
-                    m_it++;
-                  }
-                }
-              } while (m_list == 0 && m_it != m_container->m_list0->end() && !(*m_it)->isValid());
+              m_list  = 1;
+              m_it    = m_container->m_list1->begin();
             }
-            return *this;
           }
+          else
+            ++m_it;
+
+          if (m_list == 1)
+            for (; m_it != m_container->m_list1->end(); ++m_it)
+              if ((*m_it)->isValid())
+                return *this;
+
+          return *this;
+        }
+
         _M Iterator&       operator ++(int)
           { Iterator old(*this); ++(*this); return old; }
         _M Value           operator * () const
@@ -85,10 +87,17 @@ class RValidList
     _M Vacuum           RValidList() { }
     _M Vacuum           ~RValidList() { }
     _M Iterator         begin()
-      { return Iterator(this, m_list0->begin(), 0); }
+    {
+      return  (m_list0->isEmpty() && m_list1)
+            ? Iterator(this, m_list1->begin(), 0)   // bugfix, kai list0 tuscias, tai != end
+            : Iterator(this, m_list0->begin(), 0);
+    }
+
     _M Iterator         end()
-      { return (m_list1 == NULL ? Iterator(this, m_list0->end(), 0)
-                                : Iterator(this, m_list1->end(), 1)); }
+    { return   (m_list1)
+             ? Iterator(this, m_list1->end(), 0)
+             : Iterator(this, m_list0->end(), 1);
+    }
 };
 
 /**********************************************************************************************/

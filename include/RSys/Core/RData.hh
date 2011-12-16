@@ -22,6 +22,7 @@ class RData: public QObject, public RSignal
 
   public:
     _F class RElement;
+    _F class RMeasure;
     _F class RSubmission;
     _F class RUnit;
 
@@ -35,6 +36,7 @@ class RData: public QObject, public RSignal
   private:
     _M RUnitMultiHash         m_unitHash[3];
     _M RDivisionPtrList       m_divisions;
+    _M RGroupPtrList          m_groups;
     _M RMeasurePtrList        m_measures;
     _M RMeasurePtrList        m_measures1;      // planned measures / phantom
     _M RSubmissionPtrList     m_submissions;
@@ -55,6 +57,9 @@ class RData: public QObject, public RSignal
     _M RDivision*             division(const QString& identifier) const;
     _M RDivisionPtrList*      divisions()     { return &m_divisions; }
     _M void                   enableIntervalTracking();
+    _M RGroup*                group(RID id) const;
+    _M RGroup*                group(const QString& name) const;
+    _M RGroupPtrList*         groups() { return &m_groups; }
     _M QDate                  interval0() const { return m_interval0; }
     _M QDate                  interval1() const { return m_interval1; }
     _M bool                   isModified() const { return m_modified; }
@@ -82,6 +87,7 @@ class RData: public QObject, public RSignal
     _M void                   onDate0Change(RSubmission* submission, QDate oldDate0);
     _M void                   onDate1Change(RSubmission* submission, QDate oldDate1);
     _M void                   onSubmissionRemoval(RSubmission* submission);
+    _M void                   validateSubmissions1();
 
   signals:
     _M void                   elementChanged(RElement* element, int changeType);

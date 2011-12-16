@@ -1,6 +1,7 @@
 #include <QtCore/QFile>
 #include <QtSql/QSqlQuery>
 #include <RSys/Core/RData.hh>
+#include <RSys/Core/RGroup.hh>
 #include <RSys/Core/RUser.hh>
 #include <RSys/Store/RDatabase.hh>
 #include <RSys/Store/REntity1D.hh>
@@ -96,10 +97,15 @@ void RDatabase :: createDataEntities()
   de->addField<QString> ("ident") >> &RDivision::identifier   << &RDivision::setIdentifier;
   de->addField<QString> ("name")  >> &RDivision::name         << &RDivision::setName;
 
+  auto ge = newEntity1D("groups", this, m_data->groups(), alloc<RGroup>::make(m_data));
+  ge->addField<RID>     ("id")    >> &RGroup::id              << &RGroup::setId;
+  ge->addField<QString> ("name")  >> &RGroup::name            << &RGroup::setName;
+
   auto me = newEntity1D("measures", this, m_data->measures(), alloc<RMeasure>::make(m_data));
   me->addField<RID>     ("id")    >> &RMeasure::id            << &RMeasure::setId;
   me->addField<QString> ("ident") >> &RMeasure::identifier    << &RMeasure::setIdentifier;
   me->addField<QString> ("name")  >> &RMeasure::name          << &RMeasure::setName;
+  me->addField<RID>     ("gid")   >> &RMeasure::groupId       << &RMeasure::setGroupId;
 
   auto se = newEntity1D("systems", this, m_data->systems(), alloc<RSystem>::make(m_data));
   se->addField<RID>     ("id")    >> &RSystem::id             << &RSystem::setId;
@@ -138,7 +144,7 @@ void RDatabase :: createDataEntities()
   sae->setKey1(fromSystem, toSystem);
   sae->setSetter(setSystem);
 
-  m_entities << de << me << se << ue << mae << sae;
+  m_entities << de << ge << me << se << ue << mae << sae;
 }
 
 /**********************************************************************************************/
@@ -216,7 +222,8 @@ bool RDatabase :: initSQLite1()
   R_GUARD(m_database.transaction(), false);
 
   m_database.exec("CREATE TABLE divisions(id INTEGER, ident, name, PRIMARY KEY(id));");
-  m_database.exec("CREATE TABLE measures(id INTEGER, ident, name, PRIMARY KEY(id));");
+  m_database.exec("CREATE TABLE groups(id INTEGER, name, PRIMARY KEY(id));");
+  m_database.exec("CREATE TABLE measures(id INTEGER, ident, name, gid, PRIMARY KEY(id));");
   m_database.exec("CREATE TABLE systems(id INTEGER, ident, name, PRIMARY KEY(id));");
   m_database.exec("CREATE TABLE submissions(id INTEGER, measure, count, date0, date1, PRIMARY KEY(id));");
   m_database.exec("CREATE TABLE measureAdm(division, measure, weight, PRIMARY KEY(division, measure));");

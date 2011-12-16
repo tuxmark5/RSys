@@ -24,7 +24,7 @@ Vacuum RCalculator :: RCalculator(RData* data):
   m_validSubmissions(data->submissions(), data->submissions1()),
   m_validDivisions(data->divisions()),
   m_numIntervals(0),
-  m_extrapolationEnabled(true)
+  m_intrapolationEnabled(true)
 {
 }
 
@@ -116,21 +116,31 @@ void RCalculator :: calculateIntervals()
     for (auto measure : m_validMeasures)
     {
       measure->m_usage.clear();
+      if (measure->m_usageMap.empty())
+      {
+        measure->m_usage.resize(m_numIntervals);
+        continue;
+      }
+      QDate predictFrom = (--measure->m_usageMap.end()).key();
+      if (m_data->interval1().isValid() && m_data->interval1().daysTo(predictFrom) <= 0)
+      {
+        predictFrom = m_data->interval1().addDays(1);
+      }
       measure->m_usage.reserve(m_numIntervals);
       for (int i = 0; i < m_numIntervals; i++)
       {
         double usage;
-        if (TO(intervals[i]).daysTo(m_data->interval1()) > -1)
+        if (TO(intervals[i]).daysTo(predictFrom) >= 0)
         { // intervalas istorijoje
           usage = calculateUsage(intervals[i], measure->m_usageMap);
-        } else if (FROM(intervals[i]).daysTo(m_data->interval1()) < 0)
+        } else if (FROM(intervals[i]).daysTo(predictFrom) <= 0)
         { // prognozė
           usage = predictUsage(intervals[i], measure->m_usageMap);
         } else { // ir istorija, ir prognozė
           RInterval interval = intervals[i];
-          TO(interval) = m_data->interval1().addDays(1);
+          TO(interval) = predictFrom;
           usage = calculateUsage(interval, measure->m_usageMap);
-          FROM(interval) = TO(interval);
+          FROM(interval) = predictFrom;
           TO(interval) = TO(intervals[i]);
           usage += predictUsage(interval, measure->m_usageMap);
         }
@@ -182,9 +192,9 @@ double RCalculator :: calculateUsage(RInterval interval, UsageMap& usageMap)
   } else {
     it--;
     curUsage = it.value();
-    if (m_extrapolationEnabled)
+    if (m_intrapolationEnabled)
     {
-      usage = -polynomialExtrapolation(it, usageMap.begin(), usageMap.end(), curDate);
+      usage = -polynomialIntrapolation(it, usageMap.begin(), usageMap.end(), curDate);
       curDate = it.key();
     }
     it++;
@@ -198,9 +208,9 @@ double RCalculator :: calculateUsage(RInterval interval, UsageMap& usageMap)
   }
   if (it != usageMap.begin())
   {
-    if (m_extrapolationEnabled)
+    if (m_intrapolationEnabled)
     {
-      usage += polynomialExtrapolation(--it, usageMap.begin(), usageMap.end(), TO(interval));
+      usage += polynomialIntrapolation(--it, usageMap.begin(), usageMap.end(), TO(interval));
     } else {
       usage += curDate.daysTo(TO(interval)) * curUsage;
     }
@@ -240,7 +250,7 @@ double RCalculator :: predictUsage(RInterval interval, UsageMap& usageMap)
                                          FROM(interval).month(), FROM(interval).day()));
   double usage[3];
   int pastYears; // kelių metų duomenis turime
-  for (pastYears = 0; pastYears < 3; pastYears++)
+  for (pastYears = 0; pastYears < 2; pastYears++)
   {
     FROM(interval) = FROM(interval).addDays(distance);
     TO(interval) = TO(interval).addDays(distance);
@@ -269,12 +279,6 @@ double RCalculator :: predictUsage(RInterval interval, UsageMap& usageMap)
       return 0;
     case 1:
       return usage[0];
-    case 3:
-      double coefficients[3];
-      if (polynomialExtrapolation(1, usage[2], 2, usage[1], 3, usage[0], coefficients))
-      {
-        return std::max(0.0, integrate(coefficients, 2 + yearsToFuture, 3 + yearsToFuture));
-      }
     case 2:
       return std::max(0.0, usage[0] + (usage[0] - usage[1]) * yearsToFuture);
   }
@@ -283,17 +287,17 @@ double RCalculator :: predictUsage(RInterval interval, UsageMap& usageMap)
 
 /**********************************************************************************************/
 
-double RCalculator :: polynomialExtrapolation(QDate prevDate, double prevUsage,
+double RCalculator :: polynomialIntrapolation(QDate prevDate, double prevUsage,
                                               QDate startDate, double mainUsage,
                                               QDate endDate, double nextUsage,
                                               QDate nextDate, QDate date)
 {
   double coefficients[3]; // antro laipsnio polinomo koeficientai
                           // (koeficientas prie laipsnio i yra indeksu 2 - i)
-  if (polynomialExtrapolation(prevDate.daysTo(startDate), prevDate.daysTo(startDate) * prevUsage,
-                          prevDate.daysTo(endDate), startDate.daysTo(endDate) * mainUsage,
-                          prevDate.daysTo(nextDate), endDate.daysTo(nextDate) * nextUsage,
-                          coefficients)
+  if (getPolynom(prevDate.daysTo(startDate), prevDate.daysTo(startDate) * prevUsage,
+                 prevDate.daysTo(endDate), startDate.daysTo(endDate) * mainUsage,
+                 prevDate.daysTo(nextDate), endDate.daysTo(nextDate) * nextUsage,
+                 coefficients)
       && nonNegativeInInterval(coefficients, prevDate.daysTo(startDate),
                                prevDate.daysTo(endDate)))
   {
@@ -306,10 +310,10 @@ double RCalculator :: polynomialExtrapolation(QDate prevDate, double prevUsage,
 
 /**********************************************************************************************/
 
-bool RCalculator :: polynomialExtrapolation(int segment1, double segment1Integral,
-                                              int segment2, double segment2Integral,
-                                              int segment3, double segment3Integral,
-                                              double coefficients[3])
+bool RCalculator :: getPolynom(int segment1, double segment1Integral,
+                               int segment2, double segment2Integral,
+                               int segment3, double segment3Integral,
+                               double coefficients[3])
 {
   double matrix[3][4];
   // (rezultate koeficientas prie laipsnio i yra indeksu 2 - i)
@@ -397,7 +401,7 @@ bool RCalculator :: solveSystemOfLinearEquations(double matrix[3][4],
 
 /**********************************************************************************************/
 
-double RCalculator :: polynomialExtrapolation(UsageMap :: iterator it,
+double RCalculator :: polynomialIntrapolation(UsageMap :: iterator it,
                                               UsageMap :: iterator begin,
                                               UsageMap :: iterator end,
                                               QDate date)
@@ -432,7 +436,7 @@ double RCalculator :: polynomialExtrapolation(UsageMap :: iterator it,
   } else {
     nextDate = it.key();
   }
-  return polynomialExtrapolation(prevDate, prevUsage, startDate, mainUsage,
+  return polynomialIntrapolation(prevDate, prevUsage, startDate, mainUsage,
                                  endDate, nextUsage, nextDate, date);
 }
 
@@ -557,7 +561,7 @@ double RCalculator :: daysUsage(QDate day, UsageMap& usageMap)
 
 /**********************************************************************************************/
 
- void RCalculator :: setExtrapolationEnabled(bool enabled)
+ void RCalculator :: setIntrapolationEnabled(bool enabled)
  {
-   m_extrapolationEnabled = enabled;
+   m_intrapolationEnabled = enabled;
  }

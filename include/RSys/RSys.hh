@@ -31,6 +31,7 @@
 class RData;
 class RDivision;
 class RElement;
+class RGroup;
 class RMeasure;
 class RSubmission;
 class RSystem;
@@ -180,6 +181,8 @@ typedef ROList<RDivision*>              RDivisionList;
 typedef RSharedPtr<RDivision>           RDivisionPtr;
 typedef ROList<RDivisionPtr>            RDivisionPtrList;
 typedef std::function<RInterval (int)>  RIntervalFun;
+typedef RSharedPtr<RGroup>              RGroupPtr;
+typedef ROList<RGroupPtr>               RGroupPtrList;
 typedef ROList<RMeasure*>               RMeasureList;
 typedef RSharedPtr<RMeasure>            RMeasurePtr;
 typedef ROList<RMeasurePtr>             RMeasurePtrList;

@@ -12,6 +12,7 @@ Vacuum RSubmission :: RSubmission(RData* data, bool planned):
   m_count(0),
   m_planned(planned)
 {
+  m_valid = false;
 }
 
 /**********************************************************************************************/
@@ -62,6 +63,8 @@ void RSubmission :: remove()
     m_data->measures1()->removeOne(m_measure);
     m_measure = 0;
   }
+
+  m_valid = false;
 }
 
 /**********************************************************************************************/
@@ -84,6 +87,10 @@ bool RSubmission :: setDate0(const QDate& date0)
   R_DATA_GUARD(date0.isValid(), false, "Neteisinga data.");
   R_DATA_GUARD(m_date1.isValid() ? (date0 < m_date1) : true, false,
                "Klaidingas kairysis intervalo galas.");
+  R_DATA_GUARD(isPlanned() ? date0 > m_data->interval1() : true, false,
+               "Planuojamos paraiškos intervalas kertasi su istoriniais duomenimis.<br>"
+               "Intervalas gali prasidėti nuo: <b>%1</b>",
+               .arg(R_DATE_TO_S(m_data->interval1().addDays(1))));
 
   QDate oldDate0  = m_date0;
   m_date0         = date0;
@@ -91,6 +98,17 @@ bool RSubmission :: setDate0(const QDate& date0)
   (*m_data)[date0Changed](this, oldDate0);
   m_data->modify();
 
+  return true;
+}
+
+/**********************************************************************************************/
+
+bool RSubmission :: setDate0E(const QDate& date0)
+{
+  R_GUARD(setDate0(date0),  false);
+  R_GUARD(m_date1.isNull(), true);
+
+  setDate1(m_date0.addMonths(1).addDays(-1));
   return true;
 }
 
@@ -109,6 +127,50 @@ bool RSubmission :: setDate1(const QDate& date1)
 
   m_data->modify();
   return true;
+}
+
+/**********************************************************************************************/
+extern std::function<QDate (QDate)> g_dateIncrementor;
+/* * * * * * * * * * * * * * * * * * * * * * * ** * * * * * * * * * * * * * * * * * * * * * * */
+
+void RSubmission :: setDefaultInteval()
+{
+  R_GUARD(m_measure, Vacuum);
+  R_GUARD(m_date0.isNull() || m_date1.isNull(), Vacuum);
+
+  RInterval lastInterval  = m_measure->lastInterval();
+  QDate     date0         = std::get<0>(lastInterval);
+  QDate     date1         = std::get<1>(lastInterval);
+  QDate     newDate0;
+  QDate     newDate1;
+
+  if (date0.isValid() && date1.isValid())
+  {
+    int length = date0.daysTo(date1);
+
+    switch (length)
+    {
+      case 29:
+      case 30:
+      case 31:
+        newDate0 = date0.addMonths(1);
+        newDate1 = newDate0.addMonths(1).addDays(-1);
+        break;
+
+      default:
+        newDate0 = date1.addDays(1);
+        newDate1 = newDate0.addDays(length);
+        break;
+    }
+  }
+  else
+  {
+    newDate0 = m_data->interval1().addDays(1);
+    newDate1 = g_dateIncrementor(newDate0).addDays(-1);
+  }
+
+  if (m_date0.isNull()) setDate0(newDate0);
+  if (m_date1.isNull()) setDate1(newDate1);
 }
 
 /**********************************************************************************************/
@@ -137,6 +199,8 @@ bool RSubmission :: setMeasureName(const QString& measureName)
   QString       measureName1  = measureName.trimmed().toUpper();
   RMeasurePtr   measure1      = m_data->measure(measureName1);
   R_DATA_GUARD(measure1, false, "Nežinoma paramos priemonė <b>%1</b>", .arg(measureName1));
+  R_DATA_GUARD(!isPlanned() ? !measure1->isPlanned() : true, false,
+               "Neleistinas planuojamos priemonės panaudojimas");
 
   m_measureName   = measureName1;
   (*m_data)[measureChange](this, measure1.get());
@@ -144,6 +208,8 @@ bool RSubmission :: setMeasureName(const QString& measureName)
   validate();
 
   m_data->modify();
+  setDefaultInteval();
+
   return true;
 }
 
@@ -166,6 +232,7 @@ void RSubmission :: setMeasure1NameE(const QString& measureName)
   (*m_data)[measureChange](this, measure1.get());
   m_measure       = measure1;
   validate();
+  setDefaultInteval();
 }
 
 /**********************************************************************************************/
@@ -177,8 +244,9 @@ void RSubmission :: validate()
   valid &= m_date0.isValid();
   valid &= m_date1.isValid();
   valid &= bool(m_measure);
-  valid &= m_count > 0;
 
+  if (valid && isPlanned())
+    valid = m_date0 > m_data->interval1();
   setValid(valid);
 }
 
