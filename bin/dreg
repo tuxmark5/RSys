@@ -43,6 +43,7 @@ COMPONENTS = {
         'l':  'Logic',
         'p':  'Parse',
         's':  'Store',
+        't':  'Test',
         'a':  'All',
         }
 PHASES = {
