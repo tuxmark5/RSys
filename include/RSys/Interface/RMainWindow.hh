@@ -67,6 +67,7 @@ class RMainWindow: public QMainWindow
     _M RResults*            m_results;
 
     _M RContainerPtr        m_divisionContainer;
+    _M RContainerPtr        m_groupContainer;
     _M RContainerPtr        m_measureContainer;
     _M RContainerPtr        m_measure1Container;
     _M RContainerPtr        m_submissionContainer;
@@ -83,6 +84,7 @@ class RMainWindow: public QMainWindow
     _M RUnitPtrList*        currentUnits() const;
     _M RData*               data() const { return m_data1; }
     _M RContainer*          divisionContainer() const { return m_divisionContainer; }
+    _M RContainer*          groupContainer() const { return m_groupContainer; }
     _M RLogDock*            logDock() const { return m_logDock; }
     _M RContainer*          measureContainer() const { return m_measureContainer; }
     _M RContainer*          measure1Container() const { return m_measure1Container; }

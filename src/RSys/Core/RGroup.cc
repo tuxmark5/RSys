@@ -28,6 +28,7 @@ Vacuum RGroup :: ~RGroup()
 
 void RGroup :: setName(const QString& name)
 {
+  qDebug() << "SN" << name;
   m_name = name;
 }
 

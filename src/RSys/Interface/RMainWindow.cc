@@ -13,6 +13,7 @@
 
 #include <RSys/Core/RData.hh>
 #include <RSys/Core/RDivision.hh>
+#include <RSys/Core/RGroup.hh>
 #include <RSys/Core/RMeasure.hh>
 #include <RSys/Core/RSubmission.hh>
 #include <RSys/Core/RSystem.hh>
@@ -289,12 +290,19 @@ void RMainWindow :: createContainers()
   cd->addAccessor2<QString>(1, Qt::DisplayRole) >> &RDivision::name       << &RDivision::setName;
   cd->setAlloc([=]() { return new RDivision(m_data1); });
 
+  auto cg = newContainer(m_data1->groups());
+  cg->addColumn("Kryptis");
+  cg->addAccessor2<QString>(0, Qt::DisplayRole) >> &RGroup::name          << &RGroup::setName;
+  cg->setAlloc([=]() { return new RGroup(m_data1); });
+
   auto cm = newContainer(m_data1->measures());
   cm->addColumn("Pavadinimas");
   cm->addColumn("Aprašymas");
+  cm->addColumn("Kryptis");
   cm->addAccessor2<QString>(0, Qt::DisplayRole) >> &RMeasure::identifier << &RMeasure::setIdentifier;
   cm->addAccessor2<QString>(0, Qt::ToolTipRole) >> &RMeasure::fullName;
   cm->addAccessor2<QString>(1, Qt::DisplayRole) >> &RMeasure::name       << &RMeasure::setName;
+  cm->addAccessor2<QString>(2, Qt::DisplayRole) >> &RMeasure::groupName  << &RMeasure::setGroupName;
   cm->setAlloc([=]() { return new RMeasure(m_data1); });
 
   auto cu = newContainer(m_data1->submissions());
@@ -330,6 +338,7 @@ void RMainWindow :: createContainers()
   cs->setAlloc([=]() { return new RSystem(m_data1); });
 
   m_divisionContainer     = cd;
+  m_groupContainer        = cg;
   m_measureContainer      = cm;
   m_measure1Container     = newContainer(m_data1->measures1(), *cm);
   m_submissionContainer   = cu;

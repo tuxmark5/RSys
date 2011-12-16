@@ -54,10 +54,11 @@ void RData :: clear()
   m_submissions.clear();        // deps: measures
   m_submissions1.clear();       // deps: measures
 
-  m_measures.clear();           // deps: -
+  m_measures.clear();           // deps: groups
   m_measures1.deleteAll();      // deps: -
   m_systems.clear();            // deps: -
   m_users.clear();
+  m_groups.clear();
 
   m_unitHash[RUnit::Division].clear();
   m_unitHash[RUnit::Measure].clear();
@@ -90,6 +91,26 @@ void RData :: enableIntervalTracking()
   (*this)[RSubmission::date0Changed]      << std::bind(&RData::onDate0Change, this, _1, _2);
   (*this)[RSubmission::date1Changed]      << std::bind(&RData::onDate1Change, this, _1, _2);
   (*this)[RSubmission::submissionRemoval] << std::bind(&RData::onSubmissionRemoval, this, _1);
+}
+
+/**********************************************************************************************/
+
+RGroup* RData :: group(RID id) const
+{
+  for (auto& g: m_groups)
+    if (g->id() == id)
+      return g;
+  return 0;
+}
+
+/**********************************************************************************************/
+
+RGroup* RData :: group(const QString& name) const
+{
+  for (auto& g: m_groups)
+    if (g->name() == name)
+      return g;
+  return 0;
 }
 
 /**********************************************************************************************/

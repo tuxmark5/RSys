@@ -16,6 +16,7 @@ Vacuum RMeasure :: RMeasure(RData* data, bool planned):
 
 Vacuum RMeasure :: RMeasure(RMeasure& measure, RData* data):
   RUnit(measure, data),
+  m_group(measure.m_group ? measure.m_group->buddy() : 0),
   m_planned(measure.m_planned)
 {
 }
@@ -25,6 +26,7 @@ Vacuum RMeasure :: RMeasure(RMeasure& measure, RData* data):
 Vacuum RMeasure :: ~RMeasure()
 {
   R_NZ(m_data)->purgeMeasure(this);
+  setGroup(0);
 }
 
 /**********************************************************************************************/
@@ -32,6 +34,13 @@ Vacuum RMeasure :: ~RMeasure()
 RID RMeasure :: groupId() const
 {
   return m_group ? m_group->id() : -1;
+}
+
+/**********************************************************************************************/
+
+QString RMeasure :: groupName() const
+{
+  return m_group ? m_group->name() : QString();
 }
 
 /**********************************************************************************************/
@@ -61,9 +70,27 @@ void RMeasure :: remove()
 
 /**********************************************************************************************/
 
+void RMeasure :: setGroup(RGroup* group)
+{
+  R_GUARD(m_group != group, Vacuum);
+
+  if (m_group && (m_group->numRefs() <= 3)) // this, list, entity?
+    m_data->groups()->removeOne(m_group);
+  m_group = group;
+}
+
+/**********************************************************************************************/
+
 void RMeasure :: setGroupId(RID group)
 {
-  //m_groupId = group;
+  setGroup(m_data->group(group));
+}
+
+/**********************************************************************************************/
+
+void RMeasure :: setGroupName(const QString& group)
+{
+  setGroup(m_data->group(group));
 }
 
 /**********************************************************************************************/

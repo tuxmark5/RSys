@@ -22,6 +22,7 @@ class RData: public QObject, public RSignal
 
   public:
     _F class RElement;
+    _F class RMeasure;
     _F class RSubmission;
     _F class RUnit;
 
@@ -56,6 +57,8 @@ class RData: public QObject, public RSignal
     _M RDivision*             division(const QString& identifier) const;
     _M RDivisionPtrList*      divisions()     { return &m_divisions; }
     _M void                   enableIntervalTracking();
+    _M RGroup*                group(RID id) const;
+    _M RGroup*                group(const QString& name) const;
     _M RGroupPtrList*         groups() { return &m_groups; }
     _M QDate                  interval0() const { return m_interval0; }
     _M QDate                  interval1() const { return m_interval1; }

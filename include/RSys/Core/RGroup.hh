@@ -16,6 +16,7 @@ class RGroup: public RElement
     _M Vacuum           RGroup(RData* data);
     _M Vacuum           RGroup(RGroup& group, RData* data);
     _V Vacuum           ~RGroup();
+    _M RGroup*          buddy() { return static_cast<RGroup*>(m_buddy); }
     _M QString          name() const { return m_name; }
     _M void             setName(const QString& name);
 };
