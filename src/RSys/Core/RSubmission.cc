@@ -114,6 +114,24 @@ bool RSubmission :: setDate0E(const QDate& date0)
 
 /**********************************************************************************************/
 
+bool RSubmission :: setDate0F(const QDate &date0)
+{
+  // TODO: Patikrinti ar teisingai veikia ši funkcija.
+  R_DATA_GUARD(date0.isValid(), false, "Neteisinga data.");
+
+  QDate oldDate0  = m_date0;
+  m_date0         = date0;
+  validate();
+  (*m_data)[date0Changed](this, oldDate0);
+  m_data->modify();
+
+  setDate1(date0.addDays(1));
+
+  return true;
+}
+
+/**********************************************************************************************/
+
 bool RSubmission :: setDate1(const QDate& date1)
 {
   R_DATA_GUARD(date1.isValid(), false, "Neteisinga data.");

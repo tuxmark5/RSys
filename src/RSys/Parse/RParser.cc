@@ -463,7 +463,7 @@ bool RParser::readSubmissions(RData *data, RITable *table, QStringList &message)
         RSubmissionPtr submission = new RSubmission(data);
         bool correct = submission->setMeasureName(
               table->cell(measureColumn,rowIndex).toString().toUpper());
-        correct &= submission->setDate0(
+        correct &= submission->setDate0F(
               this->parseDate(table->cell(dateFromColumn,rowIndex)));
         correct &= submission->setDate1(
               this->parseDate(table->cell(dateToColumn,rowIndex)));
