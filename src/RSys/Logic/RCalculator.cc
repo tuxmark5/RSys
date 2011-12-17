@@ -14,19 +14,6 @@
 #define IS_LEAP(x)    (x).daysInYear() == 366
 #define MAGIC         2.718281828
 
-/**********************************************************************************************/
-
-/**
- * Informacija apie priemonės apkrovų įrašus jų teisingumo patikrinimui.
- */
-struct MeasureInfo
-{
-  QMap<QDate, RSubmissionPtr> m_usefulSubmissions; // smulkiausi korektiški įrašai
-                                                   // pagal intervalo pradžią
-  QMap<QDate, QDate>          m_invalidIntervals; // kur yra susikertančių intervalų
-  QVector<RSubmissionPtr>     m_splitSubmissions; // kurie buvo patikslinti
-};
-
 /********************************************* RS *********************************************/
 /*                                        RCalculator                                         */
 /**********************************************************************************************/
@@ -55,6 +42,7 @@ void RCalculator :: update()
   {
     measure->m_unitUsage.clear();
     measure->m_usageMap.clear();
+    measure->m_usage.clear();
   }
   for (auto division : m_validDivisions)
   {
@@ -67,10 +55,10 @@ void RCalculator :: update()
   {
     QDate from = submission->date0();
     QDate to   = submission->date1().addDays(1);
-    MeasureInfo& info = measuresInfos[submission->measure()];
+    MeasureInfo& info = measureInfos[submission->measure()];
 
     { // patikriname, ar nesikerta su anksčiau susikirtusiais
-      auto it = info.m_invalidIntervals.lower_bound(to);
+      auto it = info.m_invalidIntervals.lowerBound(to);
       if (it != info.m_invalidIntervals.begin() && (--it).value() > from)
       {
         submission->setValid(false);
@@ -108,7 +96,7 @@ void RCalculator :: update()
     }
 
     { // patikrina, ar nesikerta su naudojamais
-      auto it = info.m_usefulSubmissions.lower_bound(to);
+      auto it = info.m_usefulSubmissions.lowerBound(to);
       if (it != info.m_usefulSubmissions.begin())
       {
         if ((--it).value()->date1() > from)
@@ -118,7 +106,7 @@ void RCalculator :: update()
           do
           {
             it.value()->setValid(false);
-            if (it.value() != info.m_usefulSubmissions.begin())
+            if (it != info.m_usefulSubmissions.begin())
             {
               if (it.key() < from) from = it.key();
               info.m_usefulSubmissions.erase(it--);
@@ -138,7 +126,7 @@ void RCalculator :: update()
     }
 
     { // patikrina, ar yra tikslinantis intervalas
-      auto it = info.m_usefulSubmissions.lower_bound(from);
+      auto it = info.m_usefulSubmissions.lowerBound(from);
       if (it != info.m_usefulSubmissions.end() && it.value()->date1() < to)
       { // buvo nedidesnis intervalas
         info.m_splitSubmissions.push_back(submission);
@@ -152,7 +140,7 @@ void RCalculator :: update()
         if (it != info.m_usefulSubmissions.end() && it.key() <= from
             && it.value()->date1() >= to)
         { // buvo didesnis intervalas
-          info.m_splitSubmissions.push_back(it->value());
+          info.m_splitSubmissions.push_back(it.value());
           if (it.key() == from)
           {
             it.value() = submission;
@@ -167,13 +155,11 @@ void RCalculator :: update()
     info.m_usefulSubmissions.insert(from, submission);
   }
 
-  for (info.m_usefulSubmissions)
-    double usage = (double)submission->count() / from.daysTo(to);
-    submission->measure()->m_usageMap.insert(from, usage);
-    if (intervalMap.find(to) == intervalMap.end())
-    {
-      submission->measure()->m_usageMap.insert(to, 0);
-    }
+  for (auto it = measureInfos.begin(); it != measureInfos.end(); it++)
+  {
+    checkSplitSubmissions(it.value());
+    updateUsageMap(it.key()->m_usageMap, it.value().m_usefulSubmissions);
+  }
 
   calculateIntervals();
 }
@@ -190,6 +176,25 @@ void RCalculator :: updateMeasures(RDivisionPtr& division, RMeasureHash& measure
       measIt.key()->m_unitUsage[sysIt.key()] += sysIt.value() * measIt.value();
     }
   }
+}
+
+/**********************************************************************************************/
+
+void RCalculator :: updateUsageMap(UsageMap& usageMap, SubmissionMap& submissions)
+{
+  for (auto it = submissions.begin(); it != submissions.end(); it++)
+  {
+    QDate to = it.value()->date1().addDays(1);
+    usageMap.insert(it.key(), (double)it.value()->count()
+                              / (it.value()->date0().daysTo(to)));
+    usageMap.insert(to, 0.0);
+  }
+}
+
+/**********************************************************************************************/
+
+void RCalculator :: checkSplitSubmissions(MeasureInfo info)
+{
 }
 
 /**********************************************************************************************/
