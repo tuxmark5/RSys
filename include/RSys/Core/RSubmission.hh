@@ -42,11 +42,11 @@ class RSubmission: public RElement
     _M void             setDefaultInteval();
     _M bool             setDate0(const QDate& date0);
     _M bool             setDate0E(const QDate& date0);
-    _M bool             setDate0F(const QDate& date0);
     _M bool             setDate1(const QDate& date1);
     _M void             setMeasure(RMeasure* measure);
     _M void             setMeasureId(RID id);
     _M bool             setMeasureName(const QString& measureName);
+    _M bool             setMeasureNameE(const QString& measureName);
     _M void             setMeasure1NameE(const QString& measureName);
     _M void             validate();
 

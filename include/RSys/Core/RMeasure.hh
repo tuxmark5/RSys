@@ -33,6 +33,7 @@ class RMeasure: public RUnit
     _M QString          groupName() const;
     _M bool             isPlanned() const { return m_planned; }
     _M RInterval        lastInterval();
+    _M void             purge();
     _M void             remove();
     _M void             setGroup(RGroup* group);
     _M void             setGroupId(RID group);

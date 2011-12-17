@@ -89,7 +89,7 @@ bool RSubmission :: setDate0(const QDate& date0)
                "Klaidingas kairysis intervalo galas.");
   R_DATA_GUARD(isPlanned() ? date0 > m_data->interval1() : true, false,
                "Planuojamos paraiškos intervalas kertasi su istoriniais duomenimis.<br>"
-               "Intervalas gali prasidėti nuo: <b>%1</b>",
+               "Intervalas gali prasidėti nuo: <b>%1</b>.",
                .arg(R_DATE_TO_S(m_data->interval1().addDays(1))));
 
   QDate oldDate0  = m_date0;
@@ -109,24 +109,6 @@ bool RSubmission :: setDate0E(const QDate& date0)
   R_GUARD(m_date1.isNull(), true);
 
   setDate1(m_date0.addMonths(1).addDays(-1));
-  return true;
-}
-
-/**********************************************************************************************/
-
-bool RSubmission :: setDate0F(const QDate &date0)
-{
-  // TODO: Patikrinti ar teisingai veikia ši funkcija.
-  R_DATA_GUARD(date0.isValid(), false, "Neteisinga data.");
-
-  QDate oldDate0  = m_date0;
-  m_date0         = date0;
-  validate();
-  (*m_data)[date0Changed](this, oldDate0);
-  m_data->modify();
-
-  setDate1(date0.addDays(1));
-
   return true;
 }
 
@@ -216,18 +198,26 @@ bool RSubmission :: setMeasureName(const QString& measureName)
 {
   QString       measureName1  = measureName.trimmed().toUpper();
   RMeasurePtr   measure1      = m_data->measure(measureName1);
-  R_DATA_GUARD(measure1, false, "Nežinoma paramos priemonė <b>%1</b>", .arg(measureName1));
+  R_DATA_GUARD(measure1, false, "Nežinoma paramos priemonė <b>%1</b>.", .arg(measureName1));
   R_DATA_GUARD(!isPlanned() ? !measure1->isPlanned() : true, false,
-               "Neleistinas planuojamos priemonės panaudojimas");
+               "Neleistinas planuojamos priemonės panaudojimas.");
 
   m_measureName   = measureName1;
   (*m_data)[measureChange](this, measure1.get());
   m_measure       = measure1;
   validate();
-
   m_data->modify();
-  setDefaultInteval();
 
+  return true;
+}
+
+/**********************************************************************************************/
+
+bool RSubmission :: setMeasureNameE(const QString& measureName)
+{
+  R_GUARD(setMeasureNameE(measureName), false);
+
+  setDefaultInteval();
   return true;
 }
 
