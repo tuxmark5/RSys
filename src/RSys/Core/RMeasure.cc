@@ -57,14 +57,19 @@ RInterval RMeasure :: lastInterval()
 
 /**********************************************************************************************/
 
+void RMeasure :: purge()
+{
+  RUnit::purge();
+  R_NZ(m_data)->purgeMeasure(this);
+  setGroup(0);
+}
+
+/**********************************************************************************************/
+
 void RMeasure :: remove()
 {
   (*m_data)[measureRemoval](this);
-
-  RUnit::purge();
-
-  R_NZ(m_data)->purgeMeasure(this);
-
+  purge();
   m_data->modify();
 }
 
