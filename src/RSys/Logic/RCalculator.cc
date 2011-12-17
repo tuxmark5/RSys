@@ -67,8 +67,16 @@ void RCalculator :: update()
       auto it = info.m_usefulSubmissions.lowerBound(to);
       if (it != info.m_usefulSubmissions.begin())
       {
-        if ((--it).value()->date1() > from)
-        {
+        if ((--it).key() >= from && it.value()->date1() < to)
+        { // einamasis apgaubia
+          info.m_splitSubmissions.push_back(*it);
+          continue;
+        } else if (it.key() <= from && it.value()->date1().addDays(1) >= to)
+        { // einamasis tikslina
+          info.m_splitSubmissions.push_back(it.value());
+          info.m_usefulSubmissions.erase(it);
+        } else if (it.value().date1() > from)
+        { // kertasi
           submission->setValid(false);
           if (it.value()->date1() >= to) to = it.value()->date1().addDays(1);
           do
@@ -89,33 +97,6 @@ void RCalculator :: update()
           }
           info.m_invalidIntervals.insert(from, to);
           continue;
-        }
-      }
-    }
-
-    { // patikrina, ar yra tikslinantis intervalas
-      auto it = info.m_usefulSubmissions.lowerBound(from);
-      if (it != info.m_usefulSubmissions.end() && it.value()->date1() < to)
-      { // buvo nedidesnis intervalas
-        info.m_splitSubmissions.push_back(submission);
-        continue;
-      } else {
-        if (it != info.m_usefulSubmissions.begin()
-            && (it == info.m_usefulSubmissions.end() || it.key() != from))
-        {
-            --it;
-        }
-        if (it != info.m_usefulSubmissions.end() && it.key() <= from
-            && it.value()->date1() >= to)
-        { // buvo didesnis intervalas
-          info.m_splitSubmissions.push_back(it.value());
-          if (it.key() == from)
-          {
-            it.value() = submission;
-            continue;
-          } else {
-            info.m_usefulSubmissions.erase(it);
-          }
         }
       }
     }
