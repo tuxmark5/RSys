@@ -461,7 +461,6 @@ bool RCalculator :: nonNegativeInInterval(double coefficients[3], int from, int 
 
 void RCalculator :: findLowUsageIntervals(RInterval interval, int daysBySeasons[4])
 {
-  RInterval result;
   int fractionsBySeasons[4]; // kokią dalį reikiamo ilgio sudaro viena diena
   int fractionsNeeded = 1;
   for (int i = 0; i < 4; i++)
@@ -499,6 +498,7 @@ void RCalculator :: findLowUsageIntervals(RInterval interval, int daysBySeasons[
       return RInterval(day.addDays(x), day.addDays(x + 1));
     };
   m_numIntervals[1] = intervalLength;
+  calculateIntervals(1);
 
   for (int i = 0; i < intervalLength; i++)
   {
