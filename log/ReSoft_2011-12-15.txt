@@ -1,0 +1,13 @@
+* suplanuota dar labiau padidinti klaidų prevencijos galimybę įvedimo laukuose;
+* nuspręsta įdėti paramos priemonių krypčių redagavimą/importavimą;
+* suplanuota sukurti prezentaciją pristatymui;
+* suplanuota užbaigti rašyti dokumentaciją;
+* suplanuota parašyti TSP ataskaitą;
+* suplanuota atlikti detalią reikalavimų peržiūrą;
+* suplanuota atlikti testavimą;
+* aptartas dokumentacijos stilius;
+* aptarta polinominio prognozavimo problematika (apkrovos auga per greit), nuspręsta pereiti prie tiesinio prognozavimo;
+* aptarta pagalbos sistema;
+* aptarti neištaisyti sąsajos defektai & galimi jų sprendimo būdai;
+* aptartas prognozavimo srities intervalo radimo algoritmas;
+* aptartas istorinių duomenų invalidavimo principas;
