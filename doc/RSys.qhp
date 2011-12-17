@@ -62,6 +62,7 @@
       <file>html/images/header-bg.png</file>
       <file>html/images/logo.png</file>
       <file>html/style/*</file>
+      <file>res/*</file>
     </files>
   </filterSection>
 </QtHelpProject>
