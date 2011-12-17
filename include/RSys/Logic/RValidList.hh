@@ -88,9 +88,11 @@ class RValidList
     _M Vacuum           ~RValidList() { }
     _M Iterator         begin()
     {
-      return  (m_list0->isEmpty() && m_list1)
-            ? Iterator(this, m_list1->begin(), 0)   // bugfix, kai list0 tuscias, tai != end
-            : Iterator(this, m_list0->begin(), 0);
+      Iterator it = (m_list0->isEmpty() && m_list1)
+                    ? Iterator(this, m_list1->begin(), 0)
+                    : Iterator(this, m_list0->begin(), 0);
+      while (it != end() && (*it)->isValid() == false) it++;
+      return it;
     }
 
     _M Iterator         end()
