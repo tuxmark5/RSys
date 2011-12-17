@@ -114,24 +114,6 @@ bool RSubmission :: setDate0E(const QDate& date0)
 
 /**********************************************************************************************/
 
-bool RSubmission :: setDate0F(const QDate &date0)
-{
-  // TODO: Patikrinti ar teisingai veikia ši funkcija.
-  R_DATA_GUARD(date0.isValid(), false, "Neteisinga data.");
-
-  QDate oldDate0  = m_date0;
-  m_date0         = date0;
-  validate();
-  (*m_data)[date0Changed](this, oldDate0);
-  m_data->modify();
-
-  setDate1(date0.addDays(1));
-
-  return true;
-}
-
-/**********************************************************************************************/
-
 bool RSubmission :: setDate1(const QDate& date1)
 {
   R_DATA_GUARD(date1.isValid(), false, "Neteisinga data.");
@@ -224,10 +206,18 @@ bool RSubmission :: setMeasureName(const QString& measureName)
   (*m_data)[measureChange](this, measure1.get());
   m_measure       = measure1;
   validate();
-
   m_data->modify();
-  setDefaultInteval();
 
+  return true;
+}
+
+/**********************************************************************************************/
+
+bool RSubmission :: setMeasureNameE(const QString& measureName)
+{
+  R_GUARD(setMeasureNameE(measureName), false);
+
+  setDefaultInteval();
   return true;
 }
 

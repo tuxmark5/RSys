@@ -311,7 +311,7 @@ void RMainWindow :: createContainers()
   cu->addColumn("Pradžia");
   cu->addColumn("Pabaiga");
   cu->addAccessor2<QString>(0, Qt::DisplayRole)
-    >> &RSubmission::measureName << &RSubmission::setMeasureName;
+    >> &RSubmission::measureName << &RSubmission::setMeasureNameE;
   cu->addAccessor2<QString>(0, Qt::ToolTipRole)
     >> &RSubmission::measureFullName;
   cu->addAccessor2<int>(1, Qt::DisplayRole)
