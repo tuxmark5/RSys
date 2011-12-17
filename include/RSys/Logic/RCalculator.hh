@@ -162,6 +162,21 @@ class RCalculator: public QObject
      */
     _S int              seasonOf(QDate date);
 
+    /**
+     * Patikrina, ar duotas intervalas kerta (priklauso) kurį nors (kuriam
+     * nors) iš intervalų. Jei kerta, modifikuoja intervalus taip, kad
+     * įtrauktų ir jį.
+     *
+     * @param from      intervalo, su kuriuo tikriname, ar kertasi, pradžia
+     *                  (imtinai)
+     * @param to        intervalo, su kuriuo tikriname, ar kertasi, pabaiga
+     *                  (ne imtinai)
+     * @param intervals intervalai, su kuriais tikriname, ar nekerta;
+     *                  tipo [a; b)
+     * @return true, jei intervalai kertasi; false priešingu atveju
+     */
+    _S bool             intersect(QDate from, QDate to, QMap<QDate, QDate>& intervals);
+
   public:
     _M Vacuum           RCalculator(RData* data);
     _M Vacuum           ~RCalculator();
