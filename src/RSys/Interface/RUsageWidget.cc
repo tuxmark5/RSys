@@ -252,8 +252,6 @@ void RUsageWidget :: updateHeader()
       .arg(m_unit->name())
       .arg(m_title);
 
-  qDebug() << "UNIT" << m_unit->identifier() << std::get<0>(m_unit->lowestUsage());
-
   if (m_showLowestUsage && !std::get<0>(lowestUsage).isNull())
   {
     text += R_S("<br/><u>Mažiausios apkrovos intervalas:</u> nuo <b>%1</b> iki <b>%2</b>")

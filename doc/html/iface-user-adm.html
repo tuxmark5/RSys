@@ -1,14 +1,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link href="style/style.css" rel="stylesheet" type="text/css" >
     <title>Naudotojų administravimo sąsaja - RSys dokumentacija</title>
-</head>
-<body>
+  </head>
+
+  <body>
     <div id="header">
         <h1><img height="60px" src="images/logo.png"/>&nbsp;&nbsp;Naudotojų administravimo sąsaja</h1>
     </div>
+
     <div id="navigation">
         &nbsp;<a href="index.html">Turinys</a>
         &nbsp;&nbsp;&raquo;<a href="iface-extra-parent.html">Papildomos sąsajos</a>
@@ -18,5 +20,80 @@
     <div id="content">
 	    <img src="../res/iface-user-adm.png"/>
     </div>
+
+    <p>Šioje sąsajoje galima:</p>
+    <ul>
+      <li>Sukurti naują naudotojo paskyrą.</li>
+      <li>Pašalinti egzistuojančio naudotojo paskyrą.</li>
+      <li>Pakeisti naudotojo privilegijas arba slaptažodį.</li>
+    </ul>
+
+    <p>
+      Dėl PostgreSQL DBVS apribojimų, keisti sukurto naudotojo vardą galimybės nėra.
+      Norint tai padaryti reikia pašalinti esamą naudotoją ir sukurti naują su norimu vardu
+    </p>
+
+    <h2>Privilegijų rūšys</h2>
+    <table>
+      <tr>
+        <th>Privilegijos pavadinimas</th>
+        <th>Paaiškinimas</th>
+      </tr>
+
+      <tr>
+        <td>Paramos priem.</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>Padaliniai</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>IS</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>Paramos priem. adm.</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>IS adm.</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>Istoriniai duomenys</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>Rodyti rėžimą: padaliniai</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>Rodyti rėžimą: IS</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>Rodyti rezultatų kortelę</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>Rodyti apžvalgos kortelę</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>Leisti importuoti duomenis</td>
+        <td></td>
+      </tr>
+    </table>
   </body>
 </html>
