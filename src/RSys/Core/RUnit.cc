@@ -23,6 +23,7 @@ Vacuum RUnit :: RUnit(RUnit& unit, RData* data):
   m_identifier        (unit.m_identifier),
   m_name              (unit.m_name),
   m_usage             (unit.m_usage),
+  m_lowestUsage       (unit.m_lowestUsage),
   m_viewMode          (unit.m_viewMode),
   m_visible           (unit.m_visible)
 {
