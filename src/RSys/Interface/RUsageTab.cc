@@ -8,6 +8,7 @@
 #include <RSys/Interface/RMainWindow.hh>
 #include <RSys/Interface/RUsageTab.hh>
 #include <RSys/Interface/RUsageWidget.hh>
+#include <RSys/Logic/RResults.hh>
 
 /********************************************* RS *********************************************/
 /*                                         RUsageTab                                          */
@@ -72,7 +73,7 @@ RUsageWidget* RUsageTab :: createWidget(RUnit* unit)
   int           mode    = unit->viewMode() != -1 ? unit->viewMode() : m_defaultMode;
   RUsageWidget* widget  = new RUsageWidget(mode, unit, m_results);
 
-  connect(m_mainWindow, SIGNAL(searchModeChanged(bool)), widget, SLOT(setSearchInterval(bool)));
+  connect(m_mainWindow, SIGNAL(searchModeChanged(bool)), this, SLOT(setIntervalSearchEnabled(bool)));
 
   return widget;
 }
@@ -149,6 +150,20 @@ void RUsageTab :: resizeEvent(QResizeEvent* event)
 
   m_innerWidget->setFixedWidth(newWidth);
   RTab::resizeEvent(event);
+}
+
+/**********************************************************************************************/
+
+void RUsageTab :: setIntervalSearchEnabled(bool enabled)
+{
+  if (enabled)
+  {
+    m_results->findLowestUsageIntervals();
+  }
+
+  for (int i = 0; i < m_innerLayout->count(); i++)
+    if (RUsageWidget* widget = qobject_cast<RUsageWidget*>(m_innerLayout->itemAt(i)->widget()))
+      widget->setIntervalSearchEnabled(enabled);
 }
 
 /**********************************************************************************************/

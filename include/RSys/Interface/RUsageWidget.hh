@@ -38,7 +38,7 @@ class RUsageWidget: public RLayerWidget
     _M RResultsModel*   m_model;
     _M QString          m_title;
     _M QLabel*          m_header;
-    _M RInterval        m_lowInterval;
+    _M bool             m_showLowestUsage: 1;
 
   public:
     _M Vacuum           RUsageWidget(int mode, RUnit* unit, RResults* results, QWidget* parent = 0);
@@ -50,9 +50,10 @@ class RUsageWidget: public RLayerWidget
   public slots:
     _M void             modifyMode();
     _M void             modifyMode(int modifier);
+    _M void             setIntervalSearchEnabled(bool search);
     _M void             setMode(int mode);
-    _M void             setSearchInterval(bool search);
     _M void             updateGlobalInterval();
+    _M void             updateLowUsageInterval();
 
   protected:
     _V void             createButtons(const ButtonCallback& callback);

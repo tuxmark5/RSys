@@ -30,19 +30,20 @@ class RUsageTab: public RTab, public RIObserver
     _V void           resetObservable();
     _V void           resizeEvent(QResizeEvent* event);
 
+  public slots:
+    //_M void           resetBegin();
+    //_M void           resetEnd();
+    _M void           setIntervalSearchEnabled(bool enabled);
+    _M void           setMode();
+    _M void           setUnits(RUnitPtrList* units);
+    _M void           updateElement(RElement* unit, int updateType);
+    _M void           updateElementVisibility(RUnit* unit);
+
   protected:
     _V void           clearUnits();
     _M RUsageWidget*  createWidget(RUnit* unit);
     _V void           populateUnits();
     _M RUsageWidget*  widgetForElement(RElement* element);
-
-  public slots:
-    //_M void           resetBegin();
-    //_M void           resetEnd();
-    _M void           setMode();
-    _M void           setUnits(RUnitPtrList* units);
-    _M void           updateElement(RElement* unit, int updateType);
-    _M void           updateElementVisibility(RUnit* unit);
 };
 
 /**********************************************************************************************/

@@ -210,6 +210,13 @@ RInterval RResults :: findLowUsageInterval(RUnit* unit)
 
 /**********************************************************************************************/
 
+void RResults :: findLowestUsageIntervals()
+{
+  m_calculator1->findLowUsageIntervals(RInterval(m_interval0, m_interval1), m_seasonalLengths);
+}
+
+/**********************************************************************************************/
+
 QString RResults :: intervalStr(int x)
 {
   RInterval interval = m_intervalFun(x);

@@ -44,6 +44,7 @@ class RUnit: public RElement
     _M QString            fullName() const;
     _M QString            identifier() const { return m_identifier; }
     _M bool               isVisible() const { return m_visible; }
+    _M const RInterval&   lowestUsage() const { return m_lowestUsage; }
     _M QString            name() const { return m_name; }
     _V void               purge();
     _M bool               setIdentifier(const QString& identifier);
@@ -54,7 +55,6 @@ class RUnit: public RElement
     _M int                type() const { return m_type; }
     _M const UsageVector& usage() const { return m_usage[0]; }
     _M const RUsage&      usageAt(int x) const { return x < m_usage[0].size() ? m_usage[0].at(x) : g_emptyUsage; }
-    _M const RInterval&   lowestUsage() const { return m_lowestUsage; }
     _M int                viewMode() const { return m_viewMode; }
 
   public:
