@@ -169,6 +169,7 @@ bool RIntervalToolBar :: applyInterval()
 
   emit message(msgText);
   results()->setInterval(std::move(fun), num);
+  results()->setInterval(date0, date1);
   emit intervalChanged();
 
   return true;
@@ -412,7 +413,7 @@ void RIntervalToolBar :: setValid(bool valid)
   {
     m_interval0->setPalette(QPalette());
     m_interval1->setPalette(QPalette());
-    results()->setInterval(m_interval0->date(), m_interval1->date());
+    //results()->setInterval(m_interval0->date(), m_interval1->date());
   }
   else
   {

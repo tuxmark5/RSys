@@ -661,9 +661,9 @@ void RMainWindow :: setShowSearchForm(bool show)
   {
     m_searchAction->setChecked(false);
     m_searchForm = 0;
-  }
 
-  emit searchModeChanged(show);
+    emit searchModeChanged(false);
+  }
 }
 
 /**********************************************************************************************/
