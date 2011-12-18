@@ -1,5 +1,6 @@
 #include <QtCore/QLocale>
 #include <QtCore/QSettings>
+#include <QtCore/QTranslator>
 #include <QtGui/QApplication>
 #include <RSys/Interface/RMainWindow.hh>
 #include <RSys/Tests/RTests.hh>
@@ -20,8 +21,13 @@ int main(int argc, char** argv)
   else
   {
     QLocale       locale(QLocale::Lithuanian, QLocale::Lithuania);
+    QTranslator   translator(0);
+    translator.load("qt_lt", ".");
     QLocale::setDefault(locale);
+
     QApplication  app(argc, argv);
+    app.installTranslator(&translator);
+
     QSettings     settings("ReSoft", "RSys");
     g_settings = &settings;
     RMainWindow   mainWnd;

@@ -622,8 +622,15 @@ void RMainWindow :: setInterfaceEnabled(bool enabled)
     m_splitter = 0;
   }
 
-  m_menuBar->setEnabled(enabled);
-  m_toolBar->setEnabled(enabled);
+  m_commitAction          ->setEnabled(enabled);
+  m_disconnectAction      ->setEnabled(enabled);
+  m_divisionsStateAction  ->setEnabled(enabled);
+  m_exterpolationAction   ->setEnabled(enabled);
+  m_importAction          ->setEnabled(enabled);
+  m_rollbackAction        ->setEnabled(enabled);
+  m_searchAction          ->setEnabled(enabled);
+  m_systemsStateAction    ->setEnabled(enabled);
+
   m_intervalToolBar->setEnabled(enabled);
   m_paletteDock->setEnabled(enabled);
   m_paletteDock->setVisible(enabled);
