@@ -73,7 +73,7 @@ void RCalculator :: update()
       {
         if ((--it).key() >= from && it.value()->date1() < to)
         { // einamasis apgaubia
-          info.m_splitSubmissions.push_back(*it);
+          info.m_splitSubmissions.push_back(submission);
           continue;
         } else if (it.key() <= from && it.value()->date1().addDays(1) >= to)
         { // einamasis tikslina
@@ -155,7 +155,7 @@ void RCalculator :: checkSplitSubmissions(MeasureInfo& info)
     if (intersect(submission, info)) continue;
     QDate from = submission->date0();
     QDate to   = submission->date1().addDays(1);
-    auto it = --info.m_usefulSubmissions.lowerBound(submission->date1());
+    auto it = --info.m_usefulSubmissions.lowerBound(to);
     if (it.value()->date1() >= to)
     { // kerta pabaigoje
       qDebug() << "kerta pabaigoje " << from << to.addDays(-1) << it.key() << it.value()->date1();
@@ -195,6 +195,9 @@ void RCalculator :: checkSplitSubmissions(MeasureInfo& info)
           info.m_usefulSubmissions.erase(it++);
         }
         info.m_usefulSubmissions.insert(from, submission);
+      } else {
+        qDebug() << "Tikslina [" << from << "; " << to.addDays(-1)
+                 << "] teisingai: " << totalCount;
       }
     }
   }
