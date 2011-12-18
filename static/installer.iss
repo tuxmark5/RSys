@@ -32,6 +32,7 @@ Source: "QtNetwork4.dll"; DestDir: "{app}"
 Source: "QtWebKit4.dll";  DestDir: "{app}"
 Source: "RDoc.qhc";       DestDir: "{app}"
 Source: "RSys.qch";       DestDir: "{app}"
+Source: "qt_lt.qm";       DestDir: "{app}"
 
 Source: "plugins\sqldrivers\qsqlite4.dll";  DestDir: "{app}\plugins\sqldrivers"
 Source: "plugins\sqldrivers\qsqlpsql4.dll"; DestDir: "{app}\plugins\sqldrivers"
