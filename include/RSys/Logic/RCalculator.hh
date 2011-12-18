@@ -26,6 +26,7 @@ class RCalculator: public QObject
     _T RValidList<RDivisionPtrList>   ValidDivisionPtrList;
     _T RValidList<RSystemPtrList>     ValidSystemPtrList;
     _T RValidList<RUnitPtrList>       ValidUnitPtrList;
+    _T unsigned long long             Fractions;
 
   private:
     _M RData*                         m_data;
@@ -51,11 +52,10 @@ class RCalculator: public QObject
                                            int whichUsage);
     _M double           calculateUsage(RInterval interval, UsageMap& usageMap);
     _M double           predictUsage(RInterval interval, UsageMap& usageMap);
-    _M double           daysUsage(QDate day, UsageMap& usageMap);
     _M void             zeroUsages(RUnitPtrList* units, int whichUsage);
     _S void             findLowUsageIntervals(ValidUnitPtrList* units,
-                                              QVector<int>& fractions,
-                                              int fractionsNeeded, QDate& date);
+                                              QVector<Fractions>& fractions,
+                                              Fractions fractionsNeeded, QDate& date);
 
     /**
      * Nuspėja apkrovą intervale, remiantas gretimų intervalų apkrovomis.
@@ -160,28 +160,6 @@ class RCalculator: public QObject
     _M Vacuum           ~RCalculator();
     _M void             update();
     _M void             setIntervalFun(IntervalFun intervalFun, int numIntervals);
-
-    /**
-     * Randa mažiausiai apkrautą padalinio ar sistemos intervalą.
-     * Apribojama, kuriame dienų intervale ieškoti bei koks dienų kiekis
-     * reikalingas ieškomame intervale atsižvelgiant į sezoną.
-     *
-     * @param unit           sistema ar paramos priemonė, kurios mažiausiai
-     *                       apkrauto intervalo ieškome
-     * @param interval       intervalas, kuriame ieškoti (imtinai)
-     * @param daysBySeasons  rodyklė į 4 skaičius, kurie atitinka reikalavimus
-     *                       gauto mažiausios apkrovos intervalo ilgiui, jei
-     *                       jis priklauso atitinkamai žiemos, pavasario,
-     *                       vasaros, rudens sezonams; skaičiumi 0 nurodoma,
-     *                       kad atitinkamo sezono rastame intervale turi nebūti
-     * @return tas intervale interval esantis dienų intervalas (imtinai), kurio
-     *         apkrova pagal valandas mažiausia, tačiau atitinka nurodytus
-     *         daysBySeasons ilgio reikalavimus; jei yra keli tokie intervalai,
-     *         grąžina anksčiausią; jei nėra nė vieno, grąžina nulinių datų
-     *         intervalą
-     */
-    _M RInterval        findLowUsageInterval(RUnitPtr unit, RInterval interval,
-                                             int daysBySeasons[4]);
 
     /**
      * Randa mažiausiai apkrautą padalinių ir sistemų intervalą.

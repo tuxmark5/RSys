@@ -66,7 +66,6 @@ class RResults: public QObject
     _M RCalculator*     calculator1() const { return m_calculator1; }
     _M RData*           data1() const { return m_data1; }
     _M Getter           field(int type, RUnit* unit);
-    _M RInterval        findLowUsageInterval(RUnit* unit);
     _M void             findLowestUsageIntervals();
     _M RInterval        interval(int x) const { return m_intervalFun(x); }
     _M QDate            interval0() const { return m_interval0; }

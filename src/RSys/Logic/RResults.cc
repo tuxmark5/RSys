@@ -203,13 +203,6 @@ double RResults :: fieldDeltaUsageCount(RUnit* unit, int x)
 
 /**********************************************************************************************/
 
-RInterval RResults :: findLowUsageInterval(RUnit* unit)
-{
-  return m_calculator1->findLowUsageInterval(unit, RInterval(m_interval0, m_interval1), m_seasonalLengths);
-}
-
-/**********************************************************************************************/
-
 void RResults :: findLowestUsageIntervals()
 {
   m_calculator1->findLowUsageIntervals(RInterval(m_interval0, m_interval1), m_seasonalLengths);

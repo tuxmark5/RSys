@@ -461,8 +461,8 @@ bool RCalculator :: nonNegativeInInterval(double coefficients[3], int from, int 
 
 void RCalculator :: findLowUsageIntervals(RInterval interval, int daysBySeasons[4])
 {
-  int fractionsBySeasons[4]; // kokią dalį reikiamo ilgio sudaro viena diena
-  int fractionsNeeded = 1;
+  Fractions fractionsBySeasons[4]; // kokią dalį reikiamo ilgio sudaro viena diena
+  Fractions fractionsNeeded = 1;
   for (int i = 0; i < 4; i++)
   {
     if (daysBySeasons[i] > 0)
@@ -489,7 +489,7 @@ void RCalculator :: findLowUsageIntervals(RInterval interval, int daysBySeasons[
 
   int intervalLength = FROM(interval).daysTo(TO(interval)) + 1;
 
-  QVector<int> fractions;
+  QVector<Fractions> fractions;
   fractions.reserve(intervalLength);
   QDate day = FROM(interval);
 
@@ -513,15 +513,15 @@ void RCalculator :: findLowUsageIntervals(RInterval interval, int daysBySeasons[
 /**********************************************************************************************/
 
 void RCalculator :: findLowUsageIntervals(ValidUnitPtrList* units,
-                                          QVector<int>& fractions,
-                                          int fractionsNeeded, QDate& date)
+                                          QVector<Fractions>& fractions,
+                                          Fractions fractionsNeeded, QDate& date)
 {
   for (auto unit : *units)
   {
     unit->m_lowestUsage = RInterval();
     double currentUsage = 0;
     double lowestUsage = MAGIC;
-    int currentFractions = 0;
+    Fractions currentFractions = 0;
     UsageVector& usage = unit->m_usage[1];
     int intervalLength = usage.size();
     for (int from = 0, to = 0; to < intervalLength; to++)
@@ -539,6 +539,7 @@ void RCalculator :: findLowUsageIntervals(ValidUnitPtrList* units,
       while (currentFractions - fractions[from] >= fractionsNeeded)
       { // čia visada from < intervalLength, nes užtikrinam fractionsNeeded > 0
         currentUsage -= usage[from].first;
+        if (currentUsage < 0) currentUsage = 0;
         currentFractions -= fractions[from];
         from++;
       }
@@ -555,116 +556,9 @@ void RCalculator :: findLowUsageIntervals(ValidUnitPtrList* units,
 
 /**********************************************************************************************/
 
-RInterval RCalculator :: findLowUsageInterval(RUnitPtr unit, RInterval interval,
-                                             int daysBySeasons[4])
-{
-  int fractionsBySeasons[4]; // kokią dalį reikiamo ilgio sudaro viena diena
-  int fractionsNeeded = 1;
-  for (int i = 0; i < 4; i++)
-  {
-    if (daysBySeasons[i] > 0)
-    {
-      fractionsNeeded *= daysBySeasons[i];
-    }
-  }
-  if (fractionsNeeded <= 0)
-  {
-    unit->m_lowestUsage = RInterval();
-    return unit->m_lowestUsage;
-  }
-  for (int i = 0; i < 4; i++)
-  {
-    if (daysBySeasons[i] > 0)
-    {
-      fractionsBySeasons[i] = fractionsNeeded / daysBySeasons[i];
-    }
-  }
-
-  QHash<RMeasurePtr, double> measures;
-  for (auto measure : m_validMeasures)
-  {
-    double measureUsage = measure->m_unitUsage.value(unit, 0);
-    if (measureUsage > 0)
-    {
-      measures.insert(measure, measureUsage);
-    }
-  }
-
-  int intervalLength = FROM(interval).daysTo(TO(interval)) + 1;
-  QVector<double> usage;
-  QVector<int> fraction;
-  usage.reserve(intervalLength);
-  fraction.reserve(intervalLength);
-  QDate day = FROM(interval);
-  for (int i = 0; i < intervalLength; i++)
-  {
-    double curUsage = 0;
-    for (auto it = measures.begin(); it != measures.end(); it++)
-    {
-      curUsage += it.value() * daysUsage(day, it.key()->m_usageMap);
-    }
-    usage.push_back(curUsage);
-    fraction.push_back(fractionsBySeasons[seasonOf(day)]);
-    day = day.addDays(1);
-  }
-
-  double currentUsage = 0;
-  double lowestUsage = MAGIC;
-  int currentFractions = 0;
-  for (int from = 0, to = 0; to < intervalLength; to++)
-  {
-    if (fraction[to] == 0) // netinkamas sezonas
-    {
-      while (to < intervalLength && fraction[to] == 0) to++;
-      from = to;
-      currentUsage = 0;
-      currentFractions = 0;
-      if (to >= intervalLength) break;
-    }
-    currentFractions += fraction[to];
-    currentUsage += usage[to];
-    while (currentFractions - fraction[from] >= fractionsNeeded)
-    { // čia visada from < intervalLength, nes užtikrinam fractionsNeeded > 0
-      currentUsage -= usage[from];
-      currentFractions -= fraction[from];
-      from++;
-    }
-    if (currentFractions >= fractionsNeeded
-        && (FROM(unit->m_lowestUsage).isNull() || currentUsage < lowestUsage))
-    {
-      lowestUsage = currentUsage;
-      unit->m_lowestUsage = RInterval(FROM(interval).addDays(from),
-                                      FROM(interval).addDays(to));
-    }
-  }
-
-  return unit->m_lowestUsage;
-}
-
-/**********************************************************************************************/
-
 int RCalculator :: seasonOf(QDate date)
 {
   return date.month() % 12 / 3; // elegantiška, ar ne? :D
-}
-
-/**********************************************************************************************/
-
-double RCalculator :: daysUsage(QDate day, UsageMap& usageMap)
-{
-  if (usageMap.empty()) return 0;
-  RInterval interval = RInterval(day, day.addDays(1));
-  QDate predictFrom = (--usageMap.end()).key();
-  if (m_data->interval1().isValid() && m_data->interval1().daysTo(predictFrom) <= 0)
-  {
-    predictFrom = m_data->interval1().addDays(1);
-  }
-  if (day < predictFrom)
-  {
-    return calculateUsage(interval, usageMap);
-  } else {
-    return predictUsage(interval, usageMap);
-  }
 }
 
 /**********************************************************************************************/
