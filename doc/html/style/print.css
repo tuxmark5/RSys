@@ -1,0 +1,67 @@
+body 
+{
+  background:   white !important; 
+  display:      block;
+  page:         main;
+}
+
+#header img
+{
+  display:      none !important;
+}
+
+@page main
+{
+  size:     A4;
+  margin:   20pt 20pt 40pt 20pt;
+  
+  @top
+  {
+    content: string(chapter-title);
+  }
+
+  @bottom-right
+  {
+    content: counter(page);
+  }
+}
+
+chapter title
+{
+  string-set: chapter-title content()
+}
+
+.tocBody ul 
+{
+  max-width:    50em;
+  padding:      0;
+  overflow-x:   hidden;
+}
+
+.tocDots
+{
+  float:        left;
+  width:        0;
+  white-space:  nowrap;
+  content:
+    ". . . . . . . . . . . . . . . . . . . . "
+    ". . . . . . . . . . . . . . . . . . . . "
+    ". . . . . . . . . . . . . . . . . . . . "
+    ". . . . . . . . . . . . . . . . . . . . "
+    ". . . . . . ";
+}
+
+.tocBody ul a:first-child 
+{
+  padding-right:  0.33em;
+  background:     white;
+}
+
+.tocNum 
+{
+  float:          right;
+  padding-left:   0.33em;
+  padding-right:  4em;
+  background:     white;
+  content:        target-counter(attr(href), page);
+}
