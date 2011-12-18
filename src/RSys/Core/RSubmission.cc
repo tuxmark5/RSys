@@ -117,7 +117,7 @@ bool RSubmission :: setDate0E(const QDate& date0)
 bool RSubmission :: setDate1(const QDate& date1)
 {
   R_DATA_GUARD(date1.isValid(), false, "Neteisinga data.");
-  R_DATA_GUARD(m_date0.isValid() ? (m_date0 < date1) : true, false,
+  R_DATA_GUARD(m_date0.isValid() ? (m_date0 <= date1) : true, false,
                "Klaidingas dešinysis intervalo galas.");
 
   QDate oldDate1  = m_date1;
