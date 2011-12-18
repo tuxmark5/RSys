@@ -1,14 +1,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link href="style/style.css" rel="stylesheet" type="text/css" >
-    <title>Intervalo pasirinkimo įrankių juosta - RSys dokumentacija</title>
-</head>
-<body>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <link href="style/style.css" rel="stylesheet" type="text/css" >
+      <title>Intervalo pasirinkimo įrankių juosta - RSys dokumentacija</title>
+  </head>
+  <body>
     <div id="header">
         <h1><img height="60px" src="images/logo.png"/>&nbsp;&nbsp;Intervalo pasirinkimo įrankių juosta</h1>
     </div>
+
     <div id="navigation">
         &nbsp;<a href="index.html">Turinys</a>
         &nbsp;&nbsp;&raquo;<a href="iface-bar-parent.html">Įrankių juostos ir meniu</a>
@@ -77,6 +78,43 @@
 	        </td>
 	      </tr>
 	    </table>
+
+      <h2>Automatinis intervalų koregavimas</h2>
+      <p>Sistema automatiškai koreguoja pasirinktą intervalą pagal šiuos kriterijus:</p>
+      <ul>
+        <li>
+          <b>Intervalas turi atikti istorinių duomenų ribas.</b> Jei kuris nors intervalo galas 
+          išlenda už intervalo ribų, tai jis yra pastumiamas taip, kad sutaptų su turimų duomenų intervalu.<br/>
+          Šiai taisyklei išimtis yra <b>dešinysis</b> intervalo galas, kuriam leidžiama <b>5 metais</b> viršyti turimų duomenų
+          dešinįjį intervalo galą tam, kad būtų galima pamatyti apkrovų prognozes.
+        </li>
+
+        <li>
+          <b>Intervalo galai turi atitikti pasirinktą granuliarumą</b>. Jei kažkuris intervalo galas neatitinka
+          pasirinkto granuliarumo, tai jis bus patumtas. Pvz. pasirinkus savaitinį granuliarumą pasirinktas
+          intervalas visą laiką prasidės pirmadieniu, o baigsis sekmadieniu. Mėnėsinio granuliarumo atveju
+          intervalas prasidės pirmąja mėnesio diena, o baigsis - paskutiniąja ir t.t.
+        </li>
+      </ul>
+
+      <p>
+        Intervalų koregavimo priežastys bei pats koreguotas intervalas
+        yra pateikiami informaciniame pranešime, kuris parodomas paspaudus mygtuką <b>Rodyti</b>.
+      </p>
+
+      <h2>Intervalų korektiškumas</h2>
+      <p>Sistema priima tik <b>korektiškus</b> intervalus. Korektiško intervalo kriterijai:</p>
+      <ul>
+        <li>Intervalo pradžia turi būti anksčiau už pabaigą.</li>
+        <li>Maksimalus <b>koreguoto</b> intervalo ilgis yra 10 metų</li>
+      </ul>
+
+      <h2>Papildoma informacija</h2>
+      <ul>
+        <li>Pasirinkus nekorektišką intervalą, intervalų įvedimo laukų fono spalva bus pakeista į raudoną spalvą.</li>
+        <li>Paspaudus mygtuką <b>Rodyti</b>, kol yra įvestas nekorektiškas intervalas, bus parodytas
+        pranešimas su priežastimi, kodėl pasirinktas intervalas yra nekorektiškas.</li>
+      </ul>
     </div>
   </body>
 </html>

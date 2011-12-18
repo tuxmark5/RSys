@@ -1,22 +1,280 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link href="style/style.css" rel="stylesheet" type="text/css" >
     <title>Pranešimų žurnalo sąsaja - RSys dokumentacija</title>
-</head>
-<body>
+  </head>
+
+  <body>
     <div id="header">
-        <h1><img height="60px" src="images/logo.png"/>&nbsp;&nbsp;Pranešimų žurnalo sąsaja</h1>
+      <h1><img height="60px" src="images/logo.png"/>&nbsp;&nbsp;Pranešimų žurnalo sąsaja</h1>
     </div>
+
     <div id="navigation">
-        &nbsp;<a href="index.html">Turinys</a>
-        &nbsp;&nbsp;&raquo;<a href="iface-extra-parent.html">Papildomos sąsajos</a>
-        &nbsp;&nbsp;&raquo;<a>Pranešimų žurnalo sąsaja</a>
+      &nbsp;<a href="index.html">Turinys</a>
+      &nbsp;&nbsp;&raquo;<a href="iface-extra-parent.html">Papildomos sąsajos</a>
+      &nbsp;&nbsp;&raquo;<a>Pranešimų žurnalo sąsaja</a>
     </div>
     
     <div id="content">
-	    <img src="../res/iface-log.png"/>
+      <p>Šioje sąsajoje galima:</p>
+      <ul>
+        <li>Peržiūrėti pranešimų žurnalą.</li>
+        <li>Išvalyti pranešimų žurnalą.</li>
+      </ul>
+
+      <img src="../res/iface-log.png"/>
+
+      <h2>Aprašymas</h2>
+      <p>
+        Įvykus bet kokiam reikšmingam įvykiui (pvz. importavimo klaidai) sistemoje, apie tai 
+        yra spausdinamas atitinkamas pranešimas į pranešimų žurnalą. <br/>
+        Bet kokio lygio pranešimui patekus į žurnalą yra automatiškai parodoma pranešimų žurnalo sąsaja.
+        Šį automatinio pasirodymo elgesį galima išjungi atžymint varnelę <b>Rodyti žurnalą įvykus klaidai</b>.
+      </p>
+
+      <p>Pranešimai yra skirstomi į 4 lygius:</p>
+      <ol>
+        <li>
+          <b>Informaciniai pranešimai</b>. Tai pranešimai padedantys tiksliau suprasti sistemos veikseną.
+        </li>
+
+        <li>
+          <b>Įspėjamieji pranešimai</b>. Tai pranešimai apie įvykusias problemas, kurias sistema pilnai arba dalinai
+          pajėgė išspręsti.
+        </li>
+
+        <li>
+          <b>Įspėjamieji pranešimai</b>. Tai pranešimai apie klaidas, kurių sistemai savarankiškai išspręsti nepavyko.
+        </li>
+
+        <li>
+          <b>Kritiniai pranešimai</b>. Tai pranešimai apie katastrofines klaidas.
+        </li>
+      </ol>
+
+      <h2>Pranešimo žurnalo lentelės stulpelių paaiškinimai</h2>
+      <table>
+        <tr>
+          <th>Skiltis</th>
+          <th>Aprašymas</th>
+        </tr>
+
+        <tr>
+          <td>Lygis</td>
+          <td>Pateikiamas pranešimo lygis (informacija, įspėjimas, klaida, kritinė klaida)</td>
+        </tr>
+
+        <tr>
+          <td>Tipas</td>
+          <td>
+            Pateikiamas unikalus pranešimo numeris. Kiekvienas pranešimas sistemoje turi unikalų
+            numerį, pagal kurį galima diagnozuoti šio pranešimo pasirodymo priežastį.
+          </td>
+        </tr>
+
+        <tr>
+          <td>Laikas</td>
+          <td>
+            Data ir laikas, kada buvo išgeneruotas pranešimas.
+          </td>
+        </tr>
+
+        <tr>
+          <td>Pranešimas</td>
+          <td>
+            Pranešimo tekstas.
+          </td>
+        </tr>
+      </table>
+
+      <h2>Pranešimų tipai</h2>
+      <table>
+        <tr>
+          <th>Tipas</th>
+          <th>Aprašymas</th>
+        </tr>
+
+        <tr>
+          <td>0</td>
+          <td>Duomenys sėkmingai atstatyti</td>
+        </tr>
+
+        <tr>
+          <td>1</td>
+          <td>Duomenų atstatymo klaida</td>
+        </tr>
+
+        <tr>
+          <td>2</td>
+          <td>Duomenys sėkmingai išsaugoti</td>
+        </tr>
+
+        <tr>
+          <td>3</td>
+          <td>Nepavyko išsaugoti duomenų</td>
+        </tr>
+
+        <tr>
+          <td>4</td>
+          <td>Įvestas nekorektiškas intervalas</td>
+        </tr>
+
+        <tr>
+          <td>5</td>
+          <td>
+            Nepavyko pradėti importo. Taip gali būti jei nepavyko atverti pasirinktos bylos, o tai
+            galu nutikti dėl įvairių priežasčių: nėra prieeigos prie failo, bylos formatas yra
+            netinkamas ir pan.
+          </td>
+        </tr>
+
+        <tr>
+          <td>6</td>
+          <td>Pasirinkto intervalo ilgis viršija maksimalią leistiną reikšmę (10 metų)</td>
+        </tr>
+
+        <tr>
+          <td>7</td>
+          <td>Pasirinktas intervalas per trumpas</td>
+        </tr>
+
+        <tr>
+          <td>8</td>
+          <td>Intervalo pradžia yra vėliau negu jo pabaiga</td>
+        </tr>
+
+        <tr>
+          <td>9</td>
+          <td>Įvyko viena arba daugiau klaidų importuojant duomenų failą</td>
+        </tr>
+
+        <tr>
+          <td>10</td>
+          <td>Importuojant paramos priemones, nevalidi paramos priemonė buvo praleista</td>
+        </tr>
+
+        <tr>
+          <td>11</td>
+          <td>Importuojant paramos priemones, nepavyko surasti lakšto antraštinės eilutės</td>
+        </tr>
+
+        <tr>
+          <td>12</td>
+          <td>Informacinis pranešimas, informuojantis apie paramos priemonių importavimo baigimą</td>
+        </tr>
+
+        <tr>
+          <td>13</td>
+          <td>Importuojant padalinius, nevalidus padalinys buvo praleistas</td>
+        </tr>
+
+        <tr>
+          <td>14</td>
+          <td>Importuojant padalinius, nepavyko rasti lakšto antraštinės eilutės</td>
+        </tr>
+
+        <tr>
+          <td>15</td>
+          <td>Informacinis pranešimas, informuojantis apie padalinių importavimo pabaigą</td>
+        </tr>
+
+        <tr>
+          <td>16</td>
+          <td>Importuojant sistemas nevalidi sistema buvo praleista</td>
+        </tr>
+
+        <tr>
+          <td>17</td>
+          <td>Importuojant sistemas nepavyko rasti lakšto antraštinės eilutės</td>
+        </tr>
+
+        <tr>
+          <td>18</td>
+          <td>Informacinis pranešimas, informuojantis apie sistemų importavimo pabaigą</td>
+        </tr>
+
+        <tr>
+          <td>19</td>
+          <td>Kritinė importavimo klaida</td>
+        </tr>
+
+        <tr>
+          <td>20</td>
+          <td>Importuojant sistemų administravimo informaciją nepavyko rasti antraštinės lakšto eilutės</td>
+        </tr>
+
+        <tr>
+          <td>21</td>
+          <td>Importuojant sistemų administravimo informaciją nepavyko atpažinti pamintėtos sistemos vardo</td>
+        </tr>
+
+        <tr>
+          <td>22</td>
+          <td>Importuojant sistemų administravimo informaciją nepavyko atpažinti paminėto padalinio vardo</td>
+        </tr>
+
+        <tr>
+          <td>23</td>
+          <td>Informacinis pranešimas, informuojantis apie sistemų administravimo informacijos importo pabaigą</td>
+        </tr>
+
+        <tr>
+          <td>24</td>
+          <td>Importuojant sistemų administravimo informaciją nevalidus įrašas buvo praleistas</td>
+        </tr>
+
+        <tr>
+          <td>25</td>
+          <td>Importuojant paraiškos prieminių administravimo informaciją nepavyko rasti antraštinės lakšto eilutės</td>
+        </tr>
+
+        <tr>
+          <td>26</td>
+          <td>Importuojant paraiškos prieminių administravimo informaciją nepavyko pasiversti pateikto įrašo į slankaus kablelio skaičių</td>
+        </tr>
+
+        <tr>
+          <td>27</td>
+          <td>Importuojant paraiškos prieminių administravimo informaciją nepavyko atpažinti paminėtos paramos priemonės pavadinimo</td>
+        </tr>
+
+        <tr>
+          <td>28</td>
+          <td>Importuojant paraiškos prieminių administravimo informaciją nepavyko atpažinti paminėto padalinio pavadinimo</td>
+        </tr>
+
+        <tr>
+          <td>29</td>
+          <td>Informacinis pranešimas, informuojantis apie  paraiškos prieminių administravimo informacijos importo baigimą</td>
+        </tr>
+
+        <tr>
+          <td>30</td>
+          <td>Importuojant istorinius duomenis nevalidus įrašas buvo praleistas</td>
+        </tr>
+
+        <tr>
+          <td>31</td>
+          <td>Importuojant istorinius duomenis nepavyko rasti lakšto antraštinės eilutės</td>
+        </tr>
+
+        <tr>
+          <td>32</td>
+          <td>Importuojant istorinius duomenis nepavyko pasiversti celės reikšmės į sveiką skaičių</td>
+        </tr>
+
+        <tr>
+          <td>33</td>
+          <td>Informacinis pranešimas, informuojantis apie istorinių duomenų importo pabaigą</td>
+        </tr>
+
+        <tr>
+          <td>34</td>
+          <td>Ieškant mažiausios apkrovos intervalo pateiktas nekorektiškas intervalas</td>
+        </tr>
+      </table>
     </div>
   </body>
 </html>

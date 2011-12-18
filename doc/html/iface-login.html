@@ -1,29 +1,57 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link href="style/style.css" rel="stylesheet" type="text/css" >
     <title>Prisijungimo sąsaja - RSys dokumentacija</title>
-</head>
-<body>
+  </head>
+  
+  <body>
     <div id="header">
-        <h1><img height="60px" src="images/logo.png"/>&nbsp;&nbsp;Prisijungimo sąsaja</h1>
+      <h1><img height="60px" src="images/logo.png"/>&nbsp;&nbsp;Prisijungimo sąsaja</h1>
     </div>
     <div id="navigation">
-        &nbsp;<a href="index.html">Turinys</a>
-        &nbsp;&nbsp;&raquo;<a href="iface-extra-parent.html">Papildomos sąsajos</a>
-        &nbsp;&nbsp;&raquo;<a>Prisijungimo sąsaja</a>
+      &nbsp;<a href="index.html">Turinys</a>
+      &nbsp;&nbsp;&raquo;<a href="iface-extra-parent.html">Papildomos sąsajos</a>
+      &nbsp;&nbsp;&raquo;<a>Prisijungimo sąsaja</a>
     </div>
     
     <div id="content">
-	    <img src="../res/iface-login.png"/>
-	    <br/>
-	    <br/>
-	    Naudojantis šia sąsaja galima:
-	    <ul>
-	      <li>Pasirinkti prisijungimo tipą (vietinis arba nuotolinis prisijungimas)</li>
-	      <li>Pasirinkti norimą duomenų bazę ir jei reikia vartotoją</li>
-	    </ul>
+      <p>Naudojantis šia sąsaja galima:</p>
+      <ul>
+        <li>Pasirinkti prisijungimo tipą (vietinis arba nuotolinis prisijungimas)</li>
+        <li>Pasirinkti norimą duomenų bazę ir jei reikia vartotojo vardą bei slaptažodį</li>
+        <li>Sukurti naują vietinę duomenų bazę</li>
+      </ul>
+
+      <img src="../res/iface-login.png"/>
+
+      <h2>Nuotolinis prisijungimas</h2>
+      <p>
+        Norint prisijungti prie nuotolinio PostgreSQL serverio, reikia įvesti serverio adresą,
+        duomenų bazės pavadinimą, naudotojo vardą bei slaptažodį. <br/>
+        Kaip tokią duomenų bazę paruošti galite sužinoti skyrelije <a href="task-db-setup.html">
+        duomenų bazės paruošimas</a>.
+      </p>
+
+      <h2>Vietinė DB</h2>
+      <ul>
+        <li>
+          Norint atverti jau egzistuojančią DB, reikia paspausti mygtuką <b>...</b>, pasirinkti dominančios
+          DB bylą ir paspausti mygtuką <b>Atverti</b>.
+        </li>
+
+        <li>
+          Norint sukurti naują DB, reikia paspausti mygtuką <b>Sukurti naują DB</b> ir pasirinkti katalogą,
+          kuriame išsaugoti kuriamą DB. Sukurta vietinė DB bus atverta automatiškai.
+        </li>
+      </ul>
+
+      <p>
+        Nuotolinė ir vietinės DB funkcionalumu yra identiškos. Yra tik vienas skirtumas:
+        skirtingai nei nuotoliniame prisijungime, vietinėje DB neveikia joks naudotojų 
+        ir jų privilegijų valdymas.
+      </p>
     </div>
   </body>
 </html>

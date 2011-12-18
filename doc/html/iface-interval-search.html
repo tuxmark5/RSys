@@ -1,23 +1,70 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link href="style/style.css" rel="stylesheet" type="text/css" >
     <title>Mažiausios apkrovos intervalo paieškos sąsaja - RSys dokumentacija</title>
-</head>
-<body>
+  </head>
+
+  <body>
     <div id="header">
-        <h1><img height="60px" src="images/logo.png"/>&nbsp;&nbsp;Mažiausios apkrovos intervalo paieškos sąsaja</h1>
+      <h1><img height="60px" src="images/logo.png"/>&nbsp;&nbsp;Mažiausios apkrovos intervalo paieškos sąsaja</h1>
     </div>
+
     <div id="navigation">
-        &nbsp;<a href="index.html">Turinys</a>
-        &nbsp;&nbsp;&raquo;<a href="iface-extra-parent.html">Papildomos sąsajos</a>
-        &nbsp;&nbsp;&raquo;<a>Mažiausios apkrovos intervalo paieškos sąsaja</a>
+      &nbsp;<a href="index.html">Turinys</a>
+      &nbsp;&nbsp;&raquo;<a href="iface-extra-parent.html">Papildomos sąsajos</a>
+      &nbsp;&nbsp;&raquo;<a>Mažiausios apkrovos intervalo paieškos sąsaja</a>
     </div>
     
     <div id="content">
+      <p>Šia sąsaja galima:</p>
+      <ul>
+        <li>Rasti intervalus, kuomet pasirinkti padaliniai/sistemos yra apkrauti mažiausiai</li>
+        <li>Pasirinkti, ar ieškomo intervalo ilgis priklauso nuo sezoniškumo</p>
+      </ul>
+
+      <p>
+        Kokių vienetų (padalinių ar sistemų) mažiausios apkrovos intervalai yra skaičiuojami 
+        priklauso nuo to, koks rėžimas yra pasirinktas <a href="iface-palette.html">rėžimo 
+        sąsajoje</a>.
+      </p>
+
+      <p>Mažiausios apkrovos intervalų paieška turi du režimus:</p>
+      <ol>
+        <li>
+          Kai ieškomo intervalo ilgis <b>priklauso nuo sezoniškumo</b>. Tokiu atveju ieškomo intervalo ilgis
+          kinta atitinkamai nuo metų laikų (laikoma, kad žiemai priklauso gruodis, sausis, vasaris; pavasariui -
+          kovas, balandis, gegužė; ir t.t.). <br/>
+          Šį rėžimą galima naudoti tuomet, kai pvz. ieškoma, kuomet galima atlikti padalinio patalpų remontą ir
+          kai žiemą remontas trunka ilgiau negu vasarą.
+        </li>
+
+        <li>
+          Kai ieškomo intervalo ilgis yra <b>pastovus</b>. Tuomet laikoma, kad intervalo ilgis visais
+          metų laikais išlieka pastovus. <br/>
+          Šį režimą galima naudoti tuomet, kai pvz. ieškomas yra tinkamiausias intervalas IS atnaujinimui.
+        </li>
+      </ol>
+
+      <p>
+        Pasirinkus, kad ieškomo intervalo ilgis <b>priklauso nuo sezoniškumo</b>, reikia įvesti intervalo
+        ilgį visais keturiais metų laikais:
+      </p>
 	    <img src="../res/iface-interval-search-season.png"/>
+
+      <p>
+        Pasirinkus, kad ieškomo intervalo ilgis <b>nepriklauso nuo sezoniškumo</b>, užtenka įvesti tik
+        norimo intervalo ilgį:
+      </p>
 	    <img src="../res/iface-interval-search-offseason.png"/>
+
+      <p>
+        Paspaudus mygtuką <b>Ieškoti mažiausiai apkrauto intervalo</b> sistema suras <b>visų</b> pažymėtų
+        padalinių/IS intervalus ir juos pateiks <a href="iface-usages.html">apkrovų ir prognozių kortelėje</a>,
+        paryškinant rastą intervalą geltona spalva bei užrašant jo skaitinę reikšmę po kiekvieno elemento
+        antrašte.
+      </p>
     </div>
   </body>
 </html>
