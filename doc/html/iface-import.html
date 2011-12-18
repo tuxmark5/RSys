@@ -1,13 +1,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link href="style/style.css" rel="stylesheet" type="text/css" >
     <title>Duomenų importavimo sąsajos - RSys dokumentacija</title>
-</head>
-<body>
+  </head>
+  <body>
+
     <div id="header">
-        <h1><img height="60px" src="images/logo.png"/>&nbsp;&nbsp;Duomenų importavimo sąsaja</h1>
+      <h1><img height="60px" src="images/logo.png"/>&nbsp;&nbsp;Duomenų importavimo sąsaja</h1>
     </div>
     <div id="navigation">
         &nbsp;<a href="index.html">Turinys</a>
@@ -16,13 +17,33 @@
     </div>
     
     <div id="content">
+      <p>Šioje sąsajoje galima:</p>
+      <ul>
+        <li>Importuoti duomenis iš XLS failo</li>
+        <li>Pasirinkti, kokius duomenis importuoti</li>
+        <li>Pasirinkti duomenų interpretaciją</li>
+      </ul>
+
+      <p>Aktyvavus importavimo funkciją, bus parodytas norimos bylos pasirinkimo interfeisas:</p>
 	    <img src="../res/iface-import-file.png"/>
 	    <br/>
 	    <p>Bylai, iš kurios norima importuoti duomenis, parinkti.</p>
 	    <br/>
 	    <img src="../res/iface-import-sheet.png"/>
 	    <br/>
-	    <p>Lakštams, iš kurių norima importuoti duomenis, parinkti. Bei kiekvieną jų susieti su atitinkama sistemos lentele.</p>
+	    <ul>
+        <li>Pasirinkus validžią bylą, sistema pati pagal lakštų pavadinimus ir juose esančių stulpelių antraštes pabandys
+        atspėti lakštuose esančių duomenų interpretavimo būdą. Net jei lakštai arba juose esančių stulpelių antraštės
+        bus pavadinti leksiniu požiūriu skirtingai (pvz. kita žodžio galūnė, linksnis, praleista raidė ir pan.), sistema
+        vis tiek turėtų sėkmingai atspėti lakšto turinio interpretaciją. </li>
+        <li>Importo funkciją galima naudoti kelis kartus iš eilės ir taip į duomenų bazę sukelti duomenis iš kelių skirtingų
+        XLS failų. </li>
+        <li>Klaidingi įrašai importavimo metu bus automatiškai praleisti, o apie juos bus išspausdinta
+        atitinkama žinutė <a href="iface-log.html">pranešimų žurnale</a>. </li>
+        <li>Duomenys su duomenų baze bus sinchronizuojami tik tuomet, kai bus pasirinkta funkcija <b>Išsaugoti</b>.
+        Todėl persigalvojus dėl duomenų importavimo, iškart po importo procedūros galima naudotis  funkcija
+        <b>Atšaukti</b> norint atšaukti visus pakeitimus arba tiesiog uždaryti sistemą ir prisijungti per naujo.</li>
+      <ul>
     </div>  
-</body>
+  </body>
 </html>
