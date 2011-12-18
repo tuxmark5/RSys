@@ -109,6 +109,7 @@ div#navigation a {
  */
 div#content {
     margin: 10px;
+    padding-bottom: 20px;
 }
 div#content p#tasks, div#content p#ifaces {
     font-size:14pt;

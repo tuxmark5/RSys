@@ -8,6 +8,7 @@
 #include <RSys/Interface/RMainWindow.hh>
 #include <RSys/Interface/RUsageTab.hh>
 #include <RSys/Interface/RUsageWidget.hh>
+#include <RSys/Logic/RResults.hh>
 
 /********************************************* RS *********************************************/
 /*                                         RUsageTab                                          */
@@ -27,12 +28,14 @@ Vacuum RUsageTab :: RUsageTab(RMainWindow* parent):
   parent->menuBar()->m_viewMenu->addSeparator()->setParent(this);
   parent->menuBar()->m_viewMenu->addMenu(menu)->setParent(this);
 
-  RData::connect(parent->data(), SIGNAL(elementChanged(RElement*,int)),
+  connect(parent->data(), SIGNAL(elementChanged(RElement*,int)),
     this, SLOT(updateElement(RElement*,int)));
-  RData::connect(parent->data(), SIGNAL(visibilityChanged(RUnit*)),
+  connect(parent->data(), SIGNAL(visibilityChanged(RUnit*)),
     this, SLOT(updateElementVisibility(RUnit*)));
-  QAction::connect(parent, SIGNAL(unitsChanged(RUnitPtrList*)),
+  connect(parent, SIGNAL(unitsChanged(RUnitPtrList*)),
     this, SLOT(setUnits(RUnitPtrList*)));
+  connect(m_mainWindow, SIGNAL(searchModeChanged(bool)),
+    this, SLOT(setIntervalSearchEnabled(bool)));
 
   m_innerLayout = new QVBoxLayout();
   m_innerLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
@@ -71,8 +74,6 @@ RUsageWidget* RUsageTab :: createWidget(RUnit* unit)
 {
   int           mode    = unit->viewMode() != -1 ? unit->viewMode() : m_defaultMode;
   RUsageWidget* widget  = new RUsageWidget(mode, unit, m_results);
-
-  connect(m_mainWindow, SIGNAL(searchModeChanged(bool)), widget, SLOT(setSearchInterval(bool)));
 
   return widget;
 }
@@ -149,6 +150,20 @@ void RUsageTab :: resizeEvent(QResizeEvent* event)
 
   m_innerWidget->setFixedWidth(newWidth);
   RTab::resizeEvent(event);
+}
+
+/**********************************************************************************************/
+
+void RUsageTab :: setIntervalSearchEnabled(bool enabled)
+{
+  if (enabled)
+  {
+    m_results->findLowestUsageIntervals();
+  }
+
+  for (int i = 0; i < m_innerLayout->count(); i++)
+    if (RUsageWidget* widget = qobject_cast<RUsageWidget*>(m_innerLayout->itemAt(i)->widget()))
+      widget->setIntervalSearchEnabled(enabled);
 }
 
 /**********************************************************************************************/

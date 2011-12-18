@@ -31,7 +31,8 @@ Vacuum RUsageWidget :: RUsageWidget(int mode, RUnit* unit, RResults* results, QW
   RLayerWidget(parent),
   m_unit(unit),
   m_results(results),
-  m_model(new RResultsModel(results, this))
+  m_model(new RResultsModel(results, this)),
+  m_showLowestUsage(false)
 {
   m_header = new QLabel();
   m_header->setFrameStyle(QFrame::Box | QFrame::Plain);
@@ -147,6 +148,14 @@ void RUsageWidget :: onViewClicked(const QModelIndex& index)
 
 /**********************************************************************************************/
 
+void RUsageWidget :: setIntervalSearchEnabled(bool search)
+{
+  m_showLowestUsage = search;
+  updateLowUsageInterval();
+}
+
+/**********************************************************************************************/
+
 void RUsageWidget :: setMode(int mode)
 {
   R_NZ(m_unit)->setViewMode(mode);
@@ -199,21 +208,6 @@ void RUsageWidget :: setMode(int mode)
 
 /**********************************************************************************************/
 
-void RUsageWidget :: setSearchInterval(bool search)
-{
-  if (search)
-    m_lowInterval = m_results->findLowUsageInterval(m_unit);
-  else
-    m_lowInterval = RInterval();
-
-  if (RChart* chart = qobject_cast<RChart*>(widget()))
-    chart->setFillRange(0, std::get<0>(m_lowInterval), std::get<1>(m_lowInterval).addDays(search));
-
-  updateHeader();
-}
-
-/**********************************************************************************************/
-
 void RUsageWidget :: setTitle(const QString& title)
 {
   m_title = title;
@@ -232,18 +226,37 @@ void RUsageWidget :: updateGlobalInterval()
 
 /**********************************************************************************************/
 
+void RUsageWidget :: updateLowUsageInterval()
+{
+  const RInterval& lowestUsage = m_unit->lowestUsage();
+
+  if (RChart* chart = qobject_cast<RChart*>(widget()))
+  {
+    if (m_showLowestUsage)
+      chart->setFillRange(0, std::get<0>(lowestUsage), std::get<1>(lowestUsage).addDays(1));
+    else
+      chart->setFillRange(0, QDate(), QDate());
+  }
+
+  updateHeader();
+}
+
+/**********************************************************************************************/
+
 void RUsageWidget :: updateHeader()
 {
+  const RInterval& lowestUsage = m_unit->lowestUsage();
+
   QString text = QString("<b>%1</b> (<i>%2</i>): %3")
       .arg(m_unit->identifier())
       .arg(m_unit->name())
       .arg(m_title);
 
-  if (!std::get<0>(m_lowInterval).isNull())
+  if (m_showLowestUsage && !std::get<0>(lowestUsage).isNull())
   {
     text += R_S("<br/><u>Mažiausios apkrovos intervalas:</u> nuo <b>%1</b> iki <b>%2</b>")
-      .arg(std::get<0>(m_lowInterval).toString(Qt::DefaultLocaleShortDate))
-      .arg(std::get<1>(m_lowInterval).toString(Qt::DefaultLocaleShortDate));
+      .arg(std::get<0>(lowestUsage).toString(Qt::DefaultLocaleShortDate))
+      .arg(std::get<1>(lowestUsage).toString(Qt::DefaultLocaleShortDate));
   }
 
   m_header->setText(text);

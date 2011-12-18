@@ -1,14 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="style/style.css" rel="stylesheet" type="text/css" >
     <title>Naudotojų administravimo sąsaja - RSys dokumentacija</title>
   </head>
 
   <body>
-    <h2>Naudotojų administravimo sąsaja</h2>
-    <img src="../res/iface-user-adm.png"/>
-    <p>ASISTENTAS RODO TIK TUOS FAILUS, KURIU SIZE YRA DIDESNIS ARBA LYGUS 511 BYTES (cia bug)</p>
-    <p>ASISTENTAS RODO TIK TUOS FAILUS, KURIU SIZE YRA DIDESNIS ARBA LYGUS 511 BYTES (cia bug)</p>
-    <p>ASISTENTAS RODO TIK TUOS FAILUS, KURIU SIZE YRA DIDESNIS ARBA LYGUS 511 BYTES (cia bug)</p>
+    <div id="header">
+        <h1><img height="60px" src="images/logo.png"/>&nbsp;&nbsp;Naudotojų administravimo sąsaja</h1>
+    </div>
+
+    <div id="navigation">
+        &nbsp;<a href="index.html">Turinys</a>
+        &nbsp;&nbsp;&raquo;<a href="iface-extra-parent.html">Papildomos sąsajos</a>
+        &nbsp;&nbsp;&raquo;<a>Naudotojų administravimo sąsaja</a>
+    </div>
+    
+    <div id="content">
+	    <img src="../res/iface-user-adm.png"/>
+    </div>
+
+    <p>Šioje sąsajoje galima:</p>
+    <ul>
+      <li>Sukurti naują naudotojo paskyrą.</li>
+      <li>Pašalinti egzistuojančio naudotojo paskyrą.</li>
+      <li>Pakeisti naudotojo privilegijas arba slaptažodį.</li>
+    </ul>
+
+    <p>
+      Dėl PostgreSQL DBVS apribojimų, keisti sukurto naudotojo vardą galimybės nėra.
+      Norint tai padaryti reikia pašalinti esamą naudotoją ir sukurti naują su norimu vardu
+    </p>
+
+    <h2>Privilegijų rūšys</h2>
+    <table>
+      <tr>
+        <th>Privilegijos pavadinimas</th>
+        <th>Paaiškinimas</th>
+      </tr>
+
+      <tr>
+        <td>Paramos priem.</td>
+        <td>Apriboja prieeigą prie <b>Priemonės</b> koretelės bei prie atitinkamų DB esybių</td>
+      </tr>
+
+      <tr>
+        <td>Padaliniai</td>
+        <td>Apriboja prieeigą prie <b>Padaliniai</b> koretelės bei prie atitinkamos DB esybės</td>
+      </tr>
+
+      <tr>
+        <td>IS</td>
+        <td>Apriboja prieeigą prie <b>IS</b> koretelės bei prie atitinkamos DB esybės</td>
+      </tr>
+
+      <tr>
+        <td>Paramos priem. adm.</td>
+        <td>Apriboja prieeigą prie <b>Priemonių adm.</b> koretelės bei prie atitinkamos DB esybės</td>
+      </tr>
+
+      <tr>
+        <td>IS adm.</td>
+        <td>Apriboja prieeigą prie <b>IS adm.</b> koretelės bei prie atitinkamos DB esybės</td>
+      </tr>
+
+      <tr>
+        <td>Istoriniai duomenys</td>
+        <td>Apriboja prieeigą prie <b>Istoriniai duom.</b> koretelės bei prie atitinkamos DB esybės</td>
+      </tr>
+
+      <tr>
+        <td>Rodyti rėžimą: padaliniai</td>
+        <td>
+          Nurodo, ar naudotojui leidžiama pasirinkti rėžimą <b>Padaliniai</b>.
+          Prie bent vieno iš dviejų rėžimų prieiga turi būti suteikta. Jei taip nebus, tai sistema
+          automatiškai leis prieiti prie rėžimo<b>Padaliniai</b>.
+        </td>
+      </tr>
+
+      <tr>
+        <td>Rodyti rėžimą: IS</td>
+        <td>
+          Nurodo, ar naudotojui leidžiama pasirinkti rėžimą <b>Sistemos</b>
+          Prie bent vieno iš dviejų rėžimų prieiga turi būti suteikta. Jei taip nebus, tai sistema
+          automatiškai leis prieiti prie rėžimo< b>Padaliniai</b>.
+        </td>
+      </tr>
+
+      <tr>
+        <td>Rodyti rezultatų kortelę</td>
+        <td>Nurodo, ar rodyti naudotojui rezultatų kortelę</td>
+      </tr>
+
+      <tr>
+        <td>Rodyti apžvalgos kortelę</td>
+        <td>Nurodo, ar rodyti naudotojui apžvalgos kortelę</td>
+      </tr>
+
+      <tr>
+        <td>Leisti importuoti duomenis</td>
+        <td>
+          Nurodo, ar naudotojui leidžiama naudotis importavimo funkcionalumu.
+          Norint, kad naudotojas sėkmingai galėtų importuoti duomenis, jis dar papildomai
+          turi turėti priėjimą prie importuojamų esybių DB viduje.
+        </td>
+      </tr>
+    </table>
+
+    <h2>Naudotojo slaptažodžio keitimas</h2>
+    <p> </p>
   </body>
 </html>

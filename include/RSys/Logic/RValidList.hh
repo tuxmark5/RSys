@@ -71,7 +71,7 @@ class RValidList
           return *this;
         }
 
-        _M Iterator&       operator ++(int)
+        _M Iterator        operator ++(int)
           { Iterator old(*this); ++(*this); return old; }
         _M Value           operator * () const
           { return *m_it; }

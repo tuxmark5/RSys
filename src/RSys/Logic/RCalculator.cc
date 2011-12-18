@@ -23,7 +23,8 @@ Vacuum RCalculator :: RCalculator(RData* data):
   m_validMeasures(data->measures(), data->measures1()),
   m_validSubmissions(data->submissions(), data->submissions1()),
   m_validDivisions(data->divisions()),
-  m_numIntervals(0),
+  m_validSystems(data->systems()),
+  m_numIntervals({0, 0}),
   m_intrapolationEnabled(true)
 {
 }
@@ -110,7 +111,7 @@ void RCalculator :: update()
     updateUsageMap(it.key()->m_usageMap, it.value().m_usefulSubmissions);
   }
 
-  calculateIntervals();
+  calculateIntervals(0);
 }
 
 /**********************************************************************************************/
@@ -191,30 +192,30 @@ bool RCalculator :: intersect(QDate from, QDate to, QMap<QDate, QDate>& interval
 
 void RCalculator :: setIntervalFun(IntervalFun intervalFun, int numIntervals)
 {
-  m_intervalFun = intervalFun;
-  m_numIntervals = numIntervals;
-  calculateIntervals();
+  m_intervalFun[0] = intervalFun;
+  m_numIntervals[0] = numIntervals;
+  calculateIntervals(0);
 }
 
 /**********************************************************************************************/
 
-void RCalculator :: calculateIntervals()
+void RCalculator :: calculateIntervals(int whichUsage)
 {
-  if (m_numIntervals > 0)
+  if (m_numIntervals[whichUsage] > 0)
   {
-    zeroUsages((RUnitPtrList*)m_data->systems());
-    zeroUsages((RUnitPtrList*)m_data->divisions());
+    zeroUsages((RUnitPtrList*)m_data->systems(), whichUsage);
+    zeroUsages((RUnitPtrList*)m_data->divisions(), whichUsage);
     QVector<RInterval> intervals;
-    for (int i = 0; i < m_numIntervals; i++)
+    for (int i = 0; i < m_numIntervals[whichUsage]; i++)
     {
-      intervals.push_back(m_intervalFun(i));
+      intervals.push_back(m_intervalFun[whichUsage](i));
     }
     for (auto measure : m_validMeasures)
     {
-      measure->m_usage.clear();
+      measure->m_usage[whichUsage].clear();
       if (measure->m_usageMap.empty())
       {
-        measure->m_usage.resize(m_numIntervals);
+        measure->m_usage[whichUsage].resize(m_numIntervals[whichUsage]);
         continue;
       }
       QDate predictFrom = (--measure->m_usageMap.end()).key();
@@ -222,8 +223,8 @@ void RCalculator :: calculateIntervals()
       {
         predictFrom = m_data->interval1().addDays(1);
       }
-      measure->m_usage.reserve(m_numIntervals);
-      for (int i = 0; i < m_numIntervals; i++)
+      measure->m_usage[whichUsage].reserve(m_numIntervals[whichUsage]);
+      for (int i = 0; i < m_numIntervals[whichUsage]; i++)
       {
         double usage;
         if (TO(intervals[i]).daysTo(predictFrom) >= 0)
@@ -240,34 +241,34 @@ void RCalculator :: calculateIntervals()
           TO(interval) = TO(intervals[i]);
           usage += predictUsage(interval, measure->m_usageMap);
         }
-        measure->m_usage.push_back(qMakePair(0.0, usage));
+        measure->m_usage[whichUsage].push_back(qMakePair(0.0, usage));
       }
-      calculateIntervals(measure->m_unitUsage, measure->m_usage);
+      calculateIntervals(measure->m_unitUsage, measure->m_usage[whichUsage], whichUsage);
     }
   }
 }
 
 /**********************************************************************************************/
 
-void RCalculator :: zeroUsages(RUnitPtrList* units)
+void RCalculator :: zeroUsages(RUnitPtrList* units, int whichUsage)
 {
   for (auto unit : *units)
   {
-    unit->m_usage.clear();
-    unit->m_usage.resize(m_numIntervals);
+    unit->m_usage[whichUsage].clear();
+    unit->m_usage[whichUsage].resize(m_numIntervals[whichUsage]);
   }
 }
 
 /**********************************************************************************************/
 
-void RCalculator :: calculateIntervals(UnitHash& units, UsageVector& usage)
+void RCalculator :: calculateIntervals(UnitHash& units, UsageVector& usage, int whichUsage)
 {
   for (auto it = units.begin(); it != units.end(); it++)
   {
-    for (int i = 0; i < m_numIntervals; i++)
+    for (int i = 0; i < m_numIntervals[whichUsage]; i++)
     {
-      it.key()->m_usage[i].first += usage[i].second * it.value();
-      it.key()->m_usage[i].second += usage[i].second;
+      it.key()->m_usage[whichUsage][i].first += usage[i].second * it.value();
+      it.key()->m_usage[whichUsage][i].second += usage[i].second;
     }
   }
 }
@@ -554,12 +555,10 @@ bool RCalculator :: nonNegativeInInterval(double coefficients[3], int from, int 
 
 /**********************************************************************************************/
 
-RInterval RCalculator :: findLowUsageInterval(RUnitPtr unit, RInterval interval,
-                                             int daysBySeasons[4])
+void RCalculator :: findLowUsageIntervals(RInterval interval, int daysBySeasons[4])
 {
-  RInterval result;
-  int fractionsBySeasons[4]; // kokią dalį reikiamo ilgio sudaro viena diena
-  int fractionsNeeded = 1;
+  Fractions fractionsBySeasons[4]; // kokią dalį reikiamo ilgio sudaro viena diena
+  Fractions fractionsNeeded = 1;
   for (int i = 0; i < 4; i++)
   {
     if (daysBySeasons[i] > 0)
@@ -567,7 +566,15 @@ RInterval RCalculator :: findLowUsageInterval(RUnitPtr unit, RInterval interval,
       fractionsNeeded *= daysBySeasons[i];
     }
   }
-  if (fractionsNeeded <= 0) return result;
+  if (fractionsNeeded <= 0)
+  {
+    for (auto system : m_validSystems)
+      system->m_lowestUsage = RInterval();
+    for (auto division : m_validDivisions)
+      division->m_lowestUsage = RInterval();
+    return;
+  }
+
   for (int i = 0; i < 4; i++)
   {
     if (daysBySeasons[i] > 0)
@@ -576,63 +583,71 @@ RInterval RCalculator :: findLowUsageInterval(RUnitPtr unit, RInterval interval,
     }
   }
 
-  QHash<RMeasurePtr, double> measures;
-  for (auto measure : m_validMeasures)
-  {
-    double measureUsage = measure->m_unitUsage.value(unit, 0);
-    if (measureUsage > 0)
-    {
-      measures.insert(measure, measureUsage);
-    }
-  }
-
   int intervalLength = FROM(interval).daysTo(TO(interval)) + 1;
-  QVector<double> usage;
-  QVector<int> fraction;
-  usage.reserve(intervalLength);
-  fraction.reserve(intervalLength);
+
+  QVector<Fractions> fractions;
+  fractions.reserve(intervalLength);
   QDate day = FROM(interval);
+
+  m_intervalFun[1] = [day](int x) -> RInterval
+    {
+      return RInterval(day.addDays(x), day.addDays(x + 1));
+    };
+  m_numIntervals[1] = intervalLength;
+  calculateIntervals(1);
+
   for (int i = 0; i < intervalLength; i++)
   {
-    double curUsage = 0;
-    for (auto it = measures.begin(); it != measures.end(); it++)
-    {
-      curUsage += it.value() * daysUsage(day, it.key()->m_usageMap);
-    }
-    usage.push_back(curUsage);
-    fraction.push_back(fractionsBySeasons[seasonOf(day)]);
+    fractions.push_back(fractionsBySeasons[seasonOf(day)]);
     day = day.addDays(1);
   }
 
-  double currentUsage = 0;
-  double lowestUsage = MAGIC;
-  int currentFractions = 0;
-  for (int from = 0, to = 0; to < intervalLength; to++)
+  findLowUsageIntervals((ValidUnitPtrList*)&m_validDivisions, fractions, fractionsNeeded, FROM(interval));
+  findLowUsageIntervals((ValidUnitPtrList*)&m_validSystems, fractions, fractionsNeeded, FROM(interval));
+}
+
+/**********************************************************************************************/
+
+void RCalculator :: findLowUsageIntervals(ValidUnitPtrList* units,
+                                          QVector<Fractions>& fractions,
+                                          Fractions fractionsNeeded, QDate& date)
+{
+  for (auto unit : *units)
   {
-    if (fraction[to] == 0) // netinkamas sezonas
+    unit->m_lowestUsage = RInterval();
+    double currentUsage = 0;
+    double lowestUsage = MAGIC;
+    Fractions currentFractions = 0;
+    UsageVector& usage = unit->m_usage[1];
+    int intervalLength = usage.size();
+    for (int from = 0, to = 0; to < intervalLength; to++)
     {
-      while (to < intervalLength && fraction[to] == 0) to++;
-      from = to;
-      currentUsage = 0;
-      currentFractions = 0;
-      if (to >= intervalLength) break;
-    }
-    currentFractions += fraction[to];
-    currentUsage += usage[to];
-    while (currentFractions - fraction[from] >= fractionsNeeded)
-    { // čia visada from < intervalLength, nes užtikrinam fractionsNeeded > 0
-      currentUsage -= usage[from];
-      currentFractions -= fraction[from];
-      from++;
-    }
-    if (currentFractions >= fractionsNeeded
-        && (FROM(result).isNull() || currentUsage < lowestUsage))
-    {
-      lowestUsage = currentUsage;
-      result = RInterval(FROM(interval).addDays(from), FROM(interval).addDays(to));
+      if (fractions[to] == 0) // netinkamas sezonas
+      {
+        while (to < intervalLength && fractions[to] == 0) to++;
+        from = to;
+        currentUsage = 0;
+        currentFractions = 0;
+        if (to >= intervalLength) break;
+      }
+      currentFractions += fractions[to];
+      currentUsage += usage[to].first;
+      while (currentFractions - fractions[from] >= fractionsNeeded)
+      { // čia visada from < intervalLength, nes užtikrinam fractionsNeeded > 0
+        currentUsage -= usage[from].first;
+        if (currentUsage < 0) currentUsage = 0;
+        currentFractions -= fractions[from];
+        from++;
+      }
+      if (currentFractions >= fractionsNeeded
+          && (FROM(unit->m_lowestUsage).isNull() || currentUsage < lowestUsage))
+      {
+        lowestUsage = currentUsage;
+        unit->m_lowestUsage = RInterval(date.addDays(from),
+                                        date.addDays(to));
+      }
     }
   }
-  return result;
 }
 
 /**********************************************************************************************/
@@ -640,19 +655,6 @@ RInterval RCalculator :: findLowUsageInterval(RUnitPtr unit, RInterval interval,
 int RCalculator :: seasonOf(QDate date)
 {
   return date.month() % 12 / 3; // elegantiška, ar ne? :D
-}
-
-/**********************************************************************************************/
-
-double RCalculator :: daysUsage(QDate day, UsageMap& usageMap)
-{
-  RInterval interval = RInterval(day, day.addDays(1));
-  if (day <= m_data->interval1())
-  {
-    return calculateUsage(interval, usageMap);
-  } else {
-    return predictUsage(interval, usageMap);
-  }
 }
 
 /**********************************************************************************************/

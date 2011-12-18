@@ -24,7 +24,10 @@ class RCalculator: public QObject
     _T RValidList<RMeasurePtrList>    ValidMeasurePtrList;
     _T RValidList<RSubmissionPtrList> ValidSubmissionPtrList;
     _T RValidList<RDivisionPtrList>   ValidDivisionPtrList;
+    _T RValidList<RSystemPtrList>     ValidSystemPtrList;
+    _T RValidList<RUnitPtrList>       ValidUnitPtrList;
     _T QMap<QDate, RSubmissionPtr>    SubmissionMap;
+    _T unsigned long long             Fractions;
 
     /**
      * Informacija apie priemonės apkrovų įrašus jų teisingumo patikrinimui.
@@ -42,8 +45,9 @@ class RCalculator: public QObject
     _M ValidMeasurePtrList            m_validMeasures;
     _M ValidSubmissionPtrList         m_validSubmissions;
     _M ValidDivisionPtrList           m_validDivisions;
-    _M IntervalFun                    m_intervalFun;
-    _M int                            m_numIntervals;
+    _M ValidSystemPtrList             m_validSystems;
+    _M IntervalFun                    m_intervalFun[2];
+    _M int                            m_numIntervals[2];
     _M bool                           m_intrapolationEnabled: 1;
 
   private:
@@ -57,12 +61,15 @@ class RCalculator: public QObject
     _S void             updateMeasures(RDivisionPtr& division, RMeasureHash& measures);
     _S void             updateUsageMap(UsageMap& usageMap, SubmissionMap& submissions);
     _S void             checkSplitSubmissions(MeasureInfo info);
-    _M void             calculateIntervals();
-    _M void             calculateIntervals(UnitHash& units, UsageVector& usage);
+    _M void             calculateIntervals(int whichUsage);
+    _M void             calculateIntervals(UnitHash& units, UsageVector& usage,
+                                           int whichUsage);
     _M double           calculateUsage(RInterval interval, UsageMap& usageMap);
     _M double           predictUsage(RInterval interval, UsageMap& usageMap);
-    _M double           daysUsage(QDate day, UsageMap& usageMap);
-    _M void             zeroUsages(RUnitPtrList* units);
+    _M void             zeroUsages(RUnitPtrList* units, int whichUsage);
+    _S void             findLowUsageIntervals(ValidUnitPtrList* units,
+                                              QVector<Fractions>& fractions,
+                                              Fractions fractionsNeeded, QDate& date);
 
     /**
      * Nuspėja apkrovą intervale, remiantas gretimų intervalų apkrovomis.
@@ -184,12 +191,10 @@ class RCalculator: public QObject
     _M void             setIntervalFun(IntervalFun intervalFun, int numIntervals);
 
     /**
-     * Randa mažiausiai apkrautą padalinio ar sistemos intervalą.
+     * Randa mažiausiai apkrautą padalinių ir sistemų intervalą.
      * Apribojama, kuriame dienų intervale ieškoti bei koks dienų kiekis
      * reikalingas ieškomame intervale atsižvelgiant į sezoną.
      *
-     * @param unit           sistema ar paramos priemonė, kurios mažiausiai
-     *                       apkrauto intervalo ieškome
      * @param interval       intervalas, kuriame ieškoti (imtinai)
      * @param daysBySeasons  rodyklė į 4 skaičius, kurie atitinka reikalavimus
      *                       gauto mažiausios apkrovos intervalo ilgiui, jei
@@ -202,8 +207,8 @@ class RCalculator: public QObject
      *         grąžina anksčiausią; jei nėra nė vieno, grąžina nulinių datų
      *         intervalą
      */
-    _M RInterval        findLowUsageInterval(RUnitPtr unit, RInterval interval,
-                                             int daysBySeasons[4]);
+      _M void           findLowUsageIntervals(RInterval interval,
+                                              int daysBySeasons[4]);
 
   public slots:
     _M void             setIntrapolationEnabled(bool enabled);
