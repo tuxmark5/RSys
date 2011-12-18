@@ -215,7 +215,7 @@ bool RSubmission :: setMeasureName(const QString& measureName)
 
 bool RSubmission :: setMeasureNameE(const QString& measureName)
 {
-  R_GUARD(setMeasureNameE(measureName), false);
+  R_GUARD(setMeasureName(measureName), false);
 
   setDefaultInteval();
   return true;
