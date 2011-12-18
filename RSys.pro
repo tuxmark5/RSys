@@ -3,10 +3,15 @@
 #                                             RSys                                             #
 ################################################################################################
 
-CONFIG              += depend_includepath qtestlib
-QT                  += core gui sql
+CONFIG              += depend_includepath qt
+QT                  += core gui sql testlib
 TARGET               = RSys
 TEMPLATE             = app
+
+win32 {
+  # hide console on windows
+  QMAKE_LFLAGS_CONSOLE = -Wl,-subsystem,windows
+}
 
 ################################################################################################
 
