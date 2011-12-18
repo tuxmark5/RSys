@@ -43,26 +43,29 @@ void RCalculator :: update()
   {
     measure->m_unitUsage.clear();
     measure->m_usageMap.clear();
-    measure->m_usage.clear();
+    measure->m_usage[0].clear();
   }
   for (auto division : m_validDivisions)
   {
     updateMeasures(division, division->m_measureHash);
     updateMeasures(division, division->m_measureHash1);
   }
+  for (auto submission : *(m_data->submissions()))
+  {
+    submission->validate();
+  }
 
   QHash<RMeasure*, MeasureInfo> measureInfos;
   for (auto submission : m_validSubmissions)
   {
-    QDate from = submission->date0();
-    QDate to   = submission->date1().addDays(1);
     MeasureInfo& info = measureInfos[submission->measure()];
 
-    if (intersect(from, to, info.m_invalidIntervals))
+    if (intersect(submission, info))
     {
-      submission->setValid(false);
       continue;
     }
+    QDate from = submission->date0();
+    QDate to   = submission->date1().addDays(1);
 
     { // patikrina, ar nesikerta su naudojamais
       auto it = info.m_usefulSubmissions.lowerBound(to);
@@ -76,24 +79,24 @@ void RCalculator :: update()
         { // einamasis tikslina
           info.m_splitSubmissions.push_back(it.value());
           info.m_usefulSubmissions.erase(it);
-        } else if (it.value().date1() > from)
+        } else if (it.value()->date1() >= from)
         { // kertasi
           submission->setValid(false);
+          qDebug() << "kertasi " << from << to.addDays(-1) << it.key() << it.value()->date1();
           if (it.value()->date1() >= to) to = it.value()->date1().addDays(1);
           do
           {
             it.value()->setValid(false);
+            if (it.key() < from) from = it.key();
             if (it != info.m_usefulSubmissions.begin())
             {
-              if (it.key() < from) from = it.key();
               info.m_usefulSubmissions.erase(it--);
             } else {
               break;
             }
-          } while (it.value()->date1() > from);
-          if (it.value()->date1() > from)
+          } while (it.value()->date1() >= from);
+          if (it.value()->date1() >= from)
           {
-            if (it.key() < from) from = it.key();
             info.m_usefulSubmissions.erase(it);
           }
           info.m_invalidIntervals.insert(from, to);
@@ -143,17 +146,72 @@ void RCalculator :: updateUsageMap(UsageMap& usageMap, SubmissionMap& submission
 
 /**********************************************************************************************/
 
-void RCalculator :: checkSplitSubmissions(MeasureInfo info)
+void RCalculator :: checkSplitSubmissions(MeasureInfo& info)
 {
+  qSort(info.m_splitSubmissions.begin(), info.m_splitSubmissions.end(),
+        RCalculator::submissionLengthComparator);
+  for (auto submission : info.m_splitSubmissions)
+  {
+    if (intersect(submission, info)) continue;
+    QDate from = submission->date0();
+    QDate to   = submission->date1().addDays(1);
+    auto it = --info.m_usefulSubmissions.lowerBound(submission->date1());
+    if (it.value()->date1() >= to)
+    { // kerta pabaigoje
+      qDebug() << "kerta pabaigoje " << from << to.addDays(-1) << it.key() << it.value()->date1();
+      submission->setValid(false);
+      invalidateInRange(from, to, info.m_usefulSubmissions);
+      info.m_invalidIntervals.insert(from, to);
+      continue;
+    } else {
+      int totalCount = 0;
+      while (it.key() >= from)
+      {
+        totalCount += it.value()->count();
+        if (it != info.m_usefulSubmissions.begin())
+        {
+          it--;
+        } else {
+          break;
+        }
+      }
+      if (it.key() < from && it.value()->date1() >= from)
+      { // kerta pradžioje
+        qDebug() << "kerta pradžioje " << from << to.addDays(-1) << it.key() << it.value()->date1();
+        submission->setValid(false);
+        invalidateInRange(from, to, info.m_usefulSubmissions);
+        info.m_invalidIntervals.insert(from, to);
+        continue;
+      }
+      if (totalCount != submission->count())
+      {
+        qDebug() << "Tikslinančių [" << from << "; " << to.addDays(-1)
+                 << "] suma " << totalCount << ", turėtų būti"
+                 << submission->count();
+        if (it.key() < from) it++;
+        while (it != info.m_usefulSubmissions.end() && it.value()->date1() < to)
+        {
+          it.value()->setValid(false);
+          info.m_usefulSubmissions.erase(it++);
+        }
+        info.m_usefulSubmissions.insert(from, submission);
+      }
+    }
+  }
 }
 
 /**********************************************************************************************/
 
-bool RCalculator :: intersect(QDate from, QDate to, QMap<QDate, QDate>& intervals)
+bool RCalculator :: intersect(RSubmissionPtr submission, MeasureInfo info)
 {
-  auto it = intervals.lowerBound(to);
-  if (it != intervals.begin() && (--it).value() > from)
+  QDate from = submission->date0();
+  QDate to   = submission->date1().addDays(1);
+  auto it = info.m_invalidIntervals.lowerBound(to);
+  if (it != info.m_invalidIntervals.begin() && (--it).value() > from)
   {
+    qDebug() << "kerta neteisingą " << from << to.addDays(-1) << it.key() << it.value().addDays(-1);
+    submission->setValid(false);
+    invalidateInRange(from, to, info.m_usefulSubmissions);
     if (from >= it.key())
     {
       if (to > it.value()) it.value() = to;
@@ -161,9 +219,9 @@ bool RCalculator :: intersect(QDate from, QDate to, QMap<QDate, QDate>& interval
       if (to < it.value()) to = it.value();
       do
       {
-        if (it != intervals.begin())
+        if (it != info.m_invalidIntervals.begin())
         {
-          intervals.erase(it--);
+          info.m_invalidIntervals.erase(it--);
         } else {
           break;
         }
@@ -172,20 +230,52 @@ bool RCalculator :: intersect(QDate from, QDate to, QMap<QDate, QDate>& interval
       {
         it.value() = to;
       } else if (it.key() > from) {
-        intervals.erase(it);
-        intervals.insert(from, to);
+        info.m_invalidIntervals.erase(it);
+        info.m_invalidIntervals.insert(from, to);
       } else if (it.key() < from) {
         if (it.value() >= from)
         {
           it.value() = to;
         } else {
-          intervals.insert(from, to);
+          info.m_invalidIntervals.insert(from, to);
         }
       }
     }
-    return false;
+    return true;
   }
-  return true;
+  return false;
+}
+
+/**********************************************************************************************/
+
+bool RCalculator :: invalidateInRange(QDate &from, QDate &to,
+                                      SubmissionMap& submissions)
+{
+  bool invalidated = false;
+  auto it = submissions.lowerBound(from);
+  if (it == submissions.begin()) return false;
+  if ((--it).value()->date1() >= to)
+  {
+    to = it.value()->date1().addDays(1);
+  }
+  while (it.value()->date1() >= from)
+  {
+    invalidated = true;
+    if (it.key() < from) from = it.key();
+    it.value()->setValid(false);
+    qDebug() << "invalidInRange " << from << to.addDays(-1) << it.key() << it.value()->date1();
+    if (it != submissions.begin())
+    {
+      submissions.erase(it--);
+    } else {
+      break;
+    }
+  }
+  if (it.value()->date1() >= from)
+  {
+    submissions.erase(it);
+  }
+  return invalidated;
 }
 
 /**********************************************************************************************/
@@ -659,7 +749,7 @@ int RCalculator :: seasonOf(QDate date)
 
 /**********************************************************************************************/
 
- void RCalculator :: setIntrapolationEnabled(bool enabled)
- {
-   m_intrapolationEnabled = enabled;
- }
+void RCalculator :: setIntrapolationEnabled(bool enabled)
+{
+  m_intrapolationEnabled = enabled;
+}

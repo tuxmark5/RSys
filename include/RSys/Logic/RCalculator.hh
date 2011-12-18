@@ -5,6 +5,7 @@
 #include <RSys/Logic/RResults.hh>
 #include <RSys/Core/RUnit.hh>
 #include <RSys/Core/RMeasure.hh>
+#include <RSys/Core/RSubmission.hh>
 #include <RSys/Logic/RValidList.hh>
 /**********************************************************************************************/
 #define MIN_USAGE 1e-4 // m_usage reikšmės, mažesnės už šią, paverčiamos nuliu
@@ -60,7 +61,24 @@ class RCalculator: public QObject
      */
     _S void             updateMeasures(RDivisionPtr& division, RMeasureHash& measures);
     _S void             updateUsageMap(UsageMap& usageMap, SubmissionMap& submissions);
-    _S void             checkSplitSubmissions(MeasureInfo info);
+    _S void             checkSplitSubmissions(MeasureInfo& info);
+
+    /**
+     * Nustato, jog intervalą kertantys įrašai yra neteisingi, juos išmeta iš
+     * sąrašo bei, jei reikia, praplečia duotąjį intervalą pagal išmestus.
+     *
+     * @param from        intervalo pradžia; jei buvo išmestas intervalas,
+     *                    kurio pradžios data mažesnė už from, ji priskiriama
+     *                    from
+     * @param to          intervalo pabaiga, neimtinai; jei buvo išmestas
+     *                    intervalas, kurio pabaigos data nemažesnė už to, ji,
+     *                    pridėjus vieną dieną, priskiriama to
+     * @param submissions nesikertančių intervalų įrašai, tarp kurių ieškoma
+     *                    priklausančių/kertančių/apimančių [from; to)
+     * @return true, jei buvo išmestas nors vienas intervalas; false, jei ne
+     */
+    _S bool             invalidateInRange(QDate& from, QDate& to,
+                                          SubmissionMap& submissions);
     _M void             calculateIntervals(int whichUsage);
     _M void             calculateIntervals(UnitHash& units, UsageVector& usage,
                                            int whichUsage);
@@ -70,6 +88,9 @@ class RCalculator: public QObject
     _S void             findLowUsageIntervals(ValidUnitPtrList* units,
                                               QVector<Fractions>& fractions,
                                               Fractions fractionsNeeded, QDate& date);
+    _S bool             submissionLengthComparator(const RSubmissionPtr& a,
+                                                   const RSubmissionPtr& b)
+      { return a->date0().daysTo(a->date1()) < b->date0().daysTo(b->date1()); }
 
     /**
      * Nuspėja apkrovą intervale, remiantas gretimų intervalų apkrovomis.
@@ -170,19 +191,17 @@ class RCalculator: public QObject
     _S int              seasonOf(QDate date);
 
     /**
-     * Patikrina, ar duotas intervalas kerta (priklauso) kurį nors (kuriam
-     * nors) iš intervalų. Jei kerta, modifikuoja intervalus taip, kad
-     * įtrauktų ir jį.
+     * Patikrina, ar duoto įrašo intervalas kerta (priklauso) kurį nors (kuriam
+     * nors) iš blogų intervalų. Jei kerta, modifikuoja blogus intervalus taip,
+     * kad įtrauktų ir jį. Tam nutikus, pažymi duomenis kaip neteisingus, bei
+     * ieško su juo besikertančių intervalų tarp naudojamų, su kuriais padaro
+     * tą patį.
      *
-     * @param from      intervalo, su kuriuo tikriname, ar kertasi, pradžia
-     *                  (imtinai)
-     * @param to        intervalo, su kuriuo tikriname, ar kertasi, pabaiga
-     *                  (ne imtinai)
-     * @param intervals intervalai, su kuriais tikriname, ar nekerta;
-     *                  tipo [a; b)
+     * @param submission tikrinamas įrašas
+     * @param info       informacija apie paramos priemonės duomenis
      * @return true, jei intervalai kertasi; false priešingu atveju
      */
-    _S bool             intersect(QDate from, QDate to, QMap<QDate, QDate>& intervals);
+    _S bool             intersect(RSubmissionPtr submission, MeasureInfo info);
 
   public:
     _M Vacuum           RCalculator(RData* data);
