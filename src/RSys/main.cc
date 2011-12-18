@@ -21,15 +21,17 @@ int main(int argc, char** argv)
   else
   {
     QLocale       locale(QLocale::Lithuanian, QLocale::Lithuania);
+    QLocale::setDefault(locale);
+
     QTranslator   translator(0);
     translator.load("qt_lt", ".");
-    QLocale::setDefault(locale);
 
     QApplication  app(argc, argv);
     app.installTranslator(&translator);
 
     QSettings     settings("ReSoft", "RSys");
     g_settings = &settings;
+
     RMainWindow   mainWnd;
 
     mainWnd.showMaximized();
