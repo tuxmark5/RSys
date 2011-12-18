@@ -76,7 +76,6 @@ class RModel1D: public RAbstractItemModel
     _V QModelIndex    index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
     _V bool           insertRows(int row, int count, const QModelIndex& parent = QModelIndex());
     _V QVariant       lastRowData(const QModelIndex& index, int role) const;
-    _M void           notifyAllRowsChanged();
     _V QModelIndex    parent(const QModelIndex& index) const;
     _V bool           removeRows(int row, int count, const QModelIndex& parent = QModelIndex());
     _V int            rowCount(const QModelIndex& parent = QModelIndex()) const;
@@ -91,6 +90,9 @@ class RModel1D: public RAbstractItemModel
     _M const RNode1D* node(int row, const QModelIndex& parent) const;
     _M void           resetBegin();
     _M void           resetEnd();
+
+  public slots:
+    _M void           notifyAllRowsChanged();
 
   private:
     _M void           notifyRowChanged(int row);

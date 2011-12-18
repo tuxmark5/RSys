@@ -6,6 +6,7 @@
 #include <RSys/Interface/RModel2D.hh>
 #include <RSys/Interface/RTab.hh>
 #include <RSys/Interface/RTableView.hh>
+#include <RSys/Logic/RResults.hh>
 
 /********************************************* RS *********************************************/
 /*                                            RTab                                            */
@@ -32,10 +33,12 @@ Vacuum RTab :: ~RTab()
 
 /**********************************************************************************************/
 
-RTableView* RTab :: addSubmissionTable(RContainer* container)
+RTableView* RTab :: addSubmissionTable(RResults* results, RContainer* container)
 {
   RTableView*   tableView = makeTable1DTab(container);
   QHeaderView*  header    = tableView->horizontalHeader();
+
+  connect(results, SIGNAL(updated()), tableView->model(), SLOT(notifyAllRowsChanged()));
 
   header->setResizeMode(QHeaderView::Interactive);
   header->resizeSection(0, 60);

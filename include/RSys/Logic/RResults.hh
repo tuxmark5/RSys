@@ -93,6 +93,9 @@ class RResults: public QObject
     _S double           fieldDeltaUsage(RUnit* unit, int x);
     _S double           fieldDeltaUsageCount(RUnit* unit, int x);
     _M QString          intervalStr(int x);
+
+  signals:
+    _M void             updated();
 };
 
 /**********************************************************************************************/

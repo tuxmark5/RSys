@@ -311,6 +311,7 @@ void RResults :: update()
   resetData();
 
   m_updatePending = false;
+  emit updated();
 }
 
 /**********************************************************************************************/

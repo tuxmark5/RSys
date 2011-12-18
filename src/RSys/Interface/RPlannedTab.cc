@@ -32,7 +32,7 @@ Vacuum RPlannedTab :: RPlannedTab(RMainWindow* parent):
     division->setMeasure1(measure, var.toDouble());
   };
 
-  addSubmissionTable(parent->submission1Container());
+  addSubmissionTable(parent->results(), parent->submission1Container());
   model = makeTable2DTab(parent->measure1Container(), parent->divisionContainer());
 
   model->setGetter(getter);
