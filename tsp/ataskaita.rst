@@ -17,181 +17,53 @@ Komandos nariai:
 Komandos naudotos TSPi praktikos
 ================================
 
-+   Komandos tikslų suformulavimas ir dokumentavimas.
-+   Komunikavimo procedūrų apibrėžimas.
+TODO:
+    Vytautui - quality.rst
+
++   Naujų rolių apibrėžimas:
+    +   Failas: *roles.pdf*
++   Pasiskirtymas rolėmis:
+    +   Failas: *roles.pdf*
++   Komandos tikslų suformulavimas ir dokumentavimas:
+    +   Failas: *goals.pdf*
++   Rolių tikslų suformulavimas ir dokumentavimas.
+    +   Failas: *goals.pdf*
++   Versijų kontrolė:
+    +   Galutiniame ruošinyje yra pateikta viso projekto GIT repozitorija
++   Komunikavimo procedūrų apibrėžimas:
+    +   Failas: *communication.pdf*
 +   Produkto kūrimo strategijos ruošimas.
-+   Produkto kūrimo plano ir tvarkaraščio ruošimas.
-+   Kokybės planavimas ir valdymas.
-+   Reikalavimų specifikacijos ruošimas.
+    +   Failas: *strategy.pdf*
 +   Projektavimas.
+    +   Failas: *project.pdf*
++   Produkto kūrimo plano ir tvarkaraščio ruošimas.
+    +   Failas: *weekly_plan.ods*
++   Reikalavimų valdymas:
+    +   Failas: *requirements.pdf*. Prie pateikto ruošinio pridėta spausdina kopija.
++   Savaitinių susitikimų organizavimas ir protokolavimas:
+    +   Failai: *ReSoft_2011-XX-XX.txt*. Jie kas savaitę buvo siunčiami TSP instruktoriui.
++   Defektų fiksavimas:
+    +   Failas: *defects.ods*
++   Laiko fiksavimas:
+    +   Failas: *AudriausLFF.ods*
+    +   Failas: *EgidijausLFF.ods*
+    +   Failas: *JustinoLFF.ods*
+    +   Failas: *MartynoLFF.ods*
+    +   Failas: *VytautoLFF.ods*
++   Kodo peržiūra:
+    +   Failas: *code_review.pdf*
++   Bendras kodavimo standartas:
+    +   Failas: *EAST_STD.txt*
++   Sistemos dydžio vertinimas:
+    +   Failas: *size_measurement.pdf*
++   Kokybės planavimas ir valdymas.
+    +   Failas: *quality.pdf*
 
-Komandos narių naudotos PSP praktikos
-=====================================
-
-+   Bendras kodavimo standartas.
 
 Pastabos apie tai, kaip buvo vykdytos praktikos
 ===============================================
 
-Komandos išsikelti tikslai
---------------------------
 
-+   Suplanuotas programos dydis nuo realaus skiriasi ne daugiau 20 %.
-+   Defektų tankis ne didesnis nei 1 defektas 100 kodo eilučių.
-+   Suplanuoti 2 ciklo pabaigą 2 savaičių tikslumu.
-+   Programavimo greitis ne mažesnis nei 50 eilučių per valandą.
-
-Pagal šiuos tikslus komanda nusprendė sistemos kūrimo metu rinkti tokius
-duomenis:
-
-+   defektai, kurie „iškeliavo“ į versijų kontrolės sistemą;
-+   laikas minučių tikslumu.
-
-Sprendimas fiksuoti tik tuos defektus, kurie pateko į versijų kontrolės
-sistemą, priimtas dėl dviejų priežasčių:
-
-+   komandos naudota IDE QtCreator sugeba realiu laiku parodyti vietas,
-    kuriose yra tikėtinos kompiliavimo klaidos;
-+   dalis komandos narių dėl mažos darbo su C++ patirties „sumalė“
-    kodavimo, kompiliavimo ir testavimo stadijas į vieną. (Kartais
-    per visas tris sugebėdavo „pareiti“ greičiau nei per 1 minutę.)
-
-Taip pat, dėl antrosios priežasties, fiksuojant laiką buvo laikoma, kad
-kodavimo, kompiliavimo ir modulių testavimo stadijos yra kodavimo
-stadija. Testavimo stadija fiksuojant laiką buvo išskirta tik, kai
-buvo vykdomas jau surinktos sistemos testavimas, arba jos dalių
-kodo peržiūra.
-
-Komunikavimo procedūrų apibrėžimas
-----------------------------------
-
-Komanda reguliariai susitikdavo kiekvieną ketvirtadienį prieš paskaitas.
-Susitikimų metu buvo aptariami užsakovo atsakymai į klausimus, aiškinamasi
-sudėtingesnės problemos (pavyzdžiui, dviprasmybės reikalavimuose),
-suderinama kaip turėtų sąveikauti sistemos dalys. Formalios ataskaitos
-per susitikimus nebuvo naudojamos, nes svarbiausią informaciją buvo
-galima gauti efektyviau: kaip kam sekasi dirbti „matosi“ versijų
-kontrolės sistemoje, informacija apie problemas buvo skelbiama iš
-karto, vos tik jas pastebėjus bendravimo platformoje.
-
-Ne susitikimų metu, komanda bendravo naudodama Google Wave bendravimo
-platformą.
-
-Produkto kūrimo strategijos ruošimas
-------------------------------------
-
-Renkantis strategiją, buvo nuspręsta, kad yra svarbūs šie dalykai:
-
-+   galimybė dirbti visiškai atskirai (vienam žmogui atsiradusios problemos,
-    nestabdo kitų darbo);
-+   kiekvieno ciklo pabaigoje turima sistema, su kuria galima kažką
-    padaryti.
-
-Buvo nuspręsta dirbti trimis ciklais:
-
-1.  *bazinis ciklas* (planuota: 2011-11-01, baigtas: 2011-11-17):
-
-    +   realizuota didžioji dalis naudotojo sąsajos;
-    +   realizuotas apkrovų skaičiavimas;
-    +   „įkompiliuotas“ duomenų importavimas (veikia tik su užsakovo
-        atsiųstu duomenų failu, skaito duomenis iš pozicijų, kurios
-        yra nurodytos tiesiogiai kode);
-
-2.  *pagrindinis ciklas* (planuota: 2011-12-01, baigtas: 2011-12-08):
-
-    +   realizuota sąsaja su duomenų baze;
-    +   korektiškas duomenų importavimas;
-    +   realizuotas visas pagrindinis ir papildomas funkcionalumas;
-
-3.  *baigiamasis ciklas* (baigtas: 2011-12-20):
-
-    +   užtikrinti visi reikalavimai;
-    +   paruošta dokumentacija;
-    +   pilnai realizuota naudotojo sąsaja.
-
-Pagrindinė priežastis kodėl atsirado vėlavimas – Žmogaus-kompiuterio
-sąveikos atsiskaitymams buvo norima naudoti ne maketus, o jau
-realią sistemą, dėl ko kai kurias funkcijas teko realizuoti
-anksčiau, nei buvo planuota, kas lėmė vėlesnes ciklų pabaigas.
-
-Koncepcinis sistemos projektavimas buvo daromas ne rašant atskirą
-dokumentą, o iš karto kuriant reikiamus C++ antraščių failus.
-Buvo nuspręsta, kad sistemą sudarys tokie moduliai:
-
-+   *Core* – dalykinės srities duomenų struktūros;
-+   *Import* – duomenų importavimas iš ``*.xls`` failo;
-+   *Interface* – naudotojo sąsaja;
-+   *Logic* – duomenų analizės funkcionalumas;
-+   *Parse* – importuotų duomenų validavimas ir konvertavimas į
-    vidines duomenų struktūras;
-+   *Store* – sąveika su duomenų bazėmis;
-+   *Tests* – modulių testai;
-+   *Util* – visai tai, kas netinka kitur.
-
-Kadangi komanda neturėjo istorinės duomenų bazės, kurią galima
-būtų panaudoti sistemos dydžio prognozavimui PROBE metodu, jį buvo
-bandoma atspėti prognozuojant kiek ir kokio dydžio klasių reikės.
-Klasės pagal spėjamą dydį buvo suskirstytos į tokias grupes:
-
-+   maža – 20 eilučių antraštės failas ir 100 eilučių
-    realizacijos failas;
-+   vidutinė – 30 eilučių antraštės failas ir 200 eilučių
-    realizacijos failas;
-+   didelė – 40 eilučių antraštės failas ir 500 eilučių
-    realizacijos failas;
-+   labai didelė – 60 eilučių antraštės failas ir 800 eilučių
-    realizacijos failas.
-
-Čia, kodo eilutėmis yra laikomos visos, nepriklausomai nuo jų turinio
-(tuščios, su komentarais irgi įskaičiuojamos). Planuojant buvo nuspręsta,
-kad sistemoje turėtų būti tokios klasės:
-
-    1.  mažos:
-
-        +   5 duomenų klasės (paramos priemonė, paraiška, padalinys, IS,
-            bazinė);
-        +   abstraktus duomenų modelis;
-
-    2.  vidutinės:
-
-        +   priemonių sąsaja;
-        +   priemonių administravimo sąsaja;
-        +   sistemų sąsaja;
-        +   sistemų administravimo sąsaja;
-        +   istorinių duomenų sąsaja;
-        +   prisijungimo sąsaja;
-        +   intervalų paieškos sąsaja;
-        +   importavimo sąsaja;
-        +   įrankių juostos sąsaja;
-        +   BasicExcel testai;
-        +   importavimo testai;
-        +   diagramos komponentas;
-
-    3.  didelės:
-
-        +   sąsaja su DB;
-        +   rezultatų modelis;
-        +   1 su n modelis;
-        +   n su n modelis;
-        +   planuojamų kiekių sąsaja;
-        +   rezultatų sąsaja;
-
-    4.  labai didelės:
-
-        +   logika;
-        +   pagrindinis langas;
-        +   duomenų importavimas.
-
-Iš viso – 9300 eilučių. Taip pat buvo daroma prielaida, kad realizuojant
-gali prireikti dar 20% eilučių tokiems atvejams, kaip komunikavimo tarp
-klasių užtikrinimas, papildomos skaičiavimams reikalingos duomenų
-struktūros ir panašiai. Taigi galutinė sistemos versija turėtų turėti
-apie 11160 eilučių. Suskaičiavus gavosi, kad sistema turi 14744 kodo
-eilutes. Paklaida atsirado dėl to, kad vėliau buvo nuspręsta į sistemą
-integruoti pagalbos sistemą bei prireikė papildomų duomenų modelių
-sinchronizacijai tarp duomenų struktūrų ir naudotojo sąsajos. Taip
-pat atsirado dvi nenumatytos sąsajos: naudotojų administravimo ir
-rėžimo.
 
 Reikalavimų specifikacijos ruošimas
 -----------------------------------
@@ -212,12 +84,6 @@ lietuvių kalbą. Taip pat, kadangi įrankis pritaikytas naudoti su
 SCRUM metodika, jame reikalavimams reikia nurodyti papildomą
 informaciją („Priority“, „Owner“, „Invented by“, …),
 kurią skaitant šią reikalavimų specifikaciją reikėtų ignoruoti.
-
-Projektavimas
--------------
-
-Dėl naudoto projektavimo būdo (C++ antraščių failai) koncepcinis ir
-detalusis projektavimas susiliejo į vieną.
 
 Kokybės planavimas ir valdymas
 ------------------------------
@@ -269,3 +135,5 @@ Pastabos apie tai, kodėl kai kurios praktikos nebuvo vykdytos
     dirbti kitiems. Tam itin padėjo versijų kontrolės „šakų“ naudojimas.
 
 +   *Rizikų įvertinimas ir valdymas.*
+
+

@@ -1,5 +1,7 @@
 #! /bin/sh
 
+# http://www.princexml.com/download/
+
 prince                                \
   doc/html/index.html                 \
   doc/html/task-install.html          \
