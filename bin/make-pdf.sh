@@ -3,6 +3,7 @@
 # http://www.princexml.com/download/
 
 prince                                \
+  doc/html/main.html                  \
   doc/html/index.html                 \
   doc/html/task-install.html          \
   doc/html/task-login.html            \
