@@ -28,6 +28,7 @@ int main(int argc, char** argv)
 
     QApplication  app(argc, argv);
     app.installTranslator(&translator);
+    app.setWindowIcon(QIcon(":/logo.png"));
 
     QSettings     settings("ReSoft", "RSys");
     g_settings = &settings;
