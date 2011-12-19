@@ -279,7 +279,7 @@ bool RDatabase :: remoteLogin(const QString& addr, const QString& db, const QStr
 {
   m_database = QSqlDatabase::addDatabase("QPSQL");
   m_postgres = 1;
-  m_database.setConnectOptions("connect_timeout=1");
+  m_database.setConnectOptions("connect_timeout=2");
 
   if (!m_database.isValid())
   {

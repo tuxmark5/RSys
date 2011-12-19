@@ -1,3 +1,4 @@
+=====
 Rolės
 =====
 
@@ -55,7 +56,7 @@ standartines TSPi roles:
 +    **Reikalavimų vadovas** (Egidijus Lukauskas). Atskaingas už:
 
     +   **reikalavimų specifikacijos ruošimą**;
-    +   *reikalavimų registravimą** (reikia nuolatos stebėti iš užsakovo
+    +   **reikalavimų registravimą** (reikia nuolatos stebėti iš užsakovo
         gaunamus atsakymus ir pagal tai registruoti naujus reikalavimus);
     +   **Reikalavimų testavimą** (reikia stebėti sistemos kūrimo
         progresą ir fiksuoti, kurie reiklavimai yra įgyvendinti, o

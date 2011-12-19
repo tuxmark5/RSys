@@ -1,3 +1,4 @@
+==========================
 Komandos išsikelti tikslai
 ==========================
 
@@ -13,18 +14,18 @@ duomenis:
 +   laikas 5 minučių tikslumu.
 
 Sprendimas fiksuoti tik tuos defektus, kurie pateko į versijų kontrolės
-sistemą, priimtas dėl vienos esminės priežasties - komandos naudota IDE
+sistemą, priimtas dėl vienos esminės priežasties – komandos naudota IDE
 QtCreator sugeba realiu laiku parodyti vietas, kuriose yra tikėtinos 
-kompiliavimo klaidos;
+kompiliavimo klaidos.
 
 Post-mortem
 -----------
 
 Plačiau apie:
 
-+   planavimo tikslumą žr. *size_measurement.pdf*
-+   defektų tankį žr. *quality.pdf*
-+   ciklų planavimą žr. *strategy.pdf*
++   planavimo tikslumą žr. **size_measurement.pdf**
++   defektų tankį žr. **quality.pdf**
++   ciklų planavimą žr. **strategy.pdf**
 
 
 Rolių išsikelti tikslai
