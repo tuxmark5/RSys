@@ -8,5 +8,4 @@ lib/External/*
 *.user
 *.user*
 .~lock.*
-out.pdf
-
+*.pdf

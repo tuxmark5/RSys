@@ -1,0 +1,125 @@
+☺Aprašymo papildymas☺☹☺Išsaugojimo laikas☺☹☺Trukmė☺☹☺Aprašymas☺☹☺id☺☹☺Komponentas☺☹☺Pašalintas☺☹☺Radėjas☺☹☺tipas☺☹☺įterptas☺
+☺Pamiršta išlaisvinti lentelėms skirtą atmintį.☺☹☺2011-10-31 11:55:24☺☹18☹☹1☹☺Import☺☹☺1:Kodavimas☺☹☺Audrius☺☹80☹☺1:Kodavimas☺
+☺Per anksti sunaikinamų komponentų destruktoriai sugadina steką ir nulaužia sistemą.☺☹☺2011-11-06 19:35:58☺☹17☹☹2☹☺Interface☺☹☺1:Kodavimas☺☹☺Audrius☺☹80☹☺1:Kodavimas☺
+☺Netinkamai apdorotos Unikodinės lakštų antraštės.☺☹☺2011-11-07 00:05:47☺☹23☹☹2001☹☺Import☺☹☺1:Kodavimas☺☹☺Justinas☺☹50☹☺1:Kodavimas☺
+☺Blogai apskaičiuotas apkrovų kortelės rodinio dydis.☺☹☺2011-11-07 09:20:54☺☹23☹☹3☹☺Interface☺☹☺1:Kodavimas☺☹☺Audrius☺☹40☹☺1:Kodavimas☺
+☹☺2011-11-07 19:44:44☺☹20☹☺RXLSDocument grąžina tuščią eilutę, kaip lakšto pavadinimą, jei pavadinimas nėra Unikodo simbolių eilutė.☺☹4002☹☺Import☺☹☺1:Testavimas☺☹☺Vytautas☺☹70☹☺1:Kodavimas☺
+☹☺2011-11-09 17:40:06☺☹15☹☺Buvo pamiršta įtraukti RMeasure antraštinį failą.☺☹4003☹☺Parse☺☹☺1:Kodavimas☺☹☺Vytautas☺☹30☹☺1:Kodavimas☺
+☺Prireikė įsidiegti naują OS versiją.☺☹☺2011-11-09 20:39:36☺☹114☹☺Sena gcc versija.☺☹4004☹☺All☺☹☺1:Kodavimas☺☹☺Vytautas☺☹90☹☺1:Projektavimas☺
+☺Buvo įtrauktas neegzistuojantis failas.☺☹☺2011-11-09 21:20:19☺☹8☹☹4005☹☺Parser☺☹☺1:Kodavimas☺☹☺Vytautas☺☹90☹☺1:Kodavimas☺
+☺Nepatikrina, ar pavyko atidaryti XLS failą + negražintas joks sėkmės kodas.☺☹☺2011-11-10 21:20:36☺☹8☹☹4006☹☺Import☺☹☺1:Kodavimas☺☹☺Vytautas☺☹50☹☺1:Kodavimas☺
+☺Įvedami identifikatoriai turi būti didžiosiomis raidėmis.☺☹☺2011-11-16 21:15:05☺☹8☹☹4007☹☺Interface☺☹☺1:Kodavimas☺☹☺Vytautas☺☹40☹☺1:Kodavimas☺
+☺Ne visuomet suveikia intervalų validavimas.☺☹☺2011-11-18 22:05:55☺☹14☹☹4008☹☺Interface☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
+☺Skaičiavimų kodas sukeltas ne į tą failą.☺☹☺2011-11-18 23:00:22☺☹35☹☹4☹☺Logic☺☹☺2:Kodavimas☺☹☺Audrius☺☹90☹☺2:Kodavimas☺
+☺Neteisingai veikiantis nenaudojamų laikinų paramos priemonių automatinis pašalinimas.☺☹☺2011-11-19 00:15:40☺☹27☹☹5☹☺Interface☺☹☺2:Kodavimas☺☹☺Audrius☺☹40☹☺2:Kodavimas☺
+☺Apkrovos neteisingai perskaičiuojamos kviečiant update() kelis kartus iš eilės.☺☹☺2011-11-19 01:05:30☺☹35☹☹6☹☺Logic☺☹☺2:Kodavimas☺☹☺Audrius☺☹20☹☺2:Kodavimas☺
+☺Neleistinas atminties priėjimas skaičiuojant apkrovas, kai nėra pradinių duomenų.☺☹☺2011-11-19 02:15:38☺☹5☹☹3000☹☺Logic☺☹☺2:Kodavimas☺☹☺Martynas☺☹70☹☺2:Kodavimas☺
+☺Nebuvo šalinami susiję duomenys.☺☹☺2011-11-19 02:25:21☺☹22☹☹7☹☺Core☺☹☺2:Kodavimas☺☹☺Audrius☺☹60☹☺2:Kodavimas☺
+☺Nebuvo šalinami susiję duomenys.☺☹☺2011-11-19 03:00:51☺☹9☹☹8☹☺Core☺☹☺2:Kodavimas☺☹☺Audrius☺☹60☹☺2:Kodavimas☺
+☺Vietoj end netyčia buvo iteruojama iki begin☺☹☺2011-11-19 03:05:52☺☹8☹☹3001☹☺Logic☺☹☺2:Kodavimas☺☹☺Martynas☺☹70☹☺2:Kodavimas☺
+☺Blogas konteinerio tipas: vietoj bool turėjo būti double.☺☹☺2011-11-19 03:20:23☺☹29☹☹3002☹☺Logic☺☹☺2:Kodavimas☺☹☺Martynas☺☹60☹☺2:Kodavimas☺
+☺Netinkamas intervalų koregavimas.☺☹☺2011-11-19 13:20:07☺☹15☹☹4009☹☺Interface☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
+☺Pernelyg neefektyvūs intervalų keitimas.☺☹☺2011-11-20 16:45:17☺☹25☹☹4010☹☺Interface☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
+☺„Įvesti“ klavišas intervalų redagavimo lauke nieko nedaro.☺☹☺2011-11-20 16:55:13☺☹13☹☹4011☹☺Interface☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
+☺Neefektyvus padalinių / sistemų pažymėjimas.☺☹☺2011-11-20 17:00:08☺☹18☹☹4012☹☺Interface☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
+☺Maksimalus rodomo intervalo ilgis yra 9 metai, o ne 10, kaip teigia naudotojo sąsaja.☺☹☺2011-11-20 17:00:54☺☹9☹☹4013☹☺Interface☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
+☺RSys langas turėtų pasileisti išdidinto ekrano veiksenoje, kad į ekraną tilptų visos įrankių juostos.☺☹☺2011-11-20 17:05:33☺☹8☹☹4014☹☺Interface☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
+☺Neišeina greitai apžvelgti visų turimų duomenų nustatant itin ilgą intervalą.☺☹☺2011-11-20 17:05:56☺☹37☹☹4015☹☺Interface☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
+☺Iš to paties šaltinio daugiau negu vienas pranešimas neturėtų būti rodomas.☺☹☺2011-11-20 18:05:17☺☹19☹☹9☹☺Interface☺☹☺2:Kodavimas☺☹☺Audrius☺☹40☹☺2:Kodavimas☺
+☺Neaišku, kodėl rodomi kiti intervalai, negu buvo įvesti.☺☹☺2011-11-21 00:05:52☺☹5☹☹4016☹☺Interface☺☹☺2:Testavimas☺☹☺Vytautas☺☹70☹☺2:Kodavimas☺
+☺Pranešimų langas ilgoms žinutėms per greit užsidaro.☺☹☺2011-11-21 00:25:25☺☹11☹☹10☹☺Interface☺☹☺2:Kodavimas☺☹☺Audrius☺☹40☹☺2:Kodavimas☺
+☺Šalinant papildomą įvedimo eilutę su Ctrl+- sistema lūžta.☺☹☺2011-11-21 00:35:46☺☹7☹☹2002☹☺Interface☺☹☺2:Kodavimas☺☹☺Justinas☺☹50☹☺2:Kodavimas☺
+☺Sistema lūžta skaičiuodama apkrovas, kai paraiškoje nurodyta paramos priemonė neegzistuoja arba nurodyti per dideli apkrovų skaičiai.☺☹☺2011-11-21 13:00:16☺☹7☹☹3003☹☺Logic☺☹☺2:Kodavimas☺☹☺Martynas☺☹70☹☺2:Kodavimas☺
+☺Intervalai keičiami po validavimo.☺☹☺2011-11-21 13:16:00☺☹9☹☹4017☹☺Interface☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
+☺Netinkama modelių atnaujinimų sinchronizacija kai kuriais atvejais sukelia sistemos lūžimą.☺☹☺2011-11-21 13:45:17☺☹22☹☹11☹☺Interface☺☹☺2:Kodavimas☺☹☺Audrius☺☹20☹☺2:Kodavimas☺
+☺Netinkami laipsniai lygties koeficientų apskaičiavime.☺☹☺2011-11-21 14:25:10☺☹37☹☹3004☹☺Logic☺☹☺2:Kodavimas☺☹☺Martynas☺☹70☹☺2:Kodavimas☺
+☺Kai nėra duomenų, tai sistema netinkamai koreguoja rodomą intervalą.☺☹☺2011-11-21 17:45:29☺☹19☹☹2003☹☺Interface☺☹☺2:Kodavimas☺☹☺Justinas☺☹50☹☺2:Kodavimas☺
+☺Sistema turėtų remtis aplinkiniais intervalais skaičiuojant apkrovas, kad šios pasiskirstytų lygiau.☺☹☺2011-11-21 19:45:05☺☹33☹☹4018☹☺Logic☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
+☺Įrankių juostų ikonos yra nevienodo dydžio.☺☹☺2011-11-21 21:00:16☺☹30☹☹12☹☺Interface☺☹☺2:Kodavimas☺☹☺Audrius☺☹40☹☺2:Kodavimas☺
+☺Inicijavus bet kokį RUnit už RData ribų, RUnit destruktorius bando „dereferencinti“ NULL.☺☹☺2011-11-26 13:15:14☺☹5☹☹1003☹☺Core☺☹☺2:Testavimas☺☹☺Egidijus☺☹50☹☺2:Kodavimas☺
+☺Po intervalų modifikavimo kodo suveikęs pranešimų generatorius rodo neaiškius klaidų pranešimus.☺☹☺2011-11-26 14:00:52☺☹16☹☹4019☹☺Interface☺☹☺2:Testavimas☺☹☺Vytautas☺☹50☹☺2:Kodavimas☺
+☺Pamiršta iš pranešimų, kurie nukeliauja į pranešimų žurnalą, pašalinti HTML gaires.☺☹☺2011-11-29 22:10:45☺☹11☹☹13☹☺Interface☺☹☺2:Kodavimas☺☹☺Audrius☺☹40☹☺2:Kodavimas☺
+☺Šalinant paramos priemones, pamiršta pašalinti su jomis susijusias paraiškas.☺☹☺2011-11-30 22:15:48☺☹6☹☹14☹☺Core☺☹☺2:Kodavimas☺☹☺Audrius☺☹60☹☺2:Kodavimas☺
+☺Nebuvo jokio paraiškų validavimo (tiek pačio intervalo, tiek pavadinimo).☺☹☺2011-11-30 22:35:10☺☹10☹☹15☹☺Interface☺☹☺2:Kodavimas☺☹☺Audrius☺☹50☹☺2:Kodavimas☺
+☺Tuštinant RData, pamiršta ištuštinti m_unitHash.☺☹☺2011-12-01 01:15:49☺☹9☹☹16☹☺Core☺☹☺2:Kodavimas☺☹☺Audrius☺☹60☹☺2:Kodavimas☺
+☺Netinkamas 2D modelio eilutės/stulpelio adapterių išlaisvinimas.☺☹☺2011-12-01 02:00:52☺☹15☹☹17☹☺Interface☺☹☺2:Kodavimas☺☹☺Audrius☺☹50☹☺2:Kodavimas☺
+☺Neteisinga naudotojo pervadinimo SQL užklausa.☺☹☺2011-12-01 02:15:32☺☹11☹☹18☹☺Store☺☹☺2:Kodavimas☺☹☺Audrius☺☹20☹☺2:Kodavimas☺
+☺Neteisingas rolių valdymas duomenų bazėje.☺☹☺2011-12-01 02:20:26☺☹20☹☹19☹☺Store☺☹☺2:Kodavimas☺☹☺Audrius☺☹20☹☺2:Kodavimas☺
+☺Blogos administratoriaus pradinės privilegijos.☺☹☺2011-12-01 02:25:28☺☹7☹☹20☹☺Store☺☹☺2:Kodavimas☺☹☺Audrius☺☹20☹☺2:Kodavimas☺
+☺Pamiršta į įdiegimo programą pridėti postgresql DB valdyklės priklausomybę.☺☹☺2011-12-01 15:30:25☺☹13☹☹21☹☺Installer☺☹☺2:Kodavimas☺☹☺Audrius☺☹90☹☺2:Kodavimas☺
+☺Vietoj %s turėjo būti %1 pranešimo formatavime.☺☹☺2011-12-01 15:45:42☺☹7☹☹22☹☺Store☺☹☺2:Kodavimas☺☹☺Audrius☺☹71☹☺2:Kodavimas☺
+☺Duomenų atstatymo metu, neteisinga tvarka vykdomas duomenų trynimas ir sinchronizavimas su naudotojo sąsaja.☺☹☺2011-12-02 03:00:20☺☹31☹☹23☹☺Core☺☹☺2:Kodavimas☺☹☺Audrius☺☹70☹☺2:Kodavimas☺
+☺Pamiršta išjungti vieną išskleidžiamąjį sąrašą „import“ formoje.☺☹☺2011-12-02 15:00:56☺☹9☹☹24☹☺Interface☺☹☺2:Kodavimas☺☹☺Audrius☺☹40☹☺2:Kodavimas☺
+☺Pamiršta į repozitoriją įkelti Rsignal.cc.☺☹☺2011-12-02 15:50:25☺☹8☹☹25☹☺Util☺☹☺2:Kodavimas☺☹☺Audrius☺☹90☹☺2:Kodavimas☺
+☺Windows nerodo Unikodinių ikonėlių.☺☹☺2011-12-03 15:15:38☺☹15☹☹26☹☺Interface☺☹☺2:Kodavimas☺☹☺Audrius☺☹40☹☺2:Kodavimas☺
+☺Netikslūs klaidų pranešimai Parse modulio kode.☺☹☺2011-12-03 15:20:57☺☹6☹☹4020☹☺Parser☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
+☺Importavimo metu sąsaja yra perkraunama būsenos pranešimais.☺☹☺2011-12-03 15:30:39☺☹9☹☹4021☹☺Interface☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
+☺Klaidinantis pranešimas.☺☹☺2011-12-03 17:00:05☺☹7☹☹4022☹☺Parser☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
+☺HTML gairių pašalinimo kodas, nepašalindavo visų.☺☹☺2011-12-03 17:10:04☺☹9☹☹4023☹☺Interface☺☹☺2:Kodavimas☺☹☺Vytautas☺☹50☹☺2:Kodavimas☺
+☺Pamiršta pridėti qt.conf prie įdiegimo programos.☺☹☺2011-12-03 17:30:18☺☹8☹☹27☹☺Installer☺☹☺2:Testavimas☺☹☺Audrius☺☹90☹☺2:Kodavimas☺
+☺Trūksta su naudotojų valdymu susijusių įrašų SQLite DB inicializavime.☺☹☺2011-12-04 12:00:05☺☹11☹☹3005☹☺Store☺☹☺2:Testavimas☺☹☺Martynas☺☹70☹☺2:Kodavimas☺
+☺Pamiršta pridėti libintl-8.dll prie įdiegimo programos.☺☹☺2011-12-04 15:45:29☺☹12☹☹2004☹☺Installer☺☹☺2:Testavimas☺☹☺Justinas☺☹90☹☺2:Kodavimas☺
+☺Pamiršta pridėti libiconv-2.dll prie įdiegimo programos.☺☹☺2011-12-04 16:00:18☺☹5☹☹2005☹☺Installer☺☹☺2:Testavimas☺☹☺Justinas☺☹90☹☺2:Kodavimas☺
+☺Paletės saugumo inicializacijai naudojamas ne tas saugumo deskriptorius.☺☹☺2011-12-04 16:40:56☺☹9☹☹2006☹☺Interface☺☹☺2:Testavimas☺☹☺Justinas☺☹30☹☺2:Kodavimas☺
+☺Neteisingai veikiantis kaskadinis įrašų šalinimas.☺☹☺2011-12-04 17:40:42☺☹23☹☹28☹☺Core☺☹☺2:Testavimas☺☹☺Audrius☺☹60☹☺2:Kodavimas☺
+☺Šalinant įrašus iš lentelių, rezultatai neatsinaujina.☺☹☺2011-12-04 20:05:43☺☹7☹☹4024☹☺Interface☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
+☺Nesimato, nuo kurios vietos prasideda prognozės.☺☹☺2011-12-04 20:15:09☺☹36☹☹4025☹☺Interface☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
+☺Vidada pranešama, kad duomenų išsaugojimas pavyko.☺☹☺2011-12-04 20:15:32☺☹6☹☹1004☹☺Store☺☹☺2:Testavimas☺☹☺Egidijus☺☹40☹☺2:Kodavimas☺
+☺Apžvalgos sąsajoje sunku suprasti, kas konkrečiai lentelės rėžime yra vaizduojama.☺☹☺2011-12-04 20:15:41☺☹19☹☹29☹☺Interface☺☹☺2:Testavimas☺☹☺Audrius☺☹40☹☺2:Kodavimas☺
+☺Neaiškios tikslios priežastys, kodėl sąsaja būtent taip koreguoja intervalus.☺☹☺2011-12-04 20:20:07☺☹27☹☹4026☹☺Interface☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
+☺Administravimo sąsaja nevisada reaguoja į naudotojo pasirinkumus.☺☹☺2011-12-04 20:35:57☺☹7☹☹3006☹☺Interface☺☹☺2:Testavimas☺☹☺Martynas☺☹40☹☺2:Kodavimas☺
+☺Bereikalingas pasikeitimo signalų emitavimas neįvykdžius jokių pakeitimų naudotojų administravimo sąsajoje.☺☹☺2011-12-04 21:45:20☺☹7☹☹30☹☺Interface☺☹☺2:Testavimas☺☹☺Audrius☺☹80☹☺2:Kodavimas☺
+☺Kai kuriais atvejais dėl ekstrapoliacijos apkrovos gaunasi neigiamos.☺☹☺2011-12-04 22:05:57☺☹13☹☹2007☹☺Logic☺☹☺2:Testavimas☺☹☺Justinas☺☹70☹☺2:Kodavimas☺
+☺Pamiršta sveiką skaičių pasiversti į slankaus kablelio: dėl to apkrovos kai kuriais atvejais suskaičiuojamos netiksliai.☺☹☺2011-12-05 01:15:30☺☹5☹☹3007☹☺Logic☺☹☺2:Testavimas☺☹☺Martynas☺☹70☹☺2:Kodavimas☺
+☺Neteisingas datos apvalinimo į ketvirčius algoritmas.☺☹☺2011-12-05 01:15:58☺☹11☹☹31☹☺Interface☺☹☺2:Testavimas☺☹☺Audrius☺☹70☹☺2:Kodavimas☺
+☺Buvo kažkur dingusios antraštės rezultatų komponente.☺☹☺2011-12-05 17:00:05☺☹8☹☹32☹☺Interface☺☹☺2:Testavimas☺☹☺Audrius☺☹40☹☺2:Kodavimas☺
+☺Išsaugant duomenis į DB sąsajoje neatnaujindavo pradinės apkrovos.☺☹☺2011-12-05 17:10:18☺☹5☹☹33☹☺Interface☺☹☺2:Testavimas☺☹☺Audrius☺☹40☹☺2:Kodavimas☺
+☺Blogas apžvalgos sąsajos saugumo deskriptorius lemdavo, kad administratoriaus apribojimai apžvalgos sąsajai nieko nereikšdavo.☺☹☺2011-12-05 17:25:03☺☹9☹☹3008☹☺Interface☺☹☺2:Testavimas☺☹☺Martynas☺☹30☹☺2:Kodavimas☺
+☺Įvedus blogus duomenis į sistemų administravimo sąsają, šis nepateikdavo jokio klaidą paaiškinančio pranešimo.☺☹☺2011-12-05 17:40:49☺☹7☹☹1005☹☺Interface☺☹☺2:Testavimas☺☹☺Egidijus☺☹40☹☺2:Kodavimas☺
+☺Reikia suvienodinti „Vartotojai“ ir „Naudotojai“ sąvokas.☺☹☺2011-12-05 17:45:28☺☹5☹☹4027☹☺Interface☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
+☺Klaida GCC kompiliatoriuje išprovokuodavo sistemos lūžimą Windows OS.☺☹☺2011-12-05 19:00:54☺☹121☹☹1001☹☺Util☺☹☺2:Testavimas☺☹☺Egidijus☺☹70☹☺2:Kodavimas☺
+☺Sąvoka „Vartotojai“ pakeista į „Naudotojai“.☺☹☺2011-12-06 01:30:02☺☹9☹☹3009☹☺Interface☺☹☺2:Testavimas☺☹☺Martynas☺☹40☹☺2:Kodavimas☺
+☺Reikėtų, kad prisijungimo sąsajoje sistemos logotipas keistų dydį pagal lango dydį.☺☹☺2011-12-06 03:00:57☺☹30☹☹3010☹☺Interface☺☹☺2:Testavimas☺☹☺Martynas☺☹40☹☺2:Kodavimas☺
+☺Administratoriaus sąsajoje privilegijos lygmuo „Leisti ir rašyti“ gali kartais sukelti abejonių.☺☹☺2011-12-07 08:45:43☺☹6☹☹4028☹☺Interface☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
+☺Klaida apkrovų prognozavimo algoritme (pamirštas daugiklis).☺☹☺2011-12-07 23:45:18☺☹19☹☹3011☹☺Logic☺☹☺2:Testavimas☺☹☺Martynas☺☹70☹☺2:Kodavimas☺
+☺Prisijungimo sąsaja leidžia atidaryti bet kokį failą kaip vietinę DB.☺☹☺2011-12-08 00:05:54☺☹29☹☹1006☹☺Store☺☹☺2:Testavimas☺☹☺Egidijus☺☹40☹☺2:Kodavimas☺
+☺Ne visi pranešimai keliauja į pranešimų žurnalą.☺☹☺2011-12-08 00:10:22☺☹63☹☹3012☹☺Interface☺☹☺2:Testavimas☺☹☺Martynas☺☹40☹☺2:Kodavimas☺
+☺Pradiniams duomenims nebuvo skaičiuojamas globalus intervalas.☺☹☺2011-12-09 18:05:52☺☹14☹☹34☹☺Core☺☹☺3:Kodavimas☺☹☺Audrius☺☹20☹☺3:Kodavimas☺
+☺Prieš išvalant sąrašus reikėjo emituoti apie šį įvykį signalą visiems stebėtojams.☺☹☺2011-12-09 20:20:27☺☹8☹☹35☹☺Util☺☹☺3:Kodavimas☺☹☺Audrius☺☹40☹☺3:Kodavimas☺
+☺Klaida mažiausios apkrovos intervalo paieškos algoritme.☺☹☺2011-12-10 11:00:17☺☹15☹☹3013☹☺Logic☺☹☺3:Kodavimas☺☹☺Martynas☺☹70☹☺3:Kodavimas☺
+☺Klaida validžių duomenų sąrašo iteratoriuje.☺☹☺2011-12-11 02:35:03☺☹23☹☹3014☹☺Logic☺☹☺3:Kodavimas☺☹☺Martynas☺☹70☹☺3:Kodavimas☺
+☺Martyno metų laikų identifikatoriai skiriasi nuo tų, kurie naudojami sąsajos kode.☺☹☺2011-12-11 13:45:22☺☹9☹☹36☹☺Interface☺☹☺3:Kodavimas☺☹☺Audrius☺☹30☹☺3:Kodavimas☺
+☺Nebuvo klaidų prevencijos mažiausios apkrovos intervalų paieškos sąsajoje.☺☹☺2011-12-11 13:45:58☺☹23☹☹37☹☺Interface☺☹☺3:Kodavimas☺☹☺Audrius☺☹40☹☺3:Kodavimas☺
+☺Interfeisas „draskosi“, kai trūksta vietos statiniams komponentams.☺☹☺2011-12-11 14:00:47☺☹6☹☹38☹☺Interface☺☹☺3:Kodavimas☺☹☺Audrius☺☹40☹☺3:Kodavimas☺
+☺Paraiškų administravimo sąsaja leisdavo įvesti neigiamus administravimo kaštus.☺☹☺2011-12-12 17:00:49☺☹8☹☹39☹☺Interface☺☹☺3:Kodavimas☺☹☺Audrius☺☹50☹☺3:Kodavimas☺
+☺Planuojamos priemonės būdavo pašalinamos neteisingai.☺☹☺2011-12-12 17:05:39☺☹19☹☹40☹☺Core☺☹☺3:Kodavimas☺☹☺Audrius☺☹60☹☺3:Kodavimas☺
+☺Pamiršta RValidList kopijuojančiame konstruktoriuje inicijuoti visus laukus .☺☹☺2011-12-15 11:00:02☺☹9☹☹3015☹☺Logic☺☹☺3:Kodavimas☺☹☺Martynas☺☹70☹☺3:Kodavimas☺
+☺Qt Assistentas „nevalgo“ reliatyvių kelių CSS failuose.☺☹☺2011-12-15 15:00:04☺☹6☹☹1002☹☺Documentation☺☹☺3:Kodavimas☺☹☺Egidijus☺☹90☹☺3:Kodavimas☺
+☺Iteratorius bandydavo iteruoti per tuščią masyvą ir sistema nulūždavo.☺☹☺2011-12-15 21:20:13☺☹22☹☹41☹☺Logic☺☹☺3:Kodavimas☺☹☺Audrius☺☹70☹☺3:Kodavimas☺
+☺Prognozės skaičiuojamos nuo neteisingos datos.☺☹☺2011-12-15 22:45:16☺☹17☹☹3016☹☺Logic☺☹☺3:Kodavimas☺☹☺Martynas☺☹70☹☺3:Kodavimas☺
+☺Kai planuojama priemonė yra adresuojama iš istorinių duomenų ir ją kas pašalina, tai sistema nulūžta.☺☹☺2011-12-15 23:15:06☺☹15☹☹42☹☺Interface☺☹☺3:Kodavimas☺☹☺Audrius☺☹60☹☺3:Kodavimas☺
+☺RSubmission::setDate0 importo metu generuoja krūvą nereikalingų pranešimų.☺☹☺2011-12-16 19:50:50☺☹16☹☹4029☹☺Parser☺☹☺3:Testavimas☺☹☺Vytautas☺☹20☹☺3:Kodavimas☺
+☺Leidžiant testus nebūdavo inicijuojama statinė funkcija.☺☹☺2011-12-16 22:21:48☺☹43☹☹4030☹☺Core☺☹☺3:Testavimas☺☹☺Vytautas☺☹30☹☺3:Kodavimas☺
+☺Inicijavus priemonės administravimą su numatytomis reikšmėmis, lūždavo importas, nes nebesivaliduodavo datos.☺☹☺2011-12-16 22:25:55☺☹15☹☹4031☹☺Core☺☹☺3:Testavimas☺☹☺Vytautas☺☹70☹☺3:Kodavimas☺
+☺Sukeitus lakštus pradiniame faile vietomis, lūždavo importas.☺☹☺2011-12-16 22:27:31☺☹23☹☹4032☹☺Parse☺☹☺3:Testavimas☺☹☺Vytautas☺☹70☹☺3:Kodavimas☺
+☺Rašybos klaida.☺☹☺2011-12-16 22:29:26☺☹1☹☹4033☹☺Core☺☹☺3:Testavimas☺☹☺Vytautas☺☹40☹☺3:Kodavimas☺
+☺Rašybos klaida.☺☹☺2011-12-16 22:29:47☺☹1☹☹4034☹☺Core☺☹☺3:Testavimas☺☹☺Vytautas☺☹40☹☺3:Kodavimas☺
+☺Rašybos klaida.☺☹☺2011-12-16 22:29:57☺☹1☹☹4035☹☺Core☺☹☺3:Testavimas☺☹☺Vytautas☺☹40☹☺3:Kodavimas☺
+☺Rašybos klaida.☺☹☺2011-12-16 22:30:16☺☹1☹☹4036☹☺Core☺☹☺3:Testavimas☺☹☺Vytautas☺☹40☹☺3:Kodavimas☺
+☺Rašybos klaida.☺☹☺2011-12-16 22:30:19☺☹1☹☹4037☹☺Core☺☹☺3:Testavimas☺☹☺Vytautas☺☹40☹☺3:Kodavimas☺
+☺Rašybos klaida.☺☹☺2011-12-16 22:30:22☺☹1☹☹4038☹☺Core☺☹☺3:Testavimas☺☹☺Vytautas☺☹40☹☺3:Kodavimas☺
+☺Rašybos klaida.☺☹☺2011-12-16 22:31:31☺☹1☹☹4039☹☺Import☺☹☺3:Testavimas☺☹☺Vytautas☺☹40☹☺3:Kodavimas☺
+☺Rašybos klaida.☺☹☺2011-12-16 22:31:34☺☹1☹☹4040☹☺Import☺☹☺3:Testavimas☺☹☺Vytautas☺☹40☹☺3:Kodavimas☺
+☺Rašybos klaida.☺☹☺2011-12-16 22:31:37☺☹1☹☹4041☹☺Import☺☹☺3:Testavimas☺☹☺Vytautas☺☹40☹☺3:Kodavimas☺
+☺Rašybos klaida.☺☹☺2011-12-16 22:31:42☺☹1☹☹4042☹☺Import☺☹☺3:Testavimas☺☹☺Vytautas☺☹40☹☺3:Kodavimas☺
+☺Rašybos klaida.☺☹☺2011-12-16 22:31:45☺☹1☹☹4043☹☺Import☺☹☺3:Testavimas☺☹☺Vytautas☺☹40☹☺3:Kodavimas☺
+☺Po pakeitimų nebuvo atnaujinti testai iki galo.☺☹☺2011-12-16 22:36:52☺☹6☹☹4044☹☺Test☺☹☺3:Testavimas☺☹☺Vytautas☺☹70☹☺3:Testavimas☺
+☺setMeasureName automatiškai nuspėja intervalus, tačiau to importavimo metu nereikia.☺☹☺2011-12-17 14:30:55☺☹10☹☹43☹☺Core☺☹☺3:Kodavimas☺☹☺Audrius☺☹20☹☺3:Kodavimas☺
+☺Šalinant paramos priemones nesišalino nepanaudotos kryptys.☺☹☺2011-12-17 14:55:58☺☹9☹☹44☹☺Core☺☹☺3:Kodavimas☺☹☺Audrius☺☹60☹☺3:Kodavimas☺
+☺Slankaus kablelio skaičiavimo klaida.☺☹☺2011-12-18 01:17:23☺☹42☹☹3017☹☺Logic☺☹☺3:Testavimas☺☹☺Martynas☺☹70☹☺3:Kodavimas☺
+☺Sumaišytos funkcijos.☺☹☺2011-12-18 14:28:13☺☹11☹☹3018☹☺Core☺☹☺3:Testavimas☺☹☺Martynas☺☹71☹☺3:Kodavimas☺
+☺Neteisingų duomenų įrašų spalvinimas atsinaujina tik pažymėjus atitinkamą įrašą.☺☹☺2011-12-18 14:46:03☺☹13☹☹3019☹☺Interface☺☹☺3:Testavimas☺☹☺Martynas☺☹40☹☺3:Kodavimas☺
+☺Neleido į duomenis įvesti 1 dienos ilgio intervalo.☺☹☺2011-12-18 15:36:12☺☹4☹☹3020☹☺Core☺☹☺3:Testavimas☺☹☺Martynas☺☹70☹☺3:Kodavimas☺
+☺Sumaišytos rodyklės.☺☹☺2011-12-18 15:50:12☺☹2☹☹3021☹☺Logic☺☹☺3:Testavimas☺☹☺Martynas☺☹70☹☺3:Kodavimas☺
+☺Sumaišyti kintamieji.☺☹☺2011-12-18 15:53:04☺☹1☹☹3022☹☺Logic☺☹☺3:Testavimas☺☹☺Martynas☺☹70☹☺3:Kodavimas☺
+☺Neišversti sąsajos mygtukų pavadinimai į lietuvių kalbą.☺☹☺2011-12-18 15:55:23☺☹56☹☹3023☹☺Interface☺☹☺3:Testavimas☺☹☺Martynas☺☹40☹☺3:Kodavimas☺

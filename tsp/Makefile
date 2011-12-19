@@ -1,5 +1,11 @@
-ataskaita.pdf: ataskaita.rst
-	bin/rst2pdf ataskaita.rst -o ataskaita.pdf
+SRCS=$(wildcard *.rst)
+
+PDFS=$(SRCS:.rst=.pdf)
+
+all: $(PDFS)
+
+%.pdf : %.rst
+	rst2pdf --stylesheets="style.json" $< -o $@
 
 bootstrap.py:
 	wget http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py
@@ -10,5 +16,5 @@ bin/buildout: bootstrap.py
 buildout: bin/buildout buildout.cfg
 	bin/buildout -v
 
-show:
-	xdg-open ataskaita.pdf
+clean:
+	rm -f *.pdf

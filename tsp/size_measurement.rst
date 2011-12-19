@@ -2,9 +2,9 @@ Projekto dydžio vertinimas
 ==========================
 
 Kadangi komanda neturi istorinės duomenų bazės, kurią galima
-būtų panaudoti sistemos dydžio prognozavimui PROBE metodu, jį buvo
+būtų panaudoti sistemos dydžio prognozavimui PROBE metodu, jį yra
 bandoma atspėti prognozuojant kiek ir kokio dydžio klasių reikės.
-Klasės pagal spėjamą dydį buvo suskirstytos į tokias grupes:
+Klasės pagal spėjamą dydį yra suskirstytos į tokias grupes:
 
 +   maža – 20 eilučių antraštės failas ir 100 eilučių
     realizacijos failas;
@@ -19,13 +19,13 @@ Klasės pagal spėjamą dydį buvo suskirstytos į tokias grupes:
 (tuščios, su komentarais irgi įskaičiuojamos). Planuojant buvo nuspręsta,
 kad sistemoje turėtų būti tokios klasės:
 
-    1.  mažos:
+    1.  *mažos*:
 
         +   5 duomenų klasės (paramos priemonė, paraiška, padalinys, IS,
             bazinė);
         +   abstraktus duomenų modelis;
 
-    2.  vidutinės:
+    2.  *vidutinės*:
 
         +   priemonių sąsaja;
         +   priemonių administravimo sąsaja;
@@ -40,7 +40,7 @@ kad sistemoje turėtų būti tokios klasės:
         +   importavimo testai;
         +   diagramos komponentas;
 
-    3.  didelės:
+    3.  *didelės*:
 
         +   sąsaja su DB;
         +   rezultatų modelis;
@@ -49,7 +49,7 @@ kad sistemoje turėtų būti tokios klasės:
         +   planuojamų kiekių sąsaja;
         +   rezultatų sąsaja;
 
-    4.  labai didelės:
+    4.  *labai didelės*:
 
         +   logika;
         +   pagrindinis langas;
@@ -64,9 +64,23 @@ apie 11160 eilučių.
 Post-mortem
 -----------
 
-Suskaičiavus gavosi, kad sistema turi 14744 kodo eilutes. 
-Paklaida atsirado dėl to, kad vėliau buvo nuspręsta į sistemą
-integruoti pagalbos sistemą bei prireikė papildomų duomenų modelių
-sinchronizacijai tarp duomenų struktūrų ir naudotojo sąsajos. Taip
-pat atsirado dvi nenumatytos sąsajos: naudotojų administravimo ir
-rėžimo.
+Parašius sistemą ir suskaičiavus jos kodo eilučių skaičių,
+gavosi, kad sistema turi 15496 kodo eilutes. Nuo pradinio vertinimo nukrypta
+per 4336 eilutes arba per 38.85%. Vadinasi, kaip bebūtų gaila,
+tikslo, jog įvertinti programos dydį 20% tikslumu įgyvendinti nepavyko.
+
+Tokią didelę paklaidą lėmė kelios priežastys:
++   Nebuvo numatyti šie komponentai:
+    +   Pagalbos sistema (~500 eilučių)
+    +   Rėžimo interfeisas (kode dar vadinamas palete, ~500 eilučių)
+    +   Naudotojų administravimas (~600 eilučių)
+    +   Naudotojų administravimo sąsajos (~500 eilučių)
+    +   Papildomi komponentai, palengvinantys sinchronizaciją tarp 
+        naudotojo sąsajos ir duomenų modelių (~2000 eilučių)
++   Netinkamai įvertinti šių klasių dydžiai:
+    +   įrankių juostų klasės viršyjo 600 eilučių 
+        (~400 eilučių skirtumas nuo prognozės)
+
+Nors nuokrypis pakankamai didelis, tačiau komanda išlieka patenkinta tokiu rezultatu,
+nes neturint jokių istorinių duomenų pavyko pakankamai tiksliai ne tik suplanuoti
+būsimas klases, bet ir įvertinti jų dydį.
