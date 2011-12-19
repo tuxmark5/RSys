@@ -1,0 +1,57 @@
+@CHARSET "UTF-8";
+body {
+    font-size: 13px;
+    font-family: Cantarell, 'Droid Sans', 'DejaVu Sans', 'Bitstream Vera Sans', Verdana, sans-serif;
+    font-style: normal;
+    font-variant: normal;
+    color:#444;
+    margin: 0;
+    padding: 0;
+}
+div#content {
+    margin: 40px;
+    position: relative;
+    padding-top: 200px;
+}
+div#content div#title {
+    background-color: #DDD;
+    width: 350px;
+    height: 200px;
+    float: right;
+    padding: 40px;
+    padding-top: 30px; 
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+div#content div#title div.doc_title {
+    width: 100%;
+    text-align: right;
+    font-style:italic;
+    font-weight: bold;
+    font-size: 24px;
+}
+div#content div#title div.system_title {
+    width: 100%;
+    text-align: right;
+    font-weight: bold;
+    padding-top: 20px;
+    font-size: 48px;
+}
+div#content div#title div.extra {
+    width: 100%;
+    text-align: right;
+    padding-top: 90px;
+    font-style:italic;
+    font-weight: bold;
+}
+div.clear {
+    clear: both;
+}
+
+div#content div#footer {
+    padding-top: 150px;
+    position: relative;
+    width: 100%;
+    text-align: right;
+}

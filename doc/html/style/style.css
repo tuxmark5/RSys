@@ -9,7 +9,7 @@ body {
     font-family: Cantarell, 'Droid Sans', 'DejaVu Sans', 'Bitstream Vera Sans', Verdana, sans-serif;
     background:#ffffff;
     font-style: normal;
-    font-variant: normal
+    font-variant: normal;
     color:#333;
     margin: 0;
     padding: 0;
@@ -27,6 +27,13 @@ table {
     font-style: normal;
     color: #333;
     text-align: -webkit-auto;
+}
+table.listed tr td:first-child {
+    border-bottom: 1px #DDD solid;
+    border-right: 1px #DDD solid;
+}
+table.listed tr td {
+    border-bottom: 1px #DDD solid;
 }
 /* Text styles */
 h1 {
@@ -68,6 +75,10 @@ ol li {
 /* Elements */
 li img {
     vertical-align:middle;
+}
+ol img{
+    margin-top: 10px;
+    padding-bottom: 10px;
 }
 /**
  *     Header global styles
@@ -117,4 +128,9 @@ div#content p#tasks, div#content p#ifaces {
 div#content table {
     border-collapse:separate; 
     border-spacing:5px 15px; 
+}
+
+div#content td.bar-element {
+    text-align:center;
+    background-color:rgb(236,233,216);
 }
