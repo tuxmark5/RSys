@@ -1,5 +1,5 @@
-Produkto kūrimo strategijos ruošimas
-------------------------------------
+Produkto kūrimo strategija (papildyta 2011-12-19) 
+=================================================
 
 Renkantis strategiją, buvo nuspręsta, kad yra svarbūs šie dalykai:
 
@@ -24,14 +24,11 @@ Buvo nuspręsta dirbti trimis ciklais:
     +   korektiškas duomenų importavimas;
     +   realizuotas visas pagrindinis ir papildomas funkcionalumas;
 
-3.  *baigiamasis ciklas* (baigtas: 2011-12-20):
+3.  *baigiamasis ciklas* (planuota: 2011-12-20, baigtas: 2011-12-20):
 
     +   užtikrinti visi reikalavimai;
     +   paruošta dokumentacija;
     +   pilnai realizuota naudotojo sąsaja.
-
-
-TODO: sqlite, postgresql
 
 Post-mortem
 -----------
