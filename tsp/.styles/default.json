@@ -1,0 +1,36 @@
+{
+  "fontsAlias": {
+    "stdFont": "Times_Roman",
+    "stdBold": "Times_Roman-Bold",
+    "stdItalic": "Times_Roman-Oblique",
+    "stdBoldItalic": "Times_Roman-BoldOblique",
+    "stdMono": "Monospace",
+    "stdMonoItalic": "Monospace Italic"
+    },
+  "styles": [
+    ["normal", {
+      "parent": "base",
+      "fontSize":10,
+      "leading":12,
+      "leftIndent":0,
+      "rightIndent":0,
+      "firstLineIndent":10,
+      "spaceBefore":0,
+      "spaceAfter":0,
+      "bulletFontName":"Times-Roman",
+      "bulletFontSize":10,
+      "bulletIndent":0,
+      "borderWidth": 0,
+      "borderPadding": 0,
+      "allowWidows": 1,
+      "allowOrphans": 0
+      }],
+    ["admonition", {
+      "backColor": "white"
+      }],
+    ["code", {
+      "backColor": "white"
+      }]
+    ]
+}
+
