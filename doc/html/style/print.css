@@ -5,6 +5,10 @@ body
   page:         main;
 }
 
+h1 {
+  color: #000;
+}
+
 #header img
 {
   display:      none !important;
