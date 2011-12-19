@@ -101,8 +101,14 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
 Vacuum RMainWindow :: ~RMainWindow()
 {
   logout(false);
+  /*m_divisionContainer   ->destroy();
+  m_groupContainer      ->destroy();
+  m_measureContainer    ->destroy();
+  m_measure1Container   ->destroy();
+  m_submissionContainer ->destroy();
+  m_systemContainer     ->destroy();
   delete m_data0;
-  delete m_data1;
+  delete m_data1;*/
 }
 
 /**********************************************************************************************/
