@@ -56,7 +56,8 @@ bool RDatabase :: commit()
   {
     if (!(*it)->commit(query))
     {
-      qDebug() << "FAIL";
+      qDebug() << "COMMIT FAILED";
+      break;
     }
   }
 
