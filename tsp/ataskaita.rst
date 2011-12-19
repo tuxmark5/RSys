@@ -63,8 +63,6 @@ TODO:
 Pastabos apie tai, kaip buvo vykdytos praktikos
 ===============================================
 
-
-
 Reikalavimų specifikacijos ruošimas
 -----------------------------------
 
@@ -85,55 +83,18 @@ SCRUM metodika, jame reikalavimams reikia nurodyti papildomą
 informaciją („Priority“, „Owner“, „Invented by“, …),
 kurią skaitant šią reikalavimų specifikaciją reikėtų ignoruoti.
 
-Kokybės planavimas ir valdymas
-------------------------------
 
-+   Kokybės planavimas ir valdymas:
-    
-    +   defektų kiekiai programų išeities tekstuose;
-    +   testavimui ir kūrimui sugaištas laikas;
-    +   kaip buvo vykdomos peržiūros (dokumentų, reikalavimų, kodo,
-        dviejų žvejų)
+Pasiskirstymas rolėmis
+----------------------
 
-    TODO: Realiai iš šito nieko nesigavo, nes QtCreator rodo klaidas,
-    nemoku programuoti C++0x.
+Standartinių TSPi rolių buvo atsisakyta dėl per didelio žinių
+skirtumo tarp komandos narių. Detaliau apie dalijimąsi rolėmis žr.
+failą *roles.pdf*.
 
+Defektų fiksavimas
+------------------
 
-Pastabos apie tai, kodėl kai kurios praktikos nebuvo vykdytos
-=============================================================
-
-+   *Rolių ir jų atsakomybių apibrėžimas ir priskyrimas* buvo vykdytas tik
-    neformaliai. Buvo nuspręsta nenaudoti TSPi rolių, nes komandos
-    narių sugebėjimai nesutapo su tuo ko reikia rolėms ir pasiskirstymas
-    pagal roles būtų buvęs labai neefektyvus. (Pavyzdžiui, Vytautas
-    rūpinosi įrankiais, kurie palaiko reikalavimų apdorojimo ir
-    defektų fiksavimo procesus, o Audrius – kompiliatoriais,
-    bibliotekomis ir panašiai, nors šios abi veiklos turėtų būti atliekamos
-    palaikymo vadovo.) Kadangi komandos nariai yra pakankamai atsakingi,
-    tai nebeliko poreikio formaliai apibrėžinėti kas, ką ir iki kada turi
-    padaryti – pakakdavo susitarti žodžiu, o tai sutaupė nemažai laiko,
-    kurį galima buvo panaudoti sistemos tobulinimui.
-
-+   *Projekto progreso sekimas.* Šios praktikos buvo atsisakyta, dėl
-    galimybės dirbti tolygiai nebuvimo. Pavyzdžiui, savaitę, kai buvo
-    kokio nors dalyko kontrolinis, sistemos kūrimo komandos narys
-    galėdavo paskirti tik kelias valandas, tuo tarpu, savaitę kurią
-    nebūdavo kontrolinio – kelias dienas. Dėl to planavimas formaliai
-    nebuvo vykdomas. Pastebėtos problemos buvo arba pranešamos
-    visiems bendravimo platformoje, arba užfiksuojamos riktų
-    stebėjimo sistemoje.
-
-+   *Komandos proceso evoliucionavimo / pritaikymo plano paruošimas ir jo
-    įgyvendinimas*
-
-+   *Produkto kūrimo plano ir tvarkaraščio ruošimo* praktika nebuvo vykdyta
-    dėl to, kad daugumai naudojamos technologijos buvo naujos, dėl ko
-    planavimas tampa praktiškai neįmanomu. (Dabar galima būtų pasakyti,
-    kad kai kurių veiklų reali užbaigimo data po planuotos būtų buvusi net
-    pora savaičių vėliau.) Vietoj to, komanda stengėsi sudėlioti
-    užduotis taip, kad problemos iškilusios vienam žmogui netrukdytų
-    dirbti kitiems. Tam itin padėjo versijų kontrolės „šakų“ naudojimas.
-
-+   *Rizikų įvertinimas ir valdymas.*
-
-
+Kad nereikėtų kiekvienam komandos nariui atskirai registruoti defektų
+ir taip vienu metu kaupti 5 nepriklausomus defektų sąrašus, buvo nuspręsta
+defektų *registravimą* perleisti vidinės kokybės vadovui, kurį kiekvienas
+komandos narys privalo informuoti apie užfiksuotus defektus.

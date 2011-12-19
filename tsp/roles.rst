@@ -14,35 +14,51 @@ standartines TSPi roles:
     Kadangi šis komandos narys turi didžiausią patirtį programuojant C++,
     tai veiklos tiesiogiai susiję su šia programavimo kalba ir yra perduodamos
     komandos lyderiui.
+
 +   *Vidinės kokybės vadovas* (Vytautas Astrauskas). Atsakingas už:
     +   *Testavimo organizavimą*. 
     +   *Defektų registravimą*. Defektus turi fiksuoti visi komandos nariai,
     	tačiau, radus defektą, apie jį turi būti pranešama vidinės kokybės vadovui,
     	kuris išanalizavęs defekto prigimtį jį užregistruoja.
-    +	*Kodo kokybės valdymas*. Priežiūra, kad kodas atitiktų kodavimo standartą.
-+	*Išorinės kokybės vadovas* (Martynas Budriūnas). Atsakingas už:
- 	+	*Grafinės sąsajos kokybės užtikrinimą*. Tai apima naudotojo sąsajos
-		peržiūrą ir priežiūrą, kad joje naudojama metafora atitiktų dalykinę
-		sritį bei kalbos kultūros taisykles bei naudotojo sąsajos panaudojamumo
-		principus.
-	+	*Dokumentacijos kokybės užtikrinimą*. 
-	+	*Reikalavimų specifikacijos kokybės užtikrinimą*.
+    +	  *Kodo kokybės valdymas*. Priežiūra, kad kodas atitiktų kodavimo standartą.
+
++	  *Išorinės kokybės vadovas* (Martynas Budriūnas). Atsakingas už:
+ 	  +   *Grafinės sąsajos kokybės užtikrinimą*. Tai apima naudotojo sąsajos
+		    peržiūrą ir priežiūrą, kad joje naudojama metafora atitiktų dalykinę
+		    sritį bei kalbos kultūros taisykles bei naudotojo sąsajos panaudojamumo
+		    principus.
+    +   *Dokumentacijos kokybės užtikrinimą*. 
+    +	  *Reikalavimų specifikacijos kokybės užtikrinimą*.
 	Kadangi šis komandos narys turi didžiausią kalbos kultūros žinių kiekį,
 	tai visi artefaktai, kuriuose gali atsirasti tokio pobūdžio klaidų,
 	turi būti pateikiami išorinės kokybės vadovui, kad šis atliktų peržiūrą
 	ir ištaisytų klaidas, kurių kiti komandos nariai gali nepastebėti.
-+	*Planavimo vadovas* (Justinas Jusevičius). Atsakingas už:
-	+	*Planavimo organizavimą*.
-	+	*Laiko sekimą*. Remiantis komandos narių LFF formomis reikia
+
++	  *Planavimo vadovas* (Justinas Jusevičius). Atsakingas už:
+    +	  *Planavimo organizavimą*.
+    +	  *Laiko sekimą*. Remiantis komandos narių LFF formomis reikia
 		apskaičiuoti, kokio dydžio paklaida yra tarp planuoto ir
 		realaus laiko, skirto darbams atlikti.
-	+	*Ciklų planavimas*. Remiantis komandos narių nuomonėmis reikia
+    +	  *Ciklų planavimas*. Remiantis komandos narių nuomonėmis reikia
 		suplanuoti 3 darbų atlikimo ciklus.
-+	*Reikalavimų vadovas* (Egidijus Lukauskas). Atskaingas už:
-	+	*Reikalavimų specifikacijos ruošimą*.
-	+	*Reikalavimų registravimą*. Reikia nuolatos stebėti iš užsakovo
+
++	  *Reikalavimų vadovas* (Egidijus Lukauskas). Atskaingas už:
+    +	  *Reikalavimų specifikacijos ruošimą*.
+    +	  *Reikalavimų registravimą*. Reikia nuolatos stebėti iš užsakovo
 		gaunamus atsakymus ir pagal tai registruoti naujus reikalavimus.
-	+	*Reikalavimų testavimą*. Reikia stebėti sistemos kūrimo progresą
+    +	  *Reikalavimų testavimą*. Reikia stebėti sistemos kūrimo progresą
 		ir fiksuoti, kurie reiklavimai yra įgyvendinti, o kurie ne, bei
 		apie tai pranešti komandos lyderiui ir planavimo vadovui.
 
+Post-mortem
+-----------
+
+Po trijų mėnesių darbo su šiomis rolėmis, galima pakankamai tvirtai teigti,
+jog toks rolių išskirstymas buvo pakankamai efektyvus. Ypač efektyviai suveikė
+papildyto komandos lyderio, vidinės kokybės vadovo ir išorinės kokybės vadovo
+rolės. Šiek tiek daugiau problemų buvo su planavimo ir reikalavimų vadovų rolėmis,
+nes norint tinkamai atlikti šias roles tekdavo stipriai įsigilinti į 
+kuriamos sistemos architektūros detales, kas turint nedaug C++ programavimo
+kalbos patirties buvo pakankamai sudėtinga. Dėl šios priežasties planavimo
+ir reikalavimų vadovai pakankamai aktyviai dalyvaudavo savaitiniuose susitikimuose
+siekdami tinkamai įgyvendinti jiems pavestus darbus.
