@@ -5,10 +5,7 @@ PDFS=$(SRCS:.rst=.pdf)
 all: $(PDFS)
 
 %.pdf : %.rst
-	bin/rst2pdf \
-		--stylesheets="default.json"\
-		--stylesheet-path=".styles"\
-		$< -o $@
+	rst2pdf --stylesheets="style.json" $< -o $@
 
 bootstrap.py:
 	wget http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py
