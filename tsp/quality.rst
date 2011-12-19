@@ -32,4 +32,17 @@ Planuodami, tai, kaip užtikrinsime sistemos kokybę, labiausiai
 tikėjomės ją užtikrinti vykdydami efektyvias peržiūras. Deja, dėl
 labai skirtingų sugebėjimų programuoti C++, gavosi, kad ne visi
 galėjo lygiaverčiai jas vykdyti: praktiškai visą sistemos kodą
-yra peržiūrėjęs Audrius, kiti – žymiai mažiau.
+yra peržiūrėjęs Audrius, kiti – žymiai mažiau. Su dokumentų
+peržiūra sekėsi žymiai geriau: kiekvienas vykdantis pakartotinę
+peržiūrą, sugebėdavo rasti nebent rašybos klaidų.
+
+Užsibrėžtą tikslą ne daugiau nei 1 defektas 50 kodo eilučių, komandai
+pavyko įgyvendinti. Iš viso buvo rasti 124 defektai ir parašytos
+15496 kodo eilutės, tai yra vidutiniškai 1 defektas 124 kodo eilutėms.
+Deja, čia džiaugtis nėra labai kuo, nes tiksle nurodytas defektų
+tankis nėra gautas pasinaudojant kokiais nors ankstesnių darbų
+vertinimais, o buvo grynas spėjimas.
+
+Nors sistema visų apsibrėžtų kokybės kriterijų ir netenkina, mes
+būtume linkę ją laikyti pakankamai kokybiškai, nes
+TODO: Pas mus nieko neranda, o randa tik trečiųjų šalių bibliotekose.
