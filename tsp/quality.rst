@@ -44,8 +44,6 @@ tankis nėra gautas pasinaudojant kokiais nors ankstesnių darbų
 vertinimais, o buvo grynas spėjimas.
 
 Nors sistema visų apsibrėžtų kokybės kriterijų ir netenkina
-(kompiliuojant kompiliatorius rodo perspėjimus bei vykdant esmines
-užduotis „valgrind“ rodo, kad su atmintimi nėra dirbama visiškai
-tvarkingai), mes būtume linkę pačią sistemą laikyti pakankamai
-kokybišką, nes visi įspėjimai yra randami bibliotekų, kurias
-naudoja mūsų sistema, kode.
+(kompiliuojant kompiliatorius rodo perspėjimus), mes būtume linkę
+pačią sistemą laikyti pakankamai kokybišką, nes visi įspėjimai
+yra randami bibliotekų, kurias naudoja mūsų sistema, kode.
