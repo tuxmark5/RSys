@@ -538,6 +538,9 @@ void RMainWindow :: loginEnd(bool success)
   {
     // disconnect signals to destroyed REntities
     m_data1->disconnectAll();
+
+    m_data0->clear();
+    m_data1->clear();
     delete m_results;
     m_results = 0;
   }
