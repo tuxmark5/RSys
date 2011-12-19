@@ -1,3 +1,4 @@
+==========================
 Komandos išsikelti tikslai
 ==========================
 
@@ -22,9 +23,9 @@ Post-mortem
 
 Plačiau apie:
 
-+   planavimo tikslumą žr. *size_measurement.pdf*
-+   defektų tankį žr. *quality.pdf*
-+   ciklų planavimą žr. *strategy.pdf*
++   planavimo tikslumą žr. **size_measurement.pdf**
++   defektų tankį žr. **quality.pdf**
++   ciklų planavimą žr. **strategy.pdf**
 
 
 Rolių išsikelti tikslai

@@ -1,3 +1,4 @@
+==========================
 Projekto dydžio vertinimas
 ==========================
 
@@ -70,14 +71,18 @@ per 4336 eilutes arba per 38.85%. Vadinasi, kaip bebūtų gaila,
 tikslo, jog įvertinti programos dydį 20% tikslumu įgyvendinti nepavyko.
 
 Tokią didelę paklaidą lėmė kelios priežastys:
+
 +   Nebuvo numatyti šie komponentai:
+
     +   Pagalbos sistema (~500 eilučių)
     +   Rėžimo interfeisas (kode dar vadinamas palete, ~500 eilučių)
     +   Naudotojų administravimas (~600 eilučių)
     +   Naudotojų administravimo sąsajos (~500 eilučių)
     +   Papildomi komponentai, palengvinantys sinchronizaciją tarp 
         naudotojo sąsajos ir duomenų modelių (~2000 eilučių)
+
 +   Netinkamai įvertinti šių klasių dydžiai:
+
     +   įrankių juostų klasės viršyjo 600 eilučių 
         (~400 eilučių skirtumas nuo prognozės)
 
