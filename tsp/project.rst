@@ -2,6 +2,7 @@ Sistemos koncepcinis projektas
 ==============================
 
 Per grupinį susitikimą, nuspręsta sistemą padalinti į tokius komponentus:
+
 +   *Core* – dalykinės srities duomenų struktūros;
 +   *Import* – duomenų importavimas iš ``*.xls`` failo;
 +   *Interface* – naudotojo sąsaja;
@@ -29,6 +30,7 @@ Sistemos komponentus pavyko sukurti taip, kad šie būtų kiek įmanoma
 mažiau susiję vieni su kitais.
 
 Gautos komponentų priklausomybės:
+
 +   *Core* komponentas yra visiškai nepriklausomas.
 +   *Import* komponentas yra visiškai nepriklausomas.
 +   *Parse* komponentas priklauso tik nuo *Core* ir *Import*.

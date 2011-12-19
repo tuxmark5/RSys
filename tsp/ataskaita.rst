@@ -2,9 +2,9 @@
 TSPi naudojimo ataskaita
 ========================
 
-Komanda: *ReSoft*
+Komanda: **ReSoft**
 
-Sistema: *RSys*
+Sistema: **RSys**
 
 Komandos nariai:
 
@@ -17,47 +17,77 @@ Komandos nariai:
 Komandos naudotos TSPi praktikos
 ================================
 
-TODO:
-    Vytautui - quality.rst
-
 +   Naujų rolių apibrėžimas:
-    +   Failas: *roles.pdf*
+
+    +   Failas: **roles.pdf**
+
 +   Pasiskirtymas rolėmis:
-    +   Failas: *roles.pdf*
+
+    +   Failas: **roles.pdf**
+
 +   Komandos tikslų suformulavimas ir dokumentavimas:
-    +   Failas: *goals.pdf*
+
+    +   Failas: **goals.pdf**
+
 +   Rolių tikslų suformulavimas ir dokumentavimas.
-    +   Failas: *goals.pdf*
+
+    +   Failas: **goals.pdf**
+
 +   Versijų kontrolė:
+
     +   Galutiniame ruošinyje yra pateikta viso projekto GIT repozitorija
+
 +   Komunikavimo procedūrų apibrėžimas:
-    +   Failas: *communication.pdf*
+
+    +   Failas: **communication.pdf**
+
 +   Produkto kūrimo strategijos ruošimas.
-    +   Failas: *strategy.pdf*
+
+    +   Failas: **strategy.pdf**
+
 +   Projektavimas.
-    +   Failas: *project.pdf*
+
+    +   Failas: **project.pdf**
+
 +   Produkto kūrimo plano ir tvarkaraščio ruošimas.
-    +   Failas: *weekly_plan.ods*
+
+    +   Failas: **weekly_plan.ods**
+
 +   Reikalavimų valdymas:
-    +   Failas: *requirements.pdf*. Prie pateikto ruošinio pridėta spausdina kopija.
+
+    +   Failas: **requirements.pdf**. Prie pateikto ruošinio pridėta spausdina kopija.
+
 +   Savaitinių susitikimų organizavimas ir protokolavimas:
-    +   Failai: *ReSoft_2011-XX-XX.txt*. Jie kas savaitę buvo siunčiami TSP instruktoriui.
+
+    +   Failai: **ReSoft_2011-XX-XX.txt**. Jie kas savaitę buvo siunčiami TSP instruktoriui.
+
 +   Defektų fiksavimas:
-    +   Failas: *defects.ods*
+
+    +   Failas: **defects.ods**
+
 +   Laiko fiksavimas:
-    +   Failas: *AudriausLFF.ods*
-    +   Failas: *EgidijausLFF.ods*
-    +   Failas: *JustinoLFF.ods*
-    +   Failas: *MartynoLFF.ods*
-    +   Failas: *VytautoLFF.ods*
+
+    +   Failas: **AudriausLFF.ods**
+    +   Failas: **EgidijausLFF.ods**
+    +   Failas: **JustinoLFF.ods**
+    +   Failas: **MartynoLFF.ods**
+    +   Failas: **VytautoLFF.ods**
+
 +   Kodo peržiūra:
-    +   Failas: *code_review.pdf*
+
+    +   Failas: **code_review.pdf**
+
 +   Bendras kodavimo standartas:
-    +   Failas: *EAST_STD.txt*
+
+    +   Failas: **EAST_STD.txt**
+
 +   Sistemos dydžio vertinimas:
-    +   Failas: *size_measurement.pdf*
+
+    +   Failas: **size_measurement.pdf**
+
 +   Kokybės planavimas ir valdymas.
-    +   Failas: *quality.pdf*
+
+    +   Failas: **quality.pdf**
 
 
 Pastabos apie tai, kaip buvo vykdytos praktikos
@@ -76,7 +106,7 @@ peržiūra pasinaudojant įrankio pateikiamomis priemonėmis
 specifikaciją, buvo atlikta sistemos peržiūra – ar ji atitinka
 nurodytus reikalavimus.
 
-*Pastaba:* Naudotas reikalavimų specifikavimo įrankis nėra
+**Pastaba:** Naudotas reikalavimų specifikavimo įrankis nėra
 internacionalizuotas, todėl nebuvo galimybės išversti terminų į
 lietuvių kalbą. Taip pat, kadangi įrankis pritaikytas naudoti su
 SCRUM metodika, jame reikalavimams reikia nurodyti papildomą
