@@ -673,6 +673,8 @@ void RCalculator :: findLowUsageIntervals(RInterval interval, int daysBySeasons[
     if (daysBySeasons[i] > 0)
     {
       fractionsBySeasons[i] = fractionsNeeded / daysBySeasons[i];
+    } else {
+      fractionsBySeasons[i] = 0;
     }
   }
 
@@ -721,7 +723,7 @@ void RCalculator :: findLowUsageIntervals(ValidUnitPtrList* units,
         from = to;
         currentUsage = 0;
         currentFractions = 0;
-        if (to >= intervalLength) return;
+        if (to >= intervalLength) break;
       }
       currentFractions += fractions[to];
       currentUsage += usage[to].first;

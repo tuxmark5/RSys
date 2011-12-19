@@ -442,8 +442,8 @@ void RMainWindow :: findIntervalNow()
 
   if (m_intervalToolBar->isIntervalValid())
   {
-    m_intervalToolBar->applyInterval();
     m_searchForm->getSeasonalLengths(m_results->seasonalLengths());
+    m_intervalToolBar->applyInterval();
     emit searchModeChanged(true);
   }
   else
@@ -649,8 +649,8 @@ void RMainWindow :: setInterfaceEnabled(bool enabled)
 
 void RMainWindow :: setInterval()
 {
-  if (m_searchForm)
-    emit searchModeChanged();
+  //if (m_searchForm)
+  //  emit searchModeChanged();
 }
 
 /**********************************************************************************************/
