@@ -99,6 +99,7 @@ class REntity1DI: public REntity1D,
         if (!result)
         {
           qDebug() << "ERR" << m_exprs[state] << query.lastError();
+          return false;
         }
       }
 
@@ -146,8 +147,13 @@ class REntity1DI: public REntity1D,
 
     _M bool               select(QSqlQuery& query)
     {
+      if (!query.exec(m_exprs[Select]))
+      {
+        qDebug() << "Can't execute:" << m_exprs[Select];
+        return false;
+      }
+
       m_allowInsert = false;
-      R_GUARD(query.exec(m_exprs[Select]), false);
 
       for (query.first(); query.isValid(); query.next())
       {

@@ -118,7 +118,10 @@ void RUserAdmTab :: onField2Changed(bool value)
 void RUserAdmTab :: onField3Changed(int newIndex)
 {
   QString key = m_fields.value(sender());
+
   m_user->setProperty(key, newIndex);
+  if (key == "mea")
+    m_user->setProperty("grp", newIndex);
 }
 
 /**********************************************************************************************/

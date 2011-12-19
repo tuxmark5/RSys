@@ -721,7 +721,7 @@ void RCalculator :: findLowUsageIntervals(ValidUnitPtrList* units,
         from = to;
         currentUsage = 0;
         currentFractions = 0;
-        if (to >= intervalLength) break;
+        if (to >= intervalLength) return;
       }
       currentFractions += fractions[to];
       currentUsage += usage[to].first;

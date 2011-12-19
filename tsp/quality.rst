@@ -43,6 +43,7 @@ Deja, čia džiaugtis nėra labai kuo, nes tiksle nurodytas defektų
 tankis nėra gautas pasinaudojant kokiais nors ankstesnių darbų
 vertinimais, o buvo grynas spėjimas.
 
-Nors sistema visų apsibrėžtų kokybės kriterijų ir netenkina, mes
-būtume linkę ją laikyti pakankamai kokybiškai, nes
-TODO: Pas mus nieko neranda, o randa tik trečiųjų šalių bibliotekose.
+Nors sistema visų apsibrėžtų kokybės kriterijų ir netenkina
+(kompiliuojant kompiliatorius rodo perspėjimus), mes būtume linkę
+pačią sistemą laikyti pakankamai kokybišką, nes visi įspėjimai
+yra randami bibliotekų, kurias naudoja mūsų sistema, kode.

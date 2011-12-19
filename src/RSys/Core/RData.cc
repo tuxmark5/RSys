@@ -54,11 +54,11 @@ void RData :: clear()
   m_submissions.clear();        // deps: measures
   m_submissions1.clear();       // deps: measures
 
-  m_measures.clear();           // deps: groups
+  m_groups.clear();
+  m_measures.clear();           // deps: groups (prevent from removeOne'ing and notifying)
   m_measures1.deleteAll();      // deps: -
   m_systems.clear();            // deps: -
   m_users.clear();
-  m_groups.clear();
 
   m_unitHash[RUnit::Division].clear();
   m_unitHash[RUnit::Measure].clear();
