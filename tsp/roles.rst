@@ -8,34 +8,34 @@ tai standartinės TSPi rolės tokio pobūdžio komandai yra netinkamos.
 Todėl yra pateikiamos alternatyvios rolės, iš kurių dalis atitinka
 standartines TSPi roles:
 
-+   *Komandos lyderis* (Audrius Šaikūnas). Atsakingas už:
++   **Komandos lyderis** (Audrius Šaikūnas). Atsakingas už:
 
-    +   *savaitinių susitikimų organizavimą ir protokolavimą;*
-    +   *kūrimo darbų priskyrimą;*
-    +   *programavimo aplinkos (kompiliatorių, bibliotekų) paruošimą*.
+    +   **savaitinių susitikimų organizavimą ir protokolavimą;**
+    +   **kūrimo darbų priskyrimą;**
+    +   **programavimo aplinkos (kompiliatorių, bibliotekų) paruošimą**.
 
     Kadangi šis komandos narys turi didžiausią patirtį programuojant
     C++, tai veiklos tiesiogiai susiję su šia programavimo kalba ir
     yra perduodamos komandos lyderiui.
 
-+   *Vidinės kokybės vadovas* (Vytautas Astrauskas). Atsakingas už:
++   **Vidinės kokybės vadovas** (Vytautas Astrauskas). Atsakingas už:
 
-    +   *testavimo organizavimą*;
-    +   *defektų registravimą* (defektus turi fiksuoti visi komandos
+    +   **testavimo organizavimą**;
+    +   **defektų registravimą** (defektus turi fiksuoti visi komandos
         nariai, tačiau, radus defektą, apie jį turi būti pranešama
         vidinės kokybės vadovui, kuris išanalizavęs defekto
         prigimtį jį užregistruoja);
-    +   *kodo kokybės valdymas* (priežiūra, kad kodas atitiktų
+    +   **kodo kokybės valdymas** (priežiūra, kad kodas atitiktų
         kodavimo standartą).
 
-+   *Išorinės kokybės vadovas* (Martynas Budriūnas). Atsakingas už:
++   **Išorinės kokybės vadovas** (Martynas Budriūnas). Atsakingas už:
 
-    +   *grafinės sąsajos kokybės užtikrinimą* (naudotojo sąsajos
+    +   **grafinės sąsajos kokybės užtikrinimą** (naudotojo sąsajos
         peržiūrą ir priežiūrą, kad joje naudojama metafora
         atitiktų dalykinę sritį bei kalbos kultūros taisykles bei
         naudotojo sąsajos panaudojamumo principus);
-    +   *dokumentacijos kokybės užtikrinimą*;
-    +   *reikalavimų specifikacijos kokybės užtikrinimą*;
+    +   **dokumentacijos kokybės užtikrinimą**;
+    +   **reikalavimų specifikacijos kokybės užtikrinimą**;
 
     Kadangi šis komandos narys turi didžiausią kalbos kultūros
     žinių kiekį, tai visi artefaktai, kuriuose gali atsirasti tokio
@@ -43,21 +43,21 @@ standartines TSPi roles:
     vadovui, kad šis atliktų peržiūrą ir ištaisytų klaidas,
     kurių kiti komandos nariai gali nepastebėti.
 
-+  *Planavimo vadovas* (Justinas Jusevičius). Atsakingas už:
++  **Planavimo vadovas** (Justinas Jusevičius). Atsakingas už:
 
-    +    *planavimo organizavimą*;
-    +    *laiko sekimą* (remiantis komandos narių LFF formomis reikia
+    +    **planavimo organizavimą**;
+    +    **laiko sekimą** (remiantis komandos narių LFF formomis reikia
          apskaičiuoti, kokio dydžio paklaida yra tarp planuoto ir
          realaus laiko, skirto darbams atlikti);
-    +    *ciklų planavimas* (remiantis komandos narių nuomonėmis
+    +    **ciklų planavimas** (remiantis komandos narių nuomonėmis
          reikia suplanuoti 3 darbų atlikimo ciklus);
 
-+    *Reikalavimų vadovas* (Egidijus Lukauskas). Atskaingas už:
++    **Reikalavimų vadovas** (Egidijus Lukauskas). Atskaingas už:
 
-    +   *reikalavimų specifikacijos ruošimą*;
-    +   *reikalavimų registravimą* (reikia nuolatos stebėti iš užsakovo
+    +   **reikalavimų specifikacijos ruošimą**;
+    +   *reikalavimų registravimą** (reikia nuolatos stebėti iš užsakovo
         gaunamus atsakymus ir pagal tai registruoti naujus reikalavimus);
-    +   *Reikalavimų testavimą* (reikia stebėti sistemos kūrimo
+    +   **Reikalavimų testavimą** (reikia stebėti sistemos kūrimo
         progresą ir fiksuoti, kurie reiklavimai yra įgyvendinti, o
         kurie ne, bei apie tai pranešti komandos lyderiui ir planavimo
         vadovui).
