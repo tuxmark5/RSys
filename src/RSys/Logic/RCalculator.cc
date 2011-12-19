@@ -679,7 +679,7 @@ void RCalculator :: findLowUsageIntervals(RInterval interval, int daysBySeasons[
   int intervalLength = FROM(interval).daysTo(TO(interval)) + 1;
 
   QVector<Fractions> fractions;
-  fractions.reserve(intervalLength);
+  fractions.fill(0, intervalLength);
   QDate day = FROM(interval);
 
   m_intervalFun[1] = [day](int x) -> RInterval

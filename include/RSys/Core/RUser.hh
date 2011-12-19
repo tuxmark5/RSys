@@ -36,6 +36,7 @@ class RUser: public RElement
     _M void             setUserNameE(const QString& userName);
 
     _M int              divisionAcc()     const { return m_properties.value("div", 0); }
+    _M int              groupAcc()        const { return m_properties.value("grp", 0); }
     _M int              measureAcc()      const { return m_properties.value("mea", 0); }
     _M int              measureAdmAcc()   const { return m_properties.value("meaA", 0); }
     _M int              systemAcc()       const { return m_properties.value("sys", 0); }

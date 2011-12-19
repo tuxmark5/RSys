@@ -118,3 +118,8 @@ div#content table {
     border-collapse:separate; 
     border-spacing:5px 15px; 
 }
+
+div#content td.bar-element {
+    text-align:center;
+    background-color:rgb(236,233,216);
+}
