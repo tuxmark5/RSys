@@ -17,9 +17,6 @@ Komandos nariai:
 Komandos naudotos TSPi praktikos
 ================================
 
-TODO:
-    Vytautui - quality.rst
-
 +   Naujų rolių apibrėžimas:
     +   Failas: *roles.pdf*
 +   Pasiskirtymas rolėmis:
