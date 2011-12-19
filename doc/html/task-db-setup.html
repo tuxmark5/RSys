@@ -1,57 +1,68 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <link href="style/style.css" rel="stylesheet" type="text/css" >
     <title>Duomenų bazės paruošimas - RSys dokumentacija</title>
   </head>
 
   <body>
-    <h2>Duomenų bazės paruošimas Ubuntu operacinėje sistemoje</h2>
-    <p>
-      Šiame skyrelyje bus aptarta, kaip reikia paruošti PostgreSQL DBVS taip, kad ši būtų
-      tinkama nuotoliniam prisijungimui. Tai atlikti yra visiškai nebūtina, jei pakanka
-      vietinės DB funkcionalumo.
-    </p>
+    <div id="header">
+        <h1><img height="60px" src="images/logo.png"/>&nbsp;&nbsp;Duomenų bazės paruošimas</h1>
+    </div>
+    <div id="navigation">
+        &nbsp;<a href="index.html">Turinys</a>&nbsp;&nbsp;&raquo;
+        <a>Duomenų bazės paruošimas</a>
+    </div>
+    
+    <div id="content">
+      <h2>Duomenų bazės paruošimas Ubuntu operacinėje sistemoje</h2>
+      <p>
+        Šiame skyrelyje bus aptarta, kaip reikia paruošti PostgreSQL DBVS taip, kad ši būtų
+        tinkama nuotoliniam prisijungimui. Tai atlikti yra visiškai nebūtina, jei pakanka
+        vietinės DB funkcionalumo.
+      </p>
 
-    <p>Norint paruošti serverį, tinkamą notoliniam prisijungimui, reikia:</p>
+      <p>Norint paruošti serverį, tinkamą notoliniam prisijungimui, reikia:</p>
 
-    <ol>
-      <li>Instaliuoti PostgreSQL 9.1 (arba naujesnę) DBVS:
-        <div style="term">sudo apt-get install postgresql-9.1</div>
-      </li>
+      <ol>
+        <li>Instaliuoti PostgreSQL 9.1 (arba naujesnę) DBVS:
+          <div style="term">sudo apt-get install postgresql-9.1</div>
+        </li>
 
-      <li>Prisijungti naudotoju <b>postgres</b>:
-        <div style="term">sudo su postgres</div>
-      </li>
+        <li>Prisijungti naudotoju <b>postgres</b>:
+          <div style="term">sudo su postgres</div>
+        </li>
 
-      <li>Inicijuoti duomenų bazę:
-        <div style="term">psql &lt; init-postgres-admin.sql</div>
-        Šis žingsnis sukurs naują duomenų bazę pavadinimu <b>db</b> ir naują naudotoją <b>admin</b> 
-        su slaptažodžiu <b>pass1234</b>, kuris turės pilnas teises prie sukurtos duomenų bazės.
-        Prieš atliekant šį žingsnį, rekomenduojama pakeisti failą <b>init-postgres.sql</b> taip, kad naujos
-        duomenų bazės ir administratoriaus naudotojo vardai bei slaptažodis atitiktų poreikius.
-      </li>
+        <li>Inicijuoti duomenų bazę:
+          <div style="term">psql &lt; init-postgres-admin.sql</div>
+          Šis žingsnis sukurs naują duomenų bazę pavadinimu <b>db</b> ir naują naudotoją <b>admin</b> 
+          su slaptažodžiu <b>pass1234</b>, kuris turės pilnas teises prie sukurtos duomenų bazės.
+          Prieš atliekant šį žingsnį, rekomenduojama pakeisti failą <b>init-postgres.sql</b> taip, kad naujos
+          duomenų bazės ir administratoriaus naudotojo vardai bei slaptažodis atitiktų poreikius.
+        </li>
 
-      <li>Atsijungti nuo naudotojo <b>postgres</b>:
-        <div style="term">exit</div>
-      </li>
+        <li>Atsijungti nuo naudotojo <b>postgres</b>:
+          <div style="term">exit</div>
+        </li>
 
-      <li>Sukurti reikiamas lenteles ir struktūras naujoje db:
-        <div style="term">psql -d <i>db</i> -U <i>admin</i> -h 127.0.0.1 -f init-postgres.sql</div>
-      </li>
-    </ol>
+        <li>Sukurti reikiamas lenteles ir struktūras naujoje db:
+          <div style="term">psql -d <i>db</i> -U <i>admin</i> -h 127.0.0.1 -f init-postgres.sql</div>
+        </li>
+      </ol>
 
-    <p>
-      Atlikus šiuos žingsnius, bus galima prisijungi prie DB naudojant RSys sistemą.
-      Prisijungus rekomenduojama importuoti pradinius duomenis ir sukurti reikiamų naudotojų paskyras.
-      Plačiau apie tai žr. skyrelius <a href="task-import.html">"Duomenų importavimas"</a> ir 
-      <a href="task-user-adm.html">"Naudotojų administravimas"</a>.
-    </p>
+      <p>
+        Atlikus šiuos žingsnius, bus galima prisijungi prie DB naudojant RSys sistemą.
+        Prisijungus rekomenduojama importuoti pradinius duomenis ir sukurti reikiamų naudotojų paskyras.
+        Plačiau apie tai žr. skyrelius <a href="task-import.html">"Duomenų importavimas"</a> ir 
+        <a href="task-user-adm.html">"Naudotojų administravimas"</a>.
+      </p>
 
-    <h2>Duomenų bazės paruošimas kitose operacinėse sistemose</h2>
-    <p>
-      Duomenų bazės paruošimas kitose operacinėse sistemose yra analogiškas aprašytam, tik gali
-      skirtis pačios DBVS instaliavimo procedūra ir būdas, kuriuo duomenų bazei yra pateikiami
-      pradiniai .sql failai.
-    </p>
+      <h2>Duomenų bazės paruošimas kitose operacinėse sistemose</h2>
+      <p>
+        Duomenų bazės paruošimas kitose operacinėse sistemose yra analogiškas aprašytam, tik gali
+        skirtis pačios DBVS instaliavimo procedūra ir būdas, kuriuo duomenų bazei yra pateikiami
+        pradiniai .sql failai.
+      </p>
+    </div>
   </body>
 </html>
