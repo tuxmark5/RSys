@@ -52,9 +52,65 @@
     </toc>
 
     <keywords>
-      <keyword name="foo" id="MyApplication::foo" ref="doc.html#foo"/>
-      <keyword name="bar" ref="doc.html#bar"/>
-      <keyword id="MyApplication::foobar" ref="doc.html#foobar"/>
+      <keyword name="diegimas" ref="./html/task-install.html"/>
+      <keyword name="prisijungimas" ref="./html/iface-login.html"/>
+      <keyword name="nuotolinis prisijungimas" ref="./html/iface-login.html"/>
+      <keyword name="vietinis prisijungimas" ref="./html/iface-login.html"/>
+      <keyword name="duomenų bazė" ref="./html/iface-login.html"/>
+      <keyword name="varotojo vardas" ref="./html/iface-login.html"/>
+      <keyword name="slaptažodis" ref="./html/iface-login.html"/>
+      <keyword name="duomenų importavimas" ref="./html/task-import.html"/>
+      <keyword name="apkrovų skaičiavimas" ref="./html/task-usages.html"/>
+      <keyword name="prognozių skaičiavimas" ref="./html/task-usages.html"/>
+      <keyword name="intervalo pradžios data" ref="./html/bar-interval.html"/>
+      <keyword name="intervalo pabaigos data" ref="./html/bar-interval.html"/>
+      <keyword name="intervalo paiška" ref="./html/iface-interval-search.html"/>
+      <keyword name="sezoniškumas" ref="./html/iface-interval-search.html"/>
+      <keyword name="mažiausiai apkrauti intervalai" ref="./html/iface-interval-search.html"/>
+      <keyword name="duomenų bazės paruošimas" ref="./html/task-db-setup.html"/>
+      <keyword name="postgresql" ref="./html/task-db-setup.html"/>
+      <keyword name="naudotojai" ref="./html/iface-user-adm.html"/>
+      <keyword name="privilegijos" ref="./html/iface-user-adm.html"/>
+      <keyword name="sąsaja" ref="./html/iface-base.html"/>
+      <keyword name="inportavimas" ref="./html/iface-import.html"/>
+      <keyword name="paramos priemonė" ref="./html/iface-measure.html"/>
+      <keyword name="priemonės" ref="./html/iface-measure.html"/>
+      <keyword name="padalinys" ref="./html/iface-division.html"/>
+      <keyword name="IS" ref="./html/iface-system.html"/>
+      <keyword name="informacinė sistema" ref="./html/iface-system.html"/>
+      <keyword name="priemonių adminsitravimas" ref="./html/iface-measure-adm.html"/>
+      <keyword name="informacinių sistemų adminsitravimas" ref="./html/iface-system-adm.html"/>
+      <keyword name="sistemų administravimas" ref="./html/iface-system-adm.html"/>
+      <keyword name="istoriniai duomenys" ref="./html/iface-submission.html"/>
+      <keyword name="paraiškų duomenys" ref="./html/iface-submission.html"/>
+      <keyword name="planuojami kiekiai" ref="./html/iface-planned.html"/>
+      <keyword name="apkrovos" ref="./html/iface-usages.html"/>
+      <keyword name="prognozės" ref="./html/iface-usages.html"/>
+      <keyword name="apkrovos ir prognozės" ref="./html/iface-usages.html"/>
+      <keyword name="stulpelinė diagrama" ref="./html/iface-usages.html"/>
+      <keyword name="linijinė diagrama" ref="./html/iface-usages.html"/>
+      <keyword name="lentelinė diagrama" ref="./html/iface-usages.html"/>
+      <keyword name="apžvalga" ref="./html/iface-summary.html"/>
+      <keyword name="sistema" ref="./html/menu-main.html"/>
+      <keyword name="keisti" ref="./html/menu-main.html"/>
+      <keyword name="rodyti" ref="./html/menu-main.html"/>
+      <keyword name="apie" ref="./html/menu-main.html"/>
+      <keyword name="atsijungti" ref="./html/menu-main.html"/>
+      <keyword name="išsaugoti" ref="./html/menu-main.html"/>
+      <keyword name="atstatyti" ref="./html/menu-main.html"/>
+      <keyword name="išeiti" ref="./html/menu-main.html"/>
+      <keyword name="meniu" ref="./html/menu-main.html"/>
+      <keyword name="įrankių juosta" ref="./html/bar-main.html"/>
+      <keyword name="intervalo pasirinkimas" ref="./html/bar-interval.html"/>
+      <keyword name="intervalo koregavimas" ref="./html/bar-interval.html"/>
+      <keyword name="intervalo korektiškumas" ref="./html/bar-interval.html"/>
+      <keyword name="pranešimų žurnalas" ref="./html/iface-log.html"/>
+      <keyword name="pranešimai" ref="./html/iface-log.html"/>
+      <keyword name="pranešimų tipai" ref="./html/iface-log.html"/>
+      <keyword name="rėžimas" ref="./html/iface-palette.html"/>
+      <keyword name="sistemos rėžimas" ref="./html/iface-palette.html"/>
+      <keyword name="privilegijų rūšys" ref="./html/iface-user-adm.html"/>
+      <keyword name="naudotojo šalinimas" ref="./html/iface-user-adm.html"/>
     </keywords>
     
     <files>

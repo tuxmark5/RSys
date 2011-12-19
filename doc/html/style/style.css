@@ -134,3 +134,11 @@ div#content td.bar-element {
     text-align:center;
     background-color:rgb(236,233,216);
 }
+
+a[name] {
+    text-decoration: none; 
+    color: #333;
+    vertical-align:middle;
+    font-weight: normal;
+}
+    
