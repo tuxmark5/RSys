@@ -149,6 +149,7 @@ INSERT INTO users(uid, username, descr)
   VALUES(0, current_user, 'Administratorius');
 INSERT INTO userAdm(uid, key, value) VALUES
   (0, 'div',    2),
+  (0, 'grp',    2),
   (0, 'mea',    2),
   (0, 'meaA',   2),
   (0, 'sys',    2),
@@ -165,6 +166,7 @@ CREATE FUNCTION r_create_user()
     EXECUTE 'CREATE ROLE '||NEW.username||' WITH LOGIN PASSWORD ''12345''';
     INSERT INTO userAdm(uid, key, value) VALUES
       (NEW.uid, 'div',  0),
+      (NEW.uid, 'grp',  0),
       (NEW.uid, 'mea',  0),
       (NEW.uid, 'meaA', 0),
       (NEW.uid, 'sys',  0),
@@ -199,6 +201,7 @@ CREATE FUNCTION r_modify_user()
 
     t = CASE
       WHEN NEW.key = 'div'  THEN 'divisions'
+      WHEN NEW.key = 'grp'  THEN 'groups'
       WHEN NEW.key = 'mea'  THEN 'measures'
       WHEN NEW.key = 'meaA' THEN 'measureAdm'
       WHEN NEW.key = 'sys'  THEN 'systems'
