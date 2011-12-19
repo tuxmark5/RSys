@@ -141,4 +141,14 @@ a[name] {
     vertical-align:middle;
     font-weight: normal;
 }
+
+div[style="term"] {
+    border: 1px #333 solid;
+    padding: 5px;
+    margin: 5px;
+    color: #000;
+    font-family: Courier;
+    background-color: #EEE;
+    font-size: 13px;
+}
     
