@@ -659,14 +659,6 @@ void RCalculator :: findLowUsageIntervals(RInterval interval, int daysBySeasons[
       fractionsNeeded *= daysBySeasons[i];
     }
   }
-  if (fractionsNeeded <= 0)
-  {
-    for (auto system : m_validSystems)
-      system->m_lowestUsage = RInterval();
-    for (auto division : m_validDivisions)
-      division->m_lowestUsage = RInterval();
-    return;
-  }
 
   for (int i = 0; i < 4; i++)
   {
