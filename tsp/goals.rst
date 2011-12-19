@@ -13,9 +13,9 @@ duomenis:
 +   laikas 5 minučių tikslumu.
 
 Sprendimas fiksuoti tik tuos defektus, kurie pateko į versijų kontrolės
-sistemą, priimtas dėl vienos esminės priežasties - komandos naudota IDE
+sistemą, priimtas dėl vienos esminės priežasties – komandos naudota IDE
 QtCreator sugeba realiu laiku parodyti vietas, kuriose yra tikėtinos 
-kompiliavimo klaidos;
+kompiliavimo klaidos.
 
 Post-mortem
 -----------
