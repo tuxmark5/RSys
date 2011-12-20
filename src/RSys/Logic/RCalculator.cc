@@ -54,6 +54,10 @@ void RCalculator :: update()
   {
     submission->validate();
   }
+  for (auto submission : *(m_data->submissions1()))
+  {
+    submission->validate();
+  }
 
   QHash<RMeasure*, MeasureInfo> measureInfos;
   for (auto submission : m_validSubmissions)
