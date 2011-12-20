@@ -61,8 +61,11 @@ class RValidList
             }
           }
           else
+            ++m_it;
+
+          if (m_list == 1)
           {
-            for (++m_it; m_it != m_container->m_list1->end(); ++m_it)
+            for (; m_it != m_container->m_list1->end(); ++m_it)
               if ((*m_it)->isValid())
                 return *this;
           }
