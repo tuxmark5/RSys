@@ -16,7 +16,7 @@
 /**********************************************************************************************/
 
 Vacuum RPaletteDock :: RPaletteDock(RMainWindow* parent):
-  QDockWidget(QString::fromUtf8("Rėžimas"), parent),
+  QDockWidget(QString::fromUtf8("Režimas"), parent),
   m_mainWindow(parent),
   m_mode(false)
 {

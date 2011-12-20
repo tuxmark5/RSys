@@ -8076,7 +8076,7 @@ Ar norite jį perrašyti?</translation>
     </message>
     <message>
         <source>error triggered by consumer</source>
-        <translation>vartotojo iššaukta klaida</translation>
+        <translation>naudotojo iššaukta klaida</translation>
     </message>
     <message>
         <source>unexpected end of file</source>

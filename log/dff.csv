@@ -65,7 +65,7 @@
 ☺Šalinant įrašus iš lentelių, rezultatai neatsinaujina.☺☹☺2011-12-04 20:05:43☺☹7☹☹4024☹☺Interface☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
 ☺Nesimato, nuo kurios vietos prasideda prognozės.☺☹☺2011-12-04 20:15:09☺☹36☹☹4025☹☺Interface☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
 ☺Vidada pranešama, kad duomenų išsaugojimas pavyko.☺☹☺2011-12-04 20:15:32☺☹6☹☹1004☹☺Store☺☹☺2:Testavimas☺☹☺Egidijus☺☹40☹☺2:Kodavimas☺
-☺Apžvalgos sąsajoje sunku suprasti, kas konkrečiai lentelės rėžime yra vaizduojama.☺☹☺2011-12-04 20:15:41☺☹19☹☹29☹☺Interface☺☹☺2:Testavimas☺☹☺Audrius☺☹40☹☺2:Kodavimas☺
+☺Apžvalgos sąsajoje sunku suprasti, kas konkrečiai lentelės režime yra vaizduojama.☺☹☺2011-12-04 20:15:41☺☹19☹☹29☹☺Interface☺☹☺2:Testavimas☺☹☺Audrius☺☹40☹☺2:Kodavimas☺
 ☺Neaiškios tikslios priežastys, kodėl sąsaja būtent taip koreguoja intervalus.☺☹☺2011-12-04 20:20:07☺☹27☹☹4026☹☺Interface☺☹☺2:Testavimas☺☹☺Vytautas☺☹40☹☺2:Kodavimas☺
 ☺Administravimo sąsaja nevisada reaguoja į naudotojo pasirinkumus.☺☹☺2011-12-04 20:35:57☺☹7☹☹3006☹☺Interface☺☹☺2:Testavimas☺☹☺Martynas☺☹40☹☺2:Kodavimas☺
 ☺Bereikalingas pasikeitimo signalų emitavimas neįvykdžius jokių pakeitimų naudotojų administravimo sąsajoje.☺☹☺2011-12-04 21:45:20☺☹7☹☹30☹☺Interface☺☹☺2:Testavimas☺☹☺Audrius☺☹80☹☺2:Kodavimas☺
@@ -90,7 +90,7 @@
 ☺Klaida validžių duomenų sąrašo iteratoriuje.☺☹☺2011-12-11 02:35:03☺☹23☹☹3014☹☺Logic☺☹☺3:Kodavimas☺☹☺Martynas☺☹70☹☺3:Kodavimas☺
 ☺Martyno metų laikų identifikatoriai skiriasi nuo tų, kurie naudojami sąsajos kode.☺☹☺2011-12-11 13:45:22☺☹9☹☹36☹☺Interface☺☹☺3:Kodavimas☺☹☺Audrius☺☹30☹☺3:Kodavimas☺
 ☺Nebuvo klaidų prevencijos mažiausios apkrovos intervalų paieškos sąsajoje.☺☹☺2011-12-11 13:45:58☺☹23☹☹37☹☺Interface☺☹☺3:Kodavimas☺☹☺Audrius☺☹40☹☺3:Kodavimas☺
-☺Interfeisas „draskosi“, kai trūksta vietos statiniams komponentams.☺☹☺2011-12-11 14:00:47☺☹6☹☹38☹☺Interface☺☹☺3:Kodavimas☺☹☺Audrius☺☹40☹☺3:Kodavimas☺
+☺Sąsaja „draskosi“, kai trūksta vietos statiniams komponentams.☺☹☺2011-12-11 14:00:47☺☹6☹☹38☹☺Interface☺☹☺3:Kodavimas☺☹☺Audrius☺☹40☹☺3:Kodavimas☺
 ☺Paraiškų administravimo sąsaja leisdavo įvesti neigiamus administravimo kaštus.☺☹☺2011-12-12 17:00:49☺☹8☹☹39☹☺Interface☺☹☺3:Kodavimas☺☹☺Audrius☺☹50☹☺3:Kodavimas☺
 ☺Planuojamos priemonės būdavo pašalinamos neteisingai.☺☹☺2011-12-12 17:05:39☺☹19☹☹40☹☺Core☺☹☺3:Kodavimas☺☹☺Audrius☺☹60☹☺3:Kodavimas☺
 ☺Pamiršta RValidList kopijuojančiame konstruktoriuje inicijuoti visus laukus .☺☹☺2011-12-15 11:00:02☺☹9☹☹3015☹☺Logic☺☹☺3:Kodavimas☺☹☺Martynas☺☹70☹☺3:Kodavimas☺

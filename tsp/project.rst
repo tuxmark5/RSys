@@ -20,11 +20,11 @@ failus. T.y. projektuoti kodu.
 Post-mortem
 -----------
 
-Toks projektavimo būdas itin gerai pasiteisino: reikalingi interfeisai būdavo
-apibrėžiami komandos susitikimų metu pilnai išsiaiškinant jų esmę. Kadangi
-projekto eigoje teko keisti pirma apibrėžtus interfeisus, tai leido
-sutaupyti daug laiko (nes jei būtų interfeisai aprašyti atskirame dokumente,
-tai be pačių interfeisų dar būtų tekę keisti pačius dokumentus).
+Toks projektavimo būdas itin gerai pasiteisino: reikalingos sąsajos būdavo
+apibrėžiamos komandos susitikimų metu pilnai išsiaiškinant jų esmę. Kadangi
+projekto eigoje teko keisti pirma apibrėžtas sąsajas, tai leido
+sutaupyti daug laiko (nes jei būtų sąsajos aprašytos atskirame dokumente,
+tai be pačių sąsajų dar būtų tekę keisti pačius dokumentus).
 
 Sistemos komponentus pavyko sukurti taip, kad šie būtų kiek įmanoma
 mažiau susiję vieni su kitais.
@@ -40,6 +40,6 @@ Gautos komponentų priklausomybės:
     jo vaidmuo yra apjungti sukurtus komponentus į naudotojui prieinamą
     grafinę sąsają.
 
-Stabiliausias apibrėžtas interfeisas - **Import**, kurio nereikėjo nė karto keisti ir
-kuris buvo sukurtas dar spalio 27 d. (git kodo revizija 
+Stabiliausias apibrėžta sąsaja - **Import**, kurios nereikėjo nė karto keisti ir
+kuri buvo sukurtas dar spalio 27 d. (git kodo revizija 
 *799572c59936b80d8f57c9f05c0da963d6e82fcb*).

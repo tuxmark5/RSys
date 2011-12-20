@@ -1,4 +1,4 @@
-RSys - tai sistema, skirta apkrovų skaičiavimui.
+RSys – tai sistema, skirta apkrovų skaičiavimui.
 
 Autoriai:
 Audrius Šaikūnas

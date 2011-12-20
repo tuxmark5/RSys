@@ -44,7 +44,7 @@
             <section ref="./html/iface-login.html" title="Prisijungimo"/>
             <section ref="./html/iface-interval-search.html" title="Mažiausios apkrovos intervalo paieškos"/>
             <section ref="./html/iface-log.html" title="Pranešimų žurnalas"/>
-            <section ref="./html/iface-palette.html" title="Rėžimo pasirinkimo"/>
+            <section ref="./html/iface-palette.html" title="Režimo pasirinkimo"/>
             <section ref="./html/iface-user-adm.html" title="Naudotojų administravimo"/>
           </section>
         </section>
@@ -107,8 +107,8 @@
       <keyword name="pranešimų žurnalas" ref="./html/iface-log.html"/>
       <keyword name="pranešimai" ref="./html/iface-log.html"/>
       <keyword name="pranešimų tipai" ref="./html/iface-log.html"/>
-      <keyword name="rėžimas" ref="./html/iface-palette.html"/>
-      <keyword name="sistemos rėžimas" ref="./html/iface-palette.html"/>
+      <keyword name="režimas" ref="./html/iface-palette.html"/>
+      <keyword name="sistemos režimas" ref="./html/iface-palette.html"/>
       <keyword name="privilegijų rūšys" ref="./html/iface-user-adm.html"/>
       <keyword name="naudotojo šalinimas" ref="./html/iface-user-adm.html"/>
     </keywords>

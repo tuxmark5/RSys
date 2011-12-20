@@ -75,7 +75,7 @@ Tokią didelę paklaidą lėmė kelios priežastys:
 +   Nebuvo numatyti šie komponentai:
 
     +   Pagalbos sistema (~500 eilučių)
-    +   Rėžimo interfeisas (kode dar vadinamas palete, ~500 eilučių)
+    +   Režimo sąsaja (kode dar vadinamas palete, ~500 eilučių)
     +   Naudotojų administravimas (~600 eilučių)
     +   Naudotojų administravimo sąsajos (~500 eilučių)
     +   Papildomi komponentai, palengvinantys sinchronizaciją tarp 
