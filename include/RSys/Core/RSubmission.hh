@@ -37,6 +37,7 @@ class RSubmission: public RElement
     _M QString          measureFullName() const;
     _M RID              measureId() const;
     _M QString          measureName() const { return m_measureName; }
+    _M void             releaseMeasure();
     _M void             remove();
     _M bool             setCount(int count);
     _M void             setDefaultInteval();

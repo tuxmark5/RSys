@@ -53,17 +53,24 @@ RID RSubmission :: measureId() const
 
 /**********************************************************************************************/
 
-void RSubmission :: remove()
+void RSubmission :: releaseMeasure()
 {
-  (*m_data)[submissionRemoval](this);
-  m_data->modify();
+  R_GUARD(m_planned, Vacuum);
 
-  if (m_planned && m_measure && m_measure->numRefs() == 2)
+  if (m_measure && m_measure->numRefs() == 2)
   {
     m_data->measures1()->removeOne(m_measure);
     m_measure = 0;
   }
+}
 
+/**********************************************************************************************/
+
+void RSubmission :: remove()
+{
+  (*m_data)[submissionRemoval](this);
+  m_data->modify();
+  releaseMeasure();
   m_valid = false;
 }
 
@@ -238,6 +245,7 @@ void RSubmission :: setMeasure1NameE(const QString& measureName)
   }
 
   (*m_data)[measureChange](this, measure1.get());
+  releaseMeasure();
   m_measure       = measure1;
   validate();
   setDefaultInteval();
