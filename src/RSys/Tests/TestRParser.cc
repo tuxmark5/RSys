@@ -6,15 +6,33 @@ void TestRParser::checkReadData(RParser *parser, RParser::GuessList list)
   RData data;
   QCOMPARE(parser->read(&data, list), true);
 
+  RGroupPtrList *groups = data.groups();
+  QCOMPARE(4, groups->size());
+  QCOMPARE(groups->at(0)->name(),
+           R_S("1 KRYPTIS „Žemės, maisto ūkio ir miškininkystės "
+               "sektoriaus konkurencingumo didinimas“"));
+  QCOMPARE(groups->at(1)->name(),
+           R_S("2 KRYPTIS „Aplinkos ir kraštovaizdžio gerinimas“"));
+  QCOMPARE(groups->at(2)->name(),
+           R_S("3 KRYPTIS „Gyvenimo kokybė kaimo vietovėse ir "
+               "kaimo ekonomikos įvairinimas“"));
+  QCOMPARE(groups->at(3)->name(),
+           R_S("4 KRYPTIS „Leader“  metodu įgyvendinamos priemonės"));
+
   RMeasurePtrList *measures = data.measures();
   QCOMPARE(27, measures->size());
   QCOMPARE(measures->at(26)->identifier(), R_S("P4-3"));
   QCOMPARE(measures->at(26)->name(),
            R_S("3. Parama VVG veiklai, įgūdžiams "
                "įgyti ir aktyviai pritaikyti"));
+  QCOMPARE(measures->at(26)->groupName(),
+           R_S("4 KRYPTIS „Leader“  metodu įgyvendinamos priemonės"));
   QCOMPARE(measures->at(1)->identifier(), R_S("P1-2"));
   QCOMPARE(measures->at(1)->name(),
            R_S("2. Naudojimasis konsultavimo paslaugomis"));
+  QCOMPARE(measures->at(1)->groupName(),
+           R_S("1 KRYPTIS „Žemės, maisto ūkio ir miškininkystės "
+               "sektoriaus konkurencingumo didinimas“"));
 
   RDivisionPtrList *divisions = data.divisions();
   QCOMPARE(12, divisions->size());
@@ -176,6 +194,21 @@ void TestRParser::testWithMissingData()
   RData data;
   QCOMPARE(parser.read(&data, list), false);
 
+  RGroupPtrList *groups = data.groups();
+  QCOMPARE(groups->size(), 5);
+  QCOMPARE(groups->at(0)->name(),
+           R_S("1 KRYPTIS „Žemės, maisto ūkio ir miškininkystės "
+               "sektoriaus konkurencingumo didinimas“"));
+  QCOMPARE(groups->at(1)->name(),
+           R_S("Nauja kryptis, o prieš tai eilutė yra tuščia kryptis."));
+  QCOMPARE(groups->at(2)->name(),
+           R_S("2 KRYPTIS „Aplinkos ir kraštovaizdžio gerinimas“"));
+  QCOMPARE(groups->at(3)->name(),
+           R_S("3 KRYPTIS „Gyvenimo kokybė kaimo vietovėse ir "
+               "kaimo ekonomikos įvairinimas“"));
+  QCOMPARE(groups->at(4)->name(),
+           R_S("4 KRYPTIS „Leader“  metodu įgyvendinamos priemonės"));
+
   RMeasurePtrList *measures = data.measures();
   QCOMPARE(25, measures->size());
   QCOMPARE(measures->at(24)->identifier(), R_S("P4-3"));
@@ -183,23 +216,35 @@ void TestRParser::testWithMissingData()
            R_S("3. Parama VVG veiklai, įgūdžiams "
                "įgyti ir aktyviai pritaikyti"));
   QCOMPARE(measures->at(24)->isValid(), true);
+  QCOMPARE(measures->at(24)->groupName(),
+           R_S("4 KRYPTIS „Leader“  metodu įgyvendinamos priemonės"));
   QCOMPARE(measures->at(1)->identifier(), R_S("P1-2"));
   QCOMPARE(measures->at(1)->name(),
            R_S("2. Naudojimasis konsultavimo paslaugomis"));
   QCOMPARE(measures->at(1)->isValid(), true);
+  QCOMPARE(measures->at(1)->groupName(),
+           R_S("1 KRYPTIS „Žemės, maisto ūkio ir miškininkystės "
+               "sektoriaus konkurencingumo didinimas“"));
   QCOMPARE(measures->at(2)->identifier(), R_S("P1-4"));
   QCOMPARE(measures->at(2)->name(),
            R_S("4. Ankstyvas pasitraukimas iš prekinės žemės ūkio gamybos"));
   QCOMPARE(measures->at(2)->isValid(), true);
+  QCOMPARE(measures->at(2)->groupName(),
+           R_S("1 KRYPTIS „Žemės, maisto ūkio ir miškininkystės "
+               "sektoriaus konkurencingumo didinimas“"));
   QCOMPARE(measures->at(5)->identifier(), R_S("P1-7"));
   QCOMPARE(measures->at(5)->name(),
            R_S("7. Miškų ekonominės vertės didinimas"));
   QCOMPARE(measures->at(5)->isValid(), true);
+  QCOMPARE(measures->at(5)->groupName(),
+           R_S("Nauja kryptis, o prieš tai eilutė yra tuščia kryptis."));
   QCOMPARE(measures->at(6)->identifier(), R_S("P1-9"));
   QCOMPARE(measures->at(6)->name(),
            R_S("9. Žemės ūkio produktų perdirbimas ir "
                "pridėtinės vertės didinimas"));
   QCOMPARE(measures->at(6)->isValid(), true);
+  QCOMPARE(measures->at(6)->groupName(),
+           R_S("Nauja kryptis, o prieš tai eilutė yra tuščia kryptis."));
 
   RDivisionPtrList *divisions = data.divisions();
   QCOMPARE(10, divisions->size());
