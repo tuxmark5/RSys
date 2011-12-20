@@ -19,75 +19,77 @@ Komandos naudotos TSPi praktikos
 
 +   Naujų rolių apibrėžimas:
 
-    +   Failas: **roles.pdf**
+    +   failas: **roles.pdf**.
 
-+   Pasiskirtymas rolėmis:
++   Pasiskirstymas rolėmis:
 
-    +   Failas: **roles.pdf**
+    +   failas: **roles.pdf**.
 
 +   Komandos tikslų suformulavimas ir dokumentavimas:
 
-    +   Failas: **goals.pdf**
+    +   failas: **goals.pdf**.
 
-+   Rolių tikslų suformulavimas ir dokumentavimas.
++   Rolių tikslų suformulavimas ir dokumentavimas:
 
-    +   Failas: **goals.pdf**
+    +   failas: **goals.pdf**.
 
 +   Versijų kontrolė:
 
-    +   Galutiniame ruošinyje yra pateikta viso projekto GIT repozitorija
+    +   galutiniame ruošinyje yra pateikta viso projekto GIT saugykla.
 
 +   Komunikavimo procedūrų apibrėžimas:
 
-    +   Failas: **communication.pdf**
+    +   failas: **communication.pdf**.
 
-+   Produkto kūrimo strategijos ruošimas.
++   Produkto kūrimo strategijos ruošimas:
 
-    +   Failas: **strategy.pdf**
+    +   failas: **strategy.pdf**.
 
-+   Projektavimas.
++   Projektavimas:
 
-    +   Failas: **project.pdf**
+    +   failas: **project.pdf**.
 
-+   Produkto kūrimo plano ir tvarkaraščio ruošimas.
++   Produkto kūrimo plano ir tvarkaraščio ruošimas:
 
-    +   Failas: **weekly_plan.ods**
+    +   failas: **weekly_plan.ods**.
 
 +   Reikalavimų valdymas:
 
-    +   Failas: **requirements.pdf**. Prie pateikto ruošinio pridėta spausdina kopija.
+    +   failas: **requirements.pdf**. Prie pateikto ruošinio pridėta
+        spausdina kopija.
 
 +   Savaitinių susitikimų organizavimas ir protokolavimas:
 
-    +   Failai: **ReSoft_2011-XX-XX.txt**. Jie kas savaitę buvo siunčiami TSP instruktoriui.
+    +   failai: **ReSoft_2011-XX-XX.txt** – jie kas savaitę buvo
+        siunčiami TSP instruktoriui.
 
 +   Defektų fiksavimas:
 
-    +   Failas: **dff.csv**
+    +   failas: **dff.csv**.
 
 +   Laiko fiksavimas:
 
-    +   Failas: **AudriausLFF.ods**
-    +   Failas: **EgidijausLFF.ods**
-    +   Failas: **JustinoLFF.ods**
-    +   Failas: **MartynoLFF.ods**
-    +   Failas: **VytautoLFF.ods**
+    +   failas: **AudriausLFF.ods**;
+    +   failas: **EgidijausLFF.ods**;
+    +   failas: **JustinoLFF.ods**;
+    +   failas: **MartynoLFF.ods**;
+    +   failas: **VytautoLFF.ods**.
 
 +   Kodo peržiūra:
 
-    +   Failas: **code_review.pdf**
+    +   failas: **code_review.pdf**.
 
 +   Bendras kodavimo standartas:
 
-    +   Failas: **EAST_STD.txt**
+    +   failas: **EAST_STD.txt**.
 
 +   Sistemos dydžio vertinimas:
 
-    +   Failas: **size_measurement.pdf**
+    +   failas: **size_measurement.pdf**.
 
-+   Kokybės planavimas ir valdymas.
++   Kokybės planavimas ir valdymas:
 
-    +   Failas: **quality.pdf**
+    +   failas: **quality.pdf**.
 
 
 Pastabos apie tai, kaip buvo vykdytos praktikos
