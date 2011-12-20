@@ -56,7 +56,7 @@ void RData :: clear()
 
   m_groups.clear();
   m_measures.clear();           // deps: groups (prevent from removeOne'ing and notifying)
-  m_measures1.deleteAll();      // deps: -
+  m_measures1.clear();          // deps: -
   m_systems.clear();            // deps: -
   m_users.clear();
 

@@ -31,7 +31,7 @@ class RValidList
 
       public:
         _M Vacuum          Iterator(RValidList<T>* container, ConstIterator it, bool list):
-          m_container(container), m_it(it), m_list(list) { }
+          m_it(it), m_list(list), m_container(container) { }
         _M Vacuum          ~Iterator() { }
         _M Iterator&       operator = (const Iterator& other)
         {
@@ -61,8 +61,11 @@ class RValidList
             }
           }
           else
+            ++m_it;
+
+          if (m_list == 1)
           {
-            for (++m_it; m_it != m_container->m_list1->end(); ++m_it)
+            for (; m_it != m_container->m_list1->end(); ++m_it)
               if ((*m_it)->isValid())
                 return *this;
           }
