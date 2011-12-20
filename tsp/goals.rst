@@ -61,13 +61,14 @@ Post-mortem
 -----------
 
 +   Komandos lyderiui pavyko įvykdyti visus užsibrėžtus tikslus
-    (nors ir  vienas susitikimas neįvyko, tačiau projektas dažnai
+    (nors vienas susitikimas ir neįvyko, tačiau projektas dažnai
     būdavo aptarinėjamas ir ne susitikimų metu).
-+   Vidinės kokybės vadovui taip pat sekėsi sėkmingai ištestuoti
-    esminius testuojamus modulius: duomenų importui ir skanavimui buvo
-    parašyti modulių testai, kurie atlikus esminius sistemos
-    pakeitimus padėdavo greitai ir efektyviai surasti naujai
-    iškilusias problemas.
++   Vidinės kokybės vadovui pavyko sukurti „RImport“ ir „RParser“
+    modulių testus, kurie kelis kartus padėjo aptikti pakeitimus,
+    kurie „sulaužė“ importavimą. Deja, vadovui nepavyko priversti
+    kitų komandos narių (pavyzdžiui „RLogic“ liko „nepadengtas“ 
+    testais) rašyti modulių testus. Priežastis: testų rašymas
+    atima nemažai laiko, kurio pritrūko.
 +   Išorinės kokybės vadovas nuolatos peržiūrinėdavo į
     repozitoriją keliaujančių artefaktų pakeitimus ir taip dažnai
     realiu laiku rasdavo įvairius defektus susijusius su produkto
@@ -78,7 +79,7 @@ Post-mortem
 +   Reikalavimų vadovas taip pat pakankamai efektyviai vykdė savo
     rolę: gauti atsakymai iš užsakovo būdavo visą laiką
     išsiunčiami visiems komandos nariams ir tai leisdavo reikalavimų
-    vadovui be pankankamai didelio delsimo užregistruoti naujus
+    vadovui be pakankamai didelio delsimo užregistruoti naujus
     reikalavimus, tačiau taip būdavo ne visada, nes dažnai norint
     pilnai suvokti gauto atsakymo prasmę tekdavo kartu bent daliai
     grupės susirinkti ir aptarti gautą atsakymą. Todėl reikalavimų
