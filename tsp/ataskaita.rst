@@ -63,7 +63,7 @@ Komandos naudotos TSPi praktikos
 
 +   Defektų fiksavimas:
 
-    +   Failas: **defects.ods**
+    +   Failas: **dff.csv**
 
 +   Laiko fiksavimas:
 
