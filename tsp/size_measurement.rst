@@ -83,7 +83,7 @@ Tokią didelę paklaidą lėmė kelios priežastys:
 
 +   Netinkamai įvertinti šių klasių dydžiai:
 
-    +   įrankių juostų klasės viršyjo 600 eilučių 
+    +   įrankių juostų klasės viršijo 600 eilučių 
         (~400 eilučių skirtumas nuo prognozės)
 
 Nors nuokrypis pakankamai didelis, tačiau komanda išlieka patenkinta tokiu rezultatu,
