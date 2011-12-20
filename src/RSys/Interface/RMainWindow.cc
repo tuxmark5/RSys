@@ -534,6 +534,9 @@ void RMainWindow :: loginEnd(bool success)
     m_data1->setModified(false);
     *m_data0        = *m_data1;
     m_intervalToolBar->applyInterval();
+
+    if (m_data1->interval0().daysTo(m_data1->interval1()) < 365)
+      showMessage(R_S("<b>Prognozės gali būti netikslios dėl mažo duomenų kiekio</b>"));
   }
   else
   {
