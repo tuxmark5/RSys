@@ -163,14 +163,14 @@ void RSubmission :: setDefaultInteval()
         break;
     }
   }
-  else
+  else if (m_data->interval1().isValid())
   {
     newDate0 = m_data->interval1().addDays(1);
     newDate1 = g_dateIncrementor(newDate0).addDays(-1);
   }
 
-  if (m_date0.isNull()) setDate0(newDate0);
-  if (m_date1.isNull()) setDate1(newDate1);
+  if (m_date0.isNull() && newDate0.isValid()) setDate0(newDate0);
+  if (m_date1.isNull() && newDate1.isValid()) setDate1(newDate1);
 }
 
 /**********************************************************************************************/

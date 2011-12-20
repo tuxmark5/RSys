@@ -467,7 +467,8 @@ void RMainWindow :: importData()
 
   g_settings->setValue("importDir", fileName);
 
-  connect(parser, SIGNAL(report(QString)), this, SLOT(showMessage(QString)));
+  connect(parser, SIGNAL(report(QString,int,int)), this,
+    SLOT(showMessage(QString,int,int)));
   connect(parser, SIGNAL(log(QString,int,int)), m_logDock,
     SLOT(addMessage(QString,int,int)));
 

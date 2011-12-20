@@ -83,6 +83,7 @@ class RParser: public QObject
   signals:
     _M  void          log(QString message, int id, int type);
     _M  void          parsed(double part);
+    _M  void          report(QString message, int id, int type);
 
 };
 
