@@ -85,7 +85,7 @@ bool RSubmission :: setCount(int count)
 bool RSubmission :: setDate0(const QDate& date0)
 {
   R_DATA_GUARD(date0.isValid(), false, "Neteisinga data.");
-  R_DATA_GUARD(m_date1.isValid() ? (date0 < m_date1) : true, false,
+  R_DATA_GUARD(m_date1.isValid() ? (date0 <= m_date1) : true, false,
                "Klaidingas kairysis intervalo galas.");
   R_DATA_GUARD(isPlanned() ? date0 > m_data->interval1() : true, false,
                "Planuojamos paraiškos intervalas kertasi su istoriniais duomenimis.<br>"
@@ -163,14 +163,14 @@ void RSubmission :: setDefaultInteval()
         break;
     }
   }
-  else
+  else if (m_data->interval1().isValid())
   {
     newDate0 = m_data->interval1().addDays(1);
     newDate1 = g_dateIncrementor(newDate0).addDays(-1);
   }
 
-  if (m_date0.isNull()) setDate0(newDate0);
-  if (m_date1.isNull()) setDate1(newDate1);
+  if (m_date0.isNull() && newDate0.isValid()) setDate0(newDate0);
+  if (m_date1.isNull() && newDate1.isValid()) setDate1(newDate1);
 }
 
 /**********************************************************************************************/

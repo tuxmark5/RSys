@@ -582,10 +582,11 @@ bool RParser::read(RData *data, QList<std::tuple<QString, int, int> > guesses)
   }
   message << R_S("</ul>");
   message << R_S("</html>");
+
   if (!allOk)
     message.insert(1, R_S("<p>Importuojant buvo klaidų. "
                           "Jas galite peržiūrėti žurnale.</p>"));
-  log(message.join(R_S("\n")), -1, -1);
+  report(message.join(R_S("\n")), -1, -1);
   return allOk;
 }
 
