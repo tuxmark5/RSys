@@ -53,13 +53,13 @@ standartines TSPi roles:
     +    **ciklų planavimas** (remiantis komandos narių nuomonėmis
          reikia suplanuoti 3 darbų atlikimo ciklus);
 
-+    **Reikalavimų vadovas** (Egidijus Lukauskas). Atskaingas už:
++    **Reikalavimų vadovas** (Egidijus Lukauskas). Atsakingas už:
 
     +   **reikalavimų specifikacijos ruošimą**;
     +   **reikalavimų registravimą** (reikia nuolatos stebėti iš užsakovo
         gaunamus atsakymus ir pagal tai registruoti naujus reikalavimus);
-    +   **Reikalavimų testavimą** (reikia stebėti sistemos kūrimo
-        progresą ir fiksuoti, kurie reiklavimai yra įgyvendinti, o
+    +   **reikalavimų testavimą** (reikia stebėti sistemos kūrimo
+        progresą ir fiksuoti, kurie reikalavimai yra įgyvendinti, o
         kurie ne, bei apie tai pranešti komandos lyderiui ir planavimo
         vadovui).
 
@@ -71,8 +71,15 @@ teigti, jog toks rolių išskirstymas buvo pakankamai efektyvus. Ypač
 efektyviai suveikė papildyto komandos lyderio, vidinės kokybės vadovo
 ir išorinės kokybės vadovo rolės. Šiek tiek daugiau problemų buvo
 su planavimo ir reikalavimų vadovų rolėmis, nes norint tinkamai
-atlikti šias roles tekdavo stipriai įsigilinti į  kuriamos sistemos
+atlikti šias roles tekdavo stipriai įsigilinti į kuriamos sistemos
 architektūros detales, kas turint nedaug C++ programavimo kalbos
 patirties buvo pakankamai sudėtinga. Dėl šios priežasties planavimo
 ir reikalavimų vadovai pakankamai aktyviai dalyvaudavo savaitiniuose
 susitikimuose siekdami tinkamai įgyvendinti jiems pavestus darbus.
+Taip pat turbūt verta paminėti, kad komandos apsibrėžtos rolės iki galo
+„nepadengė“ visų darbų, kurie yra paskiriami rolėms pagal TSPi.
+Pavyzdžiui, įrankio skirto darbui su reikalavimais paruošimas darbui
+turėtų būti palaikymo vadovo atsakomybė, bet šis darbas komandoje
+nebuvo priskirtas nei vienai iš rolių – todėl, atsiradus poreikiui
+jį padarė vidinės kokybės vadovas, nes turėjo šiek tiek patirties
+iš ankstesnių programų sistemų inžinerijos darbų.
