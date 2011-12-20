@@ -14,7 +14,7 @@ Per grupinį susitikimą, nuspręsta sistemą padalinti į tokius komponentus:
 +   **Util** – visai tai, kas netinka kitur.
 
 Kadangi sistema bus kuriama naudojantis C++ programavimo kalba, tai
-nuspręsta tolimesnį (eskizinį) projektavimą perkeltį į C++ antračių
+nuspręsta tolimesnį (eskizinį) projektavimą perkelti į C++ antraščių
 failus. T.y. projektuoti kodu.
 
 Post-mortem
@@ -40,6 +40,6 @@ Gautos komponentų priklausomybės:
     jo vaidmuo yra apjungti sukurtus komponentus į naudotojui prieinamą
     grafinę sąsają.
 
-Stabiliausias apibrėžta sąsaja - **Import**, kurios nereikėjo nė karto keisti ir
-kuri buvo sukurtas dar spalio 27 d. (git kodo revizija 
-*799572c59936b80d8f57c9f05c0da963d6e82fcb*).
+Stabiliausia apibrėžta sąsaja – **Import**, kurios nereikėjo nė
+karto keisti ir kuri buvo sukurta dar spalio 27 d. (git kodo revizija
+``799572c59936b80d8f57c9f05c0da963d6e82fcb``).
