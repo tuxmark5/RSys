@@ -238,6 +238,13 @@ void RSubmission :: setMeasure1NameE(const QString& measureName)
   }
 
   (*m_data)[measureChange](this, measure1.get());
+
+  if (m_measure && m_measure->numRefs() == 2)
+  {
+    m_data->measures1()->removeOne(m_measure);
+    m_measure = 0;
+  }
+
   m_measure       = measure1;
   validate();
   setDefaultInteval();
