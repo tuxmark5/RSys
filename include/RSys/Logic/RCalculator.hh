@@ -203,6 +203,16 @@ class RCalculator: public QObject
      */
     _S bool             intersect(RSubmissionPtr submission, MeasureInfo info);
 
+    /**
+     * Nuspėjama tiesinės funkcijos reikšmė taške x, kai žinomos jos reikšmės
+     * su atsitiktine paklaida taškuose 0, 1, ..., m.
+     *
+     * @param y funkcijos reikšmės taškuose 0, 1, ..., m
+     * @param x taškas, kurio reikšmės norime
+     * @return  tikėtina funkcijos reikšmė taške x
+     */
+    _S double linearRegression(const QVector<double>& y, double x);
+
   public:
     _M Vacuum           RCalculator(RData* data);
     _M Vacuum           ~RCalculator();

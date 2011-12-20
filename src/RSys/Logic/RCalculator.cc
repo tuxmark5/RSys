@@ -9,10 +9,11 @@
 #include <cmath>
 #include <algorithm>
 
-#define FROM(x)       std::get<0>(x)
-#define TO(x)         std::get<1>(x)
-#define IS_LEAP(x)    (x).daysInYear() == 366
-#define MAGIC         2.718281828
+#define FROM(x)               std::get<0>(x)
+#define TO(x)                 std::get<1>(x)
+#define IS_LEAP(x)            (x).daysInYear() == 366
+#define MAGIC                 2.718281828
+#define MAX_PREDICTION_LENGTH 10 // kiek daugiausiai metų žvelgti į praeitį prognozuojant
 
 /********************************************* RS *********************************************/
 /*                                        RCalculator                                         */
@@ -86,7 +87,6 @@ void RCalculator :: update()
         } else if (it.value()->date1() >= from)
         { // kertasi
           submission->setValid(false);
-          qDebug() << "kertasi " << from << to.addDays(-1) << it.key() << it.value()->date1();
           if (it.value()->date1() >= to) to = it.value()->date1().addDays(1);
           do
           {
@@ -162,7 +162,6 @@ void RCalculator :: checkSplitSubmissions(MeasureInfo& info)
     auto it = --info.m_usefulSubmissions.lowerBound(to);
     if (it.value()->date1() >= to)
     { // kerta pabaigoje
-      qDebug() << "kerta pabaigoje " << from << to.addDays(-1) << it.key() << it.value()->date1();
       submission->setValid(false);
       invalidateInRange(from, to, info.m_usefulSubmissions);
       info.m_invalidIntervals.insert(from, to);
@@ -181,7 +180,6 @@ void RCalculator :: checkSplitSubmissions(MeasureInfo& info)
       }
       if (it.key() < from && it.value()->date1() >= from)
       { // kerta pradžioje
-        qDebug() << "kerta pradžioje " << from << to.addDays(-1) << it.key() << it.value()->date1();
         submission->setValid(false);
         invalidateInRange(from, to, info.m_usefulSubmissions);
         info.m_invalidIntervals.insert(from, to);
@@ -189,9 +187,6 @@ void RCalculator :: checkSplitSubmissions(MeasureInfo& info)
       }
       if (totalCount != submission->count())
       {
-        qDebug() << "Tikslinančių [" << from << "; " << to.addDays(-1)
-                 << "] suma " << totalCount << ", turėtų būti"
-                 << submission->count();
         if (it.key() < from) it++;
         while (it != info.m_usefulSubmissions.end() && it.value()->date1() < to)
         {
@@ -199,9 +194,6 @@ void RCalculator :: checkSplitSubmissions(MeasureInfo& info)
           info.m_usefulSubmissions.erase(it++);
         }
         info.m_usefulSubmissions.insert(from, submission);
-      } else {
-        qDebug() << "Tikslina [" << from << "; " << to.addDays(-1)
-                 << "] teisingai: " << totalCount;
       }
     }
   }
@@ -216,7 +208,6 @@ bool RCalculator :: intersect(RSubmissionPtr submission, MeasureInfo info)
   auto it = info.m_invalidIntervals.lowerBound(to);
   if (it != info.m_invalidIntervals.begin() && (--it).value() > from)
   {
-    qDebug() << "kerta neteisingą " << from << to.addDays(-1) << it.key() << it.value().addDays(-1);
     submission->setValid(false);
     invalidateInRange(from, to, info.m_usefulSubmissions);
     if (from >= it.key())
@@ -270,7 +261,6 @@ bool RCalculator :: invalidateInRange(QDate &from, QDate &to,
     invalidated = true;
     if (it.key() < from) from = it.key();
     it.value()->setValid(false);
-    qDebug() << "invalidInRange " << from << to.addDays(-1) << it.key() << it.value()->date1();
     if (it != submissions.begin())
     {
       submissions.erase(it--);
@@ -442,9 +432,9 @@ double RCalculator :: predictUsage(RInterval interval, UsageMap& usageMap)
   int yearsToFuture = FROM(interval).year() - (newestData.year() + distance);
   distance = FROM(interval).daysTo(QDate(newestData.year() + distance,
                                          FROM(interval).month(), FROM(interval).day()));
-  double usage[3];
+  QVector<double> usage;
   int pastYears; // kelių metų duomenis turime
-  for (pastYears = 0; pastYears < 2; pastYears++)
+  for (pastYears = 0; pastYears < MAX_PREDICTION_LENGTH; pastYears++)
   {
     FROM(interval) = FROM(interval).addDays(distance);
     TO(interval) = TO(interval).addDays(distance);
@@ -453,17 +443,17 @@ double RCalculator :: predictUsage(RInterval interval, UsageMap& usageMap)
       FROM(interval) = FROM(interval).addDays(1);
       TO(interval) = TO(interval).addDays(1);
     }
-    if (usageMap.begin().key().daysTo(TO(interval)) <= 0)
+    if (usageMap.begin().key() > FROM(interval))
       break;
     if (TO(interval).daysTo(newestData) >= -1)
     {
-      usage[pastYears] = calculateUsage(interval, usageMap);
+      usage.push_back(calculateUsage(interval, usageMap));
     } else {
       RInterval interval0 = interval;
       RInterval interval1 = interval;
       TO(interval0) = newestData.addDays(1);
       FROM(interval1) = TO(interval0);
-      usage[pastYears] = calculateUsage(interval0, usageMap) + predictUsage(interval1, usageMap);
+      usage.push_back(calculateUsage(interval0, usageMap) + predictUsage(interval1, usageMap));
     }
     distance = FROM(interval).daysTo(FROM(interval).addYears(-1));
   }
@@ -475,8 +465,32 @@ double RCalculator :: predictUsage(RInterval interval, UsageMap& usageMap)
       return usage[0];
     case 2:
       return std::max(0.0, usage[0] + (usage[0] - usage[1]) * yearsToFuture);
+    default:
+      return std::max(0.0, linearRegression(usage, -yearsToFuture));
   }
   return -1; // neturėtų įvykti
+}
+
+/**********************************************************************************************/
+
+double RCalculator :: linearRegression(const QVector<double>& y, double x)
+{
+  double x_mean = (y.size() - 1) / 2.0;
+  double y_mean = 0;
+  for (double value : y) y_mean += value;
+  y_mean /= y.size();
+
+  double numerator = 0;
+  double denominator = 0;
+  for (int x_i = 0; x_i < y.size(); x_i++)
+  {
+    numerator += (x_i - x_mean) * (y[x_i] - y_mean);
+    denominator += (x_i - x_mean) * (x_i - x_mean);
+  }
+  double slope = numerator / denominator;
+  double intercept = y_mean - slope * x_mean;
+
+  return slope * x + intercept;
 }
 
 /**********************************************************************************************/
