@@ -85,7 +85,7 @@ bool RSubmission :: setCount(int count)
 bool RSubmission :: setDate0(const QDate& date0)
 {
   R_DATA_GUARD(date0.isValid(), false, "Neteisinga data.");
-  R_DATA_GUARD(m_date1.isValid() ? (date0 < m_date1) : true, false,
+  R_DATA_GUARD(m_date1.isValid() ? (date0 <= m_date1) : true, false,
                "Klaidingas kairysis intervalo galas.");
   R_DATA_GUARD(isPlanned() ? date0 > m_data->interval1() : true, false,
                "Planuojamos paraiškos intervalas kertasi su istoriniais duomenimis.<br>"

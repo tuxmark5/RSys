@@ -20,25 +20,25 @@
     <div id="content">
       <p>Naudojantis šia sąsaja, galima:</p>
       <ul>
-        <li>Pridėti planuojamos suadministruoti paramos priemonės informaciją paspaudus apatinę lentelės eilutę <p>„Pridėti“</p> bei suvedus reikiamus duomenis:</li>
-        <li>Ištrinti vienos ar kelių planuojamų suadministruoti paramos priemonių informacijas jas pažymėjus, atidarius kontekstinį meniu ir paspaudus <b>„Pašalinti“</b>:</li>
-        <li>Ištrinti vienos ar kelių planuojamų suadministruoti paramos priemonių informacijas jas pažymėjus ir paspaudus <b>Vald+-</b>:</li>
+        <li>Pridėti planuojamos suadministruoti paramos priemonės informaciją paspaudus apatinę lentelės eilutę <b>„Pridėti“</b> bei suvedus reikiamus duomenis;</li>
+        <li>Ištrinti vienos ar kelių planuojamų suadministruoti paramos priemonių duomenų įrašus juos pažymėjus, atidarius kontekstinį meniu ir paspaudus <b>„Pašalinti“</b>;</li>
+        <li>Ištrinti vieną ar kelis planuojamų suadministruoti paramos priemonių duomenų įrašus juos pažymėjus ir paspaudus <b>Vald+-</b>;</li>
         <li>Pakeisti planuojamos suadministruoti paramos priemonės informaciją, dukart spustelėjus ant lauko, kurį norima pakeisti.</li>
       </ul>
     <Br/>
 	    <img src="../res/iface-planned.png"/>
 
-      <p><a name="test"><b>Pastabos:</b></a></p>
+      <h2>Pastabos:</h2>
       <ul>
         <li>
-          Įvedus neegzistuojančią (planuojamą) paraiškos priemonę, atitinkama priemonė bus automatiškai 
+          Įvedus neegzistuojančią (planuojamą) paramos priemonę, atitinkama priemonė bus automatiškai 
           sukurta (tokia paramos priemonė bus vadinama <b>planuojama</b>) ir jos administravimo kaštus
           bus leidžiama keisti apatinėje lentelėje.
         </li>
 
         <li> 
-          Jei paraiškos įrašas yra šalinamas, kuriame yra paskutinė nuoroda į planuojamą paraiškos priemonę, tai ta
-          paraiškos priemonė bus ištrinta kartu su trinamu įrašu.
+          Jei yra šalinamas planuojamų duomenų įrašas, kuriame yra paskutinė nuoroda į <b>planuojamą</b> paramos priemonę, tai ta
+          paramos priemonė bus ištrinta kartu su trinamu įrašu.
         </li>
 
         <li>
@@ -47,6 +47,26 @@
 
         <li> 
           Istoriniai duomenys negali rodyti į planuojamą priemonę.
+        </li>
+
+        <li> 
+          Planuojami duomenys negali prasidėti anksčiau už turimus istorinius.
+        </li>
+
+        <li>
+          Keli tos pačios paramos priemonės duomenų intervalai gali kirstis tik tuomet, jei vienas jų pilnai priklauso kitam. Jei kirsis kitaip, tai įvestas įrašas bus pažymėtas kaip nekorektiškas ir į skaičiavimus įtrauktas nebus.
+        </li>
+
+        <li>
+          Jei vienas ar keli tos pačios paramos priemonės duomenų datos intervalai patikslina kitą (pilnai priklauso tam intervalui), tikslinančiųjų įrašų suadministruotų paramos priemonių kiekių suma turi būti lygi juos apimančio įrašo suadministruotų paramos priemonių kiekiui. Jei šis skaičius nesutaps, tikslinantieji intervalai bus pažymėti kaip nekorektiški ir skaičiavimai remsis tik juos apimančiu įrašu.
+        </li>
+
+        <li>
+          Keli tos pačios paramos priemonės duomenų intervalai gali kirstis tik tuomet, jei vienas jų pilnai priklauso kitam. Jei kirsis kitaip, tai įvestas įrašas bus pažymėtas kaip nekorektiškas ir į skaičiavimus įtrauktas nebus.
+        </li>
+
+        <li>
+          Nekorektiškų įrašų fonas yra rausvos spalvos.
         </li>
       </ul>
     </div>
