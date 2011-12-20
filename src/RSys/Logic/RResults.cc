@@ -261,7 +261,14 @@ void RResults :: setHighlightedInterval(int x)
 {
   R_GUARD(x != m_highlightedInterval, Vacuum);
 
-  m_highlightedInterval = std::get<0>(interval(x)).month();
+  if (m_highlightedInterval == std::get<0>(interval(x)).month())
+  {
+    m_highlightedInterval = -1;
+  }
+  else
+  {
+    m_highlightedInterval = std::get<0>(interval(x)).month();
+  }
   resetData();
 }
 
