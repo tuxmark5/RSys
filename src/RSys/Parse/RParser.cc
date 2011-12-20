@@ -234,6 +234,8 @@ bool RParser::readDivisionsSystems(RData *data, RITable *table, QStringList &mes
   bool errors = false;
   int existRelations = 0;
   int nonExistRelations = 0;
+  int divisionCount = 0;
+  int systemCount = 0;
   RConnection conn = (*data)[RData::errorMessage] << [&](const QString& text)
   {
     this->log(R_S("Įvyko vidinė sistemos klaida: %1").arg(text),
@@ -262,6 +264,7 @@ bool RParser::readDivisionsSystems(RData *data, RITable *table, QStringList &mes
         RDivisionPtr division = data->division(divisionID);
         if (division)
         {
+          divisionCount++;
           for (int rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
           {
             if (table->cell(start.x(), rowIndex).isNull())
@@ -275,6 +278,10 @@ bool RParser::readDivisionsSystems(RData *data, RITable *table, QStringList &mes
               RSystemPtr system = data->system(systemID);
               if (system)
               {
+                if (colIndex == start.x() + 1)
+                {
+                  systemCount++;
+                }
                 if (table->cell(colIndex, rowIndex).toBool())
                 {
                   division->setSystem(system, 1.0);
@@ -313,9 +320,10 @@ bool RParser::readDivisionsSystems(RData *data, RITable *table, QStringList &mes
   }
   this->log(R_S(
     "Iš lakšto „%1“ buvo atnaujinta informacija apie "
-    "padalinių naudojamas informacines sistemas. "
+    "%4 padalinių %5 informacinių sistemų naudojimą. "
     "(Buvo sukurti %2 naudojimo ir %3 nenaudojimo ryšiai.)")
-    .arg(table->title()).arg(existRelations).arg(nonExistRelations),
+    .arg(table->title()).arg(existRelations).arg(nonExistRelations)
+    .arg(divisionCount).arg(systemCount),
     DivisionAdmParsed, RINFO);
   message << R_S("<li>„%1“ → %2 sistemų naudojimo ir %3 nenaudojimo ryšiai.</li>")
              .arg(table->title()).arg(existRelations).arg(nonExistRelations);
@@ -329,6 +337,8 @@ bool RParser::readDivisionsMeasures(RData *data, RITable *table, QStringList &me
   int colIndex;
   bool errors = false;
   int updatedRelations = 0;
+  int measureCount = 0;
+  int divisionCount = 0;
   RConnection conn = (*data)[RData::errorMessage] << [&](const QString& text)
   {
     this->log(R_S(
@@ -366,6 +376,7 @@ bool RParser::readDivisionsMeasures(RData *data, RITable *table, QStringList &me
         RDivisionPtr division = data->division(divisionID);
         if (division)
         {
+          divisionCount++;
           for (rowIndex = start.y() + 1; rowIndex < table->height(); rowIndex++)
           {
             if (table->cell(start.x(), rowIndex).isNull())
@@ -379,6 +390,10 @@ bool RParser::readDivisionsMeasures(RData *data, RITable *table, QStringList &me
               RMeasurePtr measure = data->measure(measureID);
               if (measure)
               {
+                if (colIndex == start.x() + 1)
+                {
+                  measureCount++;
+                }
                 bool loadOk;
                 double load = table->cell(colIndex, rowIndex).toDouble(&loadOk);
                 if (table->cell(colIndex, rowIndex).isNull())
@@ -429,9 +444,10 @@ bool RParser::readDivisionsMeasures(RData *data, RITable *table, QStringList &me
   }
   this->log(R_S(
     "Iš lakšto „%1“ buvo atnaujinta informacija apie "
-    "paramos administravimo sąnaudas. (Buvo atnaujinti "
-    "%2 ryšiai.)")
-    .arg(table->title()).arg(updatedRelations),
+    "%3 paramos priemonių %4 padaliniuose administravimo "
+    "sąnaudas. (Buvo atnaujinti %2 ryšiai.)")
+    .arg(table->title()).arg(updatedRelations)
+    .arg(measureCount).arg(divisionCount),
     MeasureAdmParsed, RINFO);
   message << R_S("<li>„%1“ → atnaujinti %2 administravimo ryšiai.</li>")
              .arg(table->title()).arg(updatedRelations);
