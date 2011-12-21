@@ -64,7 +64,7 @@ Vacuum RLoginWidget :: RLoginWidget(RDatabase* database, QWidget* parent):
   m_usernameField->setText(g_settings->value("dbUser", "user").toString());
   m_dbFileField->setText(g_settings->value("dbFile", "").toString());
 
-  connect(m_database, SIGNAL(message(QString)), this, SLOT(showMessage(QString)));
+  connect(m_database, SIGNAL(messageLogin(QString)), this, SLOT(showMessage(QString)));
 }
 
 /**********************************************************************************************/

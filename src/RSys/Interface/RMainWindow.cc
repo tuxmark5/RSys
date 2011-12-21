@@ -90,6 +90,7 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   addDockWidget(Qt::RightDockWidgetArea, m_paletteDock);
   addDockWidget(Qt::BottomDockWidgetArea, m_logDock);
 
+  connect(m_database,        SIGNAL(message(QString,int,int)), this, SLOT(showMessage(QString,int,int)));
   connect(m_intervalToolBar, SIGNAL(intervalChanged()), this, SLOT(setInterval()));
   connect(m_intervalToolBar, SIGNAL(message(QString,int,int)), this, SLOT(showMessage(QString,int,int)));
 

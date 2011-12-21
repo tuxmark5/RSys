@@ -169,7 +169,12 @@ enum RMessageType
   UnableToLocateSubmissionsHeaderRow    = 31,
   IntegerParseError                     = 32,
   SubmissionsParsed                     = 33,
-  InvalidSearchInterval                 = 34
+  InvalidSearchInterval                 = 34,
+  DivisionWithoutName                   = 35,
+  MeasureWithoutName                    = 36,
+  SystemWithoutName                     = 37,
+  SubmissionWithoutMeasure              = 38,
+  UserWithoutName                       = 39
 };
 
 /**********************************************************************************************/
