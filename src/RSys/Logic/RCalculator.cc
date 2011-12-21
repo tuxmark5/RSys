@@ -304,7 +304,7 @@ void RCalculator :: calculateIntervals(int whichUsage)
     for (auto measure : m_validMeasures)
     {
       measure->m_usage[whichUsage].clear();
-      if (measure->m_usageMap.empty())
+      if (measure->m_usageMap.empty() || measure->isVisible() == false)
       {
         measure->m_usage[whichUsage].resize(m_numIntervals[whichUsage]);
         continue;
