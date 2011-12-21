@@ -157,6 +157,7 @@ void RSubmission :: setDefaultInteval()
 
     switch (length)
     {
+      case 27:
       case 28:
       case 29:
       case 30:
