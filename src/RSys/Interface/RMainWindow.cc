@@ -151,7 +151,15 @@ void RMainWindow :: addRightTab(RTab* tab, const char* title, const char* toolTi
 
 void RMainWindow :: addStatusWidget(QWidget* widget, QObject* owner)
 {
-  QVBoxLayout* layout = m_widgetL->width() > 0 ? m_layoutL : m_layoutR;
+  auto          sizes   = m_splitter->sizes();
+  QVBoxLayout*  layout;
+
+  /**/ if (sizes.at(0) > 0)
+    layout = m_layoutL;
+  else if (sizes.at(1) > 0)
+    layout = m_layoutR;
+  else
+    layout = m_layoutL;
 
   for (int i = 0; i < layout->count(); i++)
   {
