@@ -133,10 +133,14 @@ class REntity1DI: public REntity1D,
       Q_UNUSED(i1);
       Value   value = m_list->at(i0);
       int     state = m_log.value(m_list->at(i0), Update);
-      if (state == Update)
-        m_log.insert(value, Remove);
-      else if (state == Remove)
-        m_log.remove(value);
+
+      switch (state)
+      {
+        case Update: m_log.insert(value, Remove); break;
+        case Insert:
+        case Remove: m_log.remove(value); break;
+      }
+
       return true;
     }
 

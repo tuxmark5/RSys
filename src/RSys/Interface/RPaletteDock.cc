@@ -1,4 +1,5 @@
 #include <QtCore/QSettings>
+#include <QtGui/QAction>
 #include <QtGui/QGridLayout>
 #include <QtGui/QToolButton>
 #include <QtGui/QPushButton>
@@ -24,6 +25,7 @@ Vacuum RPaletteDock :: RPaletteDock(RMainWindow* parent):
   QGridLayout*  layout        = new QGridLayout(widget);
   QHBoxLayout*  layout1       = new QHBoxLayout();
   QToolButton*  divisionsMode = new QToolButton(widget);
+  QToolButton*  measuresMode  = new QToolButton(widget);
   QToolButton*  systemsMode   = new QToolButton(widget);
 
   QPushButton*  checkAll      = new QPushButton(QIcon(":/icons/check_all.png"), QString(), widget);
@@ -40,6 +42,11 @@ Vacuum RPaletteDock :: RPaletteDock(RMainWindow* parent):
   divisionsMode->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
   divisionsMode->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
   divisionsMode->setVisible(true);
+
+  measuresMode->setDefaultAction(parent->m_measuresStateAction);
+  measuresMode->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+  measuresMode->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+  measuresMode->setVisible(true);
 
   systemsMode->setDefaultAction(parent->m_systemsStateAction);
   systemsMode->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -60,14 +67,16 @@ Vacuum RPaletteDock :: RPaletteDock(RMainWindow* parent):
   layout1->addWidget(checkAll);
 
   layout->addWidget(divisionsMode,  0, 0);
-  layout->addWidget(systemsMode,    0, 1);
-  layout->addWidget(m_filter,       1, 0, 1, 2);
-  layout->addLayout(layout1,        2, 0, 1, 2);
+  layout->addWidget(measuresMode,   0, 1);
+  layout->addWidget(systemsMode,    0, 2);
+  layout->addWidget(m_filter,       1, 0, 1, 3);
+  layout->addLayout(layout1,        2, 0, 1, 3);
 
   setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   setMode(false);
   setWidget(widget);
 
+  connect(measuresMode, SIGNAL(toggled(bool)), this, SLOT(setMeasuresMode(bool)));
   connect(systemsMode, SIGNAL(toggled(bool)), this, SLOT(setMode(bool)));
   connect(checkAll, SIGNAL(clicked()), this, SLOT(checkAll()));
   connect(uncheckAll, SIGNAL(clicked()), this, SLOT(uncheckAll()));
@@ -102,6 +111,14 @@ void RPaletteDock :: createContainers(RMainWindow* main)
   cd->addAccessor2<QString>(0, Qt::DisplayRole)   >> &RDivision::fullName;
   cd->addAccessor2<QString>(0, Qt::ToolTipRole)   >> &RDivision::fullName;
 
+  auto cm = newContainer(main->data()->measures());
+  cm->addColumn("Priemonė");
+  cm->addAccessor2<int>    (0, Qt::CheckStateRole)
+    >> f(getBool) * f(&RMeasure::isVisible)
+    << f(&RMeasure::setVisible) * f(setBool);
+  cm->addAccessor2<QString>(0, Qt::DisplayRole)   >> &RMeasure::fullName;
+  cm->addAccessor2<QString>(0, Qt::ToolTipRole)   >> &RMeasure::fullName;
+
   auto cs = newContainer(main->data()->systems());
   cs->addColumn("Sistema");
   cs->addAccessor2<int>     (0, Qt::CheckStateRole)
@@ -111,6 +128,7 @@ void RPaletteDock :: createContainers(RMainWindow* main)
   cs->addAccessor2<QString> (0, Qt::ToolTipRole)  >> &RSystem::fullName;
 
   m_divisionContainer = cd;
+  m_measureContainer  = cm;
   m_systemContainer   = cs;
 }
 
@@ -140,7 +158,7 @@ auto RPaletteDock :: selectedUnits() const -> UnitList
 {
   QItemSelectionModel*  smodel    = m_filter->selectionModel();
   QModelIndexList       selection = smodel->selectedRows();
-  RUnitPtrList*         units0    = m_mainWindow->currentUnits();
+  RUnitPtrList*         units0    = selectedUnitList();
   UnitList              units;
 
   if (selection.size() < 2)
@@ -159,6 +177,15 @@ auto RPaletteDock :: selectedUnits() const -> UnitList
 
 /**********************************************************************************************/
 
+RUnitPtrList* RPaletteDock :: selectedUnitList() const
+{
+  if (m_mainWindow->m_measuresStateAction->isChecked())
+    return m_mainWindow->data()->measures()->cast<RUnitPtr>();
+  return m_mainWindow->currentUnits();
+}
+
+/**********************************************************************************************/
+
 void RPaletteDock :: setChecked(bool checked)
 {
   UnitList units = selectedUnits();
@@ -168,6 +195,19 @@ void RPaletteDock :: setChecked(bool checked)
 
   m_mainWindow->updateUnits();
   m_model->notifyAllRowsChanged();
+}
+
+/**********************************************************************************************/
+
+void RPaletteDock :: setMeasuresMode(bool mode)
+{
+  m_mainWindow->m_divisionsStateAction->setEnabled(!mode);
+  m_mainWindow->m_systemsStateAction->setEnabled(!mode);
+
+  if (mode)
+    m_model->setContainer(m_measureContainer);
+  else
+    m_model->setContainer(!m_mode ? m_divisionContainer : m_systemContainer);
 }
 
 /**********************************************************************************************/

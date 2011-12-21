@@ -231,6 +231,11 @@ void RMainWindow :: createActions()
   m_divisionsStateAction->setChecked(true);
   m_divisionsStateAction->setShortcut(QKeySequence("Alt+P"));
 
+  m_measuresStateAction   = R_ACTION(":/icons/measures.png",   "Priemonės");
+  m_measuresStateAction->setCheckable(true);
+  m_measuresStateAction->setChecked(false);
+  //m_measuresStateAction->setShortcut(QKeySequence("Alt+P"));
+
   m_systemsStateAction    = R_ACTION(":/icons/systems.png",     "Sistemos");
   m_systemsStateAction->setActionGroup(stateGroup);
   m_systemsStateAction->setCheckable(true);
