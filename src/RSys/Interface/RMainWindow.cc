@@ -495,7 +495,7 @@ void RMainWindow :: importData()
       m_importing = false;
       m_results->setUpdatesEnabled(true);
       m_data1->calculateIntervals();
-      m_results->update();
+      m_results->updateResults();
     };
 
     addStatusWidget(new RStatusWidget(importForm));
@@ -540,7 +540,7 @@ void RMainWindow :: loginEnd(bool success)
     m_data1->calculateIntervals();
     m_data1->setModified(false);
     *m_data0        = *m_data1;
-    m_results->update(true, true);
+    m_results->updateResults(true, true);
     m_intervalToolBar->applyInterval();
 
     if (m_data1->interval0().daysTo(m_data1->interval1()) < 365)
@@ -599,7 +599,7 @@ void RMainWindow :: onVisibilityChanged(RUnit* unit)
 {
   Q_UNUSED(unit);
   if (m_paletteDock->isMeasureModeActive())
-    m_results->update(false);
+    m_results->updateInterval();
 }
 
 /**********************************************************************************************/
@@ -615,7 +615,7 @@ void RMainWindow :: rollback()
     emit unitsChanged(0);
     *m_data1    = *m_data0;
     m_data1->setModified(false);
-    m_results->update(true, true);
+    m_results->updateResults(true, true);
     m_intervalToolBar->applyInterval();
     emit unitsChanged(currentUnits());
 
@@ -752,7 +752,7 @@ bool RMainWindow :: showSaveDialog(const QString& title)
 void RMainWindow :: updateUnits()
 {
   if (m_paletteDock->isMeasureModeActive())
-    m_results->update(false);
+    m_results->updateInterval();
   else
     emit unitsChanged(currentUnits());
 }

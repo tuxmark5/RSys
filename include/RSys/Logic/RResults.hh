@@ -87,7 +87,8 @@ class RResults: public QObject
     _M void             setInterval(RIntervalFun fun, int num);
     _M void             setHighlightedInterval(int x);
     _M void             setUpdatesEnabled(bool enabled);
-    _M void             update(bool updateCalc1 = true, bool updateCalc0 = false);
+    _M void             updateInterval();
+    _M void             updateResults(bool update1 = true, bool update0 = false);
 
   private:
     _S double           fieldDeltaUsage(RUnit* unit, int x);

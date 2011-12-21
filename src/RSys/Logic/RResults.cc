@@ -285,14 +285,7 @@ void RResults :: setInterval(RIntervalFun fun, int num)
 {
   m_intervalFun   = std::move(fun);
   m_numRecords    = num;
-
-  qDebug() << (m_intervalFun ? std::get<0>(m_intervalFun(0)) : QDate()) << num;
-  resetBegin();
-  //m_calculator0->update();
-  m_calculator0->setIntervalFun(m_intervalFun, m_numRecords);
-  //m_calculator1->update();
-  m_calculator1->setIntervalFun(m_intervalFun, m_numRecords);
-  resetEnd();
+  updateInterval();
 }
 
 /**********************************************************************************************/
@@ -311,7 +304,17 @@ void RResults :: unregisterField(RUnit* unit, RResultsModel* model, int key)
 
 /**********************************************************************************************/
 
-void RResults :: update(bool updateCalc1, bool updateCalc0)
+void RResults :: updateInterval()
+{
+  resetBegin();
+  m_calculator0->setIntervalFun(m_intervalFun, m_numRecords);
+  m_calculator1->setIntervalFun(m_intervalFun, m_numRecords);
+  resetEnd();
+}
+
+/**********************************************************************************************/
+
+void RResults :: updateResults(bool updateCalc1, bool updateCalc0)
 {
   resetBegin();
   if (updateCalc0)
@@ -331,7 +334,7 @@ void RResults :: updateDelayed()
   R_GUARD(m_updatesEnabled && !m_updatePending, Vacuum);
 
   m_updatePending = true;
-  QMetaObject::invokeMethod(this, "update", Qt::QueuedConnection);
+  QMetaObject::invokeMethod(this, "updateResults", Qt::QueuedConnection);
 }
 
 /**********************************************************************************************/
