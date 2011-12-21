@@ -185,6 +185,7 @@ void RMainWindow :: commit()
     m_results->resetBegin();
     *m_data0    = *m_data1;
     m_data1->setModified(false);
+    m_results->calculator0()->update();
     m_results->resetEnd();
     showMessage(R_S("Duomenys išsaugoti."), CommitSuccess, RINFO);
   }

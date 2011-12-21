@@ -19,6 +19,7 @@ Vacuum RDivision :: RDivision(RDivision& division, RData* data):
   RUnit(division, data)
 {
   r_cloneMap(m_measureHash, division.m_measureHash);
+  r_cloneMap(m_measureHash1, division.m_measureHash1);
   r_cloneMap(m_systemHash, division.m_systemHash);
 }
 
