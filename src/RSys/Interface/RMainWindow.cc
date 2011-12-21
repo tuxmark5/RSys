@@ -90,6 +90,7 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   addDockWidget(Qt::RightDockWidgetArea, m_paletteDock);
   addDockWidget(Qt::BottomDockWidgetArea, m_logDock);
 
+  connect(m_data1,           SIGNAL(visibilityChanged(RUnit*)), this, SLOT(onVisibilityChanged(RUnit*)));
   connect(m_database,        SIGNAL(message(QString,int,int)), this, SLOT(showMessage(QString,int,int)));
   connect(m_intervalToolBar, SIGNAL(intervalChanged()), this, SLOT(setInterval()));
   connect(m_intervalToolBar, SIGNAL(message(QString,int,int)), this, SLOT(showMessage(QString,int,int)));
@@ -280,8 +281,7 @@ void RMainWindow :: createConnections1()
   (*m_data1)[RSubmission::date1Changed]       << std::bind(&RResults::updateDelayed, m_results);
   (*m_data1)[RSubmission::measureChange]      << std::bind(&RResults::updateDelayed, m_results);
   (*m_data1)[RSubmission::submissionRemoval]  << std::bind(&RResults::updateDelayed, m_results);
-  //(*m_data1)[RUnit::viewModeChanged]          << RSettings::updateUnitViewMode;
-  //(*m_data1)[RUnit::visibilityChanged]        << RSettings::updateUnitVisibility;
+  //(*m_data1)[RUnit::viewModeChanged]          << RSettings::updateUnitViewMode;                                               
   (*m_data1)[RUser::onSql]                    << std::bind(&RSqlEntity::exec, m_database->sqlEntity(), _1, _2, _3);
   m_data1->enableIntervalTracking();
 }
@@ -495,7 +495,7 @@ void RMainWindow :: importData()
       m_importing = false;
       m_results->setUpdatesEnabled(true);
       m_data1->calculateIntervals();
-      m_intervalToolBar->applyInterval();
+      m_results->update();
     };
 
     addStatusWidget(new RStatusWidget(importForm));
@@ -540,6 +540,7 @@ void RMainWindow :: loginEnd(bool success)
     m_data1->calculateIntervals();
     m_data1->setModified(false);
     *m_data0        = *m_data1;
+    m_results->update(true, true);
     m_intervalToolBar->applyInterval();
 
     if (m_data1->interval0().daysTo(m_data1->interval1()) < 365)
@@ -594,6 +595,15 @@ void RMainWindow :: onSearchFormDestroyed()
 
 /**********************************************************************************************/
 
+void RMainWindow :: onVisibilityChanged(RUnit* unit)
+{
+  Q_UNUSED(unit);
+  if (m_paletteDock->isMeasureModeActive())
+    m_results->update(false);
+}
+
+/**********************************************************************************************/
+
 void RMainWindow :: rollback()
 {
   int button = QMessageBox::question(this, R_S("Atstatyti"), R_S("Ar tikrai norite atstatyti pakeitimus?"),
@@ -605,8 +615,10 @@ void RMainWindow :: rollback()
     emit unitsChanged(0);
     *m_data1    = *m_data0;
     m_data1->setModified(false);
-    emit unitsChanged(currentUnits());
+    m_results->update(true, true);
     m_intervalToolBar->applyInterval();
+    emit unitsChanged(currentUnits());
+
     showMessage(R_S("Duomenys atstatyti."), RollbackSuccess, RINFO);
   }
   else

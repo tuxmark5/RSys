@@ -129,6 +129,7 @@ class RMainWindow: public QMainWindow
 
   private slots:
     _M void                 findIntervalNow();
+    _M void                 onVisibilityChanged(RUnit* unit);
 
   signals:
     _M void                 searchModeChanged(bool search = true);

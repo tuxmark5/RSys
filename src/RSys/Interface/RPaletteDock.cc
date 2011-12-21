@@ -141,8 +141,8 @@ void RPaletteDock :: inverseChecks()
   for (auto it = units.begin(); it != units.end(); ++it)
     (*it)->setVisibleRaw((*it)->isVisible() ^ true);
 
-  m_mainWindow->updateUnits();
   m_model->notifyAllRowsChanged();
+  m_mainWindow->updateUnits();
 }
 
 /**********************************************************************************************/
@@ -205,8 +205,8 @@ void RPaletteDock :: setChecked(bool checked)
       buddy->setVisibleRaw(checked);
   }
 
-  m_mainWindow->updateUnits();
   m_model->notifyAllRowsChanged();
+  m_mainWindow->updateUnits();
 }
 
 /**********************************************************************************************/

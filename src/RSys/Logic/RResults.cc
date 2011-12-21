@@ -286,6 +286,7 @@ void RResults :: setInterval(RIntervalFun fun, int num)
   m_intervalFun   = std::move(fun);
   m_numRecords    = num;
 
+  qDebug() << (m_intervalFun ? std::get<0>(m_intervalFun(0)) : QDate()) << num;
   resetBegin();
   //m_calculator0->update();
   m_calculator0->setIntervalFun(m_intervalFun, m_numRecords);
@@ -310,12 +311,13 @@ void RResults :: unregisterField(RUnit* unit, RResultsModel* model, int key)
 
 /**********************************************************************************************/
 
-void RResults :: update(bool updateCalc)
+void RResults :: update(bool updateCalc1, bool updateCalc0)
 {
   resetBegin();
-  if (updateCalc)
+  if (updateCalc0)
+    m_calculator0->update();
+  if (updateCalc1)
     m_calculator1->update();
-  m_calculator1->setIntervalFun(m_intervalFun, m_numRecords);
   resetEnd();
 
   m_updatePending = false;
