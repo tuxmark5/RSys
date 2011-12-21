@@ -377,8 +377,10 @@ void RMainWindow :: createInterface()
   m_layoutL->setSpacing(5);
   m_layoutR->setSpacing(5);
 
-  m_layoutL->setSizeConstraint(QLayout::SetNoConstraint);
-  m_layoutR->setSizeConstraint(QLayout::SetNoConstraint);
+  //m_layoutL->setSizeConstraint(QLayout::SetNoConstraint);
+  //m_layoutR->setSizeConstraint(QLayout::SetNoConstraint);
+  m_widgetL->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored);
+  m_widgetR->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored);
 
   m_tabWidgetL->setTabPosition(QTabWidget::South);
   m_tabWidgetR->setTabPosition(QTabWidget::South);
