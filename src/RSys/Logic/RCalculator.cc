@@ -281,7 +281,7 @@ bool RCalculator :: invalidateInRange(QDate &from, QDate &to,
 
 /**********************************************************************************************/
 
-void RCalculator :: setIntervalFun(IntervalFun intervalFun, int numIntervals)
+void RCalculator :: setIntervalFun(RIntervalFun intervalFun, int numIntervals)
 {
   m_intervalFun[0] = intervalFun;
   m_numIntervals[0] = numIntervals;

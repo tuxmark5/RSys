@@ -57,7 +57,7 @@ Vacuum RSearchForm :: RSearchForm(RResults* results, QWidget* parent):
 
   layout->addLayout(layout0);
   layout->addLayout(m_seasonLayout);
-  layout->addWidget(m_searchButton = new QPushButton(R_S("Ieškoti mažiausiai apkrauto intervalo")));
+  layout->addWidget(m_searchButton = new QPushButton(R_S("Ieškoti mažiausios apkrovos intervalo")));
 
   setLayout(layout);
 

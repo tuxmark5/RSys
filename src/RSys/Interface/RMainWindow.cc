@@ -223,7 +223,7 @@ void RMainWindow :: createActions()
   m_exterpolationAction->setCheckable(true);
   m_exterpolationAction->setChecked(g_settings->value("intrapolation", true).toBool());
 
-  m_searchAction          = R_ACTION(":/icons/find_interval.png", "Mažiausiai apkrauti intervalai");
+  m_searchAction          = R_ACTION(":/icons/find_interval.png", "Mažiausios apkrovos intervalai");
   m_searchAction->setCheckable(true);
   m_searchAction->setShortcut(QKeySequence("Ctrl+F"));
 
