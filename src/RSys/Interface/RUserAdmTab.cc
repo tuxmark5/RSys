@@ -51,6 +51,7 @@ Vacuum RUserAdmTab :: RUserAdmTab(RUserTab* userTab, RMainWindow* parent):
   m_widget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
   layout()->addWidget(m_widget);
+  setMinimumHeight(350);
   setUser(0);
 }
 
