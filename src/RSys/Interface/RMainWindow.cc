@@ -643,6 +643,7 @@ void RMainWindow :: setInterfaceEnabled(bool enabled)
     m_splitter = 0;
   }
 
+  m_measuresStateAction   ->setChecked(false);
   m_commitAction          ->setEnabled(enabled);
   m_disconnectAction      ->setEnabled(enabled);
   m_divisionsStateAction  ->setEnabled(enabled);
