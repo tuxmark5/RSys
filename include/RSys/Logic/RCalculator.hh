@@ -2,7 +2,6 @@
 #define RSYS_LOGIC_RCALCULATOR_HH
 
 /**********************************************************************************************/
-#include <RSys/Logic/RResults.hh>
 #include <RSys/Core/RUnit.hh>
 #include <RSys/Core/RMeasure.hh>
 #include <RSys/Core/RSubmission.hh>
@@ -19,7 +18,6 @@ class RCalculator: public QObject
 
   private:
     _T RMeasure::UnitHash             UnitHash;
-    _T RResults::IntervalFun          IntervalFun;
     _T RMeasure::UsageMap             UsageMap;
     _T RUnit::UsageVector             UsageVector;
     _T RValidList<RMeasurePtrList>    ValidMeasurePtrList;
@@ -48,7 +46,7 @@ class RCalculator: public QObject
     _M ValidSubmissionPtrList         m_validSubmissions;
     _M ValidDivisionPtrList           m_validDivisions;
     _M ValidSystemPtrList             m_validSystems;
-    _M IntervalFun                    m_intervalFun[2];
+    _M RIntervalFun                   m_intervalFun[2];
     _M int                            m_numIntervals[2];
     _M bool                           m_intrapolationEnabled: 1;
 
@@ -218,10 +216,10 @@ class RCalculator: public QObject
     _M Vacuum           RCalculator(RData* data, bool usePlanedData);
     _M Vacuum           ~RCalculator();
     _M void             update();
-    _M void             setIntervalFun(IntervalFun intervalFun, int numIntervals);
+    _M void             setIntervalFun(RIntervalFun intervalFun, int numIntervals);
 
     /**
-     * Randa mažiausiai apkrautą padalinių ir sistemų intervalą.
+     * Randa mažiausios apkrovos padalinių ir sistemų intervalą.
      * Apribojama, kuriame dienų intervale ieškoti bei koks dienų kiekis
      * reikalingas ieškomame intervale atsižvelgiant į sezoną.
      *

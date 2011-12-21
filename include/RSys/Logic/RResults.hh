@@ -18,7 +18,6 @@ class RResults: public QObject
     _T std::tuple<RResultsModel*, int>    Field;
     _T QMultiHash<RUnit*, Field>          FieldHash;
     _T std::tuple<QDate, QDate>           Interval;
-    _T std::function<Interval (int)>      IntervalFun;
     _T QSet<RResultsModel*>               ModelSet;
 
   public:   
@@ -51,7 +50,7 @@ class RResults: public QObject
     _M QDate            m_interval0;
     _M QDate            m_interval1;
 
-    _M IntervalFun      m_intervalFun;
+    _M RIntervalFun     m_intervalFun;
     _M int              m_numRecords;
     _M int              m_seasonalLengths[4];
     _M int              m_highlightedInterval;
