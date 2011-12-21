@@ -287,9 +287,9 @@ void RResults :: setInterval(RIntervalFun fun, int num)
   m_numRecords    = num;
 
   resetBegin();
-  m_calculator0->update();
+  //m_calculator0->update();
   m_calculator0->setIntervalFun(m_intervalFun, m_numRecords);
-  m_calculator1->update();
+  //m_calculator1->update();
   m_calculator1->setIntervalFun(m_intervalFun, m_numRecords);
   resetEnd();
 }

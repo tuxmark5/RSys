@@ -52,7 +52,8 @@ class RDatabase: public QObject
     _M bool             initSQLite1();
 
   signals:
-    _M void             message(const QString& text);
+    _M void             message(const QString& text, int id, int type);
+    _M void             messageLogin(const QString& text);
 };
 
 /**********************************************************************************************/
