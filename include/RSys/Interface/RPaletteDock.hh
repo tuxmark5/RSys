@@ -22,6 +22,7 @@ class RPaletteDock: public QDockWidget
 
     _M RModel1D*        m_model;
     _M RContainerPtr    m_divisionContainer;
+    _M RContainerPtr    m_measureContainer;
     _M RContainerPtr    m_systemContainer;
 
   public:
@@ -30,11 +31,13 @@ class RPaletteDock: public QDockWidget
     _M void             createContainers(RMainWindow* main);
     _M QString          modeName() const;
     _M UnitList         selectedUnits() const;
+    _M RUnitPtrList*    selectedUnitList() const;
 
   public slots:
     _M void             checkAll();
     _M void             inverseChecks();
     _M void             setChecked(bool checked);
+    _M void             setMeasuresMode(bool mode);
     _M void             setMode(bool mode);
     _M void             uncheckAll();
 };

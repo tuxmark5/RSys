@@ -25,6 +25,7 @@ QString RSettings :: keyForUnit(RUnit* unit)
 void RSettings :: loadUnitSettings(RData* data)
 {
   loadUnitSettings(data->divisions()->cast<RUnitPtr>());
+  loadUnitSettings(data->measures()->cast<RUnitPtr>());
   loadUnitSettings(data->systems()->cast<RUnitPtr>());
 }
 
@@ -45,6 +46,7 @@ void RSettings :: loadUnitSettings(RUnitPtrList* units)
 void RSettings :: saveUnitSettings(RData* data)
 {
   saveUnitSettings(data->divisions()->cast<RUnitPtr>());
+  saveUnitSettings(data->measures()->cast<RUnitPtr>());
   saveUnitSettings(data->systems()->cast<RUnitPtr>());
 }
 

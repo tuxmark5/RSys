@@ -57,6 +57,7 @@ class RMainWindow: public QMainWindow
     _M QAction*             m_exterpolationAction;
     _M QAction*             m_helpAction;
     _M QAction*             m_importAction;
+    _M QAction*             m_measuresStateAction;
     _M QAction*             m_rollbackAction;
     _M QAction*             m_searchAction;
     _M QAction*             m_systemsStateAction;
