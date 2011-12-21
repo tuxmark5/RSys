@@ -19,10 +19,11 @@
 /*                                        RCalculator                                         */
 /**********************************************************************************************/
 
-Vacuum RCalculator :: RCalculator(RData* data):
+Vacuum RCalculator :: RCalculator(RData* data, bool usePlanedData):
   m_data(data),
-  m_validMeasures(data->measures(), data->measures1()),
-  m_validSubmissions(data->submissions(), data->submissions1()),
+  m_usePlanedData(usePlanedData),
+  m_validMeasures(data->measures(), (usePlanedData ? data->measures1() : NULL)),
+  m_validSubmissions(data->submissions(), (usePlanedData ? data->submissions1() : NULL)),
   m_validDivisions(data->divisions()),
   m_validSystems(data->systems()),
   m_numIntervals({0, 0}),
@@ -49,7 +50,10 @@ void RCalculator :: update()
   for (auto division : m_validDivisions)
   {
     updateMeasures(division, division->m_measureHash);
-    updateMeasures(division, division->m_measureHash1);
+    if (m_usePlanedData)
+    {
+      updateMeasures(division, division->m_measureHash1);
+    }
   }
   for (auto submission : *(m_data->submissions()))
   {
@@ -305,12 +309,12 @@ void RCalculator :: calculateIntervals(int whichUsage)
         measure->m_usage[whichUsage].resize(m_numIntervals[whichUsage]);
         continue;
       }
+      measure->m_usage[whichUsage].reserve(m_numIntervals[whichUsage]);
       QDate predictFrom = (--measure->m_usageMap.end()).key();
       if (m_data->interval1().isValid() && m_data->interval1().daysTo(predictFrom) <= 0)
       {
         predictFrom = m_data->interval1().addDays(1);
       }
-      measure->m_usage[whichUsage].reserve(m_numIntervals[whichUsage]);
       for (int i = 0; i < m_numIntervals[whichUsage]; i++)
       {
         double usage;

@@ -43,6 +43,7 @@ class RCalculator: public QObject
 
   private:
     _M RData*                         m_data;
+    _M bool                           m_usePlanedData;
     _M ValidMeasurePtrList            m_validMeasures;
     _M ValidSubmissionPtrList         m_validSubmissions;
     _M ValidDivisionPtrList           m_validDivisions;
@@ -214,7 +215,7 @@ class RCalculator: public QObject
     _S double linearRegression(const QVector<double>& y, double x);
 
   public:
-    _M Vacuum           RCalculator(RData* data);
+    _M Vacuum           RCalculator(RData* data, bool usePlanedData);
     _M Vacuum           ~RCalculator();
     _M void             update();
     _M void             setIntervalFun(IntervalFun intervalFun, int numIntervals);

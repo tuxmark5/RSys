@@ -18,8 +18,8 @@ Vacuum RResults :: RResults(RData* data0, RData* data1, QObject* parent):
   m_updatesEnabled(true),
   m_updatePending(false)
 {
-  m_calculator0 = new RCalculator(m_data0);
-  m_calculator1 = new RCalculator(m_data1);
+  m_calculator0 = new RCalculator(m_data0, false);
+  m_calculator1 = new RCalculator(m_data1, true);
 
   m_seasonalLengths[0] = 0;
   m_seasonalLengths[1] = 0;
