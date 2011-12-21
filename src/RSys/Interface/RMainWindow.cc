@@ -363,6 +363,9 @@ void RMainWindow :: createContainers()
 
 void RMainWindow :: createInterface()
 {
+  QScrollArea* scrollAreaL = new QScrollArea();
+  QScrollArea* scrollAreaR = new QScrollArea();
+
   m_splitter          = new QSplitter();
   m_widgetL           = new QWidget(m_splitter);
   m_widgetR           = new QWidget(m_splitter);
@@ -372,15 +375,16 @@ void RMainWindow :: createInterface()
   m_tabWidgetR        = new QTabWidget();
 
   m_layoutL->setMargin(0);
-  m_layoutR->setMargin(0);
-
+  m_layoutL->setSizeConstraint(QLayout::SetMinAndMaxSize);
   m_layoutL->setSpacing(5);
+  m_layoutR->setMargin(0);
+  m_layoutR->setSizeConstraint(QLayout::SetMinAndMaxSize);
   m_layoutR->setSpacing(5);
 
-  //m_layoutL->setSizeConstraint(QLayout::SetNoConstraint);
-  //m_layoutR->setSizeConstraint(QLayout::SetNoConstraint);
-  m_widgetL->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored);
-  m_widgetR->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored);
+  m_widgetL->setMinimumHeight(200);
+  m_widgetL->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+  m_widgetR->setMinimumHeight(200);
+  m_widgetR->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
   m_tabWidgetL->setTabPosition(QTabWidget::South);
   m_tabWidgetR->setTabPosition(QTabWidget::South);
@@ -388,8 +392,15 @@ void RMainWindow :: createInterface()
   m_layoutL->addWidget(m_tabWidgetL);
   m_layoutR->addWidget(m_tabWidgetR);
 
-  m_splitter->addWidget(m_widgetL);
-  m_splitter->addWidget(m_widgetR);
+  scrollAreaL->setFrameStyle(0);
+  scrollAreaL->setWidgetResizable(true);
+  scrollAreaL->setWidget(m_widgetL);
+  scrollAreaR->setFrameStyle(0);
+  scrollAreaR->setWidgetResizable(true);
+  scrollAreaR->setWidget(m_widgetR);
+
+  m_splitter->addWidget(scrollAreaL); // m_widgetL
+  m_splitter->addWidget(scrollAreaR); // m_widgetR
 
   createTabs();
   updateUnits();

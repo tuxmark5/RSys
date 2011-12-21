@@ -23,6 +23,7 @@ Vacuum RTab :: RTab(const QString& title, QWidget* parent):
   m_label->setMinimumHeight(20);
 
   layout->addWidget(m_label);
+  setMinimumHeight(200);
 }
 
 /**********************************************************************************************/
