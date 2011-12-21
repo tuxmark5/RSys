@@ -147,6 +147,13 @@ void RPaletteDock :: inverseChecks()
 
 /**********************************************************************************************/
 
+bool RPaletteDock :: isMeasureModeActive() const
+{
+  return m_mainWindow->m_measuresStateAction->isChecked();
+}
+
+/**********************************************************************************************/
+
 QString RPaletteDock :: modeName() const
 {
   return m_mode ? "Padaliniai" : QString::fromUtf8("Informacinės sistemos");
@@ -179,7 +186,7 @@ auto RPaletteDock :: selectedUnits() const -> UnitList
 
 RUnitPtrList* RPaletteDock :: selectedUnitList() const
 {
-  if (m_mainWindow->m_measuresStateAction->isChecked())
+  if (isMeasureModeActive())
     return m_mainWindow->data()->measures()->cast<RUnitPtr>();
   return m_mainWindow->currentUnits();
 }
@@ -191,7 +198,12 @@ void RPaletteDock :: setChecked(bool checked)
   UnitList units = selectedUnits();
 
   for (auto it = units.begin(); it != units.end(); ++it)
-    (*it)->setVisibleRaw(checked);
+  {
+    RUnit* unit = *it;
+    unit->setVisibleRaw(checked);
+    if (RUnit* buddy = unit->buddy())
+      buddy->setVisibleRaw(checked);
+  }
 
   m_mainWindow->updateUnits();
   m_model->notifyAllRowsChanged();

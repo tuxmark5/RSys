@@ -29,6 +29,7 @@ class RPaletteDock: public QDockWidget
     _M Vacuum           RPaletteDock(RMainWindow* parent = 0);
     _V Vacuum           ~RPaletteDock();
     _M void             createContainers(RMainWindow* main);
+    _M bool             isMeasureModeActive() const;
     _M QString          modeName() const;
     _M UnitList         selectedUnits() const;
     _M RUnitPtrList*    selectedUnitList() const;

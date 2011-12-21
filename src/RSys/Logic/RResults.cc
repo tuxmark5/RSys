@@ -310,10 +310,11 @@ void RResults :: unregisterField(RUnit* unit, RResultsModel* model, int key)
 
 /**********************************************************************************************/
 
-void RResults :: update()
+void RResults :: update(bool updateCalc)
 {
   resetBegin();
-  m_calculator1->update();
+  if (updateCalc)
+    m_calculator1->update();
   m_calculator1->setIntervalFun(m_intervalFun, m_numRecords);
   resetEnd();
 

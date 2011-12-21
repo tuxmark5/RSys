@@ -738,7 +738,10 @@ bool RMainWindow :: showSaveDialog(const QString& title)
 
 void RMainWindow :: updateUnits()
 {
-  emit unitsChanged(currentUnits());
+  if (m_paletteDock->isMeasureModeActive())
+    m_results->update(false);
+  else
+    emit unitsChanged(currentUnits());
 }
 
 /**********************************************************************************************/
