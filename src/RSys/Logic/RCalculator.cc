@@ -419,7 +419,7 @@ double RCalculator :: predictUsage(RInterval interval, UsageMap& usageMap)
   {
     newestData = m_data->interval1();
   }
-  bool feb29 = FROM(interval).month() == 2 && FROM(interval).month() == 29;
+  bool feb29 = FROM(interval).month() == 2 && FROM(interval).day() == 29;
   int distance = 0;
   if (FROM(interval).month() > newestData.month()
       || (FROM(interval).month() == newestData.month()
@@ -430,8 +430,8 @@ double RCalculator :: predictUsage(RInterval interval, UsageMap& usageMap)
   }
   if (feb29)
   {
-    FROM(interval).addDays(-1);
-    TO(interval).addDays(-1);
+    FROM(interval) = FROM(interval).addDays(-1);
+    TO(interval) = TO(interval).addDays(-1);
   }
   int yearsToFuture = FROM(interval).year() - (newestData.year() + distance);
   distance = FROM(interval).daysTo(QDate(newestData.year() + distance,
@@ -692,6 +692,10 @@ void RCalculator :: findLowUsageIntervals(RInterval interval, int daysBySeasons[
     }
   }
 
+  if (FROM(interval) < m_data->interval0())
+  { // kad nerastų nulinių apkrovų prieš turimus duomenis
+    FROM(interval) = m_data->interval0();
+  }
   int intervalLength = FROM(interval).daysTo(TO(interval)) + 1;
 
   QVector<Fractions> fractions;
