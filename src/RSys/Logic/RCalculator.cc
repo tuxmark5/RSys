@@ -41,7 +41,7 @@ Vacuum RCalculator :: ~RCalculator()
 
 void RCalculator :: update()
 {
-  for (auto measure : *(m_data->measures()))
+  for (auto measure : m_validMeasures)
   {
     measure->m_unitUsage.clear();
     measure->m_usageMap.clear();
