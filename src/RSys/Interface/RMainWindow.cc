@@ -90,6 +90,7 @@ Vacuum RMainWindow :: RMainWindow(QWidget* parent):
   addDockWidget(Qt::RightDockWidgetArea, m_paletteDock);
   addDockWidget(Qt::BottomDockWidgetArea, m_logDock);
 
+  connect(m_database,        SIGNAL(message(QString,int,int)), this, SLOT(showMessage(QString,int,int)));
   connect(m_intervalToolBar, SIGNAL(intervalChanged()), this, SLOT(setInterval()));
   connect(m_intervalToolBar, SIGNAL(message(QString,int,int)), this, SLOT(showMessage(QString,int,int)));
 
@@ -738,7 +739,10 @@ bool RMainWindow :: showSaveDialog(const QString& title)
 
 void RMainWindow :: updateUnits()
 {
-  emit unitsChanged(currentUnits());
+  if (m_paletteDock->isMeasureModeActive())
+    m_results->update(false);
+  else
+    emit unitsChanged(currentUnits());
 }
 
 /**********************************************************************************************/

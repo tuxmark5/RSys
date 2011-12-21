@@ -12,10 +12,12 @@ class REntity
   public:
     _E State
     {
-      Insert = 0x00,
-      Remove = 0x01,
-      Update = 0x02,
-      Select = 0x03
+      Insert    = 0x00,
+      Remove    = 0x01,
+      Update    = 0x02,
+      Select    = 0x03,
+      Transient = 0x04,
+      Invalid   = 0xFF
     };
 
   public:

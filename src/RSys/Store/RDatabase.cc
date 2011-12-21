@@ -57,7 +57,7 @@ bool RDatabase :: commit()
     if (!(*it)->commit(query))
     {
       qDebug() << "COMMIT FAILED";
-      break;
+      return m_database.rollback(), false;
     }
   }
 
@@ -68,6 +68,14 @@ bool RDatabase :: commit()
 
 void RDatabase :: createAdminDataEntities()
 {
+  auto userFilter = [=](const RUser& user) -> bool
+  {
+    if (user.userName().isEmpty())
+      return message(R_S("Išsaugojimas atšauktas: rastas <b>naudotojas</b> be vardo"),
+                     UserWithoutName, RERROR), false;
+    return true;
+  };
+
   auto toUser       = [=](const QVariant& var)  -> RUser*     { return m_data->user(var.toLongLong()); };
   auto toKey        = [=](const QVariant& var)  -> QString    { return var.toString(); };
   auto fromUser     = [ ](RUser* user)          -> QVariant   { return user->id(); };
@@ -78,6 +86,7 @@ void RDatabase :: createAdminDataEntities()
   de->addField<RID>     ("uid")       >> &RUser::id           << &RUser::setId;
   de->addField<QString> ("username")  >> &RUser::userName     << &RUser::setUserName;
   de->addField<QString> ("descr")     >> &RUser::description  << &RUser::setDescription;
+  de->setFilter(userFilter);
 
   auto uae = new UserPropertyE("userAdm", this, "uid", "key", "value");
   (*m_data)[RUser::propertySet]   << std::bind(&UserPropertyE::onSet, uae, _1, _2, _3);
@@ -93,10 +102,43 @@ void RDatabase :: createAdminDataEntities()
 
 void RDatabase :: createDataEntities()
 {
+  auto divisionFilter = [=](const RUnit& unit) -> bool
+  {
+    if (unit.identifier().isEmpty())
+      return message(R_S("Išsaugojimas atšauktas: rastas <b>padalinys</b> be pavadinimo"),
+                     DivisionWithoutName, RERROR), false;
+    return true;
+  };
+
+  auto measureFilter = [=](const RUnit& unit) -> bool
+  {
+    if (unit.identifier().isEmpty())
+      return message(R_S("Išsaugojimas atšauktas: rasta <b>priemonė</b> be pavadinimo"),
+                     MeasureWithoutName, RERROR), false;
+    return true;
+  };
+
+  auto systemFilter = [=](const RUnit& unit) -> bool
+  {
+    if (unit.identifier().isEmpty())
+      return message(R_S("Išsaugojimas atšauktas: rasta <b>sistema</b> be pavadinimo"),
+                     SystemWithoutName, RERROR), false;
+    return true;
+  };
+
+  auto submissionFilter = [=](const RSubmission& s) -> bool
+  {
+    if (!s.measure())
+      return message(R_S("Išsaugojimas atšauktas: rastas <b>istorinis duomuo</b> be priemonės"),
+                     SubmissionWithoutMeasure, RERROR), false;
+    return true;
+  };
+
   auto de = newEntity1D("divisions", this, m_data->divisions(), alloc<RDivision>::make(m_data));
   de->addField<RID>     ("id")    >> &RDivision::id           << &RDivision::setId;
   de->addField<QString> ("ident") >> &RDivision::identifier   << &RDivision::setIdentifier;
   de->addField<QString> ("name")  >> &RDivision::name         << &RDivision::setName;
+  de->setFilter(divisionFilter);
 
   auto ge = newEntity1D("groups", this, m_data->groups(), alloc<RGroup>::make(m_data));
   ge->addField<RID>     ("id")    >> &RGroup::id              << &RGroup::setId;
@@ -107,11 +149,13 @@ void RDatabase :: createDataEntities()
   me->addField<QString> ("ident") >> &RMeasure::identifier    << &RMeasure::setIdentifier;
   me->addField<QString> ("name")  >> &RMeasure::name          << &RMeasure::setName;
   me->addField<RID>     ("gid")   >> &RMeasure::groupId       << &RMeasure::setGroupId;
+  me->setFilter(measureFilter);
 
   auto se = newEntity1D("systems", this, m_data->systems(), alloc<RSystem>::make(m_data));
   se->addField<RID>     ("id")    >> &RSystem::id             << &RSystem::setId;
   se->addField<QString> ("ident") >> &RSystem::identifier     << &RSystem::setIdentifier;
   se->addField<QString> ("name")  >> &RSystem::name           << &RSystem::setName;
+  se->setFilter(systemFilter);
 
   auto ue = newEntity1D("submissions", this, m_data->submissions(), alloc<RSubmission>::make(m_data));
   ue->addField<RID>     ("id")      >> &RSubmission::id         << &RSubmission::setId;
@@ -119,6 +163,7 @@ void RDatabase :: createDataEntities()
   ue->addField<int>     ("count")   >> &RSubmission::count      << &RSubmission::setCount;
   ue->addField<QDate>   ("date0")   >> &RSubmission::date0      << &RSubmission::setDate0;
   ue->addField<QDate>   ("date1")   >> &RSubmission::date1      << &RSubmission::setDate1;
+  ue->setFilter(submissionFilter);
 
   auto toDivision   = [=](const QVariant& var) -> RDivision* { return m_data->division(var.toLongLong()); };
   auto toMeasure    = [=](const QVariant& var) -> RMeasure*  { return m_data->measure(var.toLongLong()); };
@@ -175,7 +220,7 @@ void RDatabase :: emitPSQLError(const QSqlError& error)
   if (msg.isNull())
     msg = R_S("Klaida: %1").arg(text);
 
-  emit message(msg);
+  emit messageLogin(msg);
 }
 
 /**********************************************************************************************/
@@ -184,7 +229,7 @@ void RDatabase :: emitSQLiteError(const QSqlError& error)
 {
   Q_UNUSED(error);
 
-  emit message(R_S("Nepavyko atidaryti DB."));
+  emit messageLogin(R_S("Nepavyko atidaryti DB."));
 }
 
 /**********************************************************************************************/
@@ -208,7 +253,7 @@ bool RDatabase :: initSQLite0(const QString& dbFile)
 
   if (!m_database.isValid())
   {
-    emit message(R_S("Nerasta <b>SQLite</b> QT tvarkyklė <b>QSQLITE</b>"));
+    emit messageLogin(R_S("Nerasta <b>SQLite</b> QT tvarkyklė <b>QSQLITE</b>"));
     return false;
   }
 
@@ -284,7 +329,7 @@ bool RDatabase :: remoteLogin(const QString& addr, const QString& db, const QStr
 
   if (!m_database.isValid())
   {
-    emit message(R_S("Nerasta <b>PostgreSQL</b> QT tvarkyklė <b>QPSQL</b>"));
+    emit messageLogin(R_S("Nerasta <b>PostgreSQL</b> QT tvarkyklė <b>QPSQL</b>"));
     return false;
   }
 

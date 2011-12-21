@@ -45,12 +45,14 @@ class REntity1DI: public REntity1D,
     _T typename FieldList::ConstIterator                FieldIterator;
     _T QHash<Value, int>                                Log;
     _T std::function<Entry*()>                          Allocator;
+    _T std::function<bool (const Entry&)>               Filter;
 
   private:
     _M Log                m_log;
     _M FieldList          m_fields;
     _M List*              m_list;
     _M Allocator          m_allocator;
+    _M Filter             m_filter;
     _M bool               m_allowInsert: 1;
 
   public:
@@ -88,6 +90,12 @@ class REntity1DI: public REntity1D,
           if (it.value() != state)
             continue;
 
+          if (m_filter && !m_filter(*it.key()))
+          {
+            result = false;
+            break;
+          }
+
           switch (state)
           {
             case Insert: result = syncInsert(query, *it.key()); break;
@@ -103,7 +111,7 @@ class REntity1DI: public REntity1D,
         }
       }
 
-      m_log.clear();
+      rollback();
       return true;
     }
 
@@ -114,15 +122,21 @@ class REntity1DI: public REntity1D,
     {
       Q_UNUSED(i1);
       R_GUARD(m_allowInsert, Vacuum);
-      m_log.insert(m_list->at(i0), Insert);
+
+      const Value& value = m_list->at(i0);
+      m_log.insert(value, Insert); // (m_filter && !m_filter(*value)) ? Transient :
     }
 
     _V void               modify1(int i0, int i1)
     {
       Q_UNUSED(i1);
       Value   value = m_list->at(i0);
-      if (!m_log.contains(value))
-        m_log.insert(value, Update);
+
+      switch (m_log.value(value, Invalid))
+      {
+        case Transient: m_log.insert(value, Insert); break;
+        case Invalid:   m_log.insert(value, Update); break;
+      }
     }
 
     _V int                numFields() const
@@ -136,9 +150,10 @@ class REntity1DI: public REntity1D,
 
       switch (state)
       {
-        case Update: m_log.insert(value, Remove); break;
+        case Update:    m_log.insert(value, Remove); break;
         case Insert:
-        case Remove: m_log.remove(value); break;
+        case Remove:
+        case Transient: m_log.remove(value); break;
       }
 
       return true;
@@ -147,6 +162,13 @@ class REntity1DI: public REntity1D,
     _V void               rollback()
     {
       m_log.clear();
+      /*for (auto it = m_log.begin(); it != m_log.end(); )
+      {
+        if (it.value() < 3)
+          it = m_log.erase(it);
+        else
+          ++it;
+      }*/
     }
 
     _M bool               select(QSqlQuery& query)
@@ -171,6 +193,9 @@ class REntity1DI: public REntity1D,
 
       return true;
     }
+
+    _M void               setFilter(Filter filter)
+    { m_filter = std::move(filter); }
 
   private:
     _M void               bindValues(QSqlQuery& query, Entry& entry, FieldIterator it0, FieldIterator it1)
