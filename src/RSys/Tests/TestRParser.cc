@@ -100,6 +100,26 @@ void TestRParser::testNotExistingFile()
   QCOMPARE(parser.open("static/test_not_exist.xls"), false);
 }
 
+void TestRParser::testImageFile()
+{
+  RParser parser;
+  QCOMPARE(parser.open("res/logo.png"), false);
+}
+
+void TestRParser::testBrokenSheet()
+{
+  RParser parser;
+  QCOMPARE(parser.open("static/test2.xls"), true);
+  RParser::GuessList list = parser.guessesList();
+  QCOMPARE(list[6], std::make_tuple(R_S("Istoriniai duomenys"), (int) RUNKNOWN, 6));
+  QCOMPARE(list[7], std::make_tuple(R_S("Istorinė lentelė"), (int) RUNKNOWN, 7));
+
+  list[6] = std::make_tuple(R_S("Istoriniai duomenys"), RDIVISION, 6);
+  list[7] = std::make_tuple(R_S("Istorinė lentelė"), RSYSTEM, 7);
+  RData data;
+  QCOMPARE(parser.read(&data, list), false);
+}
+
 void TestRParser::testNormalFile()
 {
   RParser parser;
@@ -126,7 +146,7 @@ void TestRParser::testNormalFile()
   QCOMPARE(list[7], std::make_tuple(R_S("Istorinė lentelė"), (int) RUNKNOWN, 7));
 
   list[6] = std::make_tuple(R_S("Istoriniai duomenys"), 0x106, 6);
-  list[7] = std::make_tuple(R_S("Istoriniai duomenys"), 0x106, 6);
+  list[7] = std::make_tuple(R_S("Istoriniai lentelė"), 0x106, 7);
 
   checkReadData(&parser, list);
 

@@ -15,6 +15,8 @@ class TestRParser: public QObject
   private slots:
     _M void     testNormalFile();
     _M void     testNotExistingFile();
+    _M void     testImageFile();
+    _M void     testBrokenSheet();
     _M void     testDetectionByColumns();
     _M void     testWithMissingData();
 };
