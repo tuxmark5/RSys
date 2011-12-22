@@ -2,7 +2,7 @@
 Komandos išsikelti tikslai
 ==========================
 
-+   Suplanuotas programos dydis nuo realaus skiriasi ne daugiau 20 %.
++   Suplanuotas programos dydis nuo realaus skiriasi ne daugiau 20%.
 +   Defektų tankis ne didesnis nei 1 defektas 50 kodo eilučių.
 +   Suplanuoti ciklų pabaigas bent 2 savaičių tikslumu.
 +   Programavimo greitis ne mažesnis nei 50 eilučių per valandą.
@@ -80,7 +80,8 @@ Post-mortem
     rolę: gauti atsakymai iš užsakovo būdavo visą laiką
     išsiunčiami visiems komandos nariams ir tai leisdavo reikalavimų
     vadovui be pakankamai didelio delsimo užregistruoti naujus
-    reikalavimus, tačiau taip būdavo ne visada, nes dažnai norint
-    pilnai suvokti gauto atsakymo prasmę tekdavo kartu bent daliai
-    grupės susirinkti ir aptarti gautą atsakymą. Todėl reikalavimų
+    reikalavimus, tačiau taip būdavo ne visada, nes dažnai, norint
+    pilnai suvokti gauto atsakymo prasmę, tekdavo kartu bent daliai
+    grupės susirinkti ir aptarti gautą atsakymą, bei kartais
+    užduoti papildomus klausimus užsakovui. Todėl reikalavimų
     registravimas kai kuriais atvejais šiek tiek vėluodavo.

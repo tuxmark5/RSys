@@ -16,7 +16,7 @@ Klasės pagal spėjamą dydį yra suskirstytos į tokias grupes:
 +   labai didelė – 60 eilučių antraštės failas ir 800 eilučių
     realizacijos failas.
 
-Čia, kodo eilutėmis yra laikomos visos, nepriklausomai nuo jų turinio
+Čia kodo eilutėmis yra laikomos visos, nepriklausomai nuo jų turinio
 (tuščios, su komentarais irgi įskaičiuojamos). Planuojant buvo nuspręsta,
 kad sistemoje turėtų būti tokios klasės:
 
@@ -66,9 +66,9 @@ Post-mortem
 -----------
 
 Parašius sistemą ir suskaičiavus jos kodo eilučių skaičių,
-gavosi, kad sistema turi 15496 kodo eilutes. Nuo pradinio vertinimo nukrypta
+paaiškėjo, kad sistema turi 15496 kodo eilutes. Nuo pradinio vertinimo nukrypta
 per 4336 eilutes arba per 38.85%. Vadinasi, kaip bebūtų gaila,
-tikslo, jog įvertinti programos dydį 20% tikslumu įgyvendinti nepavyko.
+tikslo įvertinti programos dydį 20% tikslumu įgyvendinti nepavyko.
 
 Tokią didelę paklaidą lėmė kelios priežastys:
 

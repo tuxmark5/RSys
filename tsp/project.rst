@@ -15,7 +15,7 @@ Per grupinį susitikimą, nuspręsta sistemą padalinti į tokius komponentus:
 
 Kadangi sistema bus kuriama naudojantis C++ programavimo kalba, tai
 nuspręsta tolimesnį (eskizinį) projektavimą perkelti į C++ antraščių
-failus. T.y. projektuoti kodu.
+failus. T. y. projektuoti kodu.
 
 Post-mortem
 -----------
@@ -41,5 +41,5 @@ Gautos komponentų priklausomybės:
     grafinę sąsają.
 
 Stabiliausia apibrėžta sąsaja – **Import**, kurios nereikėjo nė
-karto keisti ir kuri buvo sukurta dar spalio 27 d. (git kodo revizija
+karto keisti ir kuri buvo sukurta dar spalio 27 d. (Git kodo revizija
 ``799572c59936b80d8f57c9f05c0da963d6e82fcb``).

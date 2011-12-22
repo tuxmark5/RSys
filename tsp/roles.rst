@@ -4,7 +4,7 @@ Rolės
 
 Kadangi tarp komandos narių yra itin skirtingas techninių žinių lygis 
 (pvz. tik 2 komandos nariai yra itin gerai įvaldę C++ programavimo kalbą,
-1 komandos narys yra itin gerai įvaldęs lietuvių kalbos kultūros taisykles),
+1 komandos narys yra gerai įvaldęs lietuvių kalbos kultūros taisykles),
 tai standartinės TSPi rolės tokio pobūdžio komandai yra netinkamos.
 Todėl yra pateikiamos alternatyvios rolės, iš kurių dalis atitinka
 standartines TSPi roles:
@@ -16,7 +16,7 @@ standartines TSPi roles:
     +   **programavimo aplinkos (kompiliatorių, bibliotekų) paruošimą**.
 
     Kadangi šis komandos narys turi didžiausią patirtį programuojant
-    C++, tai veiklos tiesiogiai susiję su šia programavimo kalba ir
+    C++, tai veiklos, tiesiogiai susijusios su šia programavimo kalba, ir
     yra perduodamos komandos lyderiui.
 
 +   **Vidinės kokybės vadovas** (Vytautas Astrauskas). Atsakingas už:
@@ -24,8 +24,8 @@ standartines TSPi roles:
     +   **testavimo organizavimą**;
     +   **defektų registravimą** (defektus turi fiksuoti visi komandos
         nariai, tačiau, radus defektą, apie jį turi būti pranešama
-        vidinės kokybės vadovui, kuris išanalizavęs defekto
-        prigimtį jį užregistruoja);
+        vidinės kokybės vadovui, kuris, išanalizavęs defekto
+        prigimtį, jį užregistruoja);
     +   **kodo kokybės valdymas** (priežiūra, kad kodas atitiktų
         kodavimo standartą).
 
@@ -33,7 +33,7 @@ standartines TSPi roles:
 
     +   **grafinės sąsajos kokybės užtikrinimą** (naudotojo sąsajos
         peržiūrą ir priežiūrą, kad joje naudojama metafora
-        atitiktų dalykinę sritį bei kalbos kultūros taisykles bei
+        atitiktų dalykinę sritį bei kalbos kultūros taisykles ir
         naudotojo sąsajos panaudojamumo principus);
     +   **dokumentacijos kokybės užtikrinimą**;
     +   **reikalavimų specifikacijos kokybės užtikrinimą**;
@@ -68,7 +68,7 @@ Post-mortem
 
 Po trijų mėnesių darbo su šiomis rolėmis, galima pakankamai tvirtai
 teigti, jog toks rolių išskirstymas buvo pakankamai efektyvus. Ypač
-efektyviai suveikė papildyto komandos lyderio, vidinės kokybės vadovo
+efektyviai suveikė papildytos komandos lyderio, vidinės kokybės vadovo
 ir išorinės kokybės vadovo rolės. Šiek tiek daugiau problemų buvo
 su planavimo ir reikalavimų vadovų rolėmis, nes norint tinkamai
 atlikti šias roles tekdavo stipriai įsigilinti į kuriamos sistemos
@@ -78,8 +78,8 @@ ir reikalavimų vadovai pakankamai aktyviai dalyvaudavo savaitiniuose
 susitikimuose siekdami tinkamai įgyvendinti jiems pavestus darbus.
 Taip pat turbūt verta paminėti, kad komandos apsibrėžtos rolės iki galo
 „nepadengė“ visų darbų, kurie yra paskiriami rolėms pagal TSPi.
-Pavyzdžiui, įrankio skirto darbui su reikalavimais paruošimas darbui
+Pavyzdžiui, įrankio, skirto darbui su reikalavimais, paruošimas darbui
 turėtų būti palaikymo vadovo atsakomybė, bet šis darbas komandoje
-nebuvo priskirtas nei vienai iš rolių – todėl, atsiradus poreikiui
+nebuvo priskirtas nei vienai iš rolių – todėl, atsiradus poreikiui,
 jį padarė vidinės kokybės vadovas, nes turėjo šiek tiek patirties
 iš ankstesnių programų sistemų inžinerijos darbų.

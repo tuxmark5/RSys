@@ -56,7 +56,7 @@ Komandos naudotos TSPi praktikos
 +   Reikalavimų valdymas:
 
     +   failas: **requirements.pdf**. Prie pateikto ruošinio pridėta
-        spausdina kopija.
+        spausdinta kopija.
 
 +   Savaitinių susitikimų organizavimas ir protokolavimas:
 
