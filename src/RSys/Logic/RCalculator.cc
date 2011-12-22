@@ -13,7 +13,6 @@
 #define TO(x)                 std::get<1>(x)
 #define IS_LEAP(x)            (x).daysInYear() == 366
 #define MAGIC                 2.718281828
-#define MAX_PREDICTION_LENGTH 10 // kiek daugiausiai metų žvelgti į praeitį prognozuojant
 
 /********************************************* RS *********************************************/
 /*                                        RCalculator                                         */
