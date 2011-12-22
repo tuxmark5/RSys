@@ -278,13 +278,17 @@ void RIntervalToolBar :: getInterval(QDate& date0, QDate& date1, RIntervalFun& f
     case ByQuarter:
       //date0   = QDate(date0.year(), date0.month(), 1).addMonths(0 - date0.month() % 3);
       //date1   = QDate(date1.year(), date1.month(), 1).addMonths(3 - date1.month() % 3);
+      static const int monthsInQuarter = 12 / 4;
       date0   = QDate(date0.year(), date0.month(), 1).addMonths(0 - (date0.month() - 1) % 3);
       date1   = QDate(date1.year(), date1.month(), 1).addMonths(3 - (date1.month() - 1) % 3);
-      num     = date0.daysTo(date1) / 120;
-      inc     = [](QDate d) -> QDate { return d.addMonths(4); };
+      num     =  (date1.year() * 12 + date1.month()
+               - (date0.year() * 12 + date0.month())
+               ) / monthsInQuarter;
+      inc     = [](QDate d) -> QDate { return d.addMonths(monthsInQuarter); };
       fun     = [date0](int x) -> RInterval
       {
-        return RInterval(date0.addMonths(x * 4), date0.addMonths(x * 4 + 4));
+        return RInterval(date0.addMonths(x * monthsInQuarter),
+                         date0.addMonths(x * monthsInQuarter + monthsInQuarter));
       };
       break;
 
