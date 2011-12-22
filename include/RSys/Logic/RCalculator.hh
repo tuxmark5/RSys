@@ -8,6 +8,7 @@
 #include <RSys/Logic/RValidList.hh>
 /**********************************************************************************************/
 #define MIN_USAGE 1e-4 // m_usage reikšmės, mažesnės už šią, paverčiamos nuliu
+#define MAX_PREDICTION_LENGTH 10 // kiek daugiausiai metų žvelgti į praeitį prognozuojant
 /********************************************* RS *********************************************/
 /*                                        RCalculator                                         */
 /**********************************************************************************************/
@@ -92,7 +93,7 @@ class RCalculator: public QObject
       { return a->date0().daysTo(a->date1()) < b->date0().daysTo(b->date1()); }
 
     /**
-     * Nuspėja apkrovą intervale, remiantas gretimų intervalų apkrovomis.
+     * Nuspėja apkrovą intervale, remiantis gretimų intervalų apkrovomis.
      *
      * Randa tokią 2 laipsnio polinominę funkciją f(x), kad jos integralai duotuose
      * intervaluose atitiktų duotas apkrovas, ir grąžina apskaičiuotą reikiamo
@@ -119,7 +120,7 @@ class RCalculator: public QObject
     /**
      * Suformuoja ankstesnio metodo iškvietimą intervalui [it.key(); date).
      *
-     * @param it    iteratoriu į nagrinėjamą intervalą
+     * @param it    iteratorius į nagrinėjamą intervalą
      * @param begin struktūros, turinčios it, pradžios iteratorius
      * @param end   struktūros, turinčios it, pabaigos iteratorius
      * @param date  data, iki kurios (ne imtinai) reikia numatyti apkrovas
@@ -203,25 +204,56 @@ class RCalculator: public QObject
     _S bool             intersect(RSubmissionPtr submission, MeasureInfo info);
 
     /**
-     * Nuspėjama tiesinės funkcijos reikšmė taške x, kai žinomos jos reikšmės
+     * Nuspėja tiesinės funkcijos reikšmę taške x, kai žinomos jos reikšmės
      * su atsitiktine paklaida taškuose 0, 1, ..., m.
      *
-     * @param y funkcijos reikšmės taškuose 0, 1, ..., m
-     * @param x taškas, kurio reikšmės norime
-     * @return  tikėtina funkcijos reikšmė taške x
+     * @param y   funkcijos reikšmės taškuose 0, 1, ..., m
+     * @param x   taškas, kurio reikšmės norime
+     * @return    tikėtina funkcijos reikšmė taške x
      */
     _S double linearRegression(const QVector<double>& y, double x);
 
   public:
     _M Vacuum           RCalculator(RData* data, bool usePlanedData);
     _M Vacuum           ~RCalculator();
+
+    /**
+     * Atnaujina visus skaičiavimams naudojamus duomenis ir perskaičiuoja
+     * rezultatus.
+     * Reikia iškviesti pasikeitus/atsiradus naujiems apdorotų paraiškų
+     * kiekiams, sąryšiams tarp priemonių ir padalinių, padalinių ir sistemų.
+     */
     _M void             update();
+
+    /**
+     * Nustato intervalų generatorių, kuriam reikia suformuluoti rezultatus
+     * ir juos atnaujina.
+     * Reikia iškviesti pasikeitus nagrinėjamam intervalui. Jei pasikeitė
+     * nagrinėjamų priemonių pasirinkimai (RMeasure::isVisible() reikšmės)
+     * taip pat pakanka iškviesti šį metodą (tiktų ir update(), bet šis
+     * žymiai efektyvesnis.
+     * Gauti rezultatai pasiekiami kviečiant RUnit::usageAt(x) metodą, kur
+     * x – intervalo numeris iš intervalo [0; numIntervals - 1].
+     *
+     * @param intervalFun  funkcija, generuojanti [pradžia; pabaiga) intervalus,
+     *                     kuriems skaičiuojamos apkrovos; intervalai gaunami
+     *                     iškvietus intervalFun(0), intervalFun(1), ...,
+     *                     intervalFun(numIntervals - 1)
+     * @param numIntervals keliems intervalams apskaičiuoti apkrovą, naudojant
+     *                     intervalFun
+     */
     _M void             setIntervalFun(RIntervalFun intervalFun, int numIntervals);
 
     /**
      * Randa mažiausios apkrovos padalinių ir sistemų intervalą.
      * Apribojama, kuriame dienų intervale ieškoti bei koks dienų kiekis
      * reikalingas ieškomame intervale atsižvelgiant į sezoną.
+     * Po šio metodo iškvietimo kiekvienam padaliniui/sistemai rasti intervalai
+     * pasiekiami RUnit::lowestUsage(). Šis metodas grąžins tą intervale
+     * interval esantį dienų intervalą (imtinai), kuriame apkrova pagal valandas
+     * mažiausia, tačiau atitinka nurodytus daysBySeasons ilgio reikalavimus.
+     * Jei yra keli tokie intervalai, grąžina anksčiausią; jei nėra nė vieno,
+     * grąžina nulinių datų intervalą.
      *
      * @param interval       intervalas, kuriame ieškoti (imtinai)
      * @param daysBySeasons  rodyklė į 4 skaičius, kurie atitinka reikalavimus
@@ -229,11 +261,6 @@ class RCalculator: public QObject
      *                       jis priklauso atitinkamai žiemos, pavasario,
      *                       vasaros, rudens sezonams; skaičiumi 0 nurodoma,
      *                       kad atitinkamo sezono rastame intervale turi nebūti
-     * @return tas intervale interval esantis dienų intervalas (imtinai), kurio
-     *         apkrova pagal valandas mažiausia, tačiau atitinka nurodytus
-     *         daysBySeasons ilgio reikalavimus; jei yra keli tokie intervalai,
-     *         grąžina anksčiausią; jei nėra nė vieno, grąžina nulinių datų
-     *         intervalą
      */
       _M void           findLowUsageIntervals(RInterval interval,
                                               int daysBySeasons[4]);
