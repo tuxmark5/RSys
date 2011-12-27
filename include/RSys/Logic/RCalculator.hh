@@ -49,7 +49,7 @@ class RCalculator: public QObject
     _M ValidSystemPtrList             m_validSystems;
     _M RIntervalFun                   m_intervalFun[2];
     _M int                            m_numIntervals[2];
-    _M bool                           m_intrapolationEnabled: 1;
+    _M bool                           m_interpolationEnabled: 1;
 
   private:
     /**
@@ -112,7 +112,7 @@ class RCalculator: public QObject
      *                  reikia numatyti suminę apkrovą
      * @return numanoma apkrova [startDate; date) intervale
      */
-    _S double           polynomialIntrapolation(QDate prevDate, double prevUsage,
+    _S double           polynomialInterpolation(QDate prevDate, double prevUsage,
                                                 QDate startDate, double mainUsage,
                                                 QDate endDate, double nextUsage,
                                                 QDate nextDate, QDate date);
@@ -126,7 +126,7 @@ class RCalculator: public QObject
      * @param date  data, iki kurios (ne imtinai) reikia numatyti apkrovas
      * @return numanoma apkrova [it.key(); date) intervale
      */
-    _S double           polynomialIntrapolation(UsageMap :: iterator it,
+    _S double           polynomialInterpolation(UsageMap :: iterator it,
                                                 UsageMap :: iterator begin,
                                                 UsageMap :: iterator end,
                                                 QDate date);
@@ -266,7 +266,7 @@ class RCalculator: public QObject
                                               int daysBySeasons[4]);
 
   public slots:
-    _M void             setIntrapolationEnabled(bool enabled);
+    _M void             setInterpolationEnabled(bool enabled);
 };
 
 /**********************************************************************************************/

@@ -26,7 +26,7 @@ Vacuum RCalculator :: RCalculator(RData* data, bool usePlanedData):
   m_validDivisions(data->divisions()),
   m_validSystems(data->systems()),
   m_numIntervals({0, 0}),
-  m_intrapolationEnabled(true)
+  m_interpolationEnabled(true)
 {
 }
 
@@ -379,9 +379,9 @@ double RCalculator :: calculateUsage(RInterval interval, UsageMap& usageMap)
   } else {
     it--;
     curUsage = it.value();
-    if (m_intrapolationEnabled)
+    if (m_interpolationEnabled)
     {
-      usage = -polynomialIntrapolation(it, usageMap.begin(), usageMap.end(), curDate);
+      usage = -polynomialInterpolation(it, usageMap.begin(), usageMap.end(), curDate);
       curDate = it.key();
     }
     it++;
@@ -395,9 +395,9 @@ double RCalculator :: calculateUsage(RInterval interval, UsageMap& usageMap)
   }
   if (it != usageMap.begin())
   {
-    if (m_intrapolationEnabled)
+    if (m_interpolationEnabled)
     {
-      usage += polynomialIntrapolation(--it, usageMap.begin(), usageMap.end(), TO(interval));
+      usage += polynomialInterpolation(--it, usageMap.begin(), usageMap.end(), TO(interval));
     } else {
       usage += curDate.daysTo(TO(interval)) * curUsage;
     }
@@ -498,7 +498,7 @@ double RCalculator :: linearRegression(const QVector<double>& y, double x)
 
 /**********************************************************************************************/
 
-double RCalculator :: polynomialIntrapolation(QDate prevDate, double prevUsage,
+double RCalculator :: polynomialInterpolation(QDate prevDate, double prevUsage,
                                               QDate startDate, double mainUsage,
                                               QDate endDate, double nextUsage,
                                               QDate nextDate, QDate date)
@@ -612,7 +612,7 @@ bool RCalculator :: solveSystemOfLinearEquations(double matrix[3][4],
 
 /**********************************************************************************************/
 
-double RCalculator :: polynomialIntrapolation(UsageMap :: iterator it,
+double RCalculator :: polynomialInterpolation(UsageMap :: iterator it,
                                               UsageMap :: iterator begin,
                                               UsageMap :: iterator end,
                                               QDate date)
@@ -647,7 +647,7 @@ double RCalculator :: polynomialIntrapolation(UsageMap :: iterator it,
   } else {
     nextDate = it.key();
   }
-  return polynomialIntrapolation(prevDate, prevUsage, startDate, mainUsage,
+  return polynomialInterpolation(prevDate, prevUsage, startDate, mainUsage,
                                  endDate, nextUsage, nextDate, date);
 }
 
@@ -771,7 +771,7 @@ int RCalculator :: seasonOf(QDate date)
 
 /**********************************************************************************************/
 
-void RCalculator :: setIntrapolationEnabled(bool enabled)
+void RCalculator :: setInterpolationEnabled(bool enabled)
 {
-  m_intrapolationEnabled = enabled;
+  m_interpolationEnabled = enabled;
 }

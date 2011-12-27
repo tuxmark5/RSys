@@ -227,9 +227,9 @@ void RMainWindow :: createActions()
   m_exitAction            = R_ACTION(":/icons/exit.png",        "Išeiti");
   m_exitAction->setShortcut(QKeySequence("Ctrl+Shift+X"));
 
-  m_exterpolationAction   = R_ACTION(QString(),                 "Intrapoliuoti rezultatus");
+  m_exterpolationAction   = R_ACTION(QString(),                 "Interpoliuoti rezultatus");
   m_exterpolationAction->setCheckable(true);
-  m_exterpolationAction->setChecked(g_settings->value("intrapolation", true).toBool());
+  m_exterpolationAction->setChecked(g_settings->value("interpolation", true).toBool());
 
   m_searchAction          = R_ACTION(":/icons/find_interval.png", "Mažiausios apkrovos intervalai");
   m_searchAction->setCheckable(true);
@@ -266,7 +266,7 @@ void RMainWindow :: createConnections()
   connect(m_disconnectAction, SIGNAL(triggered()), this, SLOT(logout()));
   connect(m_commitAction, SIGNAL(triggered()), this, SLOT(commit()));
   connect(m_exitAction, SIGNAL(triggered()), this, SLOT(close()));
-  connect(m_exterpolationAction, SIGNAL(triggered(bool)), this, SLOT(setIntrapolationEnabled(bool)));
+  connect(m_exterpolationAction, SIGNAL(triggered(bool)), this, SLOT(setInterpolationEnabled(bool)));
   connect(m_helpAction, SIGNAL(triggered()), m_help, SLOT(launch()));
   connect(m_importAction, SIGNAL(triggered()), this, SLOT(importData()));
   connect(m_rollbackAction, SIGNAL(triggered()), this, SLOT(rollback()));
@@ -653,13 +653,13 @@ void RMainWindow :: rollback()
 
 /**********************************************************************************************/
 
-void RMainWindow :: setIntrapolationEnabled(bool enabled)
+void RMainWindow :: setInterpolationEnabled(bool enabled)
 {
-  m_results->calculator0()->setIntrapolationEnabled(enabled);
-  m_results->calculator1()->setIntrapolationEnabled(enabled);
+  m_results->calculator0()->setInterpolationEnabled(enabled);
+  m_results->calculator1()->setInterpolationEnabled(enabled);
 
   R_GUARD(!m_loggingIn, Vacuum);
-  g_settings->setValue("intrapolation", enabled);
+  g_settings->setValue("interpolation", enabled);
   m_intervalToolBar->applyInterval();
 }
 
@@ -672,7 +672,7 @@ void RMainWindow :: setInterfaceEnabled(bool enabled)
     createInterface();
     createConnections1();
     setCentralWidget(m_splitter);
-    setIntrapolationEnabled(m_exterpolationAction->isChecked());
+    setInterpolationEnabled(m_exterpolationAction->isChecked());
   }
   else if (m_splitter)
   {

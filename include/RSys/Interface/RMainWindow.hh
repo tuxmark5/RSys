@@ -105,7 +105,7 @@ class RMainWindow: public QMainWindow
     _M void                 logout(bool interactive = true);
     _M void                 onSearchFormDestroyed();
     _M void                 rollback();
-    _M void                 setIntrapolationEnabled(bool enabled);
+    _M void                 setInterpolationEnabled(bool enabled);
     _M void                 setInterfaceEnabled(bool enabled);
     _M void                 setInterval();
     _M void                 setShowSearchForm(bool show);
